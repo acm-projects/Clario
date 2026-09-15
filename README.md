@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://media1.tenor.com/m/y2JXkY1pXkwAAAAd/cat-computer.gif" alt="Cat typing fast" width="200">
+  <img src="https://media.tenor.com/B9gsrz2zMIoAAAAM/skills-interview.gif" alt="Gif" width="200">
 </p>
 
 # Clario 🎙️
@@ -19,7 +19,7 @@ Most people know how to solve LeetCode problems, but the minute they're asked to
 ## MVP 🏆
 - AI Voice Interviewer: realistic mock interviews through natural voice conversation with adaptive follow-ups
 - Live Coding Workspace: in-browser editor where you solve problems while thinking out loud
-- Interview Modes: Practice, Full Mock, and Custom
+- Interview Modes: Practice, Full Mock, Custom, and Company-Specific
 - Interview Intelligence: analyzes communication, reasoning, planning time, silence, and coding behavior
 - Personalized Feedback Report: coding correctness, communication, reasoning, and overall performance
 - Interview Problem Library: searchable, filterable by topic/difficulty/role/company
@@ -32,15 +32,15 @@ Most people know how to solve LeetCode problems, but the minute they're asked to
 - Adaptive Study Plan: multi-week plan that evolves as you improve
 
 ## Timeline 📆
-
+ 
 | Week | Date / Event | Frontend | Backend |
 |---|---|---|---|
 | 1 | **Sept 9-15 - Build Night 1** | Read through the README, icebreaker, then go home and brainstorm features/ideas | Read through the README, icebreaker, then go home and brainstorm features/ideas |
-| 2 | **Sept 16-22 - Design Day + Build Night 2** | Whiteboard to finalize features + site structure; begin wireframing; set up local dev environment off the existing repo; build static layout components off wireframes (navbar, session cards) | Research needed APIs (voice AI, Piston, LeetCode wrapper, etc); flag Piston/Docker as a known trouble spot to test early; finalize DB schema; set up Supabase project + Auth |
+| 2 | **Sept 16-22 - Design Day + Build Night 2** | Whiteboard to finalize features + site structure; begin wireframing; set up local dev environment off the existing repo; build static layout components off wireframes (navbar, session cards) | Research needed APIs (voice AI, Piston, LeetCode wrapper, etc); decide on company-tagged question source and confirm data format; flag Piston/Docker as a known trouble spot to test early; finalize DB schema (include `company` field on problems table); set up Supabase project + Auth |
 | 3 | **Sept 23-29 - Build Night 3** | Build Signup/Login pages, connect to Supabase Auth | Implement auth verification in FastAPI; start voice pipeline spike (Hume EVI + Claude as CLM + TTS round trip), feeding the **AI Voice Interviewer** MVP |
 | 4 | **Sept 30-Oct 6 - Build Night 4** | Embed Monaco Editor; build problem/session UI skeleton, feeding the **Live Coding Workspace** MVP | Set up Piston Docker sandbox; build problems table + CRUD endpoints; confirm code execution round-trip works |
 | 5 | **Oct 7-13 - Build Night 5** | Build Interview Room UI: audio controls, transcript display, Monaco side-by-side | Build interviewer state machine (intro → problem → coding → wrap-up); wire system prompt to Claude; test adaptive follow-ups |
-| 6 | **Oct 14-20 - Build Night 6 + Mid-Semester Review** | Build mode selection UI (Practice/Full Mock/Custom); build Problem Library search/filter UI, feeding the **Interview Modes** + **Interview Problem Library** MVPs | Add mode field + prompt variants per mode; integrate LeetCode API wrapper to populate problem library. **Review demo:** working voice interview + coding workspace end to end |
+| 6 | **Oct 14-20 - Build Night 6 + Mid-Semester Review** | Build mode selection UI (Practice/Full Mock/Custom/Company-Specific); build Problem Library search/filter UI with company filter, feeding the **Interview Modes** + **Interview Problem Library** MVPs | Add mode field + prompt variants per mode; integrate LeetCode API wrapper and import company-tagged question set (company, difficulty, frequency) to populate problem library. **Review demo:** working voice interview + coding workspace end to end |
 | 7 | **Oct 21-27 - Build Night 7 + End of Semester Review** | Polish Interview Room based on Week 6 feedback; start Feedback Report UI shell | Build transcript_events + code_snapshots logging pipeline; build Celery job computing silence, planning time, pace, filler words, feeding the **Interview Intelligence** MVP |
 | 8 | **Oct 28-Nov 3 - Build Night 8** | Build Feedback Report UI, Communication Analysis view, feeding the **Personalized Feedback Report** + **Communication & Confidence Analysis** MVPs | Build Claude-based Feedback Report generation; wire Communication Analysis metrics into report |
 | 9 | **Nov 4-10 - Build Night 9** | Build Progress Dashboard (Recharts), Study Plan display, feeding the **Progress Dashboard** + **Personalized Study Plan** MVPs | Build dashboard aggregation endpoints; build Study Plan generation job |
@@ -143,14 +143,14 @@ To go from zero to building Clario.
 
 ## Team Clario 🎙️
 
-**Developers**
+**Developers 👩‍💻** 
 - Asritha Pinnamaneni
 - Prapti Singh
 - Sahasra Bezawada
 - Vrinda Murugesh
 
-**Project Manager**
+**Project Manager 👩‍💼**
 - Ankitha Shaji Thomas
 
-**Industry Mentor**
+**Industry Mentor 🧑‍🏫**
 - Adarsh Goura
