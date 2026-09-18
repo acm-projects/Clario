@@ -146,7 +146,7 @@ To go from zero to building Clario.
 **Developers 👩‍💻** 
 - Asritha Pinnamaneni
 - Prapti Singh
-- Sahasra Bezawada
+- Sahasra Bezawada 🫶
 - Vrinda Murugesh
 
 **Project Manager 👩‍💼**
