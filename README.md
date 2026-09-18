@@ -144,10 +144,10 @@ To go from zero to building Clario.
 ## Team Clario 🎙️
 
 **Developers 👩‍💻** 
-- Asritha Pinnamaneni
-- Prapti Singh
-- Sahasra Bezawada 🫶
-- Vrinda Murugesh
+- Asritha Pinnamaneni 😋
+- Prapti Singh 💕
+- Sahasra Bezawada
+- Vrinda Murugesh 🤗
 
 **Project Manager 👩‍💼**
 - Ankitha Shaji Thomas ❤️
