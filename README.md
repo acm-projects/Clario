@@ -144,7 +144,7 @@ To go from zero to building Clario.
 ## Team Clario 🎙️
 
 **Developers 👩‍💻** 
-- Asritha Pinnamaneni
+- Asritha Pinnamaneni 😋
 - Prapti Singh
 - Sahasra Bezawada
 - Vrinda Murugesh
