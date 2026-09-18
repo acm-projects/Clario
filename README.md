@@ -150,7 +150,7 @@ To go from zero to building Clario.
 - Vrinda Murugesh
 
 **Project Manager 👩‍💼**
-- Ankitha Shaji Thomas
+- Ankitha Shaji Thomas ❤️
 
 **Industry Mentor 🧑‍🏫**
 - Adarsh Goura
