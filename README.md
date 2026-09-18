@@ -147,7 +147,7 @@ To go from zero to building Clario.
 - Asritha Pinnamaneni
 - Prapti Singh
 - Sahasra Bezawada
-- Vrinda Murugesh
+- Vrinda Murugesh 🤗
 
 **Project Manager 👩‍💼**
 - Ankitha Shaji Thomas ❤️
