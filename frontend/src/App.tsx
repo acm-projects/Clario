@@ -1,16 +1,23 @@
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Assessment from "./pages/Assessment";
+import Dashboard from "./pages/Dashboard";
+
 
 function App() {
   return (
-    <>
-      <div className="flex items-center justify-center h-screen  bg-orange-100">
-        <h1 className="text-4xl font-bold text-blue-500">Clario</h1>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/assessment" element={<Assessment />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
-
-
-      </div>
-    </>
-  )
+      </Routes>
+  );
 }
 
-export default App
+export default App;
