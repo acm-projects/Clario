@@ -2,6 +2,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from auth import get_current_user
+from routers.problems import router as problems_router
 
 app = FastAPI()
 
@@ -13,6 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(problems_router)
 
 @app.get("/")
 async def root():
