@@ -1,8 +1,8 @@
-import { TopBar } from "../components/TopBar";
-import { ProblemPanel } from "../components/ProblemPanel";
-import { TestResultPanel } from "../components/TestResultPanel";
-import { CodePanel } from "../components/CodePanel";
-import { VideoCallPanel } from "../components/VideoCallPanel";
+import { TopBar } from "./TopBar";
+import { ProblemPanel } from "./ProblemPanel";
+import { TestResultPanel } from "./TestResultPanel";
+import { CodePanel } from "./CodePanel";
+import { VideoCallPanel } from "./VideoCallPanel";
 import { problem, session } from "./data";
 
 function Wave() {
@@ -24,8 +24,8 @@ export default function InterviewPage() {
     <div className="relative flex h-screen flex-col overflow-hidden bg-[#0a1120] text-[#e6ebf5]">
       <TopBar timer={session.timer} onRun={() => {}} onSubmit={() => {}} />
 
-      <main className="grid min-h-0 flex-1 grid-cols-[363px_minmax(0,1fr)_390px] gap-3.5 px-3.5 pb-12 pt-3.5">
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3.5">
+      <main className="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)_300px] gap-3 pb-12 pt-3">
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3">
           <ProblemPanel problem={problem} solved={session.solved} />
           <TestResultPanel testcases={problem.example_testcases} />
         </div>

@@ -54,24 +54,23 @@ export function VideoCallPanel({ round, interviewer, speaking = true }: VideoCal
         <Pill className="bg-[#16264a] text-[#a9c4f0]">{round}</Pill>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 px-3 pb-3">
-        <div className="relative flex h-[215px] shrink-0 flex-col items-center justify-center rounded-xl border border-[#17243b] bg-[#0c1626]">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 px-2 pb-2">
+        <div className="relative flex h-[170px] shrink-0 flex-col items-center justify-center rounded-xl border border-[#17243b] bg-[#0c1626]">
           <NameTag>You</NameTag>
-          <svg width="76" height="76" viewBox="0 0 24 24" fill="none" stroke="#5b6b87" strokeWidth="1.2">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#5b6b87" strokeWidth="1.2">
             <circle cx="12" cy="7.5" r="4.5" />
             <path d="M3 22c0-5 4-8 9-8s9 3 9 8" />
           </svg>
-          <span className="absolute bottom-3 text-[11px] text-[#7d8aa3]">[Your camera feed]</span>
+          <span className="absolute bottom-3 text-[10px] text-[#7d8aa3]">[Your camera feed]</span>
         </div>
 
-        <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] bg-[#12233f]">
+        <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] bg-[#12233f] p-3">
           <NameTag>{interviewer}</NameTag>
-          {/* Replace the emoji with your avatar asset */}
-          <div className="flex h-[134px] w-[134px] items-center justify-center rounded-full bg-[#e8f1fb] text-6xl ring-[7px] ring-[#0c1a30]">
+          <div className="flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px] ring-[#0c1a30]">
             🦆
           </div>
           {speaking && (
-            <div className="mt-3 flex items-center gap-2 text-xs font-medium text-[#6fa4ee]">
+            <div className="mt-2 flex items-center gap-2 text-[11px] font-medium text-[#6fa4ee]">
               <span className="flex items-center gap-[3px]" aria-hidden>
                 {[10, 16, 10, 14, 8].map((h, i) => (
                   <span
@@ -87,7 +86,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true }: VideoCal
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center justify-center gap-3 border-t border-[#17243b] py-3.5">
+      <div className="flex shrink-0 items-center justify-center gap-2.5 border-t border-[#17243b] py-2.5">
         {controls.map((c, i) => (
           <button
             key={i}
