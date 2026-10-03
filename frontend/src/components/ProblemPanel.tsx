@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DOMPurify from "dompurify";
 import { Panel } from "./Panel";
 import type { Problem } from "../types";
 
@@ -69,10 +70,11 @@ export function ProblemPanel({ problem, solved }: { problem: Problem; solved: bo
           </div>
         )}
 
-        {/* Trusted fake data. Sanitize (e.g. DOMPurify) if this ever comes from a real API. */}
         <div
           className={`mt-4 ${htmlStyles}`}
-          dangerouslySetInnerHTML={{ __html: problem.description_html }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(problem.description_html),
+          }}
         />
       </div>
     </Panel>
