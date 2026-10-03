@@ -7,4 +7,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      // Forward code-execution requests to the FastAPI backend (Piston wrapper)
+      '/run': 'http://localhost:8000',
+    },
+  },
 })

@@ -1,19 +1,32 @@
+import os
+from typing import Literal
+
 import httpx
-from typing import Literal #lets us restrict possible values for language field
-from fastapi import APIRouter, HTTPException 
-from pydantic import BaseModel #how fastapi defines what incoming/outgoing JSON should look like
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 
 #create the router!!
 router = APIRouter()
 
-PISTON_URL = "http://localhost:2000/api/v2/execute"
+PISTON_URL = os.getenv("PISTON_URL", "http://localhost:2000/api/v2/execute")
+PISTON_VERSIONS = {
+    "python": os.getenv("PISTON_PYTHON_VERSION", "*"),
+    "java": os.getenv("PISTON_JAVA_VERSION", "*"),
+}
+MAX_OUTPUT_LENGTH = 100_000
 
 FILE_NAMES = {"python": "main.py", "java": "Main.java"}
+
+
+def limit_output(value: str) -> str:
+    if len(value) <= MAX_OUTPUT_LENGTH:
+        return value
+    return value[:MAX_OUTPUT_LENGTH] + "\n[output truncated]"
 
 #defines what something must send to /run
 class RunRequest(BaseModel):
     language: Literal["python", "java"]
-    code: str
+    code: str = Field(min_length=1, max_length=50_000)
 
 #defines what we send back from the piston sandbox
 class RunResponse(BaseModel):
@@ -26,7 +39,7 @@ async def run_code(req: RunRequest):
     #taking our req and converting it into what Piston expects
     payload = {
         "language": req.language,
-        "version": "*",
+        "version": PISTON_VERSIONS[req.language],
         "files": [{"name": FILE_NAMES[req.language], "content": req.code}],
         "run_timeout": 3000,       # ms, kills infinite loops
         "compile_timeout": 10000,
@@ -44,7 +57,10 @@ async def run_code(req: RunRequest):
         raise HTTPException(status_code=502, detail="Code execution service unavailable")
 
     #convert Piston's JSON to Python
-    data = r.json()
+    try:
+        data = r.json()
+    except ValueError as exc:
+        raise HTTPException(status_code=502, detail="Invalid response from code execution service") from exc
     #get compiling data for Java envs
     compile_stage = data.get("compile")
     #immediately return compiler error
@@ -56,12 +72,21 @@ async def run_code(req: RunRequest):
         )
 
     #get the actual execution and code
-    run = data["run"]
+    run = data.get("run")
+    if not isinstance(run, dict):
+        raise HTTPException(status_code=502, detail="Invalid response from code execution service")
+
     code = run.get("code")
     #if piston killed the program, treat it as a timeout
     if code is None:
         code = 124
-        run["stderr"] = (run.get("stderr") or "") + f"\nTerminated ({run.get('signal')})"
+        stderr = (run.get("stderr") or "") + f"\nTerminated ({run.get('signal')})"
+    else:
+        stderr = run.get("stderr", "")
     
-    #finally return our result!
-    return RunResponse(stdout=run.get("stdout", ""), stderr=run.get("stderr", ""), exit_code=code)
+    #finally return our
+    return RunResponse(
+        stdout=limit_output(run.get("stdout", "")),
+        stderr=limit_output(stderr),
+        exit_code=code,
+    )
