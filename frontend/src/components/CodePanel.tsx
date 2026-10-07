@@ -5,6 +5,7 @@ import type { Language, Problem } from "../types";
 
 interface CodePanelProps {
   starterCode: Problem["starter_code"];
+  theme: "dark" | "light";
   initialLanguage?: Language;
   onChange?: (language: Language, code: string) => void;
 }
@@ -34,9 +35,28 @@ const defineTheme: BeforeMount = (monaco) => {
       "editorCursor.foreground": "#dfe6f3",
     },
   });
+  monaco.editor.defineTheme("clario-light", {
+    base: "vs",
+    inherit: true,
+    rules: [
+      { token: "keyword", foreground: "c0266d" },
+      { token: "type.identifier", foreground: "b45309" },
+      { token: "number", foreground: "c0266d" },
+      { token: "identifier", foreground: "172333" },
+      { token: "delimiter", foreground: "34445a" },
+    ],
+    colors: {
+      "editor.background": "#ffffff",
+      "editor.lineHighlightBackground": "#edf2f7",
+      "editor.lineHighlightBorder": "#ffffff00",
+      "editorLineNumber.foreground": "#9aa8b8",
+      "editorLineNumber.activeForeground": "#65758b",
+      "editorCursor.foreground": "#172333",
+    },
+  });
 };
 
-export function CodePanel({ starterCode, initialLanguage = "java", onChange }: CodePanelProps) {
+export function CodePanel({ starterCode, theme, initialLanguage = "java", onChange }: CodePanelProps) {
   const [lang, setLang] = useState<Language>(initialLanguage);
   const [codes, setCodes] = useState<Record<Language, string>>({ ...starterCode });
   const [pos, setPos] = useState({ line: 7, col: 17 });
@@ -66,12 +86,12 @@ export function CodePanel({ starterCode, initialLanguage = "java", onChange }: C
   return (
     <Panel>
       <div className="flex shrink-0 items-center justify-between px-4 py-3">
-        <span className="text-sm font-semibold text-white">Code</span>
+        <span className="theme-main-text text-sm font-semibold">Code</span>
         <select
           value={lang}
           onChange={(e) => setLang(e.target.value as Language)}
           aria-label="Language"
-          className="cursor-pointer appearance-none rounded-full bg-[#1a2842] px-3 py-1 text-xs text-[#c3cde0] outline-none focus-visible:ring-2 focus-visible:ring-[#2f6fd0]"
+          className="theme-surface theme-body-text cursor-pointer appearance-none rounded-full px-3 py-1 text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#2f6fd0]"
         >
           {LANGUAGES.map((l) => (
             <option key={l.id} value={l.id}>
@@ -87,7 +107,7 @@ export function CodePanel({ starterCode, initialLanguage = "java", onChange }: C
           path={`solution.${lang}`}
           language={current.monaco}
           value={codes[lang]}
-          theme="clario-dark"
+          theme={`clario-${theme}`}
           beforeMount={defineTheme}
           onMount={handleMount}
           onChange={handleChange}
@@ -111,7 +131,7 @@ export function CodePanel({ starterCode, initialLanguage = "java", onChange }: C
 
       <div className="flex shrink-0 items-center justify-between px-4 py-3 text-xs">
         <Pill>{saved ? "Saved" : "Saving…"}</Pill>
-        <span className="text-[#8a97ad]">
+        <span className="theme-muted-text">
           Ln {pos.line}, Col {pos.col}
         </span>
       </div>

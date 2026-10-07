@@ -12,11 +12,11 @@ export function TestResultPanel({
 }: TestResultPanelProps) {
   const [tab, setTab] = useState<"result" | "testcase">("result");
   const tabClass = (active: boolean) =>
-    active ? "font-semibold text-white" : "text-[#8a97ad] hover:text-white";
+    active ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]";
 
   return (
     <Panel>
-      <nav className="flex shrink-0 items-center gap-5 border-b border-[#17243b] px-4 py-3 text-sm">
+      <nav className="theme-border flex shrink-0 items-center gap-5 border-b px-4 py-3 text-sm">
         <button className={tabClass(tab === "result")} onClick={() => setTab("result")}>
           Test Result
         </button>
@@ -26,10 +26,10 @@ export function TestResultPanel({
       </nav>
 
       {tab === "result" ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-[#a6b2c7]">{message}</div>
+        <div className="theme-muted-text flex flex-1 items-center justify-center text-sm">{message}</div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto p-3">
-          <pre className="rounded-lg bg-[#16233b] px-3.5 py-3 font-mono text-xs leading-6 text-[#c3cde0]">
+          <pre className="theme-code-surface theme-body-text rounded-lg px-3.5 py-3 font-mono text-xs leading-6">
             {testcases}
           </pre>
         </div>
