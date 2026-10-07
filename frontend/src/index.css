@@ -1,113 +1,134 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Sora", sans-serif;
+  --font-detail: "Inter", sans-serif;
+}
+
+@layer base {
+  button {
+    font: inherit;
+  }
+
+  :where(nav, label, input, select, textarea, small, figcaption, footer),
+  :where([class~="text-xs"], [class~="text-sm"], [class*="text-[8px]"], [class*="text-[9px]"], [class*="text-[10px]"], [class*="text-[11px]"], [class*="text-[12px]"], [class*="text-[13px]"], [class*="text-[14px]"]):not(:where(h1, h2, h3, h4, h5, h6)) {
+    font-family: var(--font-detail);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+  }
+}
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-weight: 400;
+  color: #121826;
+  background: #f4f0ed;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+html {
+  background: #f4f0ed;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f4f0ed;
+  color: #121826;
+  font-family: var(--font-sans);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+* {
+  box-sizing: border-box;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
+#root {
+  min-height: 100vh;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  text-align: left;
+  border: none;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+button {
+  font: inherit;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+
+/* Dashboard motion: a gentle arrival, hover lift, and swimming goal mascot. */
+.dashboard-card {
+  animation: dashboard-arrive 550ms ease-out both;
+  transition: translate 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+#start-interview { animation-delay: 70ms; }
+#next-practice { animation-delay: 140ms; }
+.dashboard-card[aria-labelledby="recent-heading"] { animation-delay: 210ms; }
+.dashboard-card:focus-within {
+  border-color: #3b8fe855;
+}
+@media (hover: hover) {
+  .dashboard-card:hover {
+    translate: 0 -2px;
+    border-color: #3b8fe855;
+    box-shadow: 0 14px 36px -16px #2f7fe233;
+  }
+}
+.goal-water { transition: width 1000ms cubic-bezier(.22, 1, .36, 1); }
+.goal-duck-position { transition: left 1000ms cubic-bezier(.22, 1, .36, 1); }
+.goal-duck { animation: duck-bob 2.4s ease-in-out infinite; transform-origin: center bottom; }
+.skill-bar { animation: skill-grow 700ms ease-out both; transform-origin: bottom; }
+@keyframes dashboard-arrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes duck-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-3px) rotate(3deg); }
+}
+@keyframes skill-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-card, .goal-duck, .skill-bar { animation: none; }
+  .dashboard-card, .goal-water, .goal-duck-position { transition: none; }
+  .dashboard-card:hover { translate: none; }
+}
+.interview-feature {
+  background: linear-gradient(135deg, #e1edff, #f1f6ff 75%);
+  border-radius: 16px;
+}
+
+/* Quiet informational surfaces sit behind the primary conversation card. */
+.history-surface { background: #fffdf8; }
+.recommendation-surface { background: #fffdf8; }
+.interview-feature { box-shadow: 0 12px 32px -20px #3b8fe85c; }
+.cta-conversation { color: #3b8fe8; opacity: .13; transform: rotate(9deg); }
+.welcome-duck::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 7px;
+  bottom: 2px;
+  left: 15%;
+  border-radius: 50%;
+  background: #d9af321a;
+}
+.weekly-swim { box-shadow: 0 5px 18px -14px #82745233; }
+.dashboard-bento { align-items: stretch; }
+.dashboard-bento nav { font-family: var(--font-detail); }
+.clario-dashboard header nav a:has(svg) { display: inline-flex; align-items: center; gap: 8px; border-radius: 8px; }
+.primary-interview-button { background: #2274e5; color: white; }
+.primary-interview-button:hover { background: #1765d5; }
+@media (min-width: 1280px) {
+  .dashboard-bento > div { height: 100%; }
+  .recommendation-surface { flex: 1; }
 }
