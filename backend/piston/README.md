@@ -111,3 +111,9 @@ Code execution has a timeout so programs such as infinite loops cannot hang the 
 - Clario's FastAPI backend runs separately and communicates with Piston.
 - Do not commit API keys or `.env` files.
 - Java programs currently need a `public static void main` method to run. A test harness for LeetCode-style `class Solution` code will be added later.
+
+## How to get backend started
+1. cd backend
+2. docker start piston_api
+3. source venv/bin/activate
+4. uvicorn main:app --reload

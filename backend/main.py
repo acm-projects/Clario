@@ -1,11 +1,13 @@
 from fastapi import Depends, FastAPI
 from piston.router import router as piston_router
+from voice.router import router as voice_router
 
 from auth import get_current_user
 
 app = FastAPI()
 
 app.include_router(piston_router)
+app.include_router(voice_router)
 
 @app.get("/")
 async def root():

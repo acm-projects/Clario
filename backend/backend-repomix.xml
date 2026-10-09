@@ -1,0 +1,354 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+piston/
+  README.md
+  router.py
+.env.example
+auth.py
+main.py
+test
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="piston/README.md">
+# Piston Code Execution
+
+Clario uses [Piston](https://github.com/engineer-man/piston) to run code submitted from the Interview Room. Piston runs locally in a Docker container and currently supports Python and Java for Clario.
+
+## Setup
+
+Make sure Docker Desktop is installed and running.
+
+From the `backend/piston` directory, create and start the Piston container:
+
+```bash
+docker run --privileged \
+  -v $PWD/piston_data:/piston \
+  -dit \
+  -p 2000:2000 \
+  --name piston_api \
+  ghcr.io/engineer-man/piston
+```
+
+Piston will be available at:
+
+```text
+http://localhost:2000
+```
+
+## Install Python
+
+Run this once after creating the container:
+
+```bash
+curl -X POST http://localhost:2000/api/v2/packages \
+  -H "Content-Type: application/json" \
+  -d '{"language":"python","version":"*"}'
+```
+
+## Install Java
+
+Run this once after creating the container:
+
+```bash
+curl -X POST http://localhost:2000/api/v2/packages \
+  -H "Content-Type: application/json" \
+  -d '{"language":"java","version":"*"}'
+```
+
+## Check Installed Runtimes
+
+To confirm that Python and Java are installed:
+
+```bash
+curl http://localhost:2000/api/v2/runtimes
+```
+
+## Starting Piston Again
+
+If the Piston container already exists but is stopped, you do not need to create it again.
+
+Start it with:
+
+```bash
+docker start piston_api
+```
+
+## Stopping Piston
+
+```bash
+docker stop piston_api
+```
+
+## Removing the Container
+
+If you need to completely remove the Piston container:
+
+```bash
+docker rm -f piston_api
+```
+
+After removing it, run the setup steps above again to recreate it.
+
+## Clario API
+
+Clario's FastAPI backend communicates with Piston through the `/run` endpoint.
+
+The endpoint accepts:
+
+```json
+{
+  "language": "python",
+  "code": "print(\"hi\")"
+}
+```
+
+and returns:
+
+```json
+{
+  "stdout": "hi\n",
+  "stderr": "",
+  "exit_code": 0
+}
+```
+
+Both Python and Java are supported.
+
+Code execution has a timeout so programs such as infinite loops cannot hang the server.
+
+## Notes
+
+- Docker Desktop must be running before starting Piston.
+- Piston runs locally on port `2000`.
+- Clario's FastAPI backend runs separately and communicates with Piston.
+- Do not commit API keys or `.env` files.
+- Java programs currently need a `public static void main` method to run. A test harness for LeetCode-style `class Solution` code will be added later.
+
+## How to get backend started
+1. cd backend
+2. docker start piston_api
+3. source venv/bin/activate
+4. uvicorn main:app --reload
+</file>
+
+<file path="piston/router.py">
+import os
+from typing import Literal
+
+import httpx
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+#create the router!!
+router = APIRouter()
+
+PISTON_URL = os.getenv("PISTON_URL", "http://localhost:2000/api/v2/execute")
+PISTON_VERSIONS = {
+    "python": os.getenv("PISTON_PYTHON_VERSION", "*"),
+    "java": os.getenv("PISTON_JAVA_VERSION", "*"),
+}
+MAX_OUTPUT_LENGTH = 100_000
+
+FILE_NAMES = {"python": "main.py", "java": "Main.java"}
+
+
+def limit_output(value: str) -> str:
+    if len(value) <= MAX_OUTPUT_LENGTH:
+        return value
+    return value[:MAX_OUTPUT_LENGTH] + "\n[output truncated]"
+
+#defines what something must send to /run
+class RunRequest(BaseModel):
+    language: Literal["python", "java"]
+    code: str = Field(min_length=1, max_length=50_000)
+
+#defines what we send back from the piston sandbox
+class RunResponse(BaseModel):
+    stdout: str
+    stderr: str
+    exit_code: int
+
+@router.post("/run", response_model=RunResponse)
+async def run_code(req: RunRequest):
+    #taking our req and converting it into what Piston expects
+    payload = {
+        "language": req.language,
+        "version": PISTON_VERSIONS[req.language],
+        "files": [{"name": FILE_NAMES[req.language], "content": req.code}],
+        "run_timeout": 3000,       # ms, kills infinite loops
+        "compile_timeout": 10000,
+    }
+    #here were actually calling piston
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            #send payload to piston, r is Pistons HTTP response
+            r = await client.post(PISTON_URL, json=payload)
+            #check whether the http request succceeded
+            r.raise_for_status()
+    except httpx.TimeoutException:
+        return RunResponse(stdout="", stderr="Execution timed out.", exit_code=124)
+    except httpx.HTTPError:
+        raise HTTPException(status_code=502, detail="Code execution service unavailable")
+
+    #convert Piston's JSON to Python
+    try:
+        data = r.json()
+    except ValueError as exc:
+        raise HTTPException(status_code=502, detail="Invalid response from code execution service") from exc
+    #get compiling data for Java envs
+    compile_stage = data.get("compile")
+    #immediately return compiler error
+    if compile_stage and compile_stage.get("code") not in (0, None):
+        return RunResponse(
+            stdout=compile_stage.get("stdout", ""),
+            stderr=compile_stage.get("stderr", ""),
+            exit_code=compile_stage["code"],
+        )
+
+    #get the actual execution and code
+    run = data.get("run")
+    if not isinstance(run, dict):
+        raise HTTPException(status_code=502, detail="Invalid response from code execution service")
+
+    code = run.get("code")
+    #if piston killed the program, treat it as a timeout
+    if code is None:
+        code = 124
+        stderr = (run.get("stderr") or "") + f"\nTerminated ({run.get('signal')})"
+    else:
+        stderr = run.get("stderr", "")
+    
+    #finally return our
+    return RunResponse(
+        stdout=limit_output(run.get("stdout", "")),
+        stderr=limit_output(stderr),
+        exit_code=code,
+    )
+</file>
+
+<file path=".env.example">
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+</file>
+
+<file path="auth.py">
+import os
+
+import jwt
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jwt import PyJWKClient
+
+load_dotenv()
+
+SUPABASE_URL = os.environ["SUPABASE_URL"]  # e.g. https://xxxx.supabase.co
+JWKS_URL = f"{SUPABASE_URL}/auth/v1/.well-known/jwks.json"
+
+# Update this if your project's JWT Signing Keys tab shows a different algorithm
+ALGORITHMS = ["ES256"]
+
+bearer_scheme = HTTPBearer()
+jwk_client = PyJWKClient(JWKS_URL)
+
+
+async def get_current_user(
+    creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+) -> dict:
+    """
+    Verifies a Supabase-issued JWT and returns its payload
+    (contains 'sub' = user id, 'email', 'role', etc).
+    Raises 401 if the token is missing, expired, or invalid.
+    """
+    token = creds.credentials
+
+    try:
+        signing_key = jwk_client.get_signing_key_from_jwt(token)
+        payload = jwt.decode(
+            token,
+            signing_key.key,
+            algorithms=ALGORITHMS,
+            audience="authenticated",
+        )
+    except jwt.PyJWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {e}",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return payload
+</file>
+
+<file path="main.py">
+from fastapi import Depends, FastAPI
+from piston.router import router as piston_router
+
+from auth import get_current_user
+
+app = FastAPI()
+
+app.include_router(piston_router)
+
+@app.get("/")
+async def root():
+    return {"status": "ok"}
+
+
+@app.get("/api/me")
+async def read_me(user: dict = Depends(get_current_user)):
+    """
+    Protected route. Requires a valid Supabase access token in the
+    Authorization header: 'Bearer <token>'.
+    """
+    return {"user_id": user["sub"], "email": user.get("email")}
+</file>
+
+<file path="test">
+hi
+</file>
+
+</files>

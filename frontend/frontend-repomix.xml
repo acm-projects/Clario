@@ -1,0 +1,1905 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+public/
+  favicon.svg
+  icons.svg
+src/
+  assets/
+    hero.png
+    react.svg
+    vite.svg
+  components/
+    Button.tsx
+    CodePanel.tsx
+    data.ts
+    InterviewPage.tsx
+    NavbarDashboard.tsx
+    Panel.tsx
+    ProblemPanel.tsx
+    TestResultPanel.tsx
+    TopBar.tsx
+    VideoCallPanel.tsx
+  lib/
+    supabase.ts
+  pages/
+    Assessment.tsx
+    Dashboard.tsx
+    Feedback.tsx
+    InterviewRoom.tsx
+    Landing.tsx
+    Login.tsx
+    Mockinterview.tsx
+    Practice.tsx
+    Problemlib.tsx
+    Signup.tsx
+  App.tsx
+  index.css
+  main.tsx
+  types.ts
+.env.example
+.gitignore
+eslint.config.js
+index.html
+package.json
+README.md
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="public/favicon.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="public/icons.svg">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="bluesky-icon" viewBox="0 0 16 17">
+    <g clip-path="url(#bluesky-clip)"><path fill="#08060d" d="M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099"/></g>
+    <defs><clipPath id="bluesky-clip"><path fill="#fff" d="M.1.85h15.3v15.3H.1z"/></clipPath></defs>
+  </symbol>
+  <symbol id="discord-icon" viewBox="0 0 20 19">
+    <path fill="#08060d" d="M16.224 3.768a14.5 14.5 0 0 0-3.67-1.153c-.158.286-.343.67-.47.976a13.5 13.5 0 0 0-4.067 0c-.128-.306-.317-.69-.476-.976A14.4 14.4 0 0 0 3.868 3.77C1.546 7.28.916 10.703 1.231 14.077a14.7 14.7 0 0 0 4.5 2.306q.545-.748.965-1.587a9.5 9.5 0 0 1-1.518-.74q.191-.14.372-.293c2.927 1.369 6.107 1.369 8.999 0q.183.152.372.294-.723.437-1.52.74.418.838.963 1.588a14.6 14.6 0 0 0 4.504-2.308c.37-3.911-.63-7.302-2.644-10.309m-9.13 8.234c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.894 0 1.614.82 1.599 1.82.001 1-.705 1.82-1.6 1.82m5.91 0c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.893 0 1.614.82 1.599 1.82 0 1-.706 1.82-1.6 1.82"/>
+  </symbol>
+  <symbol id="documentation-icon" viewBox="0 0 21 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="m15.5 13.333 1.533 1.322c.645.555.967.833.967 1.178s-.322.623-.967 1.179L15.5 18.333m-3.333-5-1.534 1.322c-.644.555-.966.833-.966 1.178s.322.623.966 1.179l1.534 1.321"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M17.167 10.836v-4.32c0-1.41 0-2.117-.224-2.68-.359-.906-1.118-1.621-2.08-1.96-.599-.21-1.349-.21-2.848-.21-2.623 0-3.935 0-4.983.369-1.684.591-3.013 1.842-3.641 3.428C3 6.449 3 7.684 3 10.154v2.122c0 2.558 0 3.838.706 4.726q.306.383.713.671c.76.536 1.79.64 3.581.66"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M3 10a2.78 2.78 0 0 1 2.778-2.778c.555 0 1.209.097 1.748-.047.48-.129.854-.503.982-.982.145-.54.048-1.194.048-1.749a2.78 2.78 0 0 1 2.777-2.777"/>
+  </symbol>
+  <symbol id="github-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844" clip-rule="evenodd"/>
+  </symbol>
+  <symbol id="social-icon" viewBox="0 0 20 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M12.5 6.667a4.167 4.167 0 1 0-8.334 0 4.167 4.167 0 0 0 8.334 0"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M2.5 16.667a5.833 5.833 0 0 1 8.75-5.053m3.837.474.513 1.035c.07.144.257.282.414.309l.93.155c.596.1.736.536.307.965l-.723.73a.64.64 0 0 0-.152.531l.207.903c.164.715-.213.991-.84.618l-.872-.52a.63.63 0 0 0-.577 0l-.872.52c-.624.373-1.003.094-.84-.618l.207-.903a.64.64 0 0 0-.152-.532l-.723-.729c-.426-.43-.289-.864.306-.964l.93-.156a.64.64 0 0 0 .412-.31l.513-1.034c.28-.562.735-.562 1.012 0"/>
+  </symbol>
+  <symbol id="x-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M1.893 1.98c.052.072 1.245 1.769 2.653 3.77l2.892 4.114c.183.261.333.48.333.486s-.068.089-.152.183l-.522.593-.765.867-3.597 4.087c-.375.426-.734.834-.798.905a1 1 0 0 0-.118.148c0 .01.236.017.664.017h.663l.729-.83c.4-.457.796-.906.879-.999a692 692 0 0 0 1.794-2.038c.034-.037.301-.34.594-.675l.551-.624.345-.392a7 7 0 0 1 .34-.374c.006 0 .93 1.306 2.052 2.903l2.084 2.965.045.063h2.275c1.87 0 2.273-.003 2.266-.021-.008-.02-1.098-1.572-3.894-5.547-2.013-2.862-2.28-3.246-2.273-3.266.008-.019.282-.332 2.085-2.38l2-2.274 1.567-1.782c.022-.028-.016-.03-.65-.03h-.674l-.3.342a871 871 0 0 1-1.782 2.025c-.067.075-.405.458-.75.852a100 100 0 0 1-.803.91c-.148.172-.299.344-.99 1.127-.304.343-.32.358-.345.327-.015-.019-.904-1.282-1.976-2.808L6.365 1.85H1.8zm1.782.91 8.078 11.294c.772 1.08 1.413 1.973 1.425 1.984.016.017.241.02 1.05.017l1.03-.004-2.694-3.766L7.796 5.75 5.722 2.852l-1.039-.004-1.039-.004z" clip-rule="evenodd"/>
+  </symbol>
+</svg>
+</file>
+
+<file path="src/assets/react.svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+</file>
+
+<file path="src/assets/vite.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="47" fill="none" aria-labelledby="vite-logo-title" viewBox="0 0 77 47"><title id="vite-logo-title">Vite</title><style>.parenthesis{fill:#000}@media (prefers-color-scheme:dark){.parenthesis{fill:#fff}}</style><path fill="#9135ff" d="M40.151 45.71c-.663.844-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.493c-.92 0-1.457-1.04-.92-1.788l7.479-10.471c1.07-1.498 0-3.578-1.842-3.578H15.443c-.92 0-1.456-1.04-.92-1.788l9.696-13.576c.213-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.472c-1.07 1.497 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.087.89 1.83L40.153 45.712z"/><mask id="a" width="48" height="47" x="14" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M40.047 45.71c-.663.843-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.389c-.92 0-1.457-1.04-.92-1.788l7.479-10.472c1.07-1.497 0-3.578-1.842-3.578H15.34c-.92 0-1.456-1.04-.92-1.788l9.696-13.575c.213-.297.556-.474.92-.474H53.93c.92 0 1.456 1.04.92 1.788L47.37 13.03c-1.07 1.498 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.088.89 1.831L40.049 45.712z"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#eee6ff" rx="5.508" ry="14.704" transform="rotate(269.814 20.96 11.29)scale(-1 1)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#eee6ff" rx="10.399" ry="29.851" transform="rotate(89.814 -16.902 -8.275)scale(1 -1)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#8900ff" rx="5.508" ry="30.487" transform="rotate(89.814 -19.197 -7.127)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.928 4.177)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.738 5.52)scale(1 -1)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#eee6ff" rx="14.072" ry="22.078" transform="rotate(93.35 31.245 55.578)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx="14.592" cy="9.743" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(39.51 14.592 9.743)"/></g><g filter="url(#k)"><ellipse cx="61.728" cy="-5.321" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 61.728 -5.32)"/></g><g filter="url(#l)"><ellipse cx="55.618" cy="7.104" fill="#00c2ff" rx="5.971" ry="9.665" transform="rotate(37.892 55.618 7.104)"/></g><g filter="url(#m)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#n)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#o)"><ellipse cx="49.857" cy="30.678" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 49.857 30.678)"/></g><g filter="url(#p)"><ellipse cx="52.623" cy="33.171" fill="#00c2ff" rx="5.971" ry="15.297" transform="rotate(37.892 52.623 33.17)"/></g></g><path d="M6.919 0c-9.198 13.166-9.252 33.575 0 46.789h6.215c-9.25-13.214-9.196-33.623 0-46.789zm62.424 0h-6.215c9.198 13.166 9.252 33.575 0 46.789h6.215c9.25-13.214 9.196-33.623 0-46.789" class="parenthesis"/><defs><filter id="b" width="60.045" height="41.654" x="-5.564" y="16.92" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-40.407" y="-6.762" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-35.435" y="2.801" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-30.84" y="20.8" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-29.307" y="21.949" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="29.961" y="-17.13" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-13.43" y="-22.082" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="34.321" y="-37.644" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="38.847" y="-10.552" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="22.45" y="-1.645" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="32.919" y="11.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="src/components/Button.tsx">
+type ButtonProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+};
+
+function Button({ children, onClick }: ButtonProps) {
+  return (
+    <button onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
+export default Button;
+</file>
+
+<file path="src/components/CodePanel.tsx">
+import { useEffect, useRef, useState } from "react";
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import { Panel, Pill } from "./Panel";
+import type { Language, Problem } from "../types";
+
+interface CodePanelProps {
+  starterCode: Problem["starter_code"];
+  theme: "dark" | "light";
+  initialLanguage?: Language;
+  onChange?: (language: Language, code: string) => void;
+}
+
+const LANGUAGES: { id: Language; label: string; monaco: string }[] = [
+  { id: "java", label: "Java", monaco: "java" },
+  { id: "python3", label: "Python 3", monaco: "python" },
+];
+
+const defineTheme: BeforeMount = (monaco) => {
+  monaco.editor.defineTheme("clario-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "keyword", foreground: "f472b6" },
+      { token: "type.identifier", foreground: "fb923c" },
+      { token: "number", foreground: "f472b6" },
+      { token: "identifier", foreground: "dfe6f3" },
+      { token: "delimiter", foreground: "c3cde0" },
+    ],
+    colors: {
+      "editor.background": "#0f1a2e",
+      "editor.lineHighlightBackground": "#3a3418",
+      "editor.lineHighlightBorder": "#0f1a2e00",
+      "editorLineNumber.foreground": "#4a5873",
+      "editorLineNumber.activeForeground": "#8a97ad",
+      "editorCursor.foreground": "#dfe6f3",
+    },
+  });
+  monaco.editor.defineTheme("clario-light", {
+    base: "vs",
+    inherit: true,
+    rules: [
+      { token: "keyword", foreground: "c0266d" },
+      { token: "type.identifier", foreground: "b45309" },
+      { token: "number", foreground: "c0266d" },
+      { token: "identifier", foreground: "172333" },
+      { token: "delimiter", foreground: "34445a" },
+    ],
+    colors: {
+      "editor.background": "#ffffff",
+      "editor.lineHighlightBackground": "#edf2f7",
+      "editor.lineHighlightBorder": "#ffffff00",
+      "editorLineNumber.foreground": "#9aa8b8",
+      "editorLineNumber.activeForeground": "#65758b",
+      "editorCursor.foreground": "#172333",
+    },
+  });
+};
+
+export function CodePanel({ starterCode, theme, initialLanguage = "java", onChange }: CodePanelProps) {
+  const [lang, setLang] = useState<Language>(initialLanguage);
+  const [codes, setCodes] = useState<Record<Language, string>>({ ...starterCode });
+  const [pos, setPos] = useState({ line: 7, col: 17 });
+  const [saved, setSaved] = useState(true);
+  const timer = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const handleMount: OnMount = (editor) => {
+    editor.setPosition({ lineNumber: 7, column: 17 });
+    editor.onDidChangeCursorPosition((e) =>
+      setPos({ line: e.position.lineNumber, col: e.position.column }),
+    );
+  };
+
+  const handleChange = (value?: string) => {
+    const code = value ?? "";
+    setCodes((prev) => ({ ...prev, [lang]: code }));
+    onChange?.(lang, code);
+    setSaved(false);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setSaved(true), 600);
+  };
+
+  const current = LANGUAGES.find((l) => l.id === lang)!;
+
+  return (
+    <Panel>
+      <div className="flex shrink-0 items-center justify-between px-4 py-3">
+        <span className="theme-main-text text-sm font-semibold">Code</span>
+        <select
+          value={lang}
+          onChange={(e) => {
+            const nextLanguage = e.target.value as Language;
+            setLang(nextLanguage);
+            onChange?.(nextLanguage, codes[nextLanguage]);
+          }}
+          aria-label="Language"
+          className="theme-surface theme-body-text cursor-pointer appearance-none rounded-full px-3 py-1 text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#2f6fd0]"
+        >
+          {LANGUAGES.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="min-h-0 flex-1">
+        <Editor
+          height="100%"
+          path={`solution.${lang}`}
+          language={current.monaco}
+          value={codes[lang]}
+          theme={`clario-${theme}`}
+          beforeMount={defineTheme}
+          onMount={handleMount}
+          onChange={handleChange}
+          options={{
+            minimap: { enabled: false },
+            fontSize: 13,
+            lineHeight: 21,
+            fontFamily: "'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace",
+            padding: { top: 12 },
+            lineNumbersMinChars: 3,
+            glyphMargin: false,
+            folding: false,
+            renderLineHighlight: "all",
+            scrollBeyondLastLine: false,
+            overviewRulerLanes: 0,
+            hideCursorInOverviewRuler: true,
+            scrollbar: { vertical: "hidden", horizontal: "hidden" },
+          }}
+        />
+      </div>
+
+      <div className="flex shrink-0 items-center justify-between px-4 py-3 text-xs">
+        <Pill>{saved ? "Saved" : "Saving…"}</Pill>
+        <span className="theme-muted-text">
+          Ln {pos.line}, Col {pos.col}
+        </span>
+      </div>
+    </Panel>
+  );
+}
+</file>
+
+<file path="src/components/data.ts">
+import type { Problem } from "../types";
+
+export const problem: Problem = {
+  slug: "two-sum",
+  leetcode_id: 1,
+  title: "Two Sum",
+  difficulty: "Easy",
+  topics: ["Array", "Hash Table"],
+  description_html: `
+<p>You are given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to target.</em></p>
+<p>You may assume that each input would have <strong>exactly one solution</strong>, and you may not use the same element twice.</p>
+<p class="example-title"><strong>Example 1:</strong></p>
+<pre><strong>Input:</strong> nums = [2,7,11,15], target = 9
+<strong>Output:</strong> [0,1]</pre>`,
+  example_testcases: "[2,7,11,15]\n9",
+  starter_code: {
+    java: `class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int[] sol = new int[2];
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    sol[0] = i;
+                    sol[1] = j;
+                    return sol;
+                }
+            }
+        }
+        return sol;
+    }
+}`,
+    python3: `class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}
+        for i, n in enumerate(nums):
+            if target - n in seen:
+                return [seen[target - n], i]
+            seen[n] = i
+        return []`,
+  },
+};
+
+// Session state, not part of the Problem type.
+export const session = {
+  timer: "24:17",
+  round: "Technical round",
+  interviewer: "Clario",
+  solved: true,
+};
+</file>
+
+<file path="src/components/InterviewPage.tsx">
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { TopBar } from "./TopBar";
+import { ProblemPanel } from "./ProblemPanel";
+import { TestResultPanel } from "./TestResultPanel";
+import type { RunResult } from "./TestResultPanel";
+import { CodePanel } from "./CodePanel";
+import { VideoCallPanel } from "./VideoCallPanel";
+import { session } from "./data";
+import { fakeProblem, type Problem } from "../types";
+
+const difficultyStyle = {
+  dark: {
+    Easy: "bg-[#173a2c] text-[#5fd39a]",
+    Medium: "bg-[#3a3217] text-[#e0b84f]",
+    Hard: "bg-[#3a1c20] text-[#ec6f7a]",
+  },
+  light: {
+    Easy: "bg-[#e3f5ea] text-[#187344]",
+    Medium: "bg-[#fff3cf] text-[#865b05]",
+    Hard: "bg-[#ffe6e8] text-[#b43a48]",
+  },
+} as const;
+
+function Wave() {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-[44px] w-full"
+      viewBox="0 0 1440 44"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path d="M0 18 C 180 40, 320 0, 560 14 S 980 40, 1200 12 S 1400 8, 1440 16 V44 H0Z" fill="var(--wave-a)" opacity="0.55" />
+      <path d="M0 28 C 220 10, 420 44, 700 28 S 1100 6, 1440 30 V44 H0Z" fill="var(--wave-b)" />
+    </svg>
+  );
+}
+
+export default function InterviewPage() {
+  const { problemId } = useParams<{ problemId: string }>();
+  const [problem, setProblem] = useState<Problem | null>(null);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
+  const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
+  const [language, setLanguage] = useState<"python3" | "java">("python3");
+  const [code, setCode] = useState("");
+  const [runResult, setRunResult] = useState<RunResult | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
+  const [running, setRunning] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(() =>
+    window.localStorage.getItem("clario-theme") === "light" ? "light" : "dark",
+  );
+
+  useEffect(() => {
+    window.localStorage.setItem("clario-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProblem() {
+      setProblem(null);
+      setLoadState("loading");
+
+      if (!problemId) {
+        setLoadState("not-found");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/problems/${encodeURIComponent(problemId)}`,
+          { signal: controller.signal },
+        );
+
+        if (response.status === 404) {
+          setLoadState("not-found");
+          return;
+        }
+        if (!response.ok) {
+          throw new Error(`Problem request failed: ${response.status}`);
+        }
+
+        const fetchedProblem = (await response.json()) as Problem;
+        setProblem(fetchedProblem);
+        setLoadState("ready");
+      } catch {
+        if (!controller.signal.aborted) {
+          if (problemId === fakeProblem.slug) {
+            setProblem(fakeProblem);
+            setLoadState("ready");
+          } else {
+            setLoadState("server-error");
+          }
+        }
+      }
+    }
+
+    void loadProblem();
+    return () => controller.abort();
+  }, [problemId]);
+
+  const runCode = async () => {
+    if (!problem) {
+      setRunError("Problem data is not available.");
+      return;
+    }
+
+    setRunning(true);
+    setRunError(null);
+    setRunResult(null);
+
+    try {
+      const sourceCode =
+        code || problem.starter_code[language];
+      const response = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language: language === "python3" ? "python" : "java",
+          code: sourceCode,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Code execution failed with status ${response.status}.`);
+      }
+
+      setRunResult((await response.json()) as RunResult);
+    } catch (error) {
+      setRunError(error instanceof Error ? error.message : "Unable to run code.");
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  if (loadState !== "ready" || !problem) {
+    const message = {
+      loading: "Loading problem…",
+      ready: "Loading problem…",
+      "not-found": "Problem not found",
+      "server-error": "Couldn't reach the server",
+    }[loadState];
+
+    return (
+      <main
+        className="flex min-h-screen items-center justify-center bg-[#0a1120] px-6 text-center text-lg font-semibold text-white"
+        role="status"
+        aria-live="polite"
+      >
+        {message}
+      </main>
+    );
+  }
+
+  return (
+    <div data-theme={theme} className="interview-page relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--text-main)]">
+      <TopBar
+        timer={session.timer}
+        theme={theme}
+        onThemeChange={setTheme}
+        onRun={runCode}
+        onSubmit={() => {}}
+        running={running}
+      />
+
+      <main className="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)_300px] gap-3 pb-12 pt-3">
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3">
+          <ProblemPanel problem={problem} solved={session.solved} />
+          <TestResultPanel
+            testcases={problem.example_testcases}
+            result={runResult}
+            error={runError}
+          />
+        </div>
+        <CodePanel
+          starterCode={problem.starter_code}
+          theme={theme}
+          initialLanguage={language}
+          onChange={(nextLanguage, nextCode) => {
+            setLanguage(nextLanguage);
+            setCode(nextCode);
+          }}
+        />
+        <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-2">
+          <div className="relative flex flex-wrap items-center justify-end gap-2 px-1">
+            <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
+              {problem.difficulty}
+            </span>
+            <button
+              onClick={() => setOpenInfo((current) => current === "topics" ? null : "topics")}
+              aria-expanded={openInfo === "topics"}
+              aria-controls="problem-topics"
+              className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
+            >
+              Topics
+            </button>
+            <button
+              onClick={() => setOpenInfo((current) => current === "hint" ? null : "hint")}
+              aria-expanded={openInfo === "hint"}
+              aria-controls="problem-hint"
+              className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
+            >
+              Hint
+            </button>
+            {openInfo === "topics" && (
+              <div id="problem-topics" className="theme-panel absolute right-0 top-full z-10 mt-2 flex max-w-full flex-wrap justify-end gap-2 rounded-lg border p-2 shadow-xl">
+                {problem.topics.map((topic) => (
+                  <span key={topic} className="theme-border rounded-full border px-2.5 py-0.5 text-xs text-[var(--accent-text)]">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            )}
+            {openInfo === "hint" && (
+              <div id="problem-hint" role="status" className="theme-panel theme-body-text absolute right-0 top-full z-10 mt-2 rounded-lg border px-3 py-2 text-xs shadow-xl">
+                Hints coming soon.
+              </div>
+            )}
+          </div>
+          <VideoCallPanel round={session.round} interviewer={session.interviewer} />
+        </div>
+      </main>
+
+      <Wave />
+    </div>
+  );
+}
+</file>
+
+<file path="src/components/NavbarDashboard.tsx">
+
+</file>
+
+<file path="src/components/Panel.tsx">
+import type { ReactNode } from "react";
+
+export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <section
+      className={`theme-panel flex min-h-0 flex-col overflow-hidden rounded-xl border ${className}`}
+    >
+      {children}
+    </section>
+  );
+}
+
+export function Pill({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={`theme-surface theme-body-text rounded-full px-3 py-1 text-xs ${className}`}>
+      {children}
+    </span>
+  );
+}
+</file>
+
+<file path="src/components/ProblemPanel.tsx">
+import DOMPurify from "dompurify";
+import { Panel } from "./Panel";
+import type { Problem } from "../types";
+
+const TABS = ["Description", "Editorial", "Solutions", "Submissions"];
+
+// Styles the raw description_html (p, code, em, strong, pre) without a typography plugin.
+const htmlStyles = [
+  "text-[var(--text-body)] text-sm leading-[1.65]",
+  "[&_p]:mb-3 [&_strong]:font-semibold [&_strong]:text-[var(--text-main)] [&_em]:italic",
+  "[&_code]:rounded [&_code]:bg-[var(--surface)] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[13px]",
+  "[&_.example-title]:mt-5 [&_.example-title_strong]:text-sm",
+  "[&_pre]:rounded-lg [&_pre]:bg-[var(--code-surface)] [&_pre]:px-3.5 [&_pre]:py-3 [&_pre]:font-mono [&_pre]:text-xs [&_pre]:leading-6 [&_pre]:whitespace-pre-wrap",
+  "[&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1",
+].join(" ");
+
+export function ProblemPanel({ problem, solved }: { problem: Problem; solved: boolean }) {
+  return (
+    <Panel>
+      <nav className="theme-border flex shrink-0 items-center gap-5 border-b px-4 py-3 text-sm">
+        {TABS.map((tab, i) => (
+          <button
+            key={tab}
+            className={i === 0 ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]"}
+          >
+            {tab}
+          </button>
+        ))}
+      </nav>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex items-center justify-between">
+          <h1 className="theme-main-text text-[2rem] font-extrabold leading-tight">
+            {problem.leetcode_id}. {problem.title}
+          </h1>
+          {solved && <span className="text-[var(--success)] text-xs font-medium">Solved</span>}
+        </div>
+
+        <div
+          className={`mt-4 ${htmlStyles}`}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(problem.description_html),
+          }}
+        />
+      </div>
+    </Panel>
+  );
+}
+</file>
+
+<file path="src/components/TestResultPanel.tsx">
+import { useState } from "react";
+import { Panel } from "./Panel";
+
+interface TestResultPanelProps {
+  testcases: string; // Problem.example_testcases
+  result?: RunResult | null;
+  error?: string | null;
+  message?: string;
+}
+
+export interface RunResult {
+  stdout: string;
+  stderr: string;
+  exit_code: number;
+}
+
+export function TestResultPanel({
+  testcases,
+  result = null,
+  error = null,
+  message = "You must run your code first",
+}: TestResultPanelProps) {
+  const [tab, setTab] = useState<"result" | "testcase">("result");
+  const tabClass = (active: boolean) =>
+    active ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]";
+
+  return (
+    <Panel>
+      <nav className="theme-border flex shrink-0 items-center gap-5 border-b px-4 py-3 text-sm">
+        <button className={tabClass(tab === "result")} onClick={() => setTab("result")}>
+          Test Result
+        </button>
+        <button className={tabClass(tab === "testcase")} onClick={() => setTab("testcase")}>
+          Testcase
+        </button>
+      </nav>
+
+      {tab === "result" ? (
+        <div className="theme-muted-text min-h-0 flex-1 overflow-auto p-3 text-sm">
+          {error ? (
+            <pre className="whitespace-pre-wrap text-red-400">{error}</pre>
+          ) : result ? (
+            <div className="font-mono text-xs">
+              <div className={result.exit_code === 0 ? "text-green-400" : "text-red-400"}>
+                exit {result.exit_code}
+              </div>
+              {result.stdout && (
+                <pre className="mt-2 whitespace-pre-wrap">{result.stdout}</pre>
+              )}
+              {result.stderr && (
+                <pre className="mt-2 whitespace-pre-wrap text-red-400">
+                  {result.stderr}
+                </pre>
+              )}
+              {!result.stdout && !result.stderr && (
+                <span className="mt-2 block">(no output)</span>
+              )}
+            </div>
+          ) : (
+            <div className="flex h-full items-center justify-center">{message}</div>
+          )}
+        </div>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <pre className="theme-code-surface theme-body-text rounded-lg px-3.5 py-3 font-mono text-xs leading-6">
+            {testcases}
+          </pre>
+        </div>
+      )}
+    </Panel>
+  );
+}
+</file>
+
+<file path="src/components/TopBar.tsx">
+import { Pill } from "./Panel";
+
+interface TopBarProps {
+  timer: string;
+  theme: "dark" | "light";
+  onThemeChange: (theme: "dark" | "light") => void;
+  onRun: () => void;
+  onSubmit: () => void;
+  running?: boolean;
+}
+
+export function TopBar({ timer, theme, onThemeChange, onRun, onSubmit, running = false }: TopBarProps) {
+  return (
+    <header className="theme-border relative flex h-[46px] shrink-0 items-center justify-between border-b px-5">
+      <div className="flex items-center gap-5">
+        <span className="theme-main-text text-[22px] font-medium tracking-[0.08em]">CLARIO</span>
+        <button className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
+        <div role="group" aria-label="Color theme" className="theme-border flex items-center rounded-md border p-0.5">
+          <button
+            type="button"
+            title="Light mode"
+            aria-label="Light mode"
+            aria-pressed={theme === "light"}
+            onClick={() => onThemeChange("light")}
+            className={`flex h-7 w-8 items-center justify-center rounded ${theme === "light" ? "theme-surface theme-main-text" : "theme-muted-text"}`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            title="Dark mode"
+            aria-label="Dark mode"
+            aria-pressed={theme === "dark"}
+            onClick={() => onThemeChange("dark")}
+            className={`flex h-7 w-8 items-center justify-center rounded ${theme === "dark" ? "theme-surface theme-main-text" : "theme-muted-text"}`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
+        <button
+          onClick={onRun}
+          disabled={running}
+          className="theme-surface theme-body-text theme-surface-hover flex h-[34px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
+          {running ? "Running..." : "Run"}
+        </button>
+        <button
+          onClick={onSubmit}
+          className="h-[34px] rounded-lg bg-[#2f6fd0] px-6 text-sm font-semibold text-white hover:bg-[#3b7ae0]"
+        >
+          Submit
+        </button>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <Pill className="theme-surface theme-body-text flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
+          Session live
+        </Pill>
+        <span className="theme-body-text text-sm tabular-nums">{timer}</span>
+      </div>
+    </header>
+  );
+}
+</file>
+
+<file path="src/components/VideoCallPanel.tsx">
+import type { ReactNode } from "react";
+import { Panel, Pill } from "./Panel";
+
+interface VideoCallPanelProps {
+  round: string;
+  interviewer: string;
+  speaking?: boolean;
+}
+
+const SignalBars = () => (
+  <span className="flex items-end gap-[2px]" aria-hidden>
+    {[5, 8, 11].map((h) => (
+      <span key={h} className="w-[3px] rounded-sm bg-[#4ade80]" style={{ height: h }} />
+    ))}
+  </span>
+);
+
+function NameTag({ children }: { children: ReactNode }) {
+  return (
+    <div className="absolute inset-x-3 top-3 flex items-center justify-between">
+      <span className="theme-panel theme-main-text rounded-full px-3 py-1 text-xs">{children}</span>
+      <SignalBars />
+    </div>
+  );
+}
+
+const icon = {
+  width: 18,
+  height: 18,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
+const Mic = () => (<svg {...icon}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>);
+const Cam = () => (<svg {...icon}><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>);
+const Screen = () => (<svg {...icon}><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></svg>);
+const More = () => (<svg {...icon} fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg>);
+const HangUp = () => (<svg {...icon}><path d="M3 14c5-4 13-4 18 0l-2 3-3-1.5V13c-3-1-7-1-10 0v2.5L5 17z" /></svg>);
+
+export function VideoCallPanel({ round, interviewer, speaking = true }: VideoCallPanelProps) {
+  const controls = [<Mic />, <Cam />, <Screen />, <More />];
+
+  return (
+    <Panel>
+      <div className="flex shrink-0 items-center justify-between px-4 py-3">
+        <span className="theme-main-text flex items-center gap-2 text-sm font-semibold">
+          <svg {...icon} width={16} height={16} className="theme-muted-text"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>
+          Video Call
+        </span>
+        <Pill className="theme-surface theme-body-text">{round}</Pill>
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col gap-2 px-2 pb-2">
+        <div className="theme-video-self relative flex h-[170px] shrink-0 flex-col items-center justify-center rounded-xl border">
+          <NameTag>You</NameTag>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#5b6b87" strokeWidth="1.2">
+            <circle cx="12" cy="7.5" r="4.5" />
+            <path d="M3 22c0-5 4-8 9-8s9 3 9 8" />
+          </svg>
+          <span className="theme-muted-text absolute bottom-3 text-[10px]">[Your camera feed]</span>
+        </div>
+
+        <div className="theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
+          <NameTag>{interviewer}</NameTag>
+          <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
+            🦆
+          </div>
+          {speaking && (
+            <div className="mt-2 flex items-center gap-2 text-[11px] font-medium text-[var(--accent-text)]">
+              <span className="flex items-center gap-[3px]" aria-hidden>
+                {[10, 16, 10, 14, 8].map((h, i) => (
+                  <span
+                    key={i}
+                    className="w-[3px] animate-pulse rounded-full bg-[#4a8cf0]"
+                    style={{ height: h, animationDelay: `${i * 120}ms` }}
+                  />
+                ))}
+              </span>
+              Speaking…
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="theme-border flex shrink-0 items-center justify-center gap-2.5 border-t py-2.5">
+        {controls.map((c, i) => (
+          <button
+            key={i}
+            className="theme-surface theme-body-text theme-surface-hover flex h-[46px] w-[46px] items-center justify-center rounded-full"
+          >
+            {c}
+          </button>
+        ))}
+        <button className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#e2493b] text-white hover:bg-[#ee5b4d]">
+          <HangUp />
+        </button>
+      </div>
+    </Panel>
+  );
+}
+</file>
+
+<file path="src/lib/supabase.ts">
+
+</file>
+
+<file path="src/pages/Assessment.tsx">
+function Assessment() {
+  return (
+    <div className="flex items-center justify-center h-screen bg-orange-100">
+      <h1 className="text-4xl font-bold text-blue-500">ur on assessment page</h1>
+    </div>
+
+  );
+}
+export default Assessment;
+</file>
+
+<file path="src/pages/Dashboard.tsx">
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
+
+function Dashboard() {
+  const navigate = useNavigate(); // ✅ hook called inside the component
+
+  const handleClick = () => {     // ✅ handler defined inside the component
+    navigate("/login");
+  };
+
+  return (
+    <div className="flex items-center justify-center h-screen bg-orange-100">
+      <h1 className="text-3xl font-bold text-blue-500">
+        Welcome to your Dashboard
+      </h1>
+      <Button onClick={handleClick}>Log out</Button>
+    </div>
+  );
+}
+
+export default Dashboard;
+</file>
+
+<file path="src/pages/Feedback.tsx">
+
+</file>
+
+<file path="src/pages/InterviewRoom.tsx">
+import { useState } from "react";
+import Editor from "@monaco-editor/react";
+
+const apiBaseUrl = import.meta.env.VITE_API_URL ?? "";
+
+type RunResult = {
+  stdout: string;
+  stderr: string;
+  exit_code: number;
+};
+
+export default function InterviewRoom() {
+  const [code, setCode] = useState<string>("# Write your solution here\n");
+  const [language, setLanguage] = useState<"python" | "java">("python");
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<RunResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const runCode = async () => {
+    setRunning(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch(`${apiBaseUrl}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language, code }),
+      });
+
+      if (!res.ok) {
+        setError(`Request failed with status ${res.status}.`);
+        return;
+      }
+
+      const data: RunResult = await res.json();
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Interview Room</h1>
+
+      <div className="mb-2 flex items-center justify-between">
+        <label className="flex items-center gap-2 text-sm text-gray-600">
+          Language:
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as "python" | "java")}
+            className="cursor-pointer rounded border border-gray-300 bg-white px-2 py-1 text-sm"
+          >
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+          </select>
+        </label>
+      </div>
+
+      <Editor
+        height="500px"
+        language={language}
+        value={code}
+        onChange={(value) => setCode(value ?? "")}
+        theme="vs-dark"
+      />
+
+      {/* Run button below the sandbox */}
+      <div className="mt-3 flex items-center justify-end gap-3">
+        <button
+          type="button"
+          onClick={runCode}
+          disabled={running}
+          className="cursor-pointer rounded bg-[#0070f3] px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {running ? "Running..." : "▶ Run"}
+        </button>
+      </div>
+
+      {/* Output section */}
+      <div className="mt-3 overflow-hidden rounded border border-gray-200">
+        <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-700 dark:bg-gray-800">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            Output
+          </h2>
+          {result && (
+            <span
+              className={`rounded px-2 py-0.5 text-xs font-medium ${
+                result.exit_code === 0
+                  ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+                  : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+              }`}
+            >
+              exit {result.exit_code}
+            </span>
+          )}
+        </div>
+
+        <div className="h-40 overflow-auto bg-black p-3 text-left font-mono text-sm">
+          {error ? (
+            <pre className="whitespace-pre-wrap text-red-400">{error}</pre>
+          ) : result && (result.stdout || result.stderr) ? (
+            <>
+              {result.stdout && (
+                <pre className="whitespace-pre-wrap text-green-300">
+                  {result.stdout}
+                </pre>
+              )}
+              {result.stderr && (
+                <pre className="whitespace-pre-wrap text-red-400">
+                  {result.stderr}
+                </pre>
+              )}
+            </>
+          ) : result ? (
+            <p className="text-gray-400">(no output)</p>
+          ) : running ? (
+            <p className="text-gray-400">Running your code...</p>
+          ) : (
+            <p className="text-gray-400">
+              Click “Run” to execute your code and see the output here.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/pages/Landing.tsx">
+import { Link } from "react-router-dom";
+
+function Landing() {
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-900 w-screen">
+      {/* Navigation Bar */}
+      <div className="absolute top-0 left-0 w-screen bg-gray-800 p-4 flex justify-end space-x-4">
+        <h1>Clario</h1>
+        <Link to="/login" className="text-white hover:text-blue-300">
+          Login
+        </Link>
+        <Link to="/signup" className="text-white hover:text-blue-300">
+          Signup
+        </Link>
+      </div>
+
+        {/* Main Content */}
+      <div className="text-center">
+        
+        <h1 className="text-4xl font-bold text-blue-500 mb-4">ur on the landing page</h1>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+export default Landing;
+</file>
+
+<file path="src/pages/Login.tsx">
+import React, { useState } from 'react';
+
+export default function Login() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Logging in with:', { email, password });
+    // Add your authentication for email & password here
+  };
+
+  const handleGoogleLogin = () => {
+    console.log('Google button clicked!'); // add your Google OAuth logic here
+  };
+
+  const handleGitHubLogin = () => {
+    console.log('GitHub button clicked!');  // add your GitHub OAuth logic here
+  };
+
+  return (
+    <div className="flex h-screen items-center justify-center bg-[#FFFAEB]">
+      <div className="rounded-2xl bg-white p-8 shadow-lg">
+        <form
+          onSubmit={handleLogin}
+          className="flex w-75 flex-col gap-3.75"
+        >
+          <h2 className="text-2xl font-bold text-red-500">Login</h2>
+          {/* Email Input */}
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-1.25 block"
+            >
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              className="box-border w-full p-2"
+            />
+          </div>
+
+          {/* Password Input */}
+          <div>
+            <label
+              htmlFor="password"
+              className="mb-1.25 block"
+            >
+              Password
+            </label>
+
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              className="box-border w-full p-2"
+            />
+          </div>
+
+          {/* submit button */}
+          <button
+            type="submit"
+            className="cursor-pointer border-none bg-[#0070f3] p-2.5 text-white"
+          >
+            Sign In
+          </button>
+
+          {/* Google OAuth */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="cursor-pointer rounded border border-gray-300 bg-white p-2.5 text-gray-800"
+          >
+            Continue with Google
+          </button>
+
+          {/* GitHub OAuth */}
+          <button
+            type="button"
+            onClick={handleGitHubLogin}
+            className="cursor-pointer rounded border border-gray-300 bg-white p-2.5 text-gray-800"
+          >
+            Continue with GitHub
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/pages/Mockinterview.tsx">
+
+</file>
+
+<file path="src/pages/Practice.tsx">
+
+</file>
+
+<file path="src/pages/Problemlib.tsx">
+
+</file>
+
+<file path="src/pages/Signup.tsx">
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+function Signup() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [dob, setDob] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Email + password sign up (form submit handler)
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // TODO: call your auth/signup logic here with { email, password, dob }
+      console.log("Sign up:", { email, password, dob });
+
+      navigate("/assessment");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    // TODO: start Google OAuth flow here
+    console.log("Google login clicked");
+  };
+
+  const handleGithubLogin = async () => {
+    setError(null);
+    // TODO: start GitHub OAuth flow here
+    console.log("GitHub login clicked");
+  };
+
+  const inputClass =
+    "w-3/4 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
+  const buttonClass =
+    "w-full bg-blue-500 text-white font-semibold rounded px-4 py-2 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed";
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-orange-100">
+      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-4xl font-bold text-blue-500 text-center mb-6">
+          Signup
+        </h1>
+
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={inputClass}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            className={inputClass}
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            className={inputClass}
+          />
+          <input
+            type="date"
+            aria-label="Date of Birth"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+            required
+            className={inputClass}
+          />
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          <button type="submit" disabled={loading} className={buttonClass}>
+            {loading ? "Signing up..." : "Sign Up"}
+          </button>
+        </form>
+
+        <div className="flex items-center my-4">
+          <div className="flex-grow border-t border-gray-300" />
+          <span className="px-3 text-sm text-gray-500">or</span>
+          <div className="flex-grow border-t border-gray-300" />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className={buttonClass}
+          >
+            Sign In with Google
+          </button>
+          <button
+            type="button"
+            onClick={handleGithubLogin}
+            className={buttonClass}
+          >
+            Sign In with GitHub
+          </button>
+        </div>
+
+        <p className="mt-6 text-center text-black">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 hover:underline">
+            Login here
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default Signup;
+</file>
+
+<file path="src/App.tsx">
+import { Routes, Route } from "react-router-dom";
+
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Assessment from "./pages/Assessment";
+import Dashboard from "./pages/Dashboard";
+import InterviewPage from "./components/InterviewPage";
+
+function App() {
+  return (
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/assessment" element={<Assessment />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/interview/:problemId" element={<InterviewPage />} />
+      </Routes>
+  );
+}
+
+export default App;
+</file>
+
+<file path="src/index.css">
+@import "tailwindcss";
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+.interview-page[data-theme="dark"] {
+  --page-bg: #0a1120;
+  --panel-bg: #0f1a2e;
+  --line: #17243b;
+  --text-main: #f4f7fc;
+  --text-body: #c3cde0;
+  --text-muted: #8a97ad;
+  --surface: #1a2842;
+  --surface-hover: #22345a;
+  --code-surface: #16233b;
+  --video-self: #0c1626;
+  --video-interviewer: #12233f;
+  --avatar-ring: #0c1a30;
+  --accent-text: #6fa4ee;
+  --wave-a: #1c3d73;
+  --wave-b: #2c5ba8;
+}
+
+.interview-page[data-theme="light"] {
+  --page-bg: #edf2f7;
+  --panel-bg: #ffffff;
+  --line: #d5dee9;
+  --text-main: #172333;
+  --text-body: #34445a;
+  --text-muted: #65758b;
+  --surface: #e8eef5;
+  --surface-hover: #d9e3ef;
+  --code-surface: #f2f5f9;
+  --video-self: #f4f7fa;
+  --video-interviewer: #e7eff8;
+  --avatar-ring: #d2deeb;
+  --accent-text: #245d9e;
+  --wave-a: #d8e5f4;
+  --wave-b: #c2d6ef;
+}
+
+.theme-panel { border-color: var(--line); background-color: var(--panel-bg); }
+.theme-border { border-color: var(--line); }
+.theme-main-text { color: var(--text-main); }
+.theme-body-text { color: var(--text-body); }
+.theme-muted-text { color: var(--text-muted); }
+.theme-surface { background-color: var(--surface); }
+.theme-surface-hover:hover { background-color: var(--surface-hover); }
+.theme-code-surface { background-color: var(--code-surface); }
+.theme-video-self { border-color: var(--line); background-color: var(--video-self); }
+.theme-video-interviewer { background-color: var(--video-interviewer); }
+.theme-avatar-ring { --tw-ring-color: var(--avatar-ring); }
+</file>
+
+<file path="src/main.tsx">
+// main.tsx
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./index.css";
+
+createRoot(document.getElementById("root")!).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+</file>
+
+<file path="src/types.ts">
+export type Problem = {
+  slug: string;
+  leetcode_id: number;
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  topics: string[];
+  description_html: string;
+  example_testcases: string;
+  starter_code: { python3: string; java: string };
+};
+
+export const fakeProblem: Problem = {
+  slug: "two-sum",
+  leetcode_id: 1,
+  title: "Two Sum",
+  difficulty: "Easy",
+  topics: ["Array", "Hash Table"],
+  description_html: `
+    <p>Given an integer array <code>nums</code> and an integer <code>target</code>, find the positions of two different elements whose values add up to <code>target</code>.</p>
+    <p>Return the two indices in either order. Each input is designed to have exactly one valid pair, and you may not use the same array element twice.</p>
+    <p><strong>Example 1</strong></p>
+    <pre>Input: nums = [2, 7, 11, 15], target = 9
+Output: [0, 1]
+Explanation: nums[0] + nums[1] equals 9.</pre>
+    <p><strong>Example 2</strong></p>
+    <pre>Input: nums = [3, 2, 4], target = 6
+Output: [1, 2]</pre>
+    <p><strong>Example 3</strong></p>
+    <pre>Input: nums = [3, 3], target = 6
+Output: [0, 1]</pre>
+    <p><strong>Constraints</strong></p>
+    <ul>
+      <li><code>2 &lt;= nums.length &lt;= 10,000</code></li>
+      <li><code>-1,000,000,000 &lt;= nums[i] &lt;= 1,000,000,000</code></li>
+      <li><code>-1,000,000,000 &lt;= target &lt;= 1,000,000,000</code></li>
+      <li>Exactly one pair of distinct indices produces the target.</li>
+    </ul>`,
+  example_testcases: "[2,7,11,15]\n9",
+  starter_code: {
+    python3: "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        ",
+    java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        \n    }\n}",
+  },
+};
+export type Language = keyof Problem["starter_code"];
+</file>
+
+<file path=".env.example">
+# Leave empty during local development to use the Vite proxy.
+# Set this to the deployed FastAPI origin in production.
+VITE_API_URL=
+</file>
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+</file>
+
+<file path="eslint.config.js">
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+    },
+  },
+])
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-app</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="package.json">
+{
+  "name": "my-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "@supabase/supabase-js": "^2.117.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.69.0",
+    "vite": "^8.3.0"
+  }
+}
+</file>
+
+<file path="README.md">
+# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
+```
+
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
+```
+</file>
+
+<file path="tsconfig.app.json">
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+</file>
+
+<file path="tsconfig.node.json">
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "module": "nodenext",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+</file>
+
+<file path="vite.config.ts">
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  server: {
+    proxy: {
+      // Forward code-execution requests to the FastAPI backend (Piston wrapper)
+      '/run': 'http://localhost:8000',
+    },
+  },
+})
+</file>
+
+</files>
