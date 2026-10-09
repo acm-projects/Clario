@@ -25,15 +25,30 @@ class SnapshotCreate(BaseModel):
     code: str
 
 
-EventType = Literal["step_change", "checklist_toggle", "nudge_shown", "nudge_response", "hint_shown"]
-VALID_STEPS = {"understand", "match", "plan", "implement", "review", "evaluate"}
-STEP_EVENTS = {"step_change", "checklist_toggle", "nudge_shown", "hint_shown"}
-VALID_CHOICES = {"back_to_planning", "skip_to_code"}
+EventType = Literal["step_completed", "step_skipped", "nudge_shown", "hint_shown"]
+VALID_STEPS = ["understand", "match", "plan", "implement", "review", "evaluate"]
+VALID_SOURCES = ("ai", "manual")
 
 
 class EventCreate(BaseModel):
     type: EventType
     data: dict = Field(default_factory=dict)
+
+
+def build_steps(events: list[dict]) -> dict:
+    """Start every step as 'todo', then replay events oldest first.
+    step_skipped marks a step 'skipped'; step_completed marks it 'done'
+    (so a skipped step the user goes back to becomes 'done')."""
+    steps = {step: "todo" for step in VALID_STEPS}
+    for e in events:
+        step = (e["metadata"] or {}).get("step")
+        if step not in steps:
+            continue
+        if e["event_type"] == "step_skipped":
+            steps[step] = "skipped"
+        elif e["event_type"] == "step_completed":
+            steps[step] = "done"
+    return steps
 
 
 def event_out(row: dict) -> dict:
@@ -119,25 +134,21 @@ def get_session(session_id: str, user: dict = Depends(get_current_user)):
     )
     latest_code = latest_snapshot[0]["code"] if latest_snapshot else None
 
-    latest_step_event = (
+    events = (
         supabase.table("session_events")
-        .select("metadata")
+        .select("event_type, metadata")
         .eq("session_id", session_id)
-        .eq("event_type", "step_change")
-        .order("created_at", desc=True)
-        .limit(1)
+        .order("created_at")
         .execute()
         .data
     )
-    current_step = "understand"
-    if latest_step_event:
-        current_step = (latest_step_event[0]["metadata"] or {}).get("step", "understand")
+    steps = build_steps(events)
 
     return {
         **session,
         "problem": problem,
         "latest_code": latest_code,
-        "current_step": current_step,
+        "steps": steps,
     }
 
 
@@ -185,11 +196,11 @@ def create_event(session_id: str, body: EventCreate, user: dict = Depends(get_cu
     if session["status"] == "completed":
         raise HTTPException(status_code=400, detail="Session already completed")
 
-    if body.type in STEP_EVENTS and body.data.get("step") not in VALID_STEPS:
+    if body.data.get("step") not in VALID_STEPS:
         raise HTTPException(status_code=400, detail="Invalid step")
 
-    if body.type == "nudge_response" and body.data.get("choice") not in VALID_CHOICES:
-        raise HTTPException(status_code=400, detail="Invalid choice")
+    if body.type == "step_completed" and body.data.get("source") not in VALID_SOURCES:
+        raise HTTPException(status_code=400, detail="Invalid source")
 
     row = (
         supabase.table("session_events")
