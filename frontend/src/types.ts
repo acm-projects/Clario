@@ -9,6 +9,12 @@ export type Problem = {
   starter_code: { python3: string; java: string };
 };
 
+export type RunResult = {
+  stdout: string;
+  stderr: string;
+  exit_code: number;
+};
+
 export const fakeProblem: Problem = {
   slug: "two-sum",
   leetcode_id: 1,

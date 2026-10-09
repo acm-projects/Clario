@@ -1,0 +1,65 @@
+.interview-room[data-theme="dark"] {
+  --page-bg: #0a1120;
+  --panel-bg: #0f1a2e;
+  --line: #17243b;
+  --text-main: #f4f7fc;
+  --text-body: #c3cde0;
+  --text-muted: #8a97ad;
+  --surface: #1a2842;
+  --surface-hover: #22345a;
+  --code-surface: #16233b;
+  --video-self: #0c1626;
+  --video-interviewer: #12233f;
+  --avatar-ring: #0c1a30;
+  --success: #5fd39a;
+  --accent-text: #6fa4ee;
+  --wave-a: #1c3d73;
+  --wave-b: #2c5ba8;
+}
+
+.interview-room[data-theme="light"] {
+  --page-bg: #edf2f7;
+  --panel-bg: #ffffff;
+  --line: #d5dee9;
+  --text-main: #172333;
+  --text-body: #34445a;
+  --text-muted: #65758b;
+  --surface: #e8eef5;
+  --surface-hover: #d9e3ef;
+  --code-surface: #f2f5f9;
+  --video-self: #f4f7fa;
+  --video-interviewer: #e7eff8;
+  --avatar-ring: #d2deeb;
+  --success: #187344;
+  --accent-text: #245d9e;
+  --wave-a: #d8e5f4;
+  --wave-b: #c2d6ef;
+}
+
+.interview-room .problem-title {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 0;
+}
+
+.interview-room .problem-description {
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.interview-room .problem-description p { margin: 0 0 0.75rem; }
+.interview-room .problem-description code { padding: 2px 5px; font-size: 12px; }
+
+.interview-room .theme-panel { border-color: var(--line); background-color: var(--panel-bg); }
+.interview-room .theme-border { border-color: var(--line); }
+.interview-room .theme-main-text { color: var(--text-main); }
+.interview-room .theme-body-text { color: var(--text-body); }
+.interview-room .theme-muted-text { color: var(--text-muted); }
+.interview-room .theme-surface { background-color: var(--surface); }
+.interview-room .theme-surface-hover:hover { background-color: var(--surface-hover); }
+.interview-room .theme-code-surface { background-color: var(--code-surface); }
+.interview-room .theme-video-self { border-color: var(--line); background-color: var(--video-self); }
+.interview-room .theme-video-interviewer { background-color: var(--video-interviewer); }
+.interview-room .theme-avatar-ring { --tw-ring-color: var(--avatar-ring); }

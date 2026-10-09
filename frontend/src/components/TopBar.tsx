@@ -4,11 +4,12 @@ interface TopBarProps {
   timer: string;
   theme: "dark" | "light";
   onThemeChange: (theme: "dark" | "light") => void;
+  isRunning: boolean;
   onRun: () => void;
   onSubmit: () => void;
 }
 
-export function TopBar({ timer, theme, onThemeChange, onRun, onSubmit }: TopBarProps) {
+export function TopBar({ timer, theme, onThemeChange, isRunning, onRun, onSubmit }: TopBarProps) {
   return (
     <header className="theme-border relative flex h-[46px] shrink-0 items-center justify-between border-b px-5">
       <div className="flex items-center gap-5">
@@ -46,10 +47,11 @@ export function TopBar({ timer, theme, onThemeChange, onRun, onSubmit }: TopBarP
       <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
         <button
           onClick={onRun}
-          className="theme-surface theme-body-text theme-surface-hover flex h-[34px] items-center gap-2 rounded-lg px-5 text-sm font-medium"
+          disabled={isRunning}
+          className="theme-surface theme-body-text theme-surface-hover flex h-[34px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-wait disabled:opacity-60"
         >
-          <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
-          Run
+          {!isRunning && <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>}
+          {isRunning ? "Running..." : "Run"}
         </button>
         <button
           onClick={onSubmit}

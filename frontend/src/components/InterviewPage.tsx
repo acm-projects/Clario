@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
 import { TestResultPanel } from "./TestResultPanel";
 import { CodePanel } from "./CodePanel";
 import { VideoCallPanel } from "./VideoCallPanel";
+import "./interview.css";
 import { session } from "./data";
-import { fakeProblem, type Problem } from "../types";
+import { fakeProblem, type Language, type Problem, type RunResult } from "../types";
+
+async function fakeRun(language: string, code: string): Promise<RunResult> {
+  void language;
+  await new Promise((resolve) => window.setTimeout(resolve, 800));
+  if (code.includes("error")) {
+    return { stdout: "", stderr: "Error: something went wrong", exit_code: 1 };
+  }
+  return { stdout: "hi\n", stderr: "", exit_code: 0 };
+}
 
 const difficultyStyle = {
   dark: {
@@ -36,10 +46,17 @@ function Wave() {
 }
 
 export default function InterviewPage() {
+  const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
+  const [language, setLanguage] = useState<Language>("java");
+  const [code, setCode] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [runResult, setRunResult] = useState<RunResult | null>(null);
+  const [resultMessage, setResultMessage] = useState("You must run your code first");
+  const [resultTab, setResultTab] = useState<"result" | "testcase">("result");
   const [theme, setTheme] = useState<"dark" | "light">(() =>
     window.localStorage.getItem("clario-theme") === "light" ? "light" : "dark",
   );
@@ -54,6 +71,8 @@ export default function InterviewPage() {
     async function loadProblem() {
       setProblem(null);
       setLoadState("loading");
+      setRunResult(null);
+      setResultMessage("You must run your code first");
 
       if (!problemId) {
         setLoadState("not-found");
@@ -76,11 +95,15 @@ export default function InterviewPage() {
 
         const fetchedProblem = (await response.json()) as Problem;
         setProblem(fetchedProblem);
+        setLanguage("java");
+        setCode(fetchedProblem.starter_code.java ?? "");
         setLoadState("ready");
       } catch {
         if (!controller.signal.aborted) {
           if (problemId === fakeProblem.slug) {
             setProblem(fakeProblem);
+            setLanguage("java");
+            setCode(fakeProblem.starter_code.java);
             setLoadState("ready");
           } else {
             setLoadState("server-error");
@@ -112,16 +135,53 @@ export default function InterviewPage() {
     );
   }
 
-  return (
-    <div data-theme={theme} className="interview-page relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--text-main)]">
-      <TopBar timer={session.timer} theme={theme} onThemeChange={setTheme} onRun={() => {}} onSubmit={() => {}} />
+  async function handleRun() {
+    setResultTab("result");
+    setIsRunning(true);
+    setRunResult(null);
+    setResultMessage("Running...");
+    try {
+      setRunResult(await fakeRun(language, code));
+    } finally {
+      setIsRunning(false);
+    }
+  }
 
-      <main className="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)_300px] gap-3 pb-12 pt-3">
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3">
+  function handleSubmit() {
+    setResultTab("result");
+    setRunResult(null);
+    setResultMessage("Submissions coming soon");
+  }
+
+  function handleEndInterview() {
+    navigate("/report");
+  }
+
+  return (
+    <div data-theme={theme} className="interview-room relative flex h-screen w-screen max-w-none self-center flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--text-main)]">
+      <TopBar timer={session.timer} theme={theme} onThemeChange={setTheme} isRunning={isRunning} onRun={handleRun} onSubmit={handleSubmit} />
+
+      <main className="relative z-10 grid min-h-0 flex-1 grid-cols-[320px_minmax(0,1fr)_300px] gap-3 px-4 pb-3 pt-3">
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_210px] gap-3">
           <ProblemPanel problem={problem} solved={session.solved} />
-          <TestResultPanel testcases={problem.example_testcases} />
+          <TestResultPanel
+            testcases={problem.example_testcases}
+            message={resultMessage}
+            isRunning={isRunning}
+            result={runResult}
+            activeTab={resultTab}
+            onTabChange={setResultTab}
+          />
         </div>
-        <CodePanel starterCode={problem.starter_code} theme={theme} />
+        <CodePanel
+          key={problem.slug}
+          starterCode={problem.starter_code}
+          theme={theme}
+          onChange={(nextLanguage, nextCode) => {
+            setLanguage(nextLanguage);
+            setCode(nextCode);
+          }}
+        />
         <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-2">
           <div className="relative flex flex-wrap items-center justify-end gap-2 px-1">
             <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
@@ -158,7 +218,7 @@ export default function InterviewPage() {
               </div>
             )}
           </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} />
+          <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
         </div>
       </main>
 
