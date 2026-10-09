@@ -3,3 +3,7 @@ node_modules/
 .env.local
 dist/
 .env __pycache__/
+
+.env
+.env.*
+!.env.example
