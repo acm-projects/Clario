@@ -8,6 +8,22 @@ app = FastAPI()
 
 app.include_router(piston_router)
 app.include_router(voice_router)
+from fastapi.middleware.cors import CORSMiddleware
+
+from auth import get_current_user
+from routers.problems import router as problems_router
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(problems_router)
 
 @app.get("/")
 async def root():

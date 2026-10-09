@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
 import { TestResultPanel } from "./TestResultPanel";
@@ -37,6 +37,7 @@ function Wave() {
 }
 
 export default function InterviewPage() {
+  const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
@@ -60,6 +61,8 @@ export default function InterviewPage() {
     async function loadProblem() {
       setProblem(null);
       setLoadState("loading");
+      setRunResult(null);
+      setResultMessage("You must run your code first");
 
       if (!problemId) {
         setLoadState("not-found");
@@ -198,7 +201,7 @@ export default function InterviewPage() {
               </div>
             )}
           </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} />
+          <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
         </div>
       </main>
 

@@ -6,7 +6,7 @@ const TABS = ["Description", "Editorial", "Solutions", "Submissions"];
 
 // Styles the raw description_html (p, code, em, strong, pre) without a typography plugin.
 const htmlStyles = [
-  "text-[var(--text-body)] text-sm leading-[1.65]",
+  "problem-description theme-body-text",
   "[&_p]:mb-3 [&_strong]:font-semibold [&_strong]:text-[var(--text-main)] [&_em]:italic",
   "[&_code]:rounded [&_code]:bg-[var(--surface)] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[13px]",
   "[&_.example-title]:mt-5 [&_.example-title_strong]:text-sm",
@@ -17,7 +17,7 @@ const htmlStyles = [
 export function ProblemPanel({ problem, solved }: { problem: Problem; solved: boolean }) {
   return (
     <Panel>
-      <nav className="theme-border flex shrink-0 items-center gap-5 border-b px-4 py-3 text-sm">
+      <nav className="theme-border flex shrink-0 items-center gap-2 border-b px-3 py-3 text-xs">
         {TABS.map((tab, i) => (
           <button
             key={tab}
@@ -30,14 +30,14 @@ export function ProblemPanel({ problem, solved }: { problem: Problem; solved: bo
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
         <div className="flex items-center justify-between">
-          <h1 className="theme-main-text text-[2rem] font-extrabold leading-tight">
+          <h1 className="problem-title theme-main-text text-2xl font-extrabold leading-tight">
             {problem.leetcode_id}. {problem.title}
           </h1>
           {solved && <span className="text-[var(--success)] text-xs font-medium">Solved</span>}
         </div>
 
         <div
-          className={`mt-4 ${htmlStyles}`}
+          className={`problem-description mt-4 ${htmlStyles}`}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(problem.description_html),
           }}

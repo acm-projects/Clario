@@ -14,18 +14,19 @@ JWKS_URL = f"{SUPABASE_URL}/auth/v1/.well-known/jwks.json"
 # Update this if your project's JWT Signing Keys tab shows a different algorithm
 ALGORITHMS = ["ES256"]
 
-bearer_scheme = HTTPBearer()
+bearer_scheme = HTTPBearer(auto_error=False)
 jwk_client = PyJWKClient(JWKS_URL)
 
 
 async def get_current_user(
     creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> dict:
-    """
-    Verifies a Supabase-issued JWT and returns its payload
-    (contains 'sub' = user id, 'email', 'role', etc).
-    Raises 401 if the token is missing, expired, or invalid.
-    """
+    if os.getenv("DEV_BYPASS_AUTH") == "true":
+        return {"sub": os.getenv("DEV_USER_ID"), "email": os.getenv("DEV_USER_EMAIL")}
+
+    if creds is None:
+        raise HTTPException(status_code=401, detail="Missing token")
+
     token = creds.credentials
 
     try:
