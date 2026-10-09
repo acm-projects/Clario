@@ -92,7 +92,7 @@ export function CodePanel({ starterCode, theme, initialLanguage = "java", onChan
           onChange={(e) => {
             const nextLanguage = e.target.value as Language;
             setLang(nextLanguage);
-            onChange?.(nextLanguage, codes[nextLanguage] ?? "");
+            onChange?.(nextLanguage, codes[nextLanguage]);
           }}
           aria-label="Language"
           className="theme-surface theme-body-text cursor-pointer appearance-none rounded-full px-3 py-1 text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#2f6fd0]"
@@ -110,7 +110,7 @@ export function CodePanel({ starterCode, theme, initialLanguage = "java", onChan
           height="100%"
           path={`solution.${lang}`}
           language={current.monaco}
-          value={codes[lang] ?? ""}
+          value={codes[lang]}
           theme={`clario-${theme}`}
           beforeMount={defineTheme}
           onMount={handleMount}

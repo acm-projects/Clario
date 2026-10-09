@@ -5,18 +5,9 @@ import { ProblemPanel } from "./ProblemPanel";
 import { TestResultPanel } from "./TestResultPanel";
 import { CodePanel } from "./CodePanel";
 import { VideoCallPanel } from "./VideoCallPanel";
-import "./interview.css";
 import { session } from "./data";
-import { fakeProblem, type Language, type Problem, type RunResult } from "../types";
-
-async function fakeRun(language: string, code: string): Promise<RunResult> {
-  void language;
-  await new Promise((resolve) => window.setTimeout(resolve, 800));
-  if (code.includes("error")) {
-    return { stdout: "", stderr: "Error: something went wrong", exit_code: 1 };
-  }
-  return { stdout: "hi\n", stderr: "", exit_code: 0 };
-}
+import { fakeProblem, type Problem, type TestsResponse } from "../types";
+import { ApiError, getProblem, runTests } from "../lib/api";
 
 const difficultyStyle = {
   dark: {
@@ -51,12 +42,11 @@ export default function InterviewPage() {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
-  const [language, setLanguage] = useState<Language>("java");
+  const [language, setLanguage] = useState<"python3" | "java">("python3");
   const [code, setCode] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
-  const [runResult, setRunResult] = useState<RunResult | null>(null);
-  const [resultMessage, setResultMessage] = useState("You must run your code first");
-  const [resultTab, setResultTab] = useState<"result" | "testcase">("result");
+  const [runResult, setRunResult] = useState<TestsResponse | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
+  const [running, setRunning] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() =>
     window.localStorage.getItem("clario-theme") === "light" ? "light" : "dark",
   );
@@ -80,41 +70,52 @@ export default function InterviewPage() {
       }
 
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/problems/${encodeURIComponent(problemId)}`,
-          { signal: controller.signal },
-        );
-
-        if (response.status === 404) {
-          setLoadState("not-found");
+        setProblem(await getProblem(problemId, controller.signal));
+        setLoadState("ready");
+      } catch (error) {
+        if (controller.signal.aborted) {
           return;
         }
-        if (!response.ok) {
-          throw new Error(`Problem request failed: ${response.status}`);
+
+        // GET /api/problems/{slug} is still being built by Prapti
+        // back to the bundled sample problem while that endpoint is missing.
+        if (problemId === fakeProblem.slug) {
+          setProblem(fakeProblem);
+          setLoadState("ready");
+          return;
         }
 
-        const fetchedProblem = (await response.json()) as Problem;
-        setProblem(fetchedProblem);
-        setLanguage("java");
-        setCode(fetchedProblem.starter_code.java ?? "");
-        setLoadState("ready");
-      } catch {
-        if (!controller.signal.aborted) {
-          if (problemId === fakeProblem.slug) {
-            setProblem(fakeProblem);
-            setLanguage("java");
-            setCode(fakeProblem.starter_code.java);
-            setLoadState("ready");
-          } else {
-            setLoadState("server-error");
-          }
-        }
+        setLoadState(
+          error instanceof ApiError && error.status === 404 ? "not-found" : "server-error",
+        );
       }
     }
 
     void loadProblem();
     return () => controller.abort();
   }, [problemId]);
+
+  const runCode = async () => {
+    if (!problem) {
+      setRunError("Problem data is not available.");
+      return;
+    }
+
+    setRunning(true);
+    setRunError(null);
+    setRunResult(null);
+
+    try {
+      const sourceCode = code || problem.starter_code[language];
+      setRunResult(
+        await runTests({ slug: problem.slug, language, code: sourceCode }),
+      );
+    } catch (error) {
+      setRunError(error instanceof Error ? error.message : "Unable to run code.");
+    } finally {
+      setRunning(false);
+    }
+  };
 
   if (loadState !== "ready" || !problem) {
     const message = {
@@ -135,48 +136,30 @@ export default function InterviewPage() {
     );
   }
 
-  async function handleRun() {
-    setResultTab("result");
-    setIsRunning(true);
-    setRunResult(null);
-    setResultMessage("Running...");
-    try {
-      setRunResult(await fakeRun(language, code));
-    } finally {
-      setIsRunning(false);
-    }
-  }
-
-  function handleSubmit() {
-    setResultTab("result");
-    setRunResult(null);
-    setResultMessage("Submissions coming soon");
-  }
-
-  function handleEndInterview() {
-    navigate("/report");
-  }
-
   return (
-    <div data-theme={theme} className="interview-room relative flex h-screen w-screen max-w-none self-center flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--text-main)]">
-      <TopBar timer={session.timer} theme={theme} onThemeChange={setTheme} isRunning={isRunning} onRun={handleRun} onSubmit={handleSubmit} />
+    <div data-theme={theme} className="interview-page relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--text-main)]">
+      <TopBar
+        timer={session.timer}
+        theme={theme}
+        onThemeChange={setTheme}
+        onRun={runCode}
+        onSubmit={() => {}}
+        running={running}
+      />
 
-      <main className="relative z-10 grid min-h-0 flex-1 grid-cols-[320px_minmax(0,1fr)_300px] gap-3 px-4 pb-3 pt-3">
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_210px] gap-3">
+      <main className="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)_300px] gap-3 pb-12 pt-3">
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3">
           <ProblemPanel problem={problem} solved={session.solved} />
           <TestResultPanel
             testcases={problem.example_testcases}
-            message={resultMessage}
-            isRunning={isRunning}
             result={runResult}
-            activeTab={resultTab}
-            onTabChange={setResultTab}
+            error={runError}
           />
         </div>
         <CodePanel
-          key={problem.slug}
           starterCode={problem.starter_code}
           theme={theme}
+          initialLanguage={language}
           onChange={(nextLanguage, nextCode) => {
             setLanguage(nextLanguage);
             setCode(nextCode);

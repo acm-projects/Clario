@@ -9,12 +9,6 @@ export type Problem = {
   starter_code: { python3: string; java: string };
 };
 
-export type RunResult = {
-  stdout: string;
-  stderr: string;
-  exit_code: number;
-};
-
 export const fakeProblem: Problem = {
   slug: "two-sum",
   leetcode_id: 1,
@@ -48,3 +42,35 @@ Output: [0, 1]</pre>
   },
 };
 export type Language = keyof Problem["starter_code"];
+
+// ---------------------------------------------------------------------------
+// Code execution: POST /run/tests contract (backend/piston/router.py)
+// ---------------------------------------------------------------------------
+
+/** Possible verdicts returned by the test runner. */
+export type RunStatus =
+  | "Accepted"
+  | "Wrong Answer"
+  | "Runtime Error"
+  | "Time Limit Exceeded"
+  | "Compile Error"
+  | "Unsupported";
+
+/** One test case result. `output` is null when the case errored out. */
+export type TestCaseResult = {
+  case: number;
+  input: string;
+  expected: string;
+  output: string | null;
+  passed: boolean;
+};
+
+/** Response body of POST /run/tests. */
+export type TestsResponse = {
+  status: RunStatus;
+  passed: number;
+  total: number;
+  cases: TestCaseResult[];
+  stdout: string;
+  error: string | null;
+};
