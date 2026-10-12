@@ -1,15 +1,25 @@
 import { Pill } from "./Panel";
+import { UmpireTracker } from "./interview/UmpireTracker";
 
 interface TopBarProps {
   timer: string;
   theme: "dark" | "light";
+  showUmpireTracker?: boolean;
   onThemeChange: (theme: "dark" | "light") => void;
   onRun: () => void;
   onSubmit: () => void;
   running?: boolean;
 }
 
-export function TopBar({ timer, theme, onThemeChange, onRun, onSubmit, running = false }: TopBarProps) {
+export function TopBar({
+  timer,
+  theme,
+  showUmpireTracker = false,
+  onThemeChange,
+  onRun,
+  onSubmit,
+  running = false,
+}: TopBarProps) {
   return (
     <header className="theme-border relative flex h-[46px] shrink-0 items-center justify-between border-b px-5">
       <div className="flex items-center gap-5">
@@ -62,6 +72,7 @@ export function TopBar({ timer, theme, onThemeChange, onRun, onSubmit, running =
       </div>
 
       <div className="flex items-center gap-4">
+        {showUmpireTracker && <UmpireTracker />}
         <Pill className="theme-surface theme-body-text flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
           Session live

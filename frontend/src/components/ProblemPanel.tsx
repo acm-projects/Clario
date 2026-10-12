@@ -30,7 +30,7 @@ export function ProblemPanel({ problem, solved }: { problem: Problem; solved: bo
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
         <div className="flex items-center justify-between">
-          <h1 className="problem-title theme-main-text text-2xl font-extrabold leading-tight">
+          <h1 className="problem-title theme-main-text text-lg font-extrabold leading-tight">
             {problem.leetcode_id}. {problem.title}
           </h1>
           {solved && <span className="text-[var(--success)] text-xs font-medium">Solved</span>}

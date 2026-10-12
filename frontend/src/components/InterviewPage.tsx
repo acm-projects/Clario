@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
 import { TestResultPanel } from "./TestResultPanel";
 import { CodePanel } from "./CodePanel";
 import { VideoCallPanel } from "./VideoCallPanel";
+import { ResizableSplit } from "./ResizableSplit";
 import { session } from "./data";
 import { fakeProblem, type Problem, type TestsResponse } from "../types";
 import { ApiError, getProblem, runTests } from "../lib/api";
@@ -39,6 +40,7 @@ function Wave() {
 export default function InterviewPage() {
   const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
+  const [searchParams] = useSearchParams();
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
@@ -62,7 +64,7 @@ export default function InterviewPage() {
       setProblem(null);
       setLoadState("loading");
       setRunResult(null);
-      setResultMessage("You must run your code first");
+      setRunError(null);
 
       if (!problemId) {
         setLoadState("not-found");
@@ -94,6 +96,8 @@ export default function InterviewPage() {
     void loadProblem();
     return () => controller.abort();
   }, [problemId]);
+
+  const handleEndInterview = () => navigate("/dashboard");
 
   const runCode = async () => {
     if (!problem) {
@@ -141,68 +145,95 @@ export default function InterviewPage() {
       <TopBar
         timer={session.timer}
         theme={theme}
+        showUmpireTracker={searchParams.get("mode") === "practice"}
         onThemeChange={setTheme}
         onRun={runCode}
         onSubmit={() => {}}
         running={running}
       />
 
-      <main className="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)_300px] gap-3 pb-12 pt-3">
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_165px] gap-3">
-          <ProblemPanel problem={problem} solved={session.solved} />
-          <TestResultPanel
-            testcases={problem.example_testcases}
-            result={runResult}
-            error={runError}
-          />
-        </div>
-        <CodePanel
-          starterCode={problem.starter_code}
-          theme={theme}
-          initialLanguage={language}
-          onChange={(nextLanguage, nextCode) => {
-            setLanguage(nextLanguage);
-            setCode(nextCode);
-          }}
+      <main className="min-h-0 flex-1 pb-12 pt-3">
+        <ResizableSplit
+          direction="horizontal"
+          storageKey="clario-interview-problem-width"
+          initialSize={30}
+          label="Resize problem panel"
+          first={
+            <ResizableSplit
+              direction="vertical"
+              storageKey="clario-interview-problem-height"
+              initialSize={75}
+              label="Resize problem and test results"
+              first={<ProblemPanel problem={problem} solved={session.solved} />}
+              second={
+                <TestResultPanel
+                  testcases={problem.example_testcases}
+                  result={runResult}
+                  error={runError}
+                />
+              }
+            />
+          }
+          second={
+            <ResizableSplit
+              direction="horizontal"
+              storageKey="clario-interview-code-width"
+              initialSize={72}
+              label="Resize code and interview panel"
+              first={
+                <CodePanel
+                  starterCode={problem.starter_code}
+                  theme={theme}
+                  initialLanguage={language}
+                  onChange={(nextLanguage, nextCode) => {
+                    setLanguage(nextLanguage);
+                    setCode(nextCode);
+                  }}
+                />
+              }
+              second={
+                <div className="grid min-h-0 min-w-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-2">
+                  <div className="relative flex flex-wrap items-center justify-end gap-2 px-1">
+                    <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
+                      {problem.difficulty}
+                    </span>
+                    <button
+                      onClick={() => setOpenInfo((current) => current === "topics" ? null : "topics")}
+                      aria-expanded={openInfo === "topics"}
+                      aria-controls="problem-topics"
+                      className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
+                    >
+                      Topics
+                    </button>
+                    <button
+                      onClick={() => setOpenInfo((current) => current === "hint" ? null : "hint")}
+                      aria-expanded={openInfo === "hint"}
+                      aria-controls="problem-hint"
+                      className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
+                    >
+                      Hint
+                    </button>
+                    {openInfo === "topics" && (
+                      <div id="problem-topics" className="theme-panel absolute right-0 top-full z-10 mt-2 flex max-w-full flex-wrap justify-end gap-2 rounded-lg border p-2 shadow-xl">
+                        {problem.topics.map((topic) => (
+                          <span key={topic} className="theme-border rounded-full border px-2.5 py-0.5 text-xs text-[var(--accent-text)]">
+                            {topic}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {openInfo === "hint" && (
+                      <div id="problem-hint" role="status" className="theme-panel theme-body-text absolute right-0 top-full z-10 mt-2 rounded-lg border px-3 py-2 text-xs shadow-xl">
+                        Hints coming soon.
+                      </div>
+                    )}
+                  </div>
+                  <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
+                </div>
+              }
+            />
+          }
         />
-        <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-2">
-          <div className="relative flex flex-wrap items-center justify-end gap-2 px-1">
-            <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
-              {problem.difficulty}
-            </span>
-            <button
-              onClick={() => setOpenInfo((current) => current === "topics" ? null : "topics")}
-              aria-expanded={openInfo === "topics"}
-              aria-controls="problem-topics"
-              className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
-            >
-              Topics
-            </button>
-            <button
-              onClick={() => setOpenInfo((current) => current === "hint" ? null : "hint")}
-              aria-expanded={openInfo === "hint"}
-              aria-controls="problem-hint"
-              className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
-            >
-              Hint
-            </button>
-            {openInfo === "topics" && (
-              <div id="problem-topics" className="theme-panel absolute right-0 top-full z-10 mt-2 flex max-w-full flex-wrap justify-end gap-2 rounded-lg border p-2 shadow-xl">
-                {problem.topics.map((topic) => (
-                  <span key={topic} className="theme-border rounded-full border px-2.5 py-0.5 text-xs text-[var(--accent-text)]">
-                    {topic}
-                  </span>
-                ))}
-              </div>
-            )}
-            {openInfo === "hint" && (
-              <div id="problem-hint" role="status" className="theme-panel theme-body-text absolute right-0 top-full z-10 mt-2 rounded-lg border px-3 py-2 text-xs shadow-xl">
-                Hints coming soon.
-              </div>
-            )}
-          </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
-        </div>
       </main>
 
       <Wave />
