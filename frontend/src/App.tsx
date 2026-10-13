@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Assessment from "./pages/Assessment";
 import InterviewSelection from "./pages/InterviewSelection";
+import InterviewRoom from "./pages/InterviewRoom";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import ProblemLibrary from "./pages/ProblemLibrary";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/assessment" element={<Assessment />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/interview" element={<InterviewSelection />} />
+        <Route path="/interview/:problemId" element={<InterviewRoom />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Settings />} />      </Route>
     </Routes>

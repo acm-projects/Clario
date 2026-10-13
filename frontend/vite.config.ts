@@ -8,6 +8,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, fileURLToPath(new URL('../backend', import.meta.url)), '')
   const bypass = command === 'serve' && env.DEV_BYPASS_AUTH === 'true'
   return {
+    server: { proxy: { '/run': 'http://localhost:8000', '/api': 'http://localhost:8000' } },
     define: {
       'import.meta.env.VITE_DEV_BYPASS_AUTH': JSON.stringify(String(bypass)),
       'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.API_BASE_URL || 'http://localhost:8000'),
