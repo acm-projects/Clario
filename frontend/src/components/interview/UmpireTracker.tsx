@@ -18,9 +18,9 @@ const steps = [
 
 const stateStyles = {
   done: "bg-[#2f6fd0] text-white",
-  current: "bg-[#4a8cf0] text-white ring-2 ring-[#9bc1ff] ring-offset-1 ring-offset-[var(--page-bg)]",
-  skipped: "bg-orange-500 text-white",
-  todo: "bg-gray-500 text-white",
+  current: "bg-[#bfdbfe] text-[#1e3a8a] ring-2 ring-[#60a5fa] ring-offset-1 ring-offset-[var(--page-bg)]",
+  skipped: "bg-gray-500 text-white",
+  todo: "bg-transparent text-[var(--text-muted)] border border-[var(--line)]",
 } as const;
 
 export function UmpireTracker() {

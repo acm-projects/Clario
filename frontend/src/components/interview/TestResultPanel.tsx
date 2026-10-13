@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Panel } from "./Panel";
-import type { TestsResponse } from "../types";
+import type { TestsResponse } from "../../types";
 
 interface TestResultPanelProps {
   testcases: string; // Problem.example_testcases

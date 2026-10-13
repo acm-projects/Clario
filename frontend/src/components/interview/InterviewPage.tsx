@@ -7,8 +7,8 @@ import { CodePanel } from "./CodePanel";
 import { VideoCallPanel } from "./VideoCallPanel";
 import { ResizableSplit } from "./ResizableSplit";
 import { session } from "./data";
-import { fakeProblem, type Problem, type TestsResponse } from "../types";
-import { ApiError, getProblem, runTests } from "../lib/api";
+import { fakeProblem, type Problem, type TestsResponse } from "../../types";
+import { ApiError, getProblem, runTests } from "../../lib/api";
 
 const difficultyStyle = {
   dark: {

@@ -1,4 +1,4 @@
-import type { Problem } from "../types";
+import type { Problem } from "../../types";
 
 export const problem: Problem = {
   slug: "two-sum",

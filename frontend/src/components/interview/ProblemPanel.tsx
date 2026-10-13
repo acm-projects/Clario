@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { Panel } from "./Panel";
-import type { Problem } from "../types";
+import type { Problem } from "../../types";
 
 const TABS = ["Description", "Editorial", "Solutions", "Submissions"];
 

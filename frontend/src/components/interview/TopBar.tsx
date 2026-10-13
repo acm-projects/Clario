@@ -1,5 +1,5 @@
 import { Pill } from "./Panel";
-import { UmpireTracker } from "./interview/UmpireTracker";
+import { UmpireTracker } from "./UmpireTracker";
 
 interface TopBarProps {
   timer: string;

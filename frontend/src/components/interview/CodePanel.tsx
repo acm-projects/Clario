@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Panel, Pill } from "./Panel";
-import type { Language, Problem } from "../types";
+import type { Language, Problem } from "../../types";
 
 interface CodePanelProps {
   starterCode: Problem["starter_code"];

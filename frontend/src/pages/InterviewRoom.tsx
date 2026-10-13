@@ -1,4 +1,4 @@
-import InterviewPage from "../components/InterviewPage";
+import InterviewPage from "../components/interview/InterviewPage";
 
 export default function InterviewRoom() {
   return <InterviewPage />;
