@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Milkyway";
+  src: url("./assets/fonts/Milkyway DEMO.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-detail: "DM Sans", sans-serif;
+  --font-headline: "Anton", sans-serif;
+}
+
+/* Animations used by Tailwind utilities. */
+@theme {
+@keyframes sidebar-settle { from { transform: scale(.8); } to { transform: scale(1); } }
+@keyframes landing-float { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+@keyframes ocean-sway { from { transform: translateX(-4%) rotate(-4deg); } to { transform: translateX(4%) rotate(4deg); } }
+@keyframes ocean-rise { from { transform: translate(0, 0); opacity: 0; } 10%, 80% { opacity: 1; } to { transform: translate(35px, -1000px); opacity: 0; } }
+@keyframes landing-duck-crossfade {
+  0%, 20% { opacity: 1; }
+  25%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes assessment-reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes magic-bento-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes magic-bento-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes magic-bento-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes magic-bento-pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes magic-bento-select {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes magic-bento-blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-wait {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-run {
+  0% {
+    opacity: 0;
+  }
+  1%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes magic-bento-check {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes magic-bento-rail {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes magic-bento-packet {
+  0% {
+    top: var(--y);
+    left: var(--x);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-switch-track {
+  from {
+    background-color: var(--mb-line);
+  }
+  to {
+    background-color: rgb(var(--mb-accent-rgb));
+  }
+}
+@keyframes magic-bento-switch-knob {
+  from {
+    background: var(--mb-ink);
+    transform: none;
+  }
+  to {
+    background: var(--mb-accent-ink);
+    transform: translateX(10px);
+  }
+}
+@keyframes magic-bento-path-a {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: 46px -18px;
+  }
+  62% {
+    translate: 12px 26px;
+  }
+}
+@keyframes magic-bento-path-b {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  35% {
+    translate: -40px 14px;
+  }
+  70% {
+    translate: -8px -22px;
+  }
+}
+@keyframes water-duck-float { 0%,100% { transform: translate(0, 10px) rotate(-3deg); } 25% { transform: translate(3px, 0) rotate(0deg); } 50% { transform: translate(0, -10px) rotate(3deg); } 75% { transform: translate(-3px, 0) rotate(0deg); } }
+@keyframes studio-bubble-rise { 0% { transform: translate(0, 0); opacity: 0; } 15%, 80% { opacity: .7; } 100% { transform: translate(30px, -900px); opacity: 0; } }
+@keyframes studio-water-shimmer { from { background-position: 0 0; } to { background-position: 60px -30px; } }
+@keyframes dashboard-cream-drift { from { background-position: 0% 30%; } to { background-position: 100% 70%; } }
+}

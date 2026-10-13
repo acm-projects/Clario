@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import type { User } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
-import type { ProfileContext, UserProfile } from "../lib/profile";
-import { createRetakeAccess, getProfileRedirect } from "../lib/profileRouting";
+import { supabase } from "../../lib/supabase";
+import type { ProfileContext, UserProfile } from "../../lib/profile";
+import { createRetakeAccess, getProfileRedirect } from "../../lib/profileRouting";
 
 type LoadedProfile = { key: string; user: User | null; profile: UserProfile | null; error: string | null; retakeAllowed: boolean };
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { chicagoDate, interviewDays, interviewStreaks } from "../lib/interviewCalendar";
+import { chicagoDate, interviewDays, interviewStreaks } from "../../lib/interviewCalendar";
 
 export default function InterviewCalendar({ completionDates, loading = false }: { completionDates: string[]; loading?: boolean }) {
   const today = chicagoDate();
