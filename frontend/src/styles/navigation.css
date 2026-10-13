@@ -1,0 +1,71 @@
+/* Sidebar layout is shared across workspace pages; --sidebar-width also reserves space for page content. */
+/* Labeled workspace navigation, with a compact option like the reference. */
+.brand-mark { display: block; width: 40px; height: 40px; }
+.landing-brand { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; color: #2378db; transition: background 180ms ease, color 180ms ease; }
+.landing-brand .brand-mark { width: 46px; height: 46px; }
+.landing-brand:hover { color: #175daf; background: #e7f0fc; }
+.landing-nav button:not(.landing-brand) { min-height: 44px; }
+.app-sidebar-layout { --sidebar-width: 224px; }
+.app-sidebar-layout:has(.sidebar-collapsed) { --sidebar-width: 80px; }
+.app-sidebar { position: relative; z-index: 30; display: flex; align-items: center; gap: 8px; margin: 12px 0; padding: 8px; border: 1px solid #dce5ee; border-radius: 14px; background: #fffdf8; box-shadow: 0 10px 28px -22px #12354c60; }
+.sidebar-header { display: flex; align-items: center; gap: 10px; }
+.sidebar-brand { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; color: #2378db; transition: background 180ms ease; }
+.sidebar-brand .brand-mark { width: 34px; height: 34px; }
+.sidebar-brand:hover { background: #e7f0fc; }
+.sidebar-brand-copy, .sidebar-section-label, .sidebar-collapse, .sidebar-person { display: none; }
+.sidebar-links { display: flex; align-items: center; justify-content: center; flex: 1; gap: 4px; min-width: 0; }
+.sidebar-account { display: flex; align-items: center; gap: 4px; }
+.sidebar-link { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; width: 42px; min-height: 44px; flex-shrink: 0; padding: 10px; border-radius: 8px; color: #6b737a; font-size: 12px; font-weight: 500; transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+.sidebar-link svg { width: 18px; height: 18px; flex-shrink: 0; transition: transform 200ms ease; }
+.sidebar-tooltip { display: none; }
+.sidebar-link:hover { background: #edf4ff; color: #2565b4; }
+.sidebar-link-active, .sidebar-link-active:hover { color: white; background: #347cf1; box-shadow: 0 5px 14px #347cf126; }
+.sidebar-link-active::after { display: none; }
+.sidebar-link:focus-visible, .sidebar-brand:focus-visible, .sidebar-collapse:focus-visible { outline: 2px solid #2378db; outline-offset: 3px; }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar-link { width: auto; padding-inline: 12px; gap: 8px; }
+  .sidebar-tooltip { display: inline; }
+}
+@media (min-width: 1024px) {
+  .app-sidebar-layout { padding-left: calc(var(--sidebar-width) + 48px); padding-right: 24px; padding-top: 24px; }
+  .app-sidebar { position: fixed; top: 24px; bottom: 24px; left: 24px; width: var(--sidebar-width); max-height: calc(100svh - 48px); margin: 0; padding: 20px 12px 14px; flex-direction: column; align-items: stretch; gap: 16px; transition: width 220ms ease; }
+  .sidebar-header { position: relative; min-height: 42px; padding-inline: 2px; }
+  .sidebar-brand-copy { display: flex; flex-direction: column; white-space: nowrap; }
+  .sidebar-brand-copy > span { font-size: 20px; font-weight: 700; letter-spacing: -.05em; }
+  .sidebar-brand-copy small { font-size: 9px; color: #849098; }
+  .sidebar-collapse { position: absolute; right: -24px; display: grid; place-items: center; width: 24px; height: 24px; border: 3px solid #fffdf8; border-radius: 50%; background: #347cf1; color: white; cursor: pointer; }
+  .sidebar-collapse svg { width: 15px; height: 15px; transition: transform 220ms; }
+  .sidebar-section-label { display: block; margin: 18px 12px 0; color: #97a1aa; font-size: 8px; font-weight: 600; letter-spacing: .14em; white-space: nowrap; }
+  .sidebar-links { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 7px; width: 100%; }
+  .sidebar-link { justify-content: flex-start; width: 100%; min-height: 46px; padding: 12px; }
+  .sidebar-tooltip { position: static; display: inline; padding: 0; border-radius: 0; background: none; color: inherit; font-size: 12px; white-space: nowrap; opacity: 1; pointer-events: auto; transform: none; }
+  .sidebar-account { flex-direction: column; align-items: stretch; gap: 12px; padding-top: 16px; border-top: 1px solid #191d2010; }
+  .sidebar-person { display: flex; align-items: center; gap: 10px; padding: 8px 6px 0; min-width: 0; }
+  .sidebar-avatar { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; background: #dfeaff; color: #2565b4; font-size: 12px; font-weight: 600; }
+  .sidebar-person-copy { min-width: 0; display: flex; flex-direction: column; }
+  .sidebar-person-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 600; }
+  .sidebar-person-copy small { margin-top: 2px; font-size: 9px; color: #849098; }
+  .sidebar-collapsed .sidebar-brand-copy, .sidebar-collapsed .sidebar-section-label, .sidebar-collapsed .sidebar-person-copy { display: none; }
+  .sidebar-collapsed .sidebar-header, .sidebar-collapsed .sidebar-link, .sidebar-collapsed .sidebar-person { justify-content: center; }
+  .sidebar-collapsed .sidebar-links { padding-top: 18px; }
+  .sidebar-collapsed .sidebar-collapse svg { transform: rotate(180deg); }
+  .sidebar-collapsed .sidebar-tooltip { position: absolute; left: calc(100% + 20px); display: block; padding: 8px 12px; border-radius: 8px; background: #191d20; color: white; opacity: 0; pointer-events: none; transform: translateX(-4px); transition: opacity 160ms, transform 160ms; }
+  .sidebar-collapsed .sidebar-link:is(:hover, :focus-visible) .sidebar-tooltip { opacity: 1; transform: none; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .sidebar-link:hover svg { transform: translateY(-2px); }
+  .sidebar-link-active svg { animation: sidebar-settle 280ms ease-out; }
+}
+@keyframes sidebar-settle { from { transform: scale(.8); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar, .sidebar-link, .sidebar-link svg, .sidebar-tooltip, .sidebar-brand, .sidebar-collapse svg, .landing-brand { transition: none; animation: none; }
+}
+
+@media (max-width: 359px) {
+  .app-sidebar { gap: 4px; padding: 6px; }
+  .sidebar-links { gap: 2px; }
+  .sidebar-link { width: 36px; min-height: 40px; padding: 9px; }
+  .sidebar-brand { width: 34px; height: 40px; }
+}
+/* Keep the dashboard sidebar nearly opaque over the animated water. */
+.clario-dashboard .app-sidebar { background: rgb(255 253 248 / 96%); border-color: rgb(25 29 32 / 8%); }

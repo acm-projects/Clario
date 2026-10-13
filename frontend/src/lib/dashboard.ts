@@ -1,9 +1,9 @@
-﻿import type { SupabaseClient } from "@supabase/supabase-js";
+﻿import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
 
-export interface DashboardProblem { id: string; title: string; difficulty: string; topic: string | null }
+export interface DashboardProblem { slug: string; title: string; difficulty: string; topic: string | null }
 export interface RecentPractice { id: string; problemId: string | null; problemTitle: string; difficulty: string | null; endedAt: string | null; status: string; startedAt: string | null }
-export interface SessionSummary { completedThisWeek: number; recent: RecentPractice[]; completedSessionIds: string[] }
+export interface SessionSummary { completedThisWeek: number; recent: RecentPractice[]; completedSessionIds: string[]; completionDates: string[] }
 
 // Monday-to-Monday in the user's timezone, including daylight-saving changes.
 export function getWeekBounds(now = new Date(), timeZone = "America/Chicago") {
@@ -40,12 +40,11 @@ export function getGreetingCopy(profile: UserProfile) {
   return "Let's keep sharpening your interview patterns.";
 }
 
-export async function loadRecommendedProblem(client: SupabaseClient, difficulty: string | null): Promise<DashboardProblem | null> {
+export async function loadRecommendedProblem(difficulty: string | null): Promise<DashboardProblem | null> {
   if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return null;
-  // Match existing title-case or lowercase storage without altering the database.
-  const { data, error } = await client.from("problems").select("id, title, difficulty, topic").ilike("difficulty", difficulty).order("id").limit(1).maybeSingle();
-  if (error) throw error;
-  return data;
+  const problems = await loadProblems();
+  const problem = problems.find((item) => item.difficulty.toLowerCase() === difficulty.toLowerCase());
+  return problem ? { slug: problem.slug, title: problem.title, difficulty: problem.difficulty, topic: problem.topics.join(" / ") || null } : null;
 }
 
 // Inspect returned session fields before using them. Unknown completion schemas fail
@@ -56,12 +55,12 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
   let completedThisWeek = 0;
   const completedRows: { id: string; ended: number }[] = [];
   const recent: RecentPractice[] = rows.map((row) => {
-    if (!("ended_at" in row)) throw new Error("Weekly progress needs the interview session completion timestamp. Confirm the interview_sessions schema.");
+    if (!("ended_at" in row)) throw new Error("Weekly progress needs the interview session completion timestamp. Confirm the sessions API schema.");
     const status = typeof row.status === "string" ? row.status.toLowerCase() : null;
     const endedAt = typeof row.ended_at === "string" ? row.ended_at : null;
     const ended = endedAt ? new Date(endedAt) : null;
     if (ended && Number.isNaN(ended.getTime())) throw new Error("An interview completion date could not be read.");
-    const completed = ended !== null && (!status || !unsuccessfulStatuses.includes(status));
+    const completed = ended !== null && ended <= now && (!status || ["completed", "finished"].includes(status)) && !unsuccessfulStatuses.includes(status ?? "");
     if (completed) completedRows.push({ id: String(row.id), ended: ended.getTime() });
     if (completed && ended >= start && ended < end) completedThisWeek++;
     return {
@@ -75,46 +74,18 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
     };
   });
   recent.sort((a, b) => new Date(b.startedAt || b.endedAt || 0).getTime() - new Date(a.startedAt || a.endedAt || 0).getTime());
-  return { completedThisWeek, recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
+  return { completedThisWeek, completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
 }
 
-export async function loadSessionSummary(client: SupabaseClient, userId: string): Promise<SessionSummary> {
-  const rows: Record<string, unknown>[] = [];
-  const pageSize = 1000;
-  for (let offset = 0; ; offset += pageSize) {
-    const { data, error } = await client.from("interview_sessions")
-      .select("id, problem_id, status, language, started_at, ended_at")
-      .eq("user_id", userId).order("id").range(offset, offset + pageSize - 1);
-    if (error) throw error;
-    rows.push(...(data ?? []));
-    if (!data || data.length < pageSize) break;
-  }
-  const summary = summarizeSessions(rows);
-  const ids = [...new Set(summary.recent.flatMap((session) => session.problemId ? [session.problemId] : []))];
-  if (!ids.length) return summary;
-  const { data: problems, error: problemError } = await client.from("problems").select("id, title, difficulty").in("id", ids);
-  if (problemError) throw problemError;
-  for (const session of summary.recent) {
-    const problem = problems?.find((item) => String(item.id) === session.problemId);
-    if (problem) { session.problemTitle = problem.title; session.difficulty = problem.difficulty; }
-  }
-  return summary;
+// Keep history empty until Prapti confirms the sessions API contract (CLA-40).
+// Do not query unconfirmed Supabase tables or invent session progress.
+export async function loadSessionSummary(): Promise<SessionSummary> {
+  return { completedThisWeek: 0, recent: [], completedSessionIds: [], completionDates: [] };
 }
-
 
 export interface SkillScore { label: string; score: number | null }
 
-export async function loadSkillScores(client: SupabaseClient, sessionIds: string[]): Promise<SkillScore[]> {
-  if (!sessionIds.length) return [];
-  const { data, error } = await client.from("feedback_reports")
-    .select("technical_score, communication_score, reasoning_score, overall_score")
-    .in("session_id", sessionIds);
-  if (error) throw error;
-  if (!data?.length) return [];
-  const columns = [{ label: "Coding", key: "technical_score" }, { label: "Communication", key: "communication_score" }, { label: "Reasoning", key: "reasoning_score" }, { label: "Overall", key: "overall_score" }] as const;
-  return columns.map(({ label, key }) => {
-    const values = data.map((row) => row[key]).filter((value): value is number => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100);
-    return { label, score: values.length ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length) : null };
-  });
+// Feedback storage is not integrated yet; the existing UI shows its empty state.
+export async function loadSkillScores(): Promise<SkillScore[]> {
+  return [];
 }
-

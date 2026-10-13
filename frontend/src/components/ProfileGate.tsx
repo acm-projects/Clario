@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
@@ -32,6 +32,19 @@ export default function ProfileGate() {
     if (location.pathname.toLowerCase() !== "/assessment") retake.current.clear();
     async function load() {
       try {
+        if (import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true") {
+          const response = await fetch("/__dev/profile");
+          if (!response.ok) throw new Error("Could not load the configured dev profile. Check backend/.env.");
+          const { user, profile } = await response.json() as { user: User; profile: UserProfile };
+          let testProfile = profile;
+          try {
+            const stored = sessionStorage.getItem(`clario:dev-profile:${user.id}`);
+            if (stored) testProfile = { ...profile, ...JSON.parse(stored), id: user.id };
+          } catch { /* Ignore an expired or malformed local testing override. */ }
+          activeUserId.current = user.id;
+          if (active) setLoaded({ key: requestKey, user, profile: testProfile, error: null, retakeAllowed: retake.current.allows(user.id, location.state) });
+          return;
+        }
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError && user) throw authError;
         activeUserId.current = user?.id ?? null;
@@ -55,11 +68,13 @@ export default function ProfileGate() {
   if (!loaded || loaded.key !== requestKey) return <main className="flex min-h-svh items-center justify-center bg-[#F6EDD1] px-6 text-sm text-[#55595c]" role="status">Loading your practice profile...</main>;
   if (loaded.error) return <main className="flex min-h-svh items-center justify-center bg-[#F6EDD1] px-6 text-[#191d20]"><div className="max-w-md rounded-2xl border border-white/90 bg-white/55 p-8"><h1 className="text-2xl font-semibold tracking-tight">We couldn&apos;t load your profile.</h1><p role="alert" className="mt-4 text-sm leading-6 text-[#55595c]">{loaded.error}</p><div className="mt-6 flex gap-6"><button onClick={() => setRetry((current) => current + 1)} className="cursor-pointer rounded-lg bg-[#3b8fe8] px-5 py-3 text-sm font-semibold">Try again</button><Link to="/login" className="py-3 text-sm underline">Log in</Link></div></div></main>;
   if (!loaded.user || !loaded.profile) return <Navigate to="/login" replace />;
-  const redirect = getProfileRedirect(location.pathname, loaded.profile.assessment_completed, loaded.retakeAllowed);
+  const devBypass = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true";
+  const redirect = devBypass ? null : getProfileRedirect(location.pathname, loaded.profile.assessment_completed, loaded.retakeAllowed);
   if (redirect) return <Navigate to={redirect} replace />;
   const context: ProfileContext = {
     user: loaded.user,
     profile: loaded.profile,
+    updateDisplayName: (name) => setLoaded((current) => current?.profile ? { ...current, profile: { ...current.profile, display_name: name } } : current),
     startRetake: () => {
       if (!["/settings", "/profile"].includes(location.pathname.toLowerCase())) return;
       const state = retake.current.start(loaded.user!.id);

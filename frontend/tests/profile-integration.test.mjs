@@ -1,6 +1,6 @@
-﻿import test from "node:test";
+import test from "node:test";
 import assert from "node:assert/strict";
-import { getProfileUpdate, saveAssessment } from "../src/lib/profile.ts";
+import { getProfileUpdate, saveAssessment, saveDisplayName, validateDisplayName } from "../src/lib/profile.ts";
 import { initialAnswers, getQuestionPath } from "../src/lib/practiceProfile.ts";
 import { createRetakeAccess, getProfileRedirect } from "../src/lib/profileRouting.ts";
 
@@ -118,4 +118,33 @@ test("failed and zero-row updates reject; the same answers can be retried", asyn
   }
   await saveAssessment(mockClient().client, answers, "user-1");
   assert.deepEqual(answers, snapshot);
+});
+
+test("display names are trimmed and validated before any account writes", async () => {
+  assert.equal(validateDisplayName("  Ada  "), "Ada");
+  for (const name of ["", "   ", "a".repeat(61)]) {
+    const { client, calls } = mockClient();
+    await assert.rejects(saveDisplayName(client, name, "user-1"));
+    assert.equal(calls.length, 0);
+  }
+});
+
+test("display name saves affect only the authenticated profile and preserve assessment preferences", async () => {
+  const { client, calls } = mockClient();
+  assert.equal(await saveDisplayName(client, " Ada ", "user-1"), "Ada");
+  assert.deepEqual(calls[0], ["table", "profiles"]);
+  assert.deepEqual(Object.keys(calls[1][1]).sort(), ["display_name", "updated_at"]);
+  assert.equal(calls[1][1].display_name, "Ada");
+  assert.deepEqual(calls[2], ["eq", "id", "user-1"]);
+});
+
+test("display name writes reject missing sessions, account changes, and denied or zero-row updates", async () => {
+  for (const user of [null, { id: "user-2" }]) {
+    const { client, calls } = mockClient({ user });
+    await assert.rejects(saveDisplayName(client, "Ada", "user-1"));
+    assert.equal(calls.length, 0);
+  }
+  for (const options of [{ updateError: new Error("RLS denied") }, { row: null }, { row: { id: "other-user" } }]) {
+    await assert.rejects(saveDisplayName(mockClient(options).client, "Ada", "user-1"));
+  }
 });

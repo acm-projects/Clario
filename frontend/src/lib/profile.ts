@@ -1,4 +1,4 @@
-﻿import type { SupabaseClient, User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { buildPracticeProfile, type OnboardingAnswers } from "./practiceProfile.ts";
 
 export interface UserProfile {
@@ -18,6 +18,7 @@ export interface ProfileContext {
   user: User;
   profile: UserProfile;
   startRetake: () => void;
+  updateDisplayName: (name: string) => void;
 }
 
 export function getProfileUpdate(answers: OnboardingAnswers) {
@@ -50,3 +51,20 @@ export async function saveAssessment(client: SupabaseClient, answers: Onboarding
 }
 
 
+
+export function validateDisplayName(value: string): string {
+  const name = value.trim();
+  if (!name || name.length > 60) throw new Error("Choose a display name between 1 and 60 characters.");
+  return name;
+}
+
+export async function saveDisplayName(client: SupabaseClient, value: string, expectedUserId: string): Promise<string> {
+  const name = validateDisplayName(value);
+  const { data: { user }, error: authError } = await client.auth.getUser();
+  if (authError) throw authError;
+  if (!user || user.id !== expectedUserId) throw new Error("Your session changed. Please sign in again before saving.");
+  const { data, error } = await client.from("profiles").update({ display_name: name, updated_at: new Date().toISOString() }).eq("id", user.id).select("id").single();
+  if (error) throw error;
+  if (!data || data.id !== user.id) throw new Error("Your display name could not be updated. Please try again.");
+  return name;
+}
