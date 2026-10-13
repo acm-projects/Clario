@@ -130,7 +130,7 @@ code {
 }
 
 .interview-page[data-theme="light"] {
-  --page-bg: #edf2f7;
+  --page-bg: #f7f3e9;
   --panel-bg: #ffffff;
   --line: #d5dee9;
   --text-main: #172333;
@@ -143,8 +143,8 @@ code {
   --video-interviewer: #e7eff8;
   --avatar-ring: #d2deeb;
   --accent-text: #245d9e;
-  --wave-a: #d8e5f4;
-  --wave-b: #c2d6ef;
+  --wave-a: #527db5;
+  --wave-b: #2c5ba8;
 }
 
 .theme-panel { border-color: var(--line); background-color: var(--panel-bg); }
@@ -158,3 +158,7 @@ code {
 .theme-video-self { border-color: var(--line); background-color: var(--video-self); }
 .theme-video-interviewer { background-color: var(--video-interviewer); }
 .theme-avatar-ring { --tw-ring-color: var(--avatar-ring); }
+
+.interview-page .problem-title {
+  font-size: 24px;
+}
