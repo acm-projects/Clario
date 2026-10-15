@@ -14,11 +14,11 @@ const htmlStyles = [
   "[&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1",
 ].join(" ");
 
-export function ProblemPanel({ problem, solved }: { problem: Problem; solved: boolean }) {
+export function ProblemPanel({ problem, solved, hideGuidance = false }: { problem: Problem; solved: boolean; hideGuidance?: boolean }) {
   return (
     <Panel>
       <nav className="theme-border flex shrink-0 items-center gap-2 border-b px-3 py-3 text-xs">
-        {TABS.map((tab, i) => (
+        {(hideGuidance ? ["Description"] : TABS).map((tab, i) => (
           <button
             key={tab}
             className={i === 0 ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]"}

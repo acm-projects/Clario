@@ -1,0 +1,26 @@
+/* Compact neutral library surfaces; search, filters, and selection are unchanged. */
+.library-page .library-controls,.library-page .library-results { padding:16px; border:1px solid #dedfdc; border-radius:12px; background:#fffdf9; box-shadow:0 3px 12px -8px #12354c24; }
+.library-page .library-controls > div:first-child { margin-bottom:12px; }
+.library-page .library-controls > .grid { gap:12px; }
+.library-page .library-controls > [role="group"] { margin-top:12px; }
+.library-page .library-results { margin-top:18px; }
+.library-page .library-results > [role="status"] { margin-bottom:8px; }
+.library-page .library-results .problem-library-card { padding:14px 0; border-bottom:1px solid #e8e7e2; background:transparent; }
+.library-page .library-results .problem-library-card:first-child { padding-top:6px; }
+.library-page .library-results .problem-library-card:last-child { padding-bottom:0; border-bottom:0; }
+.library-page .problem-library-card h2 { margin-top:10px; }
+.library-page .problem-library-card > p { margin-top:8px; margin-bottom:12px; }
+.library-page .problem-library-card > .mb-6 { margin-bottom:8px; }
+.library-page .problem-library-card > .mb-6 button { background:#f2f1ed; color:#536372; border:1px solid #e6e5df; }
+.library-page .problem-library-card > .mb-6 button:hover { background:#eae9e4; }
+.library-page .problem-library-card > .mb-6 button[aria-pressed="true"] { border-color:#a8c5e3; color:#2565b4; }
+.library-page .library-practice-notice { padding:12px 16px; border-color:#dedfdc; border-radius:10px; background:#fffdf9; }
+@media (max-width:479px) { .library-page .library-controls,.library-page .library-results { padding:14px; } }
+
+/* Keep content inset while the footer spans the entire page. */
+.library-page.app-sidebar-layout { padding:0; }
+.library-page .library-content { min-width:0; padding:8px 16px 0; }
+@media (min-width:640px) { .library-page .library-content { padding-inline:24px; } }
+@media (min-width:1024px) {
+  .library-page .library-content { padding:24px 24px 0 calc(var(--sidebar-width) + 48px); }
+}

@@ -1,3 +1,5 @@
+import FooterWaves from "../components/effects/FooterWaves";
+import "./problem-library.css";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -45,13 +47,14 @@ export default function ProblemLibrary() {
     return () => controller.abort();
   }, [retry]);
 
-  return <main className={"app-sidebar-layout [--sidebar-width:224px] [&:has(.sidebar-collapsed)]:[--sidebar-width:80px] [@media_(min-width:_1024px)]:[padding-left:calc(var(--sidebar-width)_+_48px)] [@media_(min-width:_1024px)]:[padding-right:24px] [@media_(min-width:_1024px)]:[padding-top:24px] library-page [background:#f7f1d8] [&_h1]:[font-size:clamp(32px,_3.5vw,_48px)] [&_h1]:[letter-spacing:-.045em] min-h-svh px-4 pb-6 pt-2 font-sans text-[#191d20] sm:px-6 lg:px-[5%] [&_button]:cursor-pointer [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4"}>
+  return <main className={"app-sidebar-layout [--sidebar-width:224px] [&:has(.sidebar-collapsed)]:[--sidebar-width:80px] [@media_(min-width:_1024px)]:[padding-left:calc(var(--sidebar-width)_+_48px)] [@media_(min-width:_1024px)]:[padding-right:24px] [@media_(min-width:_1024px)]:[padding-top:24px] library-page flex flex-col [background:#F7F1E4] [&_h1]:[font-size:clamp(32px,_3.5vw,_48px)] [&_h1]:[letter-spacing:-.045em] min-h-svh px-4 pt-2 font-sans text-[#191d20] sm:px-6 lg:px-[5%] [&_button]:cursor-pointer [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4"}>
+    <div className="library-content flex flex-1 flex-col">
     <NavbarDashboard />
-    <section aria-labelledby="library-heading" className="mx-auto max-w-[1120px] py-10 sm:py-14">
+    <section aria-labelledby="library-heading" className="mx-auto w-full max-w-[1120px] flex-1 py-10 sm:py-14">
       <p className={"workspace-eyebrow [font-size:10px] font-semibold [letter-spacing:.13em] [color:#2565b4]"}>PRACTICE AT YOUR PACE</p>
       <h1 id="library-heading" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Problem Library</h1>
       <p className="mt-3 text-sm leading-7 text-[#55595c]">Find your next challenge. Build a solution and practice explaining why it works.</p>
-      {choosing && <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#bcd5f4] bg-[#eef5ff] p-4 text-sm text-[#2565b4]"><p>Pick a problem for your practice interview.</p><Link to="/interview" className="inline-flex min-h-10 items-center font-semibold underline underline-offset-4">Back to interview modes</Link></div>}
+      {choosing && <div className="library-practice-notice mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#bcd5f4] bg-[#eef5ff] p-4 text-sm text-[#2565b4]"><p>Pick a problem for your practice interview.</p><Link to="/interview" className="inline-flex min-h-10 items-center font-semibold underline underline-offset-4">Back to interview modes</Link></div>}
       <div className={"library-controls [border:1px_solid_#191d2010] [border-radius:18px] [background:#fffdf8] [box-shadow:0_10px_32px_-24px_#12354c40] [padding:24px] [border-color:#dce5ed] [@media_(max-width:_479px)]:[padding:18px] mt-6"}>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-[#2565b4]">
         <p>Live problem library</p>
@@ -79,5 +82,7 @@ export default function ProblemLibrary() {
         </li>)}</ul> : <div className="py-10 text-center"><h2 className="text-lg font-semibold">No matching problems</h2><p className="mt-2 text-sm text-[#55595c]">Try another search or clear your filters.</p><button type="button" onClick={resetFilters} className="mt-5 min-h-10 text-sm font-semibold text-[#2565b4] underline underline-offset-4">Show all problems</button></div>}
       </div>
     </section>
+    </div>
+    <FooterWaves />
   </main>;
 }

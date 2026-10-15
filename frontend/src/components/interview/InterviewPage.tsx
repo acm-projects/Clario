@@ -41,6 +41,7 @@ export default function InterviewPage() {
   const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
   const [searchParams] = useSearchParams();
+  const isMock = searchParams.get("mode") === "mock";
   const [problem, setProblem] = useState<Problem | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "not-found" | "server-error">("loading");
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
@@ -164,7 +165,7 @@ export default function InterviewPage() {
               storageKey="clario-interview-problem-height"
               initialSize={75}
               label="Resize problem and test results"
-              first={<ProblemPanel problem={problem} solved={session.solved} />}
+              first={<ProblemPanel problem={problem} solved={session.solved} hideGuidance={isMock} />}
               second={
                 <TestResultPanel
                   testcases={problem.example_testcases}
@@ -197,6 +198,7 @@ export default function InterviewPage() {
                     <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
                       {problem.difficulty}
                     </span>
+                    {!isMock && <>
                     <button
                       onClick={() => setOpenInfo((current) => current === "topics" ? null : "topics")}
                       aria-expanded={openInfo === "topics"}
@@ -213,7 +215,8 @@ export default function InterviewPage() {
                     >
                       Hint
                     </button>
-                    {openInfo === "topics" && (
+                    </>}
+                    {!isMock && openInfo === "topics" && (
                       <div id="problem-topics" className="theme-panel absolute right-0 top-full z-10 mt-2 flex max-w-full flex-wrap justify-end gap-2 rounded-lg border p-2 shadow-xl">
                         {problem.topics.map((topic) => (
                           <span key={topic} className="theme-border rounded-full border px-2.5 py-0.5 text-xs text-[var(--accent-text)]">
@@ -222,7 +225,7 @@ export default function InterviewPage() {
                         ))}
                       </div>
                     )}
-                    {openInfo === "hint" && (
+                    {!isMock && openInfo === "hint" && (
                       <div id="problem-hint" role="status" className="theme-panel theme-body-text absolute right-0 top-full z-10 mt-2 rounded-lg border px-3 py-2 text-xs shadow-xl">
                         Hints coming soon.
                       </div>

@@ -1,3 +1,4 @@
+import FooterWaves from "../components/effects/FooterWaves";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
@@ -84,7 +85,7 @@ export default function Assessment() {
   }
 
   return (
-    <main className={"app-sidebar-layout relative isolate flex min-h-svh flex-col bg-[#f7f1d8] px-4 pt-2 font-sans text-[#191d20] sm:px-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#2378db]"}>
+    <main className={"app-sidebar-layout relative isolate flex min-h-svh flex-col bg-[#F7F1E4] px-4 pt-2 font-sans text-[#191d20] sm:px-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#2378db]"}>
       <NavbarDashboard />
       <div className={"relative z-10 mx-auto grid w-full max-w-[1200px] flex-1 items-start gap-10 py-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-12 lg:py-14"}>
         <aside className="assessment-intro lg:pr-4"><p className="mb-6 flex items-center gap-3 font-detail text-[10px] tracking-widest text-[#55595c]"><span className="h-0.5 w-6 bg-[#3b8fe8]" />A LITTLE ABOUT YOU</p><h1 className="max-w-64 text-3xl font-semibold leading-[1.1] tracking-[-0.045em] lg:text-4xl">Let&apos;s find your starting point.</h1><p className="mt-8 hidden max-w-64 text-[13px] leading-6 text-[#55595c] lg:block">A few quick questions will help us personalize your practice.</p><ol className={"assessment-stages [&_li[aria-current=\"step\"]]:[color:#2378db] mt-8 grid grid-cols-2 gap-4 lg:grid-cols-1"} aria-label="Assessment stages">{stages.map((label, number) => <li key={label} aria-current={stage === number ? "step" : undefined} className={`flex items-center gap-4 text-xs ${stage === number ? "font-semibold text-[#191d20]" : "text-[#191d20]/40"}`}><span className={`flex h-6 w-6 items-center justify-center rounded-full font-detail text-[10px] ${stage === number ? "bg-[#dfeaf5]/70 text-[#2f7fe2]" : "text-[#191d20]/35"}`}>{number < stage ? "?" : `0${number + 1}`}</span>{label}</li>)}</ol></aside>
@@ -100,7 +101,7 @@ export default function Assessment() {
             {questionId === "weekly" && <div className="mt-10 grid grid-cols-3 gap-4 sm:grid-cols-5">{[1, 2, 3, 4, 5].map((value) => <Choice key={value} name="weekly-goal" selected={answers.weeklyInterviewGoal === value} label={value === 5 ? "5+" : String(value)} onSelect={() => update({ weeklyInterviewGoal: value })} />)}</div>}
           </fieldset>{error && <p role="alert" className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<div className="mt-14 flex flex-wrap items-center gap-4"><button type="submit" disabled={saving} className="inline-flex min-h-12 items-center gap-6 rounded-lg bg-[#2378db] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#1969c5] disabled:opacity-60 motion-reduce:transition-none">{saving ? "Saving..." : isLast ? "Finish & open dashboard" : "Continue"}<span aria-hidden="true">&#8594;</span></button>{index > 0 && <button type="button" disabled={saving} onClick={() => { setError(""); setQuestionId(path[index - 1]); }} className="px-4 py-3 text-sm text-[#55595c] hover:text-[#191d20] disabled:opacity-60">Back</button>}</div></form>
         </section>
-      </div><AssessmentWaves />
+      </div><FooterWaves />
     </main>
   );
 }
@@ -112,27 +113,4 @@ function Choice({ name, selected, label, onSelect, description, recommended = fa
 function ComfortSlider({ value, onChange, name, left, right }: { value: number; onChange: (value: number) => void; name: string; left: string; right: string }) {
   return <div className="mt-12 max-w-[608px]"><div className="mb-6 flex flex-wrap items-baseline gap-2" aria-live="polite"><output htmlFor={name} className="text-4xl font-semibold tracking-tight text-[#191d20]">{value}</output><span className="font-detail text-xs text-[#55595c]">/ 10</span><span className="ml-auto rounded-full bg-[#e7f0fc] px-3 py-1.5 text-xs text-[#2565b4]">{value <= 3 ? "Building foundations" : value <= 7 ? "Finding your rhythm" : "Ready for a challenge"}</span></div><input id={name} type="range" min={0} max={10} step={1} value={value} onChange={(e) => onChange(Number(e.target.value))} aria-labelledby="assessment-question" aria-valuetext={`${value} out of 10`} className="h-8 w-full cursor-pointer accent-[#3b8fe8] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#191d20]" /><div className="mt-4 flex justify-between gap-4 text-xs text-[#55595c]"><span>0 / {left}</span><span className="text-right">10 / {right}</span></div></div>;
 }
-
-function AssessmentWaves() {
-  return (
-    <div className="pointer-events-none relative mt-auto h-24 shrink-0 overflow-hidden md:h-36" aria-hidden="true">
-      <svg viewBox="0 0 1440 160" preserveAspectRatio="none" className="block h-full w-full">
-        <defs>
-          <path id="assessment-wave" d="M0 64 Q180 0 360 64 T720 64 T1080 64 T1440 64 V192 H0Z" />
-        </defs>
-        {[{ color: "#6eaff8", offset: 0, duration: "22s", reverse: false },
-          { color: "#2d82ea", offset: 32, duration: "15s", reverse: true }].map((layer) => (
-          <g key={layer.color} fill={layer.color} transform={`translate(0 ${layer.offset})`}>
-            <g className="motion-reduce:hidden">
-              <use href="#assessment-wave" /><use href="#assessment-wave" x="1440" />
-              <animateTransform attributeName="transform" type="translate"
-                from={layer.reverse ? "-1440 0" : "0 0"} to={layer.reverse ? "0 0" : "-1440 0"}
-                dur={layer.duration} repeatCount="indefinite" />
-            </g>
-            <use href="#assessment-wave" className="hidden motion-reduce:block" />
-          </g>
-        ))}
-      </svg>
-    </div>
-  );
-}
+

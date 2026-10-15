@@ -44,7 +44,7 @@ export default function Feedback() {
   function resetFilters() { setQuery(""); setDifficulty("All"); setCategory("All"); setStatus("All"); }
 
   return (
-    <main className="app-sidebar-layout min-h-svh bg-[#f7f1d8] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#2378db]">
+    <main className="app-sidebar-layout min-h-svh bg-[#F7F1E4] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#2378db]">
       <NavbarDashboard />
       <div className="mx-auto max-w-[1120px]">
         <div className="pb-7 pt-8 sm:pt-10">

@@ -111,7 +111,7 @@ export default function Signup() {
   }
 
   return (
-    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#F6EDD1] font-sans text-[#191d20] [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#191d20] [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-[#191d20]">
+    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#F7F1E4] font-sans text-[#191d20] [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#191d20] [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-[#191d20]">
       {/* ======================================
           LOGO
       ====================================== */}
