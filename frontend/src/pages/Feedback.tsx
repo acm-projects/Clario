@@ -3,7 +3,7 @@ import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { loadFeedbackHistory, scoreColumns, type FeedbackInterview } from "../lib/feedback";
 
 
-const surface = "rounded-2xl border border-[#191d20]/5 bg-white p-5 shadow-[0_12px_32px_-18px_rgba(75,63,34,0.25)] sm:p-6";
+const surface = "rounded-2xl border border-[#182137]/5 bg-white p-5 shadow-[0_12px_32px_-18px_rgba(75,63,34,0.25)] sm:p-6";
 const dateLabel = (date: string) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" });
 
 export default function Feedback() {
@@ -44,13 +44,13 @@ export default function Feedback() {
   function resetFilters() { setQuery(""); setDifficulty("All"); setCategory("All"); setStatus("All"); }
 
   return (
-    <main className="app-sidebar-layout min-h-svh bg-[#F7F1E4] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#2378db]">
+    <main className="app-sidebar-layout min-h-svh bg-[#f7f4e9] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]">
       <NavbarDashboard />
       <div className="mx-auto max-w-[1120px]">
         <div className="pb-7 pt-8 sm:pt-10">
           <h1 className="text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Feedback Report</h1>
-          <p className="mt-2 text-sm leading-6 text-[#55595c]">See where you're strong, where to focus, and how far you've come.</p>
-        </div>        {error && <section className={`${surface} mb-6`}><p role="alert">{error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 min-h-10 rounded-lg bg-[#2378db] px-5 py-3 text-sm text-white">Retry</button></section>}
+          <p className="mt-2 text-sm leading-6 text-[#687087]">See where you're strong, where to focus, and how far you've come.</p>
+        </div>        {error && <section className={`${surface} mb-6`}><p role="alert">{error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 min-h-10 rounded-lg bg-[#3054ed] px-5 py-3 text-sm text-white">Retry</button></section>}
             <section aria-labelledby="performance-heading" className={surface}>
               <h2 id="performance-heading" className="text-lg font-semibold">Performance Over Time <span className="text-sm font-normal text-[#777a7c]">(Past Few Months)</span></h2>
               {points.length > 0 && <p className="mt-2 text-xs text-[#777a7c]">{dateLabel(points[0].date)}{points.length > 1 ? ` - ${dateLabel(points[points.length - 1].date)}` : ""}</p>}
@@ -60,29 +60,29 @@ export default function Feedback() {
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 id="history-heading" className="text-xl font-semibold">Previous Interviews</h2>
                 <div className="flex flex-wrap gap-2">
-                  <label><span className="sr-only">Search interviews</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search interviews..." className="min-h-10 rounded-lg border border-[#191d20]/15 bg-white px-3 text-xs" /></label>
-                  <button type="button" aria-expanded={showFilters} aria-controls="feedback-filters" onClick={() => setShowFilters((value) => !value)} className="rounded-lg border border-[#191d20]/15 px-4 text-xs">Filter</button>
+                  <label><span className="sr-only">Search interviews</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search interviews..." className="min-h-10 rounded-lg border border-[#182137]/15 bg-white px-3 text-xs" /></label>
+                  <button type="button" aria-expanded={showFilters} aria-controls="feedback-filters" onClick={() => setShowFilters((value) => !value)} className="rounded-lg border border-[#182137]/15 px-4 text-xs">Filter</button>
                 </div>
               </div>
               <div id="feedback-filters" hidden={!showFilters} className="mt-5 rounded-xl bg-[#f7f3e8] p-4">
                 <div className="flex flex-wrap items-end gap-4">
-                  {[{ label: "Difficulty", value: difficulty, update: setDifficulty, options: ["All", "Easy", "Medium", "Hard"] }, { label: "Scored category", value: category, update: setCategory, options: ["All", ...scoreColumns.map((column) => column.label)] }, { label: "Feedback status", value: status, update: setStatus, options: ["All", "Available", "Pending"] }].map((filter) => <label key={filter.label} className="flex min-w-36 flex-1 flex-col gap-2 text-xs">{filter.label}<select value={filter.value} onChange={(event) => filter.update(event.target.value)} className="min-h-10 rounded-lg border border-[#191d20]/15 bg-white px-3">{filter.options.map((option) => <option key={option}>{option}</option>)}</select></label>)}
-                  <button type="button" onClick={resetFilters} className="min-h-10 text-xs text-[#2565b4] underline">Clear filters</button>
+                  {[{ label: "Difficulty", value: difficulty, update: setDifficulty, options: ["All", "Easy", "Medium", "Hard"] }, { label: "Scored category", value: category, update: setCategory, options: ["All", ...scoreColumns.map((column) => column.label)] }, { label: "Feedback status", value: status, update: setStatus, options: ["All", "Available", "Pending"] }].map((filter) => <label key={filter.label} className="flex min-w-36 flex-1 flex-col gap-2 text-xs">{filter.label}<select value={filter.value} onChange={(event) => filter.update(event.target.value)} className="min-h-10 rounded-lg border border-[#182137]/15 bg-white px-3">{filter.options.map((option) => <option key={option}>{option}</option>)}</select></label>)}
+                  <button type="button" onClick={resetFilters} className="min-h-10 text-xs text-[#2946c5] underline">Clear filters</button>
                 </div>
               </div>
               <div className="mt-5 overflow-x-auto">
                 <table className="w-full min-w-[720px] text-left text-xs">
                   <caption className="sr-only">Feedback from your completed interviews</caption>
-                  <thead className="text-[10px] uppercase tracking-wide text-[#89836d]"><tr>{["ID", "Topic", "Difficulty", "Feedback summary", "Category", "Date", "Status"].map((heading) => <th key={heading} scope="col" className="border-b border-[#191d20]/10 px-2 pb-3 font-medium">{heading}</th>)}</tr></thead>
-                  <tbody>{interviews.map((interview) => <tr key={interview.id} className="border-b border-[#191d20]/8">
+                  <thead className="text-[10px] uppercase tracking-wide text-[#89836d]"><tr>{["ID", "Topic", "Difficulty", "Feedback summary", "Category", "Date", "Status"].map((heading) => <th key={heading} scope="col" className="border-b border-[#182137]/10 px-2 pb-3 font-medium">{heading}</th>)}</tr></thead>
+                  <tbody>{interviews.map((interview) => <tr key={interview.id} className="border-b border-[#182137]/8">
                     <td className="whitespace-nowrap px-2 py-4 text-[#777a7c]">{interview.id}</td>
                     <th scope="row" className="px-2 py-4 font-medium">{interview.topic}</th>
                     <td className="px-2 py-4 capitalize">{interview.difficulty || "Unavailable"}</td>
                     <td className="max-w-64 px-2 py-4 leading-5">{interview.summary || (interview.status === "Pending" ? "Feedback pending" : "No written summary available")}</td>
-                    <td className="px-2 py-4"><div className="flex flex-wrap gap-1">{scoreColumns.filter((column) => interview.scores[column.key] !== null).map((column) => <span key={column.key} className="rounded-full bg-[#e7f0fc] px-2 py-1 text-[10px] text-[#2565b4]">{column.label}</span>)}</div></td>
+                    <td className="px-2 py-4"><div className="flex flex-wrap gap-1">{scoreColumns.filter((column) => interview.scores[column.key] !== null).map((column) => <span key={column.key} className="rounded-full bg-[#e9edff] px-2 py-1 text-[10px] text-[#2946c5]">{column.label}</span>)}</div></td>
                     <td className="whitespace-nowrap px-2 py-4"><time dateTime={interview.date}>{dateLabel(interview.date)}</time></td>
                     <td className="px-2 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] ${interview.status === "Available" ? "bg-[#deeedf] text-[#477052]" : "bg-[#f5dfbb] text-[#8a6115]"}`}>{interview.status}</span></td>
-                  </tr>)}{!interviews.length && <tr><td colSpan={7} className="py-12 text-center">{loaded === null && !error ? "Loading your interviews..." : history.length ? <>No matching interviews. <button type="button" onClick={resetFilters} className="text-[#2565b4] underline">Clear filters</button></> : <><p className="font-medium text-[#55595c]">No previous interviews yet</p><p className="mt-2 text-xs text-[#777a7c]">Your completed interviews and feedback will appear here.</p></>}</td></tr>}</tbody>
+                  </tr>)}{!interviews.length && <tr><td colSpan={7} className="py-12 text-center">{loaded === null && !error ? "Loading your interviews..." : history.length ? <>No matching interviews. <button type="button" onClick={resetFilters} className="text-[#2946c5] underline">Clear filters</button></> : <><p className="font-medium text-[#687087]">No previous interviews yet</p><p className="mt-2 text-xs text-[#777a7c]">Your completed interviews and feedback will appear here.</p></>}</td></tr>}</tbody>
                 </table>
               </div>
               <p role="status" className="mt-4 text-[10px] text-[#89836d]">{interviews.length} of {history.length} completed interviews</p>
@@ -112,8 +112,8 @@ function PerformanceChart({ interviews, loading }: { interviews: FeedbackIntervi
         if (score === null) return null;
         return <g key={interview.id}>{previous && previousScore != null && <line x1={x(previous.date)} y1={y(previousScore)} x2={x(interview.date)} y2={y(score)} stroke={column.color} strokeWidth="3" />}<circle cx={x(interview.date)} cy={y(score)} r="4" fill={column.color}><title>{dateLabel(interview.date)}: {column.label} {score}%</title></circle></g>;
       })}</g>)}
-      {interviews.length > 0 && <text x={x(interviews[0].date)} y="205" textAnchor={end === start ? "middle" : "start"} fill="#55595c" fontSize="11">{dateLabel(interviews[0].date)}</text>}
-      {interviews.length > 1 && end !== start && <text x="920" y="205" textAnchor="end" fill="#55595c" fontSize="11">{dateLabel(interviews[interviews.length - 1].date)}</text>}
+      {interviews.length > 0 && <text x={x(interviews[0].date)} y="205" textAnchor={end === start ? "middle" : "start"} fill="#687087" fontSize="11">{dateLabel(interviews[0].date)}</text>}
+      {interviews.length > 1 && end !== start && <text x="920" y="205" textAnchor="end" fill="#687087" fontSize="11">{dateLabel(interviews[interviews.length - 1].date)}</text>}
       {!interviews.length && <text x="486" y="105" textAnchor="middle" fill="#777a7c" fontSize="14">{loading ? "Loading your progress..." : "No performance data yet"}</text>}
     </svg>
     <figcaption className="mt-2 flex flex-wrap justify-center gap-5">{series.map((column) => <button key={column.key} type="button" aria-pressed={!hidden.includes(column.label)} onClick={() => setHidden((current) => current.includes(column.label) ? current.filter((value) => value !== column.label) : [...current, column.label])} className={`min-h-9 rounded px-1 text-xs ${hidden.includes(column.label) ? "opacity-40" : ""}`} style={{ color: column.color }}>{column.label}</button>)}</figcaption>

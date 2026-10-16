@@ -1,11 +1,7 @@
 @import "tailwindcss";
+@import "./styles/tokens.css";
 
-@font-face {
-  font-family: "Milkyway";
-  src: url("./assets/fonts/Milkyway DEMO.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
+
 
 @theme {
   --font-sans: "DM Sans", sans-serif;
@@ -20,8 +16,8 @@
 @keyframes ocean-sway { from { transform: translateX(-4%) rotate(-4deg); } to { transform: translateX(4%) rotate(4deg); } }
 @keyframes ocean-rise { from { transform: translate(0, 0); opacity: 0; } 10%, 80% { opacity: 1; } to { transform: translate(35px, -1000px); opacity: 0; } }
 @keyframes landing-duck-crossfade {
-  0%, 20% { opacity: 1; }
-  25%, 95% { opacity: 0; }
+  0%, 28.333% { opacity: 1; }
+  33.333%, 95% { opacity: 0; }
   100% { opacity: 1; }
 }
 @keyframes assessment-reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -240,44 +236,20 @@
 /* Workspace navigation and interview path selection. */
 .app-sidebar.studio-sidebar { box-shadow:0 10px 32px -12px #12354c38,0 3px 9px #12354c0d; }
 .sidebar-collapse { box-shadow:0 3px 10px #2378db44; }
-.interview-selection-page { position:relative; isolation:isolate; overflow-x:clip; }
-.interview-selection-page::before { content:""; position:absolute; z-index:-1; inset:0; pointer-events:none; background:radial-gradient(ellipse at 85% 25%,#afd9ff66,transparent 45%),radial-gradient(ellipse at 25% 80%,#ffffff88,transparent 50%); }
-.interview-path-heading { animation:interview-path-enter .7s ease-out both; }
-.interview-path-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; }
-.interview-path-card { position:relative; display:flex; flex-direction:column; min-width:0; padding:32px; border:1px solid #ffffffd9; border-radius:32px; background:linear-gradient(140deg,#ffffffc9,#f4f9ff94); backdrop-filter:blur(20px); box-shadow:inset 0 1px 0 white,0 16px 40px -24px #12354c55; transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease; animation:interview-path-enter .7s .1s ease-out both; }
-.interview-path-card:nth-child(2) { animation-delay:.22s; }
-.interview-path-card:hover { transform:translateY(-6px); box-shadow:inset 0 1px 0 white,0 22px 44px -22px #2378db55; }
-.interview-path-card[data-selected="true"] { border-color:#2378db; box-shadow:0 0 0 3px #2378db,0 0 26px #76baff33,0 18px 42px -24px #2378db77; }
-.interview-path-selector { display:block; width:100%; text-align:left; cursor:pointer; border-radius:18px; }
-.interview-path-selector h2 { margin-top:24px; font-size:26px; font-weight:600; letter-spacing:-.035em; text-decoration:underline; text-decoration-color:#8ab9ee; text-underline-offset:9px; text-decoration-thickness:2px; }
-.interview-path-icon { display:grid; place-items:center; width:56px; height:56px; border:1px solid white; border-radius:18px; background:#e1efffcc; color:#2378db; box-shadow:0 5px 20px -12px #2378db77; transition:transform .4s ease,box-shadow .4s ease; }
-.interview-path-icon svg { width:28px; height:28px; }
-.interview-path-card:hover .interview-path-icon { transform:rotate(-6deg) scale(1.08); box-shadow:0 8px 24px -10px #2378db77; }
-.interview-path-check { position:absolute; top:36px; right:32px; display:grid; place-items:center; width:24px; height:24px; border:1px solid #aac4df; border-radius:50%; font-size:14px; transition:background .25s ease,transform .25s ease; }
-.interview-path-card[data-selected="true"] .interview-path-check { background:#2378db; border-color:#2378db; color:white; animation:interview-path-check .3s ease-out; }
-.interview-path-description { margin-top:24px; color:#526778; font-size:14px; line-height:1.8; }
-.interview-path-benefits { display:grid; gap:12px; margin:22px 0 26px; color:#456075; font-size:13px; line-height:1.7; }
-.interview-path-benefits li { display:flex; align-items:baseline; gap:12px; }
-.interview-path-benefits li::before { content:""; width:6px; height:6px; flex-shrink:0; border-radius:50%; background:#2378db; }
-.interview-practice-problem { padding:22px; border:1px solid #acd1f7; border-radius:22px; background:linear-gradient(120deg,#dcecff,#e8f3ff); transition:box-shadow .3s ease; }
-.interview-practice-problem:hover { box-shadow:0 6px 24px -14px #2378db77; }
-.interview-practice-problem a:hover { text-decoration:underline; text-underline-offset:4px; }
-.interview-path-start { display:flex; align-items:center; justify-content:space-between; width:100%; min-height:52px; margin-top:auto; padding:16px 22px; border-radius:16px; background:#2378db; color:white; font-size:14px; font-weight:600; cursor:pointer; transition:background .25s ease,transform .25s ease,box-shadow .25s ease; }
-.interview-practice-problem + .interview-path-start { margin-top:28px; }
-.interview-path-start:hover:not(:disabled) { background:#1969c5; transform:translateY(-2px); box-shadow:0 8px 24px -12px #2378db99; }
-.interview-path-start span { transition:transform .25s ease; }
-.interview-path-start:hover span { transform:translateX(4px); }
-.interview-path-start:disabled { cursor:not-allowed; opacity:.5; }
-.interview-mock-visual { position:relative; display:grid; place-items:center; flex:1; min-height:180px; margin-bottom:28px; overflow:hidden; border-radius:22px; background:radial-gradient(ellipse,#dcecff88,transparent 70%); }
-.interview-clock { display:flex; flex-direction:column; align-items:center; gap:10px; color:#2378db; animation:interview-clock-float 5s ease-in-out infinite; }
-.interview-clock svg { width:86px; height:86px; }
-.interview-clock span { font-size:11px; letter-spacing:.1em; }
-.interview-mock-visual i { position:absolute; width:5px; height:5px; border-radius:50%; background:#7eb6ee; left:20%; top:35%; animation:interview-clock-float 3s ease-in-out infinite; }
-.interview-mock-visual i:nth-of-type(2) { left:75%; top:60%; animation-delay:-1s; }
-.interview-mock-visual i:nth-of-type(3) { left:65%; top:15%; animation-delay:-2s; }
 @keyframes interview-path-enter { from { opacity:0; translate:0 18px; } to { opacity:1; translate:0 0; } }
 @keyframes interview-path-check { from { transform:scale(.65); } to { transform:scale(1); } }
 @keyframes interview-clock-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
 @media (min-width:1024px) { .studio-sidebar .sidebar-header { justify-content:center; } .studio-sidebar .sidebar-brand .brand-mark { width:42px; height:42px; } .studio-sidebar .sidebar-collapse { width:30px; height:30px; right:-28px; } }
-@media (max-width:767px) { .interview-path-options { grid-template-columns:minmax(0,1fr); gap:24px; } .interview-path-card { padding:26px; border-radius:28px; } .interview-path-check { top:30px; right:26px; } }
-@media (prefers-reduced-motion:reduce) { .interview-path-heading,.interview-path-card,.interview-clock,.interview-mock-visual i,.interview-path-card[data-selected="true"] .interview-path-check { animation:none; } .interview-path-card,.interview-path-icon,.interview-path-check,.interview-practice-problem,.interview-path-start,.interview-path-start span { transition:none; } .interview-path-card:hover,.interview-path-card:hover .interview-path-icon,.interview-path-start:hover:not(:disabled),.interview-path-start:hover span { transform:none; } }
+
+/* Custom dashboard animations used by Tailwind animate utilities. */
+@keyframes dashboard-duck-bob { 0%,100% { transform:translateY(0) rotate(-2deg); } 25% { transform:translateY(3px) rotate(0); } 50% { transform:translateY(-3px) rotate(2deg); } 75% { transform:translateY(2px) rotate(0); } }
+@keyframes dashboard-voice-pulse { from { transform:scaleY(.4); opacity:.6; } to { transform:scaleY(1); opacity:1; } }
+@keyframes dashboard-duck-swim { 0%,100% { transform:translateX(-18px); } 50% { transform:translateX(18px); } }
+@keyframes dashboard-duck-swim-mobile { 0%,100% { transform:translateX(-5px); } 50% { transform:translateX(5px); } }
+@keyframes dashboard-cloud-pop { 0% { opacity:0; transform:translateY(22px) scale(.55); } 65% { opacity:1; transform:translateY(-5px) scale(1.04); } 100% { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes dashboard-cloud-float { 0%,100% { transform:translate(0,0) rotate(-.4deg); } 50% { transform:translate(5px,-7px) rotate(.4deg); } }
+
+/* Custom page animations used by Tailwind utilities. */
+@keyframes interview-sun-shine { 0% { transform:scale(.92); } 45% { transform:scale(1.18); } 100% { transform:scale(1); } }
+@keyframes interview-beam-arrive { from { opacity:0; } to { opacity:.48; } }
+@keyframes landing-cloud-drift { from { translate:-18px 0; } to { translate:24px 0; } }

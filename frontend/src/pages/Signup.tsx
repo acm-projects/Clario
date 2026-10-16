@@ -111,7 +111,7 @@ export default function Signup() {
   }
 
   return (
-    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#F7F1E4] font-sans text-[#191d20] [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#191d20] [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-[#191d20]">
+    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#f7f4e9] font-sans text-[#182137] [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-[#182137] [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-[#182137]">
       {/* ======================================
           LOGO
       ====================================== */}
@@ -137,26 +137,26 @@ export default function Signup() {
                 paddling.
               </h1>
 
-              <p className="mt-6 max-w-md text-sm leading-7 text-[#55595c] sm:text-base">
+              <p className="mt-6 max-w-md text-sm leading-7 text-[#687087] sm:text-base">
                 Calm on the surface, prepared underneath. Practice technical
                 interviews out loud with Clario.
               </p>
 
               <ul className="mt-8 space-y-4 text-sm text-neutral-600">
                 <li className="flex items-center gap-3">
-                  <span className="h-2 w-2 rounded-full bg-[#3b8fe8]" />
+                  <span className="h-2 w-2 rounded-full bg-[#3054ed]" />
 
                   Voice interviews that ask follow-ups
                 </li>
 
                 <li className="flex items-center gap-3">
-                  <span className="h-2 w-2 rounded-full bg-[#3b8fe8]" />
+                  <span className="h-2 w-2 rounded-full bg-[#3054ed]" />
 
                   Code and run in the browser
                 </li>
 
                 <li className="flex items-center gap-3">
-                  <span className="h-2 w-2 rounded-full bg-[#3b8fe8]" />
+                  <span className="h-2 w-2 rounded-full bg-[#3054ed]" />
 
                   Feedback after every session
                 </li>
@@ -173,7 +173,7 @@ export default function Signup() {
                 Create an account
               </h2>
 
-              <p className="mt-2 text-sm text-[#55595c]">
+              <p className="mt-2 text-sm text-[#687087]">
                 It takes less than a minute.
               </p>
 
@@ -207,7 +207,7 @@ export default function Signup() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     autoComplete="email"
-                    className="h-12 w-full rounded-lg border border-[#191d20]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3b8fe8] focus:ring-2 focus:ring-[#3b8fe8]/20 motion-reduce:transition-none"
+                    className="h-12 w-full rounded-lg border border-[#182137]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3054ed] focus:ring-2 focus:ring-[#3054ed]/20 motion-reduce:transition-none"
                   />
                 </div>
 
@@ -232,7 +232,7 @@ export default function Signup() {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="8+ characters"
                       autoComplete="new-password"
-                      className="h-12 w-full rounded-lg border border-[#191d20]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3b8fe8] focus:ring-2 focus:ring-[#3b8fe8]/20 motion-reduce:transition-none"
+                      className="h-12 w-full rounded-lg border border-[#182137]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3054ed] focus:ring-2 focus:ring-[#3054ed]/20 motion-reduce:transition-none"
                     />
                   </div>
 
@@ -252,7 +252,7 @@ export default function Signup() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Re-enter"
                       autoComplete="new-password"
-                      className="h-12 w-full rounded-lg border border-[#191d20]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3b8fe8] focus:ring-2 focus:ring-[#3b8fe8]/20 motion-reduce:transition-none"
+                      className="h-12 w-full rounded-lg border border-[#182137]/15 bg-white/80 px-4 text-sm outline-none transition focus:border-[#3054ed] focus:ring-2 focus:ring-[#3054ed]/20 motion-reduce:transition-none"
                     />
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function Signup() {
                     required
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="h-12 w-full rounded-lg border border-[#191d20]/15 bg-white/80 px-4 text-sm text-neutral-600 outline-none transition focus:border-[#3b8fe8] focus:ring-2 focus:ring-[#3b8fe8]/20 motion-reduce:transition-none sm:max-w-[220px]"
+                    className="h-12 w-full rounded-lg border border-[#182137]/15 bg-white/80 px-4 text-sm text-neutral-600 outline-none transition focus:border-[#3054ed] focus:ring-2 focus:ring-[#3054ed]/20 motion-reduce:transition-none sm:max-w-[220px]"
                   />
                 </div>
 
@@ -284,7 +284,7 @@ export default function Signup() {
                 <button
                   type="submit"
                   disabled={loading || googleLoading}
-                  className="h-12 w-full cursor-pointer rounded-lg bg-[#3b8fe8] text-sm font-semibold text-[#121826] transition hover:bg-[#6eaff8] disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+                  className="h-12 w-full cursor-pointer rounded-lg bg-[#3054ed] text-sm font-semibold text-[#121826] transition hover:bg-[#6eaff8] disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
                 >
                   {loading ? "Creating account..." : "Sign up"}
                 </button>
@@ -308,7 +308,7 @@ export default function Signup() {
                 onClick={handleGoogleSignup}
                 type="button"
                 disabled={loading || googleLoading}
-                className="flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-[#191d20]/15 bg-white/80 text-sm font-semibold transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+                className="flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-[#182137]/15 bg-white/80 text-sm font-semibold transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
               >
                 <GoogleIcon />
                 {googleLoading ? "Connecting to Google..." : "Google"}
@@ -317,11 +317,11 @@ export default function Signup() {
               {/* ======================================
                   GO TO LOGIN
               ====================================== */}
-              <p className="mt-8 text-center text-xs text-[#55595c]">
+              <p className="mt-8 text-center text-xs text-[#687087]">
                 Already have an account?{" "}
                 <Link
                   to="/Login"
-                  className="font-semibold text-[#2f7fe2] underline-offset-4 hover:underline"
+                  className="font-semibold text-[#3054ed] underline-offset-4 hover:underline"
                 >
                   Log in
                 </Link>
@@ -368,15 +368,15 @@ function GoogleIcon() {
 
 function DuckPlaceholder() {
   return (
-    <figure className="m-0 flex h-[160px] w-[232px] flex-col border border-[#191d20]/15 bg-white/25" aria-label="Placeholder for the Clario duck illustration">
-      <div className="flex justify-between border-b border-[#191d20]/10 px-4 py-2 font-detail text-[9px] tracking-wider text-[#55595c]"><span>CLARIO / MASCOT</span><span>FIG. 01</span></div>
+    <figure className="m-0 flex h-[160px] w-[232px] flex-col border border-[#182137]/15 bg-white/25" aria-label="Placeholder for the Clario duck illustration">
+      <div className="flex justify-between border-b border-[#182137]/10 px-4 py-2 font-detail text-[9px] tracking-wider text-[#687087]"><span>CLARIO / MASCOT</span><span>FIG. 01</span></div>
       <div className="flex flex-1 items-center justify-center">
-        <svg viewBox="0 0 240 200" className="h-24 w-32 text-[#2f7fe2] opacity-65" fill="none" aria-hidden="true">
+        <svg viewBox="0 0 240 200" className="h-24 w-32 text-[#3054ed] opacity-65" fill="none" aria-hidden="true">
           <path d="M48 132c-10-20-9-39-1-54 9 14 21 23 38 25 0-14 4-28 14-38 12-12 32-16 48-9 16 6 26 22 25 39l25 10-26 13c-4 29-24 49-56 49-30 0-54-12-67-35Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeDasharray="5 7" />
           <path d="M89 127c12 16 32 20 49 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="147" cy="83" r="3" fill="currentColor" />
         </svg>
       </div>
-      <figcaption className="pb-2 text-center text-[9px] text-[#55595c]">Duck illustration placeholder</figcaption>
+      <figcaption className="pb-2 text-center text-[9px] text-[#687087]">Duck illustration placeholder</figcaption>
     </figure>
   );
 }

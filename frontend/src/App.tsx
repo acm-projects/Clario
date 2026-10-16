@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { brandTheme } from "./lib/theme";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -12,7 +13,9 @@ import Feedback from "./pages/Feedback";
 import ProfileGate from "./components/auth/ProfileGate";
 
 function App() {
-  return (
+  const { pathname } = useLocation();
+  const sandbox = /^\/interview\/[^/]+\/?$/.test(pathname);
+  const routes = (
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
@@ -27,6 +30,7 @@ function App() {
         <Route path="/profile" element={<Settings />} />      </Route>
     </Routes>
   );
+  return sandbox ? routes : <div className={brandTheme}>{routes}</div>;
 }
 
 export default App;
