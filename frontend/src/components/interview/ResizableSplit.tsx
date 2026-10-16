@@ -38,7 +38,7 @@ export function ResizableSplit({
   return (
     <div
       ref={containerRef}
-      className="grid h-full min-h-0 min-w-0"
+      className={`resizable-split resizable-split-${direction} grid h-full min-h-0 min-w-0`}
       style={horizontal
         ? { gridTemplateColumns: `minmax(0, ${size}fr) 12px minmax(0, ${100 - size}fr)` }
         : { gridTemplateRows: `minmax(0, ${size}fr) 12px minmax(0, ${100 - size}fr)` }}

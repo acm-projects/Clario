@@ -1,3 +1,4 @@
+import { DuckIcon } from "./DuckIcon";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Panel, Pill } from "./Panel";
 
@@ -119,7 +120,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
   }, [cameraStream]);
 
   return (
-    <Panel>
+    <Panel className="sandbox-video">
       <div className="flex shrink-0 items-center justify-between px-4 py-3">
         <span className="theme-main-text flex items-center gap-2 text-sm font-semibold">
           <svg {...icon} width={16} height={16} className="theme-muted-text"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>
@@ -149,7 +150,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
         <div className="theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
           <NameTag>{interviewer}</NameTag>
           <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
-            🦆
+            <DuckIcon size={84} />
           </div>
           <button
             type="button"

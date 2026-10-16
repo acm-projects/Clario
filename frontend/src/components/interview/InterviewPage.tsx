@@ -10,33 +10,6 @@ import { session } from "./data";
 import { fakeProblem, type Problem, type TestsResponse } from "../../types";
 import { ApiError, getProblem, runTests } from "../../lib/api";
 
-const difficultyStyle = {
-  dark: {
-    Easy: "bg-[#173a2c] text-[#5fd39a]",
-    Medium: "bg-[#3a3217] text-[#e0b84f]",
-    Hard: "bg-[#3a1c20] text-[#ec6f7a]",
-  },
-  light: {
-    Easy: "bg-[#e3f5ea] text-[#187344]",
-    Medium: "bg-[#fff3cf] text-[#865b05]",
-    Hard: "bg-[#ffe6e8] text-[#b43a48]",
-  },
-} as const;
-
-function Wave() {
-  return (
-    <svg
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-[44px] w-full"
-      viewBox="0 0 1440 44"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      <path d="M0 18 C 180 40, 320 0, 560 14 S 980 40, 1200 12 S 1400 8, 1440 16 V44 H0Z" fill="var(--wave-a)" opacity="0.55" />
-      <path d="M0 28 C 220 10, 420 44, 700 28 S 1100 6, 1440 30 V44 H0Z" fill="var(--wave-b)" />
-    </svg>
-  );
-}
-
 export default function InterviewPage() {
   const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
@@ -50,7 +23,7 @@ export default function InterviewPage() {
   const [runError, setRunError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(() =>
-    window.localStorage.getItem("clario-theme") === "light" ? "light" : "dark",
+    window.localStorage.getItem("clario-theme") === "dark" ? "dark" : "light",
   );
 
   useEffect(() => {
@@ -131,7 +104,8 @@ export default function InterviewPage() {
 
     return (
       <main
-        className="flex min-h-screen items-center justify-center bg-[#0a1120] px-6 text-center text-lg font-semibold text-white"
+        data-theme={theme}
+        className="interview-page flex min-h-screen items-center justify-center bg-[var(--page-bg)] px-6 text-center text-lg font-semibold text-[var(--text-main)]"
         role="status"
         aria-live="polite"
       >
@@ -152,91 +126,44 @@ export default function InterviewPage() {
         running={running}
       />
 
-      <main className="min-h-0 flex-1 pb-12 pt-3">
-        <ResizableSplit
-          direction="horizontal"
-          storageKey="clario-interview-problem-width"
-          initialSize={30}
-          label="Resize problem panel"
+      <main className="sandbox-layout">
+        <ResizableSplit direction="horizontal" storageKey="clario-sandbox-call-width" initialSize={76}
+          label="Resize workspace and interview call"
           first={
-            <ResizableSplit
-              direction="vertical"
-              storageKey="clario-interview-problem-height"
-              initialSize={75}
-              label="Resize problem and test results"
-              first={<ProblemPanel problem={problem} solved={session.solved} />}
-              second={
-                <TestResultPanel
-                  testcases={problem.example_testcases}
-                  result={runResult}
-                  error={runError}
+            <ResizableSplit direction="vertical" storageKey="clario-sandbox-results-height" initialSize={81}
+              label="Resize editor and test results"
+              first={
+                <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
+                  label="Resize problem and code editor"
+                  first={<ProblemPanel problem={problem} solved={session.solved} />}
+                  second={<CodePanel starterCode={problem.starter_code} theme={theme} initialLanguage={language}
+                    onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }
+              second={<TestResultPanel starterCode={problem.starter_code.python3} testcases={problem.example_testcases} result={runResult} error={runError} />}
             />
           }
           second={
-            <ResizableSplit
-              direction="horizontal"
-              storageKey="clario-interview-code-width"
-              initialSize={72}
-              label="Resize code and interview panel"
-              first={
-                <CodePanel
-                  starterCode={problem.starter_code}
-                  theme={theme}
-                  initialLanguage={language}
-                  onChange={(nextLanguage, nextCode) => {
-                    setLanguage(nextLanguage);
-                    setCode(nextCode);
-                  }}
-                />
-              }
-              second={
-                <div className="grid min-h-0 min-w-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-2">
-                  <div className="relative flex flex-wrap items-center justify-end gap-2 px-1">
-                    <span className={`rounded-full px-3 py-1 text-xs ${difficultyStyle[theme][problem.difficulty]}`}>
-                      {problem.difficulty}
-                    </span>
-                    <button
-                      onClick={() => setOpenInfo((current) => current === "topics" ? null : "topics")}
-                      aria-expanded={openInfo === "topics"}
-                      aria-controls="problem-topics"
-                      className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
-                    >
-                      Topics
-                    </button>
-                    <button
-                      onClick={() => setOpenInfo((current) => current === "hint" ? null : "hint")}
-                      aria-expanded={openInfo === "hint"}
-                      aria-controls="problem-hint"
-                      className="theme-surface theme-body-text theme-surface-hover rounded-full px-3 py-1 text-xs"
-                    >
-                      Hint
-                    </button>
-                    {openInfo === "topics" && (
-                      <div id="problem-topics" className="theme-panel absolute right-0 top-full z-10 mt-2 flex max-w-full flex-wrap justify-end gap-2 rounded-lg border p-2 shadow-xl">
-                        {problem.topics.map((topic) => (
-                          <span key={topic} className="theme-border rounded-full border px-2.5 py-0.5 text-xs text-[var(--accent-text)]">
-                            {topic}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    {openInfo === "hint" && (
-                      <div id="problem-hint" role="status" className="theme-panel theme-body-text absolute right-0 top-full z-10 mt-2 rounded-lg border px-3 py-2 text-xs shadow-xl">
-                        Hints coming soon.
-                      </div>
-                    )}
-                  </div>
-                  <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
-                </div>
-              }
-            />
+        <div className="sandbox-call">
+          <div className="sandbox-call-heading">
+            <h2>Interview call</h2>
+            <div className="flex gap-2">
+              {(["topics", "hint"] as const).map((item) => (
+                <button key={item} className="sandbox-button" aria-expanded={openInfo === item}
+                  aria-controls="sandbox-info" onClick={() => setOpenInfo(openInfo === item ? null : item)}>
+                  {item === "topics" ? "Topics" : "Hint"}
+                </button>
+              ))}
+            </div>
+            {openInfo && <div id="sandbox-info" className="sandbox-info" role="status">
+              {openInfo === "topics" ? problem.topics.join(" ? ") : "Hints coming soon."}
+            </div>}
+          </div>
+          <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
+        </div>
           }
         />
       </main>
-
-      <Wave />
     </div>
   );
 }

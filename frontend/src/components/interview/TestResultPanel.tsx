@@ -3,114 +3,91 @@ import { Panel } from "./Panel";
 import type { TestsResponse } from "../../types";
 
 interface TestResultPanelProps {
-  testcases: string; // Problem.example_testcases
+  testcases: string;
+  starterCode?: string;
   result?: TestsResponse | null;
   error?: string | null;
   message?: string;
 }
 
-// Verdict -> badge colours. Keys mirror the RunStatus values from the backend;
-// an unknown verdict falls back to the neutral "Unsupported" styling.
-const STATUS_STYLE: Record<string, string> = {
-  Accepted: "bg-[#173a2c] text-[#5fd39a]",
-  "Wrong Answer": "bg-[#3a3217] text-[#e0b84f]",
-  "Runtime Error": "bg-[#3a1c20] text-[#ec6f7a]",
-  "Time Limit Exceeded": "bg-[#3a3217] text-[#e0b84f]",
-  "Compile Error": "bg-[#3a1c20] text-[#ec6f7a]",
-  Unsupported: "bg-[#1c2436] text-[#8a97ad]",
-};
-
-const statusStyle = (status: string) =>
-  STATUS_STYLE[status] ?? "bg-[#1c2436] text-[#8a97ad]";
-
-export function TestResultPanel({
-  testcases,
-  result = null,
-  error = null,
-  message = "You must run your code first",
-}: TestResultPanelProps) {
-  const [tab, setTab] = useState<"result" | "testcase">("result");
-  const tabClass = (active: boolean) =>
-    active ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]";
-
-  return (
-    <Panel>
-      <nav className="theme-border flex shrink-0 items-center gap-5 border-b px-4 py-3 text-sm">
-        <button className={tabClass(tab === "result")} onClick={() => setTab("result")}>
-          Test Result
-        </button>
-        <button className={tabClass(tab === "testcase")} onClick={() => setTab("testcase")}>
-          Testcase
-        </button>
-      </nav>
-
-      {tab === "result" ? (
-        <div className="theme-muted-text min-h-0 flex-1 overflow-auto p-3 text-sm">
-          {error ? (
-            <pre className="whitespace-pre-wrap text-red-400">{error}</pre>
-          ) : result ? (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle(result.status)}`}>
-                  {result.status}
-                </span>
-                {result.total > 0 && (
-                  <span className="theme-muted-text text-xs">
-                    {result.passed}/{result.total} passed
-                  </span>
-                )}
-              </div>
-
-              {result.error && (
-                <pre className="whitespace-pre-wrap font-mono text-xs text-red-400">
-                  {result.error}
-                </pre>
-              )}
-
-              {result.cases.map((testCase) => (
-                <div
-                  key={testCase.case}
-                  className="theme-code-surface rounded-lg px-3 py-2 font-mono text-xs"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="theme-body-text font-semibold">
-                      Case {testCase.case}
-                    </span>
-                    <span className={testCase.passed ? "text-green-400" : "text-red-400"}>
-                      {testCase.passed ? "✓ Passed" : "✗ Failed"}
-                    </span>
-                  </div>
-                  <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
-                    <dt className="theme-muted-text">Input</dt>
-                    <dd className="whitespace-pre-wrap [overflow-wrap:anywhere]">{testCase.input}</dd>
-                    <dt className="theme-muted-text">Expected</dt>
-                    <dd className="whitespace-pre-wrap [overflow-wrap:anywhere]">{testCase.expected}</dd>
-                    <dt className="theme-muted-text">Output</dt>
-                    <dd className="whitespace-pre-wrap [overflow-wrap:anywhere]">
-                      {testCase.output ?? "—"}
-                    </dd>
-                  </dl>
-                </div>
-              ))}
-
-              {result.stdout && (
-                <div className="theme-code-surface rounded-lg px-3 py-2 font-mono text-xs">
-                  <div className="theme-muted-text mb-1">stdout</div>
-                  <pre className="whitespace-pre-wrap [overflow-wrap:anywhere]">{result.stdout}</pre>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex h-full items-center justify-center">{message}</div>
-          )}
+export function TestResultPanel({ testcases, starterCode = "", result = null, error = null,
+  message = "Run your code to see test results." }: TestResultPanelProps) {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [tab, setTab] = useState<"results" | "testcases">("results");
+  const signature = starterCode.match(/def\s+(?!__init__\b)\w+\s*\(([^)]*)\)/)?.[1];
+  let depth = 0;
+  const parameters = signature?.split("").map((char) => {
+    if ("[({".includes(char)) depth++;
+    if ("])}".includes(char)) depth--;
+    return char === "," && depth === 0 ? "\n" : char;
+  }).join("").split("\n").filter((param) => param.trim() && param.trim() !== "self");
+  const lines = testcases.split("\n").filter((line) => line.trim());
+  const count = parameters?.length || lines.length || 1;
+  const examples = Array.from({ length: Math.ceil(lines.length / count) }, (_, index) => ({
+    case: index + 1, input: lines.slice(index * count, (index + 1) * count).join("\n"),
+    passed: undefined as boolean | undefined,
+  }));
+  const cases = result?.cases.length ? result.cases : examples;
+  const selectedCase = cases.find((item) => item.case === selected);
+  const active = result?.cases.find((item) => item.case === selected);
+  return <Panel className="sandbox-results">
+    <div className="flex shrink-0 flex-wrap items-center gap-3">
+      <div className="flex gap-5" role="tablist" aria-label="Code execution">
+        {(["results", "testcases"] as const).map((item) => (
+          <button key={item} id={`sandbox-${item}-tab`} role="tab"
+            aria-selected={tab === item} aria-controls={`sandbox-${item}-panel`}
+            tabIndex={tab === item ? 0 : -1}
+            onClick={() => setTab(item)}
+            onKeyDown={(event) => {
+              if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+                event.preventDefault();
+                const next = event.key === "Home" ? "results" : event.key === "End" ? "testcases" : tab === "results" ? "testcases" : "results";
+                setTab(next);
+                document.getElementById(`sandbox-${next}-tab`)?.focus();
+              }
+            }}
+            className={`border-b-2 pb-2 text-base font-semibold ${tab === item ? "border-[#fac52e] theme-main-text" : "border-transparent theme-muted-text"}`}>
+            {item === "results" ? "Test results" : "Testcases"}
+          </button>
+        ))}
+      </div>
+      {result && <span className="sandbox-result-count">{result.passed} / {result.total} passed</span>}
+    </div>
+    <div id="sandbox-testcases-panel" role="tabpanel" aria-labelledby="sandbox-testcases-tab"
+      hidden={tab !== "testcases"} className="min-h-0 overflow-auto">
+      <div className="sandbox-cases sandbox-input-cases">
+        {cases.map((item) => <button key={item.case}
+          className={`sandbox-case ${item.passed === false ? "failed" : "passed"}`}
+          aria-expanded={selected === item.case} aria-controls="sandbox-case-input"
+          onClick={() => setSelected(selected === item.case ? null : item.case)}>
+          <span className="sandbox-case-dot" /><strong>Case {item.case}</strong>
+          <span>{item.passed === undefined ? "Not run" : item.passed ? "passed" : "failed"}</span>
+          <svg className="ml-auto shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ transform: selected === item.case ? "rotate(180deg)" : undefined }}><path d="m5 9 7 7 7-7" /></svg>
+        </button>)}
+      </div>
+      {selectedCase && <div id="sandbox-case-input" className="mt-3 theme-body-text">
+        <p className="mb-1 text-xs font-semibold">Input</p>
+        <pre className="theme-code-surface rounded-lg p-3 font-mono text-xs leading-6 whitespace-pre-wrap [overflow-wrap:anywhere]">{selectedCase.input}</pre>
+      </div>}
+      {!cases.length && <p className="theme-muted-text text-sm">No example testcases available.</p>}
+    </div>
+    <div id="sandbox-results-panel" role="tabpanel" aria-labelledby="sandbox-results-tab"
+      hidden={tab !== "results"} className="min-h-0 overflow-auto" aria-live="polite">
+      {error ? <pre className="whitespace-pre-wrap text-red-600">{error}</pre> : result ? <>
+        <div className="sandbox-cases">
+          {result.cases.map((item) => <button key={item.case}
+            className={`sandbox-case ${item.passed ? "passed" : "failed"}`}
+            aria-expanded={selected === item.case} onClick={() => setSelected(selected === item.case ? null : item.case)}>
+            <span className="sandbox-case-dot" /> <strong>Case {item.case}</strong>
+            <span>{item.passed ? "passed" : "failed"}</span><span className="ml-auto">{selected === item.case ? "?" : "?"}</span>
+          </button>)}
         </div>
-      ) : (
-        <div className="min-h-0 flex-1 overflow-y-auto p-3">
-          <pre className="theme-code-surface theme-body-text rounded-lg px-3.5 py-3 font-mono text-xs leading-6">
-            {testcases}
-          </pre>
-        </div>
-      )}
-    </Panel>
-  );
+        {active && <p className="mt-2 font-mono text-xs whitespace-pre-wrap">Case {active.case} ? {active.input} ? output {active.output ?? "?"} ? expected {active.expected}</p>}
+        {result.error && <pre className="mt-2 whitespace-pre-wrap text-xs text-red-600">{result.error}</pre>}
+        {result.stdout && <pre className="mt-2 whitespace-pre-wrap text-xs">{result.stdout}</pre>}
+      </> : <div className="flex flex-wrap items-center justify-between gap-3 pt-3 text-sm theme-muted-text">
+        <p>{message}</p>
+      </div>}
+    </div>
+  </Panel>;
 }

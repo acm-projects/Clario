@@ -10,12 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@hugeicons/core-free-icons": "^4.3.5",
+    "@hugeicons/react": "^1.1.10",
     "@monaco-editor/react": "^4.7.0",
     "@supabase/supabase-js": "^2.117.2",
     "@tailwindcss/vite": "^4.3.3",
+    "dompurify": "^3.4.16",
+    "gsap": "^3.15.0",
+    "motion": "^14.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "dompurify": "^3.4.16",
     "react-router-dom": "^7.18.4",
     "tailwindcss": "^4.3.3"
   },

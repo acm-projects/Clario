@@ -16,7 +16,7 @@ const htmlStyles = [
 
 export function ProblemPanel({ problem, solved }: { problem: Problem; solved: boolean }) {
   return (
-    <Panel>
+    <Panel className="sandbox-problem">
       <nav className="theme-border flex shrink-0 items-center gap-2 border-b px-3 py-3 text-xs">
         {TABS.map((tab, i) => (
           <button
@@ -33,7 +33,7 @@ export function ProblemPanel({ problem, solved }: { problem: Problem; solved: bo
           <h1 className="problem-title theme-main-text text-lg font-extrabold leading-tight">
             {problem.leetcode_id}. {problem.title}
           </h1>
-          {solved && <span className="text-[var(--success)] text-xs font-medium">Solved</span>}
+          <span className={`sandbox-difficulty difficulty-${problem.difficulty.toLowerCase()}`}>{problem.difficulty}{solved ? " ? Solved" : ""}</span>
         </div>
 
         <div

@@ -1,3 +1,5 @@
+import { DuckIcon } from "./DuckIcon";
+import { useNavigate } from "react-router-dom";
 import { Pill } from "./Panel";
 import { UmpireTracker } from "./UmpireTracker";
 
@@ -20,12 +22,13 @@ export function TopBar({
   onSubmit,
   running = false,
 }: TopBarProps) {
+  const navigate = useNavigate();
   return (
-    <header className="theme-border relative flex h-[46px] shrink-0 items-center justify-between border-b px-5">
+    <header className="theme-border relative flex h-[74px] shrink-0 items-center justify-between border-b px-5">
       <div className="flex items-center gap-5">
-        <span className="theme-main-text text-[22px] font-medium tracking-[0.08em]">CLARIO</span>
-        <button className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
-        <div role="group" aria-label="Color theme" className="theme-border flex items-center rounded-md border p-0.5">
+        <span className="sandbox-brand"><span className="sandbox-brand-icon" aria-hidden="true"><DuckIcon /></span>Clario</span>
+        <button onClick={() => navigate("/problems")} className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
+        <div role="group" aria-label="Color theme" className="sandbox-theme-toggle theme-border flex items-center rounded-md border p-0.5">
           <button
             type="button"
             title="Light mode"
@@ -58,14 +61,14 @@ export function TopBar({
         <button
           onClick={onRun}
           disabled={running}
-          className="theme-surface theme-body-text theme-surface-hover flex h-[34px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+          className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
           {running ? "Running..." : "Run"}
         </button>
         <button
           onClick={onSubmit}
-          className="h-[34px] rounded-lg bg-[#2f6fd0] px-6 text-sm font-semibold text-white hover:bg-[#3b7ae0]"
+          className="h-[42px] rounded-lg sandbox-submit px-6 text-sm font-semibold"
         >
           Submit
         </button>
@@ -77,7 +80,7 @@ export function TopBar({
           <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
           Session live
         </Pill>
-        <span className="theme-body-text text-sm tabular-nums">{timer}</span>
+        <span className="sandbox-timer theme-body-text text-sm tabular-nums">{timer}</span>
       </div>
     </header>
   );
