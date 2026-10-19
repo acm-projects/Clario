@@ -1,9 +1,62 @@
+import logging
+import os
+
 import httpx
 
-BASE_URL = "https://alfa-leetcode-api.onrender.com"
+logger = logging.getLogger(__name__)
+
+BASE_URL = os.getenv("LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com")
 TIMEOUT = 5.0  # seconds, so a slow API can't hang our server
 
 KEEP_LANGS = {"python3", "java"}
+
+
+# alfa-leetcode-api's /select doesn't return starter code, so we ask LeetCode's
+# own GraphQL endpoint for it. This is an unofficial endpoint: any failure must
+# degrade to an empty starter_code, never break the problem response.
+GRAPHQL_URL = "https://leetcode.com/graphql"
+STARTER_QUERY = """
+query starterCode($titleSlug: String!) {
+  question(titleSlug: $titleSlug) {
+    codeSnippets { langSlug code }
+  }
+}
+"""
+_starter_cache: dict[str, dict] = {}  # starter code never changes, so cache successes
+
+
+def _pick_langs(snippets) -> dict:
+    out = {}
+    for snippet in snippets or []:
+        lang = (snippet.get("langSlug") or "").lower()
+        if lang in KEEP_LANGS:
+            out[lang] = snippet.get("code", "")
+    return out
+
+
+def get_starter_code(slug: str) -> dict:
+    if slug in _starter_cache:
+        return _starter_cache[slug]
+    try:
+        response = httpx.post(
+            GRAPHQL_URL,
+            json={"query": STARTER_QUERY, "variables": {"titleSlug": slug}},
+            headers={
+                "Content-Type": "application/json",
+                "Referer": f"https://leetcode.com/problems/{slug}/",
+                "User-Agent": "Mozilla/5.0",
+            },
+            timeout=TIMEOUT,
+        )
+        response.raise_for_status()
+        question = (response.json().get("data") or {}).get("question") or {}
+        code = _pick_langs(question.get("codeSnippets"))
+    except (httpx.HTTPError, ValueError) as e:
+        logger.warning("Starter code lookup failed for %s: %s", slug, e)
+        return {}
+    if code:
+        _starter_cache[slug] = code
+    return code
 
 
 def _is_paid(item: dict) -> bool:
@@ -11,7 +64,7 @@ def _is_paid(item: dict) -> bool:
     return bool(item.get("paidOnly") or item.get("isPaidOnly"))
 
 
-def get_problem_list(difficulty: str | None = None, topic: str | None = None, search: str | None = None) -> list[dict]:
+def fetch_live_problem_list(difficulty: str | None = None, topic: str | None = None, search: str | None = None) -> list[dict]:
     params = {"limit": 200}  # pull a large batch so client-side filtering (e.g. search) has enough to work with
 
     if difficulty:
@@ -49,7 +102,7 @@ def get_problem_list(difficulty: str | None = None, topic: str | None = None, se
     return results
 
 
-def get_problem(slug: str) -> dict | None:
+def fetch_live_problem(slug: str) -> dict | None:
     response = httpx.get(f"{BASE_URL}/select", params={"titleSlug": slug}, timeout=TIMEOUT)
     response.raise_for_status()
     item = response.json()
@@ -63,11 +116,9 @@ def get_problem(slug: str) -> dict | None:
 
     topics = [t.get("name") for t in item.get("topicTags", []) if t.get("name")]
 
-    starter_code = {}
-    for snippet in item.get("codeSnippets", []):
-        lang_slug = snippet.get("langSlug", "").lower()
-        if lang_slug in KEEP_LANGS:
-            starter_code[lang_slug] = snippet.get("code", "")
+    starter_code = _pick_langs(item.get("codeSnippets"))
+    if not starter_code:
+        starter_code = get_starter_code(slug)
 
     return {
         "slug": item.get("titleSlug", slug),
@@ -79,3 +130,110 @@ def get_problem(slug: str) -> dict | None:
         "example_testcases": item.get("exampleTestcases", ""),
         "starter_code": starter_code,
     }
+
+
+# ---------------------------------------------------------------------------
+# Supabase fallback: try the live API first, read the saved copy if it fails.
+# A problem that simply doesn't exist (live returns None) is NOT a failure and
+# does not fall back.
+# ---------------------------------------------------------------------------
+def _norm(text) -> str:
+    return (text or "").strip().lower().replace("-", " ")
+
+
+def _sort_key(row: dict) -> int:
+    lid = str(row.get("leetcode_id") or "")
+    return int(lid) if lid.isdigit() else 10**9
+
+
+def _db_problem_list(difficulty, topic, search):
+    """Saved problems, filtered like the live list. None means no usable fallback data."""
+    try:
+        from db import supabase
+        rows = (
+            supabase.table("problems")
+            .select("slug, leetcode_id, title, difficulty, topics")
+            .execute()
+            .data
+        )
+    except Exception as e:
+        logger.warning("Supabase fallback list failed: %s", e)
+        return None
+    rows = [r for r in rows if r.get("slug")]
+    if not rows:
+        return None
+
+    out = []
+    for r in rows:
+        topics = r.get("topics") or []
+        if difficulty and _norm(r.get("difficulty")) != _norm(difficulty):
+            continue
+        if topic and _norm(topic) not in {_norm(t) for t in topics}:
+            continue
+        if search and _norm(search) not in _norm(r.get("title")) and _norm(search) not in _norm(r["slug"]):
+            continue
+        out.append({
+            "slug": r["slug"],
+            "leetcode_id": r.get("leetcode_id") or "",
+            "title": r.get("title") or "",
+            "difficulty": r.get("difficulty") or "",
+            "topics": topics,
+        })
+    return sorted(out, key=_sort_key)
+
+
+def _db_problem(slug: str):
+    try:
+        from db import supabase
+        rows = (
+            supabase.table("problems")
+            .select("slug, leetcode_id, title, difficulty, topics, description_html, example_testcases, starter_code")
+            .eq("slug", slug)
+            .execute()
+            .data
+        )
+    except Exception as e:
+        logger.warning("Supabase fallback lookup failed for %s: %s", slug, e)
+        return None
+    if not rows:
+        return None
+    r = rows[0]
+    starter = r.get("starter_code")
+    return {
+        "slug": r["slug"],
+        "leetcode_id": r.get("leetcode_id") or "",
+        "title": r.get("title") or "",
+        "difficulty": r.get("difficulty") or "",
+        "topics": r.get("topics") or [],
+        "description_html": r.get("description_html") or "",
+        "example_testcases": r.get("example_testcases") or "",
+        "starter_code": starter if isinstance(starter, dict) else {},
+    }
+
+
+def get_problem_list(difficulty=None, topic=None, search=None) -> list[dict]:
+    try:
+        result = fetch_live_problem_list(difficulty, topic, search)
+        logger.info("problem list served from live API")
+        return result
+    except (httpx.HTTPError, ValueError) as e:
+        logger.warning("Live problem list failed (%s); trying Supabase fallback", e)
+        rows = _db_problem_list(difficulty, topic, search)
+        if rows is None:
+            raise httpx.HTTPError("Live API failed and no Supabase fallback is available") from e
+        logger.info("problem list served from Supabase fallback")
+        return rows
+
+
+def get_problem(slug: str) -> dict | None:
+    try:
+        problem = fetch_live_problem(slug)
+        logger.info("problem %s served from live API", slug)
+        return problem
+    except (httpx.HTTPError, ValueError) as e:
+        logger.warning("Live problem %s failed (%s); trying Supabase fallback", slug, e)
+        row = _db_problem(slug)
+        if row is None:
+            raise httpx.HTTPError("Live API failed and no Supabase fallback is available") from e
+        logger.info("problem %s served from Supabase fallback", slug)
+        return row
