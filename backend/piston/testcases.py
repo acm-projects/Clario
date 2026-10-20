@@ -92,4 +92,5 @@ def build_test_cases(problem: dict) -> list[dict]:
 
     if not cases:
         raise UnsupportedProblem("Test cases not supported for this problem yet")
+    
     return cases

@@ -25,6 +25,7 @@ app.include_router(sessions_router)
 app.include_router(scenarios_router)
 
 
+
 @app.get("/")
 async def root():
     return {"status": "ok"}
