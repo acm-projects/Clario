@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <section
-      className={`theme-panel flex min-h-0 flex-col overflow-hidden rounded-xl border ${className}`}
+      className={`flex min-h-0 flex-col overflow-hidden rounded-[18px] border border-[var(--line)] bg-[var(--panel-bg)] ${className}`}
     >
       {children}
     </section>
@@ -12,7 +12,7 @@ export function Panel({ children, className = "" }: { children: ReactNode; class
 
 export function Pill({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <span className={`theme-surface theme-body-text rounded-full px-3 py-1 text-xs ${className}`}>
+    <span className={`rounded-full bg-[var(--surface)] px-3 py-1 text-xs text-[var(--text-body)] ${className}`}>
       {children}
     </span>
   );

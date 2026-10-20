@@ -7,12 +7,13 @@ interface ResizableSplitProps {
   label: string;
   first: ReactNode;
   second: ReactNode;
+  className?: string;
 }
 
 const clamp = (value: number) => Math.min(85, Math.max(15, value));
 
 export function ResizableSplit({
-  direction, storageKey, initialSize, label, first, second,
+  direction, storageKey, initialSize, label, first, second, className = "",
 }: ResizableSplitProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef<number | null>(null);
@@ -38,7 +39,7 @@ export function ResizableSplit({
   return (
     <div
       ref={containerRef}
-      className={`resizable-split resizable-split-${direction} grid h-full min-h-0 min-w-0`}
+      className={`resizable-split resizable-split-${direction} grid h-full min-h-0 min-w-0 ${className}`}
       style={horizontal
         ? { gridTemplateColumns: `minmax(0, ${size}fr) 12px minmax(0, ${100 - size}fr)` }
         : { gridTemplateRows: `minmax(0, ${size}fr) 12px minmax(0, ${100 - size}fr)` }}
@@ -53,7 +54,7 @@ export function ResizableSplit({
         aria-valuemax={85}
         aria-valuenow={Math.round(size)}
         title="Drag or use arrow keys to resize; double-click to reset"
-        className={`group flex touch-none items-center justify-center rounded select-none outline-none hover:bg-[var(--surface)] focus-visible:bg-[var(--surface)] focus-visible:ring-2 focus-visible:ring-[#2f6fd0] ${horizontal ? "cursor-col-resize" : "cursor-row-resize"}`}
+        className={`group flex touch-none items-center justify-center rounded select-none outline-none hover:bg-[var(--surface)] focus-visible:bg-[var(--surface)] focus-visible:ring-2 focus-visible:ring-[#2f6fd0] ${horizontal ? "cursor-col-resize max-[600px]:hidden" : ""} focus-visible:outline-2 focus-visible:outline-[var(--focus-color)] focus-visible:outline-offset-[3px]`}
         onDoubleClick={() => setSize(initialSize)}
         onPointerDown={(event) => {
           if (event.button !== 0) return;

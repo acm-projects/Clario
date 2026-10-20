@@ -112,14 +112,14 @@ export function CodePanel({ starterCode, theme, initialLanguage = "java", onChan
   const current = LANGUAGES.find((l) => l.id === lang)!;
 
   return (
-    <Panel className="sandbox-code">
-      <div className="flex shrink-0 items-center justify-between px-4 py-3">
+    <Panel>
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--line)] bg-[var(--page-bg)] px-4 py-3">
         <div className="flex gap-2" role="group" aria-label="Language">
           {LANGUAGES.map((item) => <button key={item.id} aria-pressed={lang === item.id}
-            className={`sandbox-button ${lang === item.id ? "is-active" : ""}`}
+            className={`cursor-pointer rounded-[9px] border border-[var(--line)] px-[15px] py-2 text-[13px] hover:bg-[var(--surface-hover)] max-[1150px]:px-[10px] ${lang === item.id ? "bg-[#fac52e] text-[#122b50]" : "bg-[var(--panel-bg)]"}`}
             onClick={() => { setLang(item.id); onChange?.(item.id, codes[item.id]); }}>{item.label}</button>)}
         </div>
-        <button className="sandbox-button" onClick={() => handleChange(starterCode[lang])}>Reset</button>
+        <button className="cursor-pointer rounded-[9px] border border-[var(--line)] bg-[var(--panel-bg)] px-[15px] py-2 text-[13px] hover:bg-[var(--surface-hover)] max-[1150px]:px-[10px]" onClick={() => handleChange(starterCode[lang])}>Reset</button>
       </div>
 
       <div className="min-h-0 flex-1">
@@ -151,9 +151,9 @@ export function CodePanel({ starterCode, theme, initialLanguage = "java", onChan
         />
       </div>
 
-      <div className="flex shrink-0 items-center justify-between px-4 py-3 text-xs">
+      <div className="flex shrink-0 items-center justify-between border-t border-[var(--line)] bg-[var(--editor-footer-bg)] px-4 py-3 font-mono text-xs text-[var(--editor-footer-text)]">
         <span>{saved ? "Saved" : "Saving…"}</span>
-        <span className="theme-muted-text">
+        <span>
           Ln {pos.line}, Col {pos.col}
         </span>
       </div>

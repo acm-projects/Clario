@@ -1,6 +1,6 @@
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { loadProblems, type ProblemSummary } from "../lib/problems";
 
 type DifficultyFilter = "All" | "Easy" | "Medium" | "Hard";
@@ -10,7 +10,8 @@ const difficultyOrder = { Easy: 0, Medium: 1, Hard: 2 };
 
 export default function ProblemLibrary() {
   const [searchParams] = useSearchParams();
-  const choosing = searchParams.get("choose") === "practice";
+  const location = useLocation();
+  const choosing = ["practice", "custom"].includes(searchParams.get("choose") ?? "");
   const [difficulty, setDifficulty] = useState<DifficultyFilter>("All");
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("All");
@@ -20,7 +21,25 @@ export default function ProblemLibrary() {
   const [error, setError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
   const source = allProblems;
-  const topics = Array.from(new Set(source.flatMap((problem) => problem.topics))).sort();
+  
+const topics = [
+  "Array",
+  "String",
+  "Dynamic Programming",
+  "Math",
+  "Two Pointers",
+  "Backtracking",
+  "Hash Table",
+  "Linked List",
+  "Matrix",
+  "Recursion",
+  "Sorting",
+  "Binary Search",
+  "Stack",
+  "Tree",
+  "Binary Tree",
+];
+
   const problems = source.filter((problem) =>
     (difficulty === "All" || problem.difficulty === difficulty) &&
     (topic === "All" || problem.topics.includes(topic)) &&
@@ -51,7 +70,7 @@ export default function ProblemLibrary() {
       <p className={"workspace-eyebrow [font-size:10px] font-semibold [letter-spacing:.13em] [color:#2565b4]"}>PRACTICE AT YOUR PACE</p>
       <h1 id="library-heading" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Problem Library</h1>
       <p className="mt-3 text-sm leading-7 text-[#55595c]">Find your next challenge. Build a solution and practice explaining why it works.</p>
-      {choosing && <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#bcd5f4] bg-[#eef5ff] p-4 text-sm text-[#2565b4]"><p>Pick a problem for your practice interview.</p><Link to="/interview" className="inline-flex min-h-10 items-center font-semibold underline underline-offset-4">Back to interview modes</Link></div>}
+      {choosing && <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#bcd5f4] bg-[#eef5ff] p-4 text-sm text-[#2565b4]"><p>Pick a problem for your custom interview.</p><Link to="/interview" className="inline-flex min-h-10 items-center font-semibold underline underline-offset-4">Back to interview modes</Link></div>}
       <div className={"library-controls [border:1px_solid_#191d2010] [border-radius:18px] [background:#fffdf8] [box-shadow:0_10px_32px_-24px_#12354c40] [padding:24px] [border-color:#dce5ed] [@media_(max-width:_479px)]:[padding:18px] mt-6"}>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-[#2565b4]">
         <p>Live problem library</p>
@@ -75,7 +94,7 @@ export default function ProblemLibrary() {
           <h2 className="mt-4 text-xl font-semibold leading-7 tracking-tight">{problem.title}</h2>
           <p className="mb-5 mt-3 line-clamp-3 text-sm leading-7 text-[#55595c]">{new DOMParser().parseFromString(problem.description_html, "text/html").querySelector("p")?.textContent || "Explore the problem and consider how you would solve it."}</p>
           <div className="mb-6 flex flex-wrap gap-2">{problem.topics.map((item) => <button type="button" key={item} onClick={() => setTopic(item)} aria-pressed={topic === item} className="min-h-8 rounded-lg bg-[#e7f0fc] px-2.5 py-1.5 text-[11px] text-[#2565b4] transition hover:bg-[#d5e6fc] motion-reduce:transition-none">{item}</button>)}</div>
-        {choosing && <Link to="/interview" state={{ selectedProblem: { slug: problem.slug, title: problem.title, difficulty: problem.difficulty } }} className="mt-4 inline-flex min-h-11 items-center justify-between gap-4 self-start rounded-lg bg-[#2378db] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1969c5] focus-visible:outline-[#2378db]">Choose this problem <span aria-hidden="true">&#8599;</span></Link>}
+        {choosing && <Link to="/interview" state={{ mode: "custom", modeProblems: (location.state as { modeProblems?: unknown } | null)?.modeProblems, selectedProblem: { slug: problem.slug, title: problem.title, difficulty: problem.difficulty } }} className="mt-4 inline-flex min-h-11 items-center justify-between gap-4 self-start rounded-lg bg-[#2378db] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1969c5] focus-visible:outline-[#2378db]">Choose this problem <span aria-hidden="true">&#8599;</span></Link>}
         </li>)}</ul> : <div className="py-10 text-center"><h2 className="text-lg font-semibold">No matching problems</h2><p className="mt-2 text-sm text-[#55595c]">Try another search or clear your filters.</p><button type="button" onClick={resetFilters} className="mt-5 min-h-10 text-sm font-semibold text-[#2565b4] underline underline-offset-4">Show all problems</button></div>}
       </div>
     </section>

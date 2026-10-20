@@ -20,7 +20,7 @@ const SignalBars = () => (
 function NameTag({ children }: { children: ReactNode }) {
   return (
     <div className="absolute inset-x-3 top-3 flex items-center justify-between">
-      <span className="theme-panel theme-main-text rounded-full px-3 py-1 text-xs">{children}</span>
+      <span className="rounded-full bg-[var(--panel-bg)] px-3 py-1 text-xs text-[var(--text-main)]">{children}</span>
       <SignalBars />
     </div>
   );
@@ -120,36 +120,36 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
   }, [cameraStream]);
 
   return (
-    <Panel className="sandbox-video">
+    <Panel className="flex-1 !rounded-none !border-0 [&>div:first-child]:hidden [&>div:nth-child(2)]:gap-3 [&>div:nth-child(2)]:px-0 [&>div:nth-child(2)]:pb-2 [&>div:last-child]:flex-wrap [&>div:last-child]:justify-between [&>div:last-child]:gap-1.5 [&>div:last-child]:border-0 [&>div:last-child]:px-0 [&>div:last-child]:pb-0 [&>div:last-child]:pt-[14px] [&>div:last-child>button]:shrink-0 [&>div:last-child>button]:border [&>div:last-child>button]:border-[var(--line)] max-[950px]:[&>div:nth-child(2)]:flex-row">
       <div className="flex shrink-0 items-center justify-between px-4 py-3">
-        <span className="theme-main-text flex items-center gap-2 text-sm font-semibold">
-          <svg {...icon} width={16} height={16} className="theme-muted-text"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>
+        <span className="flex items-center gap-2 text-sm font-semibold text-[var(--text-main)]">
+          <svg {...icon} width={16} height={16} className="text-[var(--text-muted)]"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>
           Video Call
         </span>
-        <Pill className="theme-surface theme-body-text">{round}</Pill>
+        <Pill>{round}</Pill>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-2 px-2 pb-2">
-        <div className="theme-video-self relative flex h-[170px] shrink-0 flex-col items-center justify-center rounded-xl border">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 px-0 pb-2 max-[950px]:flex-row">
+      <div className="relative flex h-auto min-h-[140px] flex-1 flex-col items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--video-self)]">
           <NameTag>You</NameTag>
           {cameraStatus === "on" ? (
             <video ref={videoRef} autoPlay muted playsInline className="h-full w-full rounded-xl object-cover" aria-label="Your camera preview" />
           ) : (
             <>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#5b6b87" strokeWidth="1.2" aria-hidden="true">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#305ed1" strokeWidth="1.2" aria-hidden="true">
                 <circle cx="12" cy="7.5" r="4.5" />
                 <path d="M3 22c0-5 4-8 9-8s9 3 9 8" />
               </svg>
-              <span className="theme-muted-text absolute bottom-3 text-[10px]">
+              <span className="absolute bottom-3 text-[10px] text-[var(--text-muted)]">
                 {cameraStatus === "blocked" ? "Camera unavailable" : cameraStatus === "off" ? "Camera off" : "Requesting camera…"}
               </span>
             </>
           )}
         </div>
 
-        <div className="theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
+        <div className="relative flex min-h-0 flex-[1.1] flex-col items-center justify-center rounded-xl border-2 border-[#fac52e] bg-[var(--video-interviewer)] p-3">
           <NameTag>{interviewer}</NameTag>
-          <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
+          <div className="flex size-[118px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px] ring-[var(--avatar-ring)] shadow-none">
             <DuckIcon size={84} />
           </div>
           <button
@@ -157,7 +157,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
             aria-pressed={isSpeaking}
             aria-label={isSpeaking ? "Pause interviewer speaking indicator" : "Resume interviewer speaking indicator"}
             onClick={() => setIsSpeaking((current) => !current)}
-            className="mt-2 flex items-center gap-2 text-[11px] font-medium text-[var(--accent-text)]"
+            className="mt-[18px] flex items-center gap-2 text-sm font-medium text-[#1e3a8a]"
           >
             {isSpeaking ? (
               <>
@@ -173,13 +173,13 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
         </div>
       </div>
 
-      <div className="theme-border flex shrink-0 items-center justify-center gap-2.5 border-t py-2.5">
+      <div className="flex shrink-0 items-center justify-center gap-1.5 border-t border-[var(--line)] pt-[14px]">
         <button
           type="button"
           aria-label={micEnabled ? "Mute microphone" : "Unmute microphone"}
           aria-pressed={micEnabled}
           onClick={() => setMicEnabled((enabled) => !enabled)}
-          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full ${micEnabled ? "theme-surface theme-body-text theme-surface-hover" : "bg-[#e2493b] text-white hover:bg-[#ee5b4d]"}`}
+          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[var(--line)] ${micEnabled ? "bg-[var(--surface)] text-[var(--text-body)] hover:bg-[var(--surface-hover)]" : "bg-[#e2493b] text-white hover:bg-[#ee5b4d]"}`}
         >
           {micEnabled ? <Mic /> : <MicOff />}
         </button>
@@ -195,14 +195,14 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
               void turnCameraOn();
             }
           }}
-          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full ${cameraStatus === "off" || cameraStatus === "blocked" ? "bg-[#e2493b] text-white hover:bg-[#ee5b4d]" : "theme-surface theme-body-text theme-surface-hover"}`}
+          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[var(--line)] ${cameraStatus === "off" || cameraStatus === "blocked" ? "bg-[#e2493b] text-white hover:bg-[#ee5b4d]" : "bg-[var(--surface)] text-[var(--text-body)] hover:bg-[var(--surface-hover)]"}`}
         >
           <Cam off={cameraStatus !== "on"} />
         </button>
-        <button type="button" aria-label="Screen sharing coming soon" title="Screen sharing coming soon" disabled className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
+        <button type="button" aria-label="Screen sharing coming soon" title="Screen sharing coming soon" disabled className="flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface)] text-[var(--text-body)] opacity-60">
           <Screen />
         </button>
-        <button type="button" aria-label="More call options coming soon" title="More call options coming soon" disabled className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
+        <button type="button" aria-label="More call options coming soon" title="More call options coming soon" disabled className="flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface)] text-[var(--text-body)] opacity-60">
           <More />
         </button>
         <button
@@ -211,7 +211,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
           onClick={() => {
             if (window.confirm("End interview?")) onEndInterview();
           }}
-          className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#e2493b] text-white hover:bg-[#ee5b4d]"
+          className="flex h-[46px] w-[46px] items-center justify-center rounded-full border border-[var(--line)] bg-[#e2493b] text-white hover:bg-[#ee5b4d]"
         >
           <HangUp />
         </button>
