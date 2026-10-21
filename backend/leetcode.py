@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import logging
-import os
 
 import httpx
 
+from config import settings
+
 logger = logging.getLogger(__name__)
 
-BASE_URL = os.getenv("LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com")
+BASE_URL = settings.leetcode_api_url
 TIMEOUT = 5.0  # seconds, so a slow API can't hang our server
 
 KEEP_LANGS = {"python3", "java"}

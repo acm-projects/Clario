@@ -117,3 +117,30 @@ Code execution has a timeout so programs such as infinite loops cannot hang the 
 2. docker start piston_api
 3. source venv/bin/activate
 4. uvicorn main:app --reload
+
+## Backend dependencies and tests
+
+The backend dependency source of truth is `backend/requirements.txt`.
+From the repository root:
+
+```bash
+python3 -m venv backend/venv
+backend/venv/bin/python -m pip install -r backend/requirements.txt
+```
+
+Copy `backend/.env.example` to `backend/.env` and provide the Supabase,
+Gemini, and ElevenLabs values before starting the API. The development
+authentication bypass remains available with `DEV_BYPASS_AUTH=true`.
+
+Start the API from `backend/` so its existing import paths continue to work:
+
+```bash
+cd backend
+../backend/venv/bin/uvicorn main:app --reload
+```
+
+Run the backend unit tests from the repository root:
+
+```bash
+backend/venv/bin/python -m pytest backend/tests -q
+```

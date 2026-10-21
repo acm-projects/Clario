@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 testcases.py  --  turns a LeetCode problem into a list of test cases.
 

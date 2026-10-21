@@ -1,0 +1,255 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-detail: "DM Sans", sans-serif;
+  --font-headline: "Anton", sans-serif;
+}
+
+/* Animations used by Tailwind utilities. */
+@theme {
+@keyframes sidebar-settle { from { transform: scale(.8); } to { transform: scale(1); } }
+@keyframes landing-float { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+@keyframes ocean-sway { from { transform: translateX(-4%) rotate(-4deg); } to { transform: translateX(4%) rotate(4deg); } }
+@keyframes ocean-rise { from { transform: translate(0, 0); opacity: 0; } 10%, 80% { opacity: 1; } to { transform: translate(35px, -1000px); opacity: 0; } }
+@keyframes landing-duck-crossfade {
+  0%, 28.333% { opacity: 1; }
+  33.333%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes assessment-reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes magic-bento-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes magic-bento-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes magic-bento-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes magic-bento-pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes magic-bento-select {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes magic-bento-blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-wait {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-run {
+  0% {
+    opacity: 0;
+  }
+  1%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes magic-bento-check {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes magic-bento-rail {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes magic-bento-packet {
+  0% {
+    top: var(--y);
+    left: var(--x);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+  }
+}
+@keyframes magic-bento-switch-track {
+  from {
+    background-color: var(--mb-line);
+  }
+  to {
+    background-color: rgb(var(--mb-accent-rgb));
+  }
+}
+@keyframes magic-bento-switch-knob {
+  from {
+    background: var(--mb-ink);
+    transform: none;
+  }
+  to {
+    background: var(--mb-accent-ink);
+    transform: translateX(10px);
+  }
+}
+@keyframes magic-bento-path-a {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: 46px -18px;
+  }
+  62% {
+    translate: 12px 26px;
+  }
+}
+@keyframes magic-bento-path-b {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  35% {
+    translate: -40px 14px;
+  }
+  70% {
+    translate: -8px -22px;
+  }
+}
+@keyframes water-duck-float { 0%,100% { transform: translate(0, 10px) rotate(-3deg); } 25% { transform: translate(3px, 0) rotate(0deg); } 50% { transform: translate(0, -10px) rotate(3deg); } 75% { transform: translate(-3px, 0) rotate(0deg); } }
+@keyframes studio-bubble-rise { 0% { transform: translate(0, 0); opacity: 0; } 15%, 80% { opacity: .7; } 100% { transform: translate(30px, -900px); opacity: 0; } }
+@keyframes studio-water-shimmer { from { background-position: 0 0; } to { background-position: 60px -30px; } }
+@keyframes dashboard-cream-drift { from { background-position: 0% 30%; } to { background-position: 100% 70%; } }
+}
+
+/* Interview room theme, scoped to the room. */
+.interview-page[data-theme="dark"] {
+  --page-bg: #0a1120;
+  --panel-bg: #0f1a2e;
+  --line: #17243b;
+  --text-main: #f4f7fc;
+  --text-body: #c3cde0;
+  --text-muted: #8a97ad;
+  --surface: #1a2842;
+  --surface-hover: #22345a;
+  --code-surface: #16233b;
+  --video-self: #0c1626;
+  --video-interviewer: #12233f;
+  --avatar-ring: #0c1a30;
+  --accent-text: #6fa4ee;
+  --wave-a: #1c3d73;
+  --wave-b: #2c5ba8;
+}
+
+.interview-page[data-theme="light"] {
+  --page-bg: #f7f3e9;
+  --panel-bg: #ffffff;
+  --line: #d5dee9;
+  --text-main: #172333;
+  --text-body: #34445a;
+  --text-muted: #65758b;
+  --surface: #e8eef5;
+  --surface-hover: #d9e3ef;
+  --code-surface: #f2f5f9;
+  --video-self: #f4f7fa;
+  --video-interviewer: #e7eff8;
+  --avatar-ring: #d2deeb;
+  --accent-text: #245d9e;
+  --wave-a: #527db5;
+  --wave-b: #2c5ba8;
+}
+
+.interview-page .theme-panel { border-color: var(--line); background-color: var(--panel-bg); }
+.interview-page .theme-border { border-color: var(--line); }
+.interview-page .theme-main-text { color: var(--text-main); }
+.interview-page .theme-body-text { color: var(--text-body); }
+.interview-page .theme-muted-text { color: var(--text-muted); }
+.interview-page .theme-surface { background-color: var(--surface); }
+.interview-page .theme-surface-hover:hover { background-color: var(--surface-hover); }
+.interview-page .theme-code-surface { background-color: var(--code-surface); }
+.interview-page .theme-video-self { border-color: var(--line); background-color: var(--video-self); }
+.interview-page .theme-video-interviewer { background-color: var(--video-interviewer); }
+.interview-page .theme-avatar-ring { --tw-ring-color: var(--avatar-ring); }
+
+.interview-page .problem-title {
+  font-size: 24px;
+}
+
+/* Workspace navigation and interview path selection. */
+.app-sidebar.studio-sidebar { box-shadow:0 10px 32px -12px #12354c38,0 3px 9px #12354c0d; }
+.sidebar-collapse { box-shadow:0 3px 10px #2378db44; }
+@keyframes interview-path-enter { from { opacity:0; translate:0 18px; } to { opacity:1; translate:0 0; } }
+@keyframes interview-path-check { from { transform:scale(.65); } to { transform:scale(1); } }
+@keyframes interview-clock-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+@media (min-width:1024px) { .studio-sidebar .sidebar-header { justify-content:center; } .studio-sidebar .sidebar-brand .brand-mark { width:42px; height:42px; } .studio-sidebar .sidebar-collapse { width:30px; height:30px; right:-28px; } }
+
+/* Custom dashboard animations used by Tailwind animate utilities. */
+@keyframes dashboard-duck-bob { 0%,100% { transform:translateY(0) rotate(-2deg); } 25% { transform:translateY(3px) rotate(0); } 50% { transform:translateY(-3px) rotate(2deg); } 75% { transform:translateY(2px) rotate(0); } }
+@keyframes dashboard-voice-pulse { from { transform:scaleY(.4); opacity:.6; } to { transform:scaleY(1); opacity:1; } }
+@keyframes dashboard-duck-swim { 0%,100% { transform:translateX(-18px); } 50% { transform:translateX(18px); } }
+@keyframes dashboard-duck-swim-mobile { 0%,100% { transform:translateX(-5px); } 50% { transform:translateX(5px); } }
+@keyframes dashboard-cloud-pop { 0% { opacity:0; transform:translateY(22px) scale(.55); } 65% { opacity:1; transform:translateY(-5px) scale(1.04); } 100% { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes dashboard-cloud-float { 0%,100% { transform:translate(0,0) rotate(-.4deg); } 50% { transform:translate(5px,-7px) rotate(.4deg); } }
+
+/* Custom page animations used by Tailwind utilities. */
+@keyframes interview-sun-shine { 0% { transform:scale(.92); } 45% { transform:scale(1.18); } 100% { transform:scale(1); } }
+@keyframes interview-beam-arrive { from { opacity:0; } to { opacity:.48; } }
+@keyframes landing-cloud-drift { from { translate:-18px 0; } to { translate:24px 0; } }

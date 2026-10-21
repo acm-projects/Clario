@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Optional
+
 import httpx
 from fastapi import APIRouter, HTTPException
 
@@ -7,7 +11,11 @@ router = APIRouter(prefix="/api/problems")
 
 
 @router.get("")
-def list_problems(difficulty: str | None = None, topic: str | None = None, search: str | None = None):
+def list_problems(
+    difficulty: Optional[str] = None,
+    topic: Optional[str] = None,
+    search: Optional[str] = None,
+):
     try:
         return get_problem_list(difficulty, topic, search)
     except httpx.HTTPError:

@@ -1,8 +1,12 @@
 node_modules/
-.env
-.env.local
 dist/
-.env __pycache__/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+venv/
+.venv/
 
 .env
 .env.*

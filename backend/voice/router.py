@@ -1,23 +1,24 @@
-import os
 import re
 from html import unescape
 from io import BytesIO
 
-from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import Response
 from google import genai
 
 from auth import get_current_user
-from piston.router import load_problem
-
-load_dotenv()
+from config import require_setting, settings
+from leetcode import get_problem
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 
-elevenlabs = ElevenLabs(api_key=os.environ["ELEVENLABS_API_KEY"])
-gemini = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+elevenlabs = ElevenLabs(
+    api_key=require_setting("ELEVENLABS_API_KEY", settings.elevenlabs_api_key)
+)
+gemini = genai.Client(
+    api_key=require_setting("GEMINI_API_KEY", settings.gemini_api_key)
+)
 
 
 def html_to_text(html: str) -> str:
@@ -30,13 +31,13 @@ def html_to_text(html: str) -> str:
 @router.get("/session")
 def get_session(problem_slug: str):
     """Returns a signed URL + problem variables for the frontend to start a session."""
-    problem = load_problem(problem_slug)
+    problem = get_problem(problem_slug)
     if problem is None:
         raise HTTPException(404, "Problem not found")
 
     try:
         signed = elevenlabs.conversational_ai.conversations.get_signed_url(
-            agent_id=os.environ["ELEVENLABS_AGENT_ID"]
+            agent_id=require_setting("ELEVENLABS_AGENT_ID", settings.elevenlabs_agent_id)
         )
     except Exception as e:
         raise HTTPException(502, f"Could not create voice session: {e}")
@@ -91,7 +92,7 @@ def voice_turn(
     # Step 3: Text to speech
     audio_stream = elevenlabs.text_to_speech.convert(
         text=response_text,
-        voice_id="JBFqnCBsd6RMkjVDRZzb",
+        voice_id=settings.elevenlabs_voice_id,
         model_id="eleven_v3",
         output_format="mp3_44100_128",
     )
