@@ -1,4 +1,5 @@
-﻿import { loadProblems } from "./problems.ts";
+import { listSessions } from "./api";
+import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
 
 export interface DashboardProblem { slug: string; title: string; difficulty: string; topic: string | null }
@@ -65,8 +66,8 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
     if (completed && ended >= start && ended < end) completedThisWeek++;
     return {
       id: String(row.id),
-      problemId: row.problem_id !== null && row.problem_id !== undefined ? String(row.problem_id) : null,
-      problemTitle: "Practice interview",
+      problemId: typeof row.problem_slug === "string" ? row.problem_slug : null,
+      problemTitle: typeof row.problem_slug === "string" ? row.problem_slug.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : "Practice interview",
       difficulty: null,
       endedAt,
       startedAt: typeof row.started_at === "string" ? row.started_at : null,
@@ -77,10 +78,8 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
   return { completedThisWeek, completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
 }
 
-// Keep history empty until Prapti confirms the sessions API contract (CLA-40).
-// Do not query unconfirmed Supabase tables or invent session progress.
 export async function loadSessionSummary(): Promise<SessionSummary> {
-  return { completedThisWeek: 0, recent: [], completedSessionIds: [], completionDates: [] };
+  return summarizeSessions(await listSessions());
 }
 
 export interface SkillScore { label: string; score: number | null }

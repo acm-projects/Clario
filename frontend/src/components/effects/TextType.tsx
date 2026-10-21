@@ -122,8 +122,8 @@ export default function TextType({
   return (
     <Component ref={containerRef} className={`text-type inline-grid [grid-template-areas:"text"] [max-width:100%] [white-space:pre-wrap] ${className}`} {...props}>
       <span className="sr-only">{currentText}</span>
-      <span className={"text-type__placeholder [grid-area:text] min-w-0 invisible pointer-events-none select-none"} aria-hidden="true">{processedText}{showCursor && <span className={"text-type__cursor [margin-left:0.25rem] inline-block [opacity:1] [color:#2378db] font-normal [@media_(prefers-reduced-motion:_reduce)]:invisible"}>{cursorCharacter}</span>}</span>
-      <span className={"text-type__visual [grid-area:text] min-w-0"} aria-hidden="true">
+      <span className="text-type__placeholder [grid-area:text] min-w-0 invisible pointer-events-none select-none" aria-hidden="true">{processedText}{showCursor && <span className="text-type__cursor [margin-left:0.25rem] inline-block [opacity:1] [color:#2378db] font-normal [@media_(prefers-reduced-motion:_reduce)]:invisible">{cursorCharacter}</span>}</span>
+      <span className="text-type__visual [grid-area:text] min-w-0" aria-hidden="true">
         <span className="text-type__content" style={{ color: textColors[currentTextIndex % textColors.length] || "inherit" }}>{reducedMotion ? processedText : displayedText}</span>
         {showCursor && <span ref={cursorRef} className={`text-type__cursor [margin-left:0.25rem] inline-block [opacity:1] [color:#2378db] font-normal [@media_(prefers-reduced-motion:_reduce)]:invisible ${cursorClassName}${hideCursor ? " text-type__cursor--hidden invisible" : ""}`}>{cursorCharacter}</span>}
       </span>

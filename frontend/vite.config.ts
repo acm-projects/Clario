@@ -8,12 +8,9 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, fileURLToPath(new URL('../backend', import.meta.url)), '')
   const bypass = command === 'serve' && env.DEV_BYPASS_AUTH === 'true'
   return {
-    server: { proxy: { '/run': 'http://localhost:8000', '/api': 'http://localhost:8000' } },
+    server: { proxy: { '/voice': env.API_BASE_URL || 'http://127.0.0.1:8000', '/run': env.API_BASE_URL || 'http://127.0.0.1:8000', '/api': env.API_BASE_URL || 'http://127.0.0.1:8000' } },
     define: {
       'import.meta.env.VITE_DEV_BYPASS_AUTH': JSON.stringify(String(bypass)),
-      'import.meta.env.VITE_API_BASE_URL': JSON.stringify(env.API_BASE_URL || 'http://localhost:8000'),
-      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.SUPABASE_URL || ''),
-      'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.SUPABASE_ANON_KEY || ''),
     },
     plugins: [react(), tailwindcss(), {
       name: 'local-profile-testing',

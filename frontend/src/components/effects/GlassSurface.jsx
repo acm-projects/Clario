@@ -2,7 +2,6 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useRef, useId } from 'react';
-import './GlassSurface.css';
 
 const FAR = 1e20;
 
@@ -741,10 +740,10 @@ const GlassSurface = ({
   return (
     <div
       ref={containerRef}
-      className={`glass-surface ${webgl ? 'glass-surface--webgl' : refractive ? 'glass-surface--svg' : 'glass-surface--fallback'} ${className}`}
+      className={`glass-surface [&.glass-surface]:[position:relative] [&.glass-surface]:[display:flex] [&.glass-surface]:[align-items:center] [&.glass-surface]:[justify-content:center] [&.glass-surface]:[overflow:hidden] [&.glass-surface]:[transition:opacity_0.26s_ease-out] [&.glass-surface:focus-visible]:[outline:2px_solid_light-dark(#007aff,_#0a84ff)] [&.glass-surface:focus-visible]:[outline-offset:2px] ${webgl ? 'glass-surface--webgl [&.glass-surface--webgl]:[box-shadow:0px_4px_16px_rgba(17,_17,_26,_0.05),_0px_8px_24px_rgba(17,_17,_26,_0.05),_0px_16px_56px_rgba(17,_17,_26,_0.05)] [&.glass-surface--webgl_.glass-surface\\_\\_line]:[background:light-dark(color-mix(in_oklch,_black,_transparent_85%),_color-mix(in_oklch,_white,_transparent_65%))] [&.glass-surface--webgl_.glass-surface\\_\\_glow]:[background:light-dark(color-mix(in_oklch,_black,_transparent_90%),_color-mix(in_oklch,_white,_transparent_85%))]' : refractive ? 'glass-surface--svg [&.glass-surface--svg]:[background:light-dark(hsl(0_0%_100%_/_var(--glass-frost,_0)),_hsl(0_0%_0%_/_var(--glass-frost,_0)))] [&.glass-surface--svg]:[backdrop-filter:var(--filter-id,_url(#glass-filter))_saturate(var(--glass-saturation,_1))] [&.glass-surface--svg]:[box-shadow:0_0_2px_1px_light-dark(color-mix(in_oklch,_black,_transparent_85%),_color-mix(in_oklch,_white,_transparent_65%))_inset,_0_0_10px_4px_light-dark(color-mix(in_oklch,_black,_transparent_90%),_color-mix(in_oklch,_white,_transparent_85%))_inset,_0px_4px_16px_rgba(17,_17,_26,_0.05),_0px_8px_24px_rgba(17,_17,_26,_0.05),_0px_16px_56px_rgba(17,_17,_26,_0.05),_0px_4px_16px_rgba(17,_17,_26,_0.05)_inset,_0px_8px_24px_rgba(17,_17,_26,_0.05)_inset,_0px_16px_56px_rgba(17,_17,_26,_0.05)_inset] [&.glass-surface--svg_.glass-surface\\_\\_line]:[background:light-dark(color-mix(in_oklch,_black,_transparent_85%),_color-mix(in_oklch,_white,_transparent_65%))] [&.glass-surface--svg_.glass-surface\\_\\_glow]:[background:light-dark(color-mix(in_oklch,_black,_transparent_90%),_color-mix(in_oklch,_white,_transparent_85%))]' : 'glass-surface--fallback [&.glass-surface--fallback]:[background:light-dark(_hsl(0_0%_100%_/_calc(0.12_+_var(--glass-frost,_0)_*_0.5)),_hsl(0_0%_100%_/_calc(0.04_+_var(--glass-frost,_0)_*_0.3))_)] [&.glass-surface--fallback]:[-webkit-backdrop-filter:blur(12px)_saturate(calc(var(--glass-saturation,_1)_*_1.4))_brightness(1.04)] [&.glass-surface--fallback]:[backdrop-filter:blur(12px)_saturate(calc(var(--glass-saturation,_1)_*_1.4))_brightness(1.04)] [&.glass-surface--fallback]:[box-shadow:inset_0_1px_0_0_light-dark(hsl(0_0%_100%_/_0.85),_hsl(0_0%_100%_/_0.3)),_inset_0_-1px_0_0_light-dark(hsl(0_0%_100%_/_0.35),_hsl(0_0%_100%_/_0.08)),_0_0_2px_1px_light-dark(color-mix(in_oklch,_black,_transparent_88%),_color-mix(in_oklch,_white,_transparent_72%))_inset,_0_0_12px_3px_light-dark(color-mix(in_oklch,_white,_transparent_72%),_color-mix(in_oklch,_white,_transparent_90%))_inset,_0px_4px_16px_rgba(17,_17,_26,_0.06),_0px_8px_24px_rgba(17,_17,_26,_0.06),_0px_16px_56px_rgba(17,_17,_26,_0.06)] [&.glass-surface--fallback_.glass-surface\\_\\_line]:[background:light-dark(color-mix(in_oklch,_black,_transparent_88%),_color-mix(in_oklch,_white,_transparent_72%))] [&.glass-surface--fallback_.glass-surface\\_\\_glow]:[background:light-dark(color-mix(in_oklch,_white,_transparent_72%),_color-mix(in_oklch,_white,_transparent_90%))] [@supports_not_((backdrop-filter:_blur(1px))_or_(-webkit-backdrop-filter:_blur(1px)))]:[&.glass-surface--fallback]:[background:light-dark(hsl(0_0%_100%_/_0.72),_hsl(0_0%_12%_/_0.72))]'} ${className}`}
       style={containerStyle}
     >
-      <svg className="glass-surface__filter" xmlns="http://www.w3.org/2000/svg">
+      <svg className={"glass-surface__filter [&.glass-surface\\_\\_filter]:[width:100%] [&.glass-surface\\_\\_filter]:[height:100%] [&.glass-surface\\_\\_filter]:[pointer-events:none] [&.glass-surface\\_\\_filter]:[position:absolute] [&.glass-surface\\_\\_filter]:[inset:0] [&.glass-surface\\_\\_filter]:[opacity:0] [&.glass-surface\\_\\_filter]:[z-index:-1]"} xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
             <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
@@ -795,28 +794,28 @@ const GlassSurface = ({
         </defs>
       </svg>
 
-      {webgl && <canvas ref={canvasRef} className="glass-surface__canvas" aria-hidden="true" />}
+      {webgl && <canvas ref={canvasRef} className={"glass-surface__canvas [&.glass-surface\\_\\_canvas]:[position:absolute] [&.glass-surface\\_\\_canvas]:[inset:0] [&.glass-surface\\_\\_canvas]:[width:100%] [&.glass-surface\\_\\_canvas]:[height:100%] [&.glass-surface\\_\\_canvas]:[border-radius:inherit] [&.glass-surface\\_\\_canvas]:[pointer-events:none]"} aria-hidden="true" />}
       {webgl && (
-        <span className="glass-surface__frame" aria-hidden="true" style={outline ? { boxShadow: 'none' } : undefined} />
+        <span className={"glass-surface__frame [&.glass-surface\\_\\_frame]:[position:absolute] [&.glass-surface\\_\\_frame]:[inset:0] [&.glass-surface\\_\\_frame]:[width:100%] [&.glass-surface\\_\\_frame]:[height:100%] [&.glass-surface\\_\\_frame]:[border-radius:inherit] [&.glass-surface\\_\\_frame]:[pointer-events:none] [&.glass-surface\\_\\_frame]:[background:light-dark(hsl(0_0%_100%_/_var(--glass-frost,_0)),_hsl(0_0%_0%_/_var(--glass-frost,_0)))] [&.glass-surface\\_\\_frame]:[box-shadow:0_0_2px_1px_light-dark(color-mix(in_oklch,_black,_transparent_85%),_color-mix(in_oklch,_white,_transparent_65%))_inset,_0_0_10px_4px_light-dark(color-mix(in_oklch,_black,_transparent_90%),_color-mix(in_oklch,_white,_transparent_85%))_inset,_0px_4px_16px_rgba(17,_17,_26,_0.05)_inset,_0px_8px_24px_rgba(17,_17,_26,_0.05)_inset,_0px_16px_56px_rgba(17,_17,_26,_0.05)_inset]"} aria-hidden="true" style={outline ? { boxShadow: 'none' } : undefined} />
       )}
-      {frosted && <span className="glass-surface__sheen" aria-hidden="true" />}
-      {frosted && !outline && <span className="glass-surface__rim" aria-hidden="true" />}
+      {frosted && <span className={"glass-surface__sheen [&.glass-surface\\_\\_sheen]:[position:absolute] [&.glass-surface\\_\\_sheen]:[inset:0] [&.glass-surface\\_\\_sheen]:[border-radius:inherit] [&.glass-surface\\_\\_sheen]:[pointer-events:none] [&.glass-surface\\_\\_sheen]:[background:linear-gradient(_135deg,_light-dark(hsl(0_0%_100%_/_0.42),_hsl(0_0%_100%_/_0.14))_0%,_transparent_42%,_transparent_64%,_light-dark(hsl(0_0%_100%_/_0.18),_hsl(0_0%_100%_/_0.05))_100%_)]"} aria-hidden="true" />}
+      {frosted && !outline && <span className={"glass-surface__rim [&.glass-surface\\_\\_rim]:[position:absolute] [&.glass-surface\\_\\_rim]:[inset:0] [&.glass-surface\\_\\_rim]:[border-radius:inherit] [&.glass-surface\\_\\_rim]:[pointer-events:none] [&.glass-surface\\_\\_rim]:[padding:3px] [&.glass-surface\\_\\_rim]:[background:linear-gradient(_150deg,_light-dark(hsl(0_0%_100%_/_0.7),_hsl(0_0%_100%_/_0.34)),_light-dark(hsl(0_0%_100%_/_0.1),_hsl(0_0%_100%_/_0.03))_45%,_light-dark(hsl(0_0%_100%_/_0.08),_hsl(0_0%_100%_/_0.02))_60%,_light-dark(hsl(0_0%_100%_/_0.42),_hsl(0_0%_100%_/_0.18))_)] [&.glass-surface\\_\\_rim]:[-webkit-mask:linear-gradient(#000_0_0)_content-box,_linear-gradient(#000_0_0)] [&.glass-surface\\_\\_rim]:[-webkit-mask-composite:xor] [&.glass-surface\\_\\_rim]:[mask:linear-gradient(#000_0_0)_content-box_exclude,_linear-gradient(#000_0_0)]"} aria-hidden="true" />}
       {outline && (
         <span
-          className="glass-surface__glow"
+          className={"glass-surface__glow [&.glass-surface\\_\\_glow]:[position:absolute] [&.glass-surface\\_\\_glow]:[inset:0] [&.glass-surface\\_\\_glow]:[pointer-events:none] [&.glass-surface\\_\\_glow]:[-webkit-mask-size:100%_100%] [&.glass-surface\\_\\_glow]:[mask-size:100%_100%]"}
           aria-hidden="true"
           style={{ WebkitMaskImage: `url(${outline.glow})`, maskImage: `url(${outline.glow})` }}
         />
       )}
       {outline && (
         <span
-          className="glass-surface__line"
+          className={"glass-surface__line [&.glass-surface\\_\\_line]:[position:absolute] [&.glass-surface\\_\\_line]:[inset:0] [&.glass-surface\\_\\_line]:[pointer-events:none] [&.glass-surface\\_\\_line]:[-webkit-mask-size:100%_100%] [&.glass-surface\\_\\_line]:[mask-size:100%_100%]"}
           aria-hidden="true"
           style={{ WebkitMaskImage: `url(${outline.line})`, maskImage: `url(${outline.line})` }}
         />
       )}
 
-      <div className="glass-surface__content">{children}</div>
+      <div className={"glass-surface__content [&.glass-surface\\_\\_content]:[width:100%] [&.glass-surface\\_\\_content]:[height:100%] [&.glass-surface\\_\\_content]:[display:flex] [&.glass-surface\\_\\_content]:[align-items:center] [&.glass-surface\\_\\_content]:[justify-content:center] [&.glass-surface\\_\\_content]:[padding:0.5rem] [&.glass-surface\\_\\_content]:[border-radius:inherit] [&.glass-surface\\_\\_content]:[position:relative] [&.glass-surface\\_\\_content]:[z-index:1]"}>{children}</div>
     </div>
   );
 };
