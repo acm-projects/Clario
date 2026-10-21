@@ -1,6 +1,7 @@
 import BrandMark from "../layout/BrandMark";
 import { useNavigate } from "react-router-dom";
 import { Pill } from "./Panel";
+import { UmpireTracker } from "./UmpireTracker";
 
 interface TopBarProps {
   timer: string;
@@ -23,7 +24,7 @@ export function TopBar({
 }: TopBarProps) {
   const navigate = useNavigate();
   return (
-    <header className="theme-border relative flex h-[74px] shrink-0 items-center justify-between border-b px-5">
+    <header className="theme-border relative flex h-[74px] shrink-0 items-center justify-between border-b px-5 max-[1250px]:h-auto max-[1250px]:min-h-[74px] max-[1250px]:flex-wrap max-[1250px]:gap-3 max-[1250px]:py-3">
       <div className="flex items-center gap-5">
         <span className="flex items-center gap-2.5 font-sans text-[28px] font-semibold tracking-[-0.045em] text-[var(--text-main)] max-[1150px]:text-2xl"><BrandMark />Clario</span>
         <button onClick={() => navigate("/problems")} className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
@@ -56,7 +57,7 @@ export function TopBar({
         </div>
       </div>
 
-      <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
+      <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5 max-[1250px]:static max-[1250px]:order-3 max-[1250px]:w-full max-[1250px]:translate-x-0 max-[1250px]:justify-center">
         <button
           onClick={onRun}
           disabled={running}
@@ -74,7 +75,8 @@ export function TopBar({
         </button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
+        <UmpireTracker />
         <Pill className="theme-surface theme-body-text flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
           {modeLabel ?? "Session live"}
