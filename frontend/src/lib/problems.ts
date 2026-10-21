@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface ProblemSummary {
   slug: string;
   leetcode_id: number | null;
@@ -30,8 +31,7 @@ export function parseProblems(payload: unknown): ProblemSummary[] {
 }
 
 export async function loadProblems(signal?: AbortSignal, request: typeof fetch = fetch): Promise<ProblemSummary[]> {
-  const baseUrl = (import.meta.env?.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
-  const response = await request(`${baseUrl}/api/problems`, { signal });
+  const response = await request(`${API_BASE_URL}/api/problems`, { signal });
   if (!response.ok) throw new Error(`Problems request failed: ${response.status}`);
   return parseProblems(await response.json());
 }

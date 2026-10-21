@@ -4,10 +4,10 @@ const art:Partial<Record<DuckPose,string>> = { idle:"smartduck.png", thinking:"s
 export function Duck({pose="idle",size="md"}:{pose?:DuckPose;size?:"xs"|"sm"|"md"|"lg"|"xl"}) {
  const [previous,setPrevious]=useState<DuckPose|null>(null);const last=useRef(pose);
  useEffect(()=>{if(last.current===pose)return;setPrevious(last.current);last.current=pose;const id=setTimeout(()=>setPrevious(null),400);return()=>clearTimeout(id)},[pose]);
- return <span className={"ui-duck ui-duck-"+size} role="img" aria-label={"Clario duck, "+pose} data-pose={pose}>
- {previous&&<img className="ui-duck-previous" src={import.meta.env.BASE_URL+(art[previous]??"smartduck.png")} alt=""/>}
- <img key={pose} className="ui-duck-current" src={import.meta.env.BASE_URL+(art[pose]??"smartduck.png")} alt=""/>
- {!art[pose]&&<span className="ui-duck-placeholder">{pose}</span>}
+ return <span className={"ui-duck [&.ui-duck]:[position:relative] [&.ui-duck]:[display:inline-block] [&.ui-duck]:[flex-shrink:0] [&.ui-duck]:[width:var(--duck-md)] [&.ui-duck]:[height:var(--duck-md)] [&.ui-duck-xs]:[width:var(--duck-xs)] [&.ui-duck-xs]:[height:var(--duck-xs)] [&.ui-duck-sm]:[width:var(--duck-sm)] [&.ui-duck-sm]:[height:var(--duck-sm)] [&.ui-duck-lg]:[width:var(--duck-lg)] [&.ui-duck-lg]:[height:var(--duck-lg)] [&.ui-duck-xl]:[width:var(--duck-xl)] [&.ui-duck-xl]:[height:var(--duck-xl)] [&.ui-duck_img]:[position:absolute] [&.ui-duck_img]:[inset:0] [&.ui-duck_img]:[width:100%] [&.ui-duck_img]:[height:100%] [&.ui-duck_img]:[object-fit:contain] [&.ui-duck-xs_.ui-duck-placeholder]:[position:static] [&.ui-duck-xs_.ui-duck-placeholder]:[display:none] ui-duck-"+size} role="img" aria-label={"Clario duck, "+pose} data-pose={pose}>
+ {previous&&<img className={"ui-duck-previous [&.ui-duck-previous]:[animation:ui-duck-out_var(--motion-slow)_var(--ease-standard)_both] [@media_(prefers-reduced-motion:reduce)]:[&.ui-duck-previous]:[display:none]"} src={import.meta.env.BASE_URL+(art[previous]??"smartduck.png")} alt=""/>}
+ <img key={pose} className={"ui-duck-current [&.ui-duck-current]:[animation:ui-duck-in_var(--motion-slow)_var(--ease-standard)_both]"} src={import.meta.env.BASE_URL+(art[pose]??"smartduck.png")} alt=""/>
+ {!art[pose]&&<span className={"ui-duck-placeholder [&.ui-duck-placeholder]:[position:absolute] [&.ui-duck-placeholder]:[bottom:0] [&.ui-duck-placeholder]:[left:50%] [&.ui-duck-placeholder]:[transform:translateX(-50%)] [&.ui-duck-placeholder]:[border-radius:var(--radius-pill)] [&.ui-duck-placeholder]:[background:var(--surface-raised)] [&.ui-duck-placeholder]:[border:var(--line)_solid_var(--border)] [&.ui-duck-placeholder]:[color:var(--text-muted)] [&.ui-duck-placeholder]:[padding:var(--space-0)_var(--space-2)] [&.ui-duck-placeholder]:[font-size:var(--type-eyebrow)] [&.ui-duck-placeholder]:[white-space:nowrap]"}>{pose}</span>}
  </span>;
 }
 // TODO artwork: listening, speaking, sleeping. Base duck and visible pose label are intentional placeholders.

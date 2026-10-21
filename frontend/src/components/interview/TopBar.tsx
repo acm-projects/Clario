@@ -1,10 +1,11 @@
+import BrandMark from "../layout/BrandMark";
+import { useNavigate } from "react-router-dom";
 import { Pill } from "./Panel";
-import { UmpireTracker } from "./UmpireTracker";
 
 interface TopBarProps {
   timer: string;
+  modeLabel?: string;
   theme: "dark" | "light";
-  showUmpireTracker?: boolean;
   onThemeChange: (theme: "dark" | "light") => void;
   onRun: () => void;
   onSubmit: () => void;
@@ -13,19 +14,20 @@ interface TopBarProps {
 
 export function TopBar({
   timer,
+  modeLabel,
   theme,
-  showUmpireTracker = false,
   onThemeChange,
   onRun,
   onSubmit,
   running = false,
 }: TopBarProps) {
+  const navigate = useNavigate();
   return (
-    <header className="theme-border relative flex h-[46px] shrink-0 items-center justify-between border-b px-5">
+    <header className="theme-border relative flex h-[74px] shrink-0 items-center justify-between border-b px-5">
       <div className="flex items-center gap-5">
-        <span className="theme-main-text text-[22px] font-medium tracking-[0.08em]">CLARIO</span>
-        <button className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
-        <div role="group" aria-label="Color theme" className="theme-border flex items-center rounded-md border p-0.5">
+        <span className="flex items-center gap-2.5 font-sans text-[28px] font-semibold tracking-[-0.045em] text-[var(--text-main)] max-[1150px]:text-2xl"><BrandMark />Clario</span>
+        <button onClick={() => navigate("/problems")} className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
+        <div role="group" aria-label="Color theme" className={"sandbox-theme-toggle [&.sandbox-theme-toggle]:[margin-left:8px] [@media_(max-width:_1150px)]:[&.sandbox-theme-toggle]:[margin-left:0] [@media_(max-width:_600px)]:[&.sandbox-theme-toggle]:[display:flex] theme-border flex items-center rounded-md border p-0.5"}>
           <button
             type="button"
             title="Light mode"
@@ -58,26 +60,26 @@ export function TopBar({
         <button
           onClick={onRun}
           disabled={running}
-          className="theme-surface theme-body-text theme-surface-hover flex h-[34px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+          className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
           {running ? "Running..." : "Run"}
         </button>
         <button
+          disabled={running}
           onClick={onSubmit}
-          className="h-[34px] rounded-lg bg-[#2f6fd0] px-6 text-sm font-semibold text-white hover:bg-[#3b7ae0]"
+          className="h-[42px] rounded-lg border border-[var(--line)] bg-[#fac52e] px-6 text-sm font-semibold text-[#122b50] disabled:opacity-50"
         >
           Submit
         </button>
       </div>
 
       <div className="flex items-center gap-4">
-        {showUmpireTracker && <UmpireTracker />}
         <Pill className="theme-surface theme-body-text flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
-          Session live
+          {modeLabel ?? "Session live"}
         </Pill>
-        <span className="theme-body-text text-sm tabular-nums">{timer}</span>
+        <span className={"sandbox-timer [&.sandbox-timer]:[border:1px_solid_var(--line)] [&.sandbox-timer]:[border-radius:11px] [&.sandbox-timer]:[background:var(--panel-bg)] [&.sandbox-timer]:[padding:8px_15px] [&.sandbox-timer]:[font-family:monospace] [&.sandbox-timer]:[font-size:16px] theme-body-text text-sm tabular-nums"}>{timer}</span>
       </div>
     </header>
   );

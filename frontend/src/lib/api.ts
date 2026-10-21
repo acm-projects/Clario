@@ -1,8 +1,8 @@
+import { sessionRequestFor, type InterviewLaunch } from "./interviewModes";
 import type { Language, Problem, TestsResponse } from "../types";
+import { supabase } from "./supabase";
+import { API_BASE_URL } from "./apiConfig";
 
-// Empty during local development so requests go through the Vite proxy
-// (see vite.config.ts). Set VITE_API_URL to the deployed FastAPI origin in prod.
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
 /** The editor calls it "python3"; the backend executes "python". */
 const BACKEND_LANGUAGE: Record<Language, "python" | "java"> = {
@@ -21,8 +21,15 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, init);
+export async function request<T>(path: string, init: RequestInit = {}, authenticated = false): Promise<T> {
+  const headers = new Headers(init.headers);
+  if (authenticated && !(import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true")) {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (!session) throw new ApiError("Please sign in to continue.", 401);
+    headers.set("Authorization", "Bearer " + session.access_token);
+  }
+  const response = await fetch(API_BASE_URL + path, { ...init, headers });
 
   if (!response.ok) {
     let message = `Request failed with status ${response.status}.`;
@@ -66,4 +73,94 @@ export function runTests(
     }),
     signal,
   });
+}
+
+export interface InterviewSession {
+  id: string;
+  mode?: string;
+  problem_slug: string;
+  language: Language;
+  status: string;
+  started_at: string;
+  ended_at: string | null;
+}
+
+export function createSession(problem_slug: string, mode: "practice" | "full_mock", language: Language) {
+  return request<InterviewSession>("/api/sessions", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ problem_slug, mode, language }),
+  }, true);
+}
+
+export function listSessions() {
+  return request<(InterviewSession & Record<string, unknown>)[]>("/api/sessions", {}, true);
+}
+
+export function getSession(id: string, signal?: AbortSignal) {
+  return request<InterviewSession & { problem: Problem | null; latest_code: string | null }>(
+    "/api/sessions/" + encodeURIComponent(id), { signal }, true);
+}
+
+export function saveSnapshot(id: string, code: string) {
+  return request<{ created_at: string }>("/api/sessions/" + encodeURIComponent(id) + "/snapshots", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }),
+  }, true);
+}
+
+export function endSession(id: string) {
+  return request<InterviewSession>("/api/sessions/" + encodeURIComponent(id) + "/end", { method: "PATCH" }, true);
+}
+
+// Adapt selection modes to the existing practice/full_mock session contract.
+export async function createModeSession(selection: InterviewLaunch): Promise<InterviewSession> {
+  const body = sessionRequestFor(selection);
+  return createSession(body.problem_slug, body.mode, body.language);
+}
+
+export function getRandomProblem(signal?: AbortSignal): Promise<Problem> {
+  return request<Problem>("/api/problems/random", { signal });
+}
+export interface ScenarioSummary {
+  slug: string; company: string; title: string; difficulty: "Easy" | "Medium" | "Hard";
+}
+export interface Scenario extends ScenarioSummary {
+  prompt: string; starter_code: Partial<Record<Language, string>>;
+}
+export function listScenarios(signal?: AbortSignal): Promise<ScenarioSummary[]> {
+  return request<ScenarioSummary[]>("/api/scenarios", { signal });
+}
+export function getScenario(slug: string, signal?: AbortSignal): Promise<Scenario> {
+  return request<Scenario>("/api/scenarios/" + encodeURIComponent(slug), { signal });
+}
+
+export function getFeedbackHistory(signal?: AbortSignal): Promise<unknown[]> {
+  return request<unknown[]>("/api/feedback", { signal }, true);
+}
+export function generateSessionFeedback(sessionId: string): Promise<unknown> {
+  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), { method: "POST" }, true);
+}
+
+export type FeedbackPreview = {
+  synthetic: boolean;
+  saved: boolean;
+  evidence: { code: string; candidate_transcript: string };
+  report: {
+    summary: string;
+    technical_score: number | null;
+    reasoning_score: number | null;
+    communication_score: number | null;
+    overall_score: number | null;
+    strengths: string[];
+    weaknesses: string[];
+    recommendations: string[];
+    evidence_limitations: string[];
+    model: string;
+  };
+};
+export function previewGeminiFeedback(): Promise<FeedbackPreview> {
+  return request<FeedbackPreview>("/api/feedback/preview/two-sum", { method: "POST" }, true);
+}
+
+export function getSessionFeedback(sessionId: string): Promise<unknown> {
+  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), {}, true);
 }

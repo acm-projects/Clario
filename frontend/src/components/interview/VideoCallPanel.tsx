@@ -1,3 +1,4 @@
+import DuckHead from "../layout/DuckHead";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Panel, Pill } from "./Panel";
 
@@ -36,7 +37,6 @@ const icon = {
   strokeLinejoin: "round" as const,
 };
 
-const Mic = () => (<svg {...icon}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>);
 const MicOff = () => (<svg {...icon}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3M3 3l18 18" /></svg>);
 const Cam = ({ off = false }: { off?: boolean }) => (<svg {...icon}><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" />{off && <path d="M3 3l18 18" />}</svg>);
 const Screen = () => (<svg {...icon}><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></svg>);
@@ -44,7 +44,6 @@ const More = () => (<svg {...icon} fill="currentColor" stroke="none"><circle cx=
 const HangUp = () => (<svg {...icon}><path d="M3 14c5-4 13-4 18 0l-2 3-3-1.5V13c-3-1-7-1-10 0v2.5L5 17z" /></svg>);
 
 export function VideoCallPanel({ round, interviewer, speaking = true, onEndInterview }: VideoCallPanelProps) {
-  const [micEnabled, setMicEnabled] = useState(true);
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
@@ -119,7 +118,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
   }, [cameraStream]);
 
   return (
-    <Panel>
+    <Panel className={"sandbox-video [&.sandbox-video]:[flex:1] [&.sandbox-video]:[border:0] [&.sandbox-video]:[border-radius:0] [&.sandbox-video_>_div:first-child]:[display:none] [&.sandbox-video_>_div:nth-child(2)]:[padding:0] [&.sandbox-video_>_div:nth-child(2)]:[gap:12px] [&.sandbox-video_.theme-video-self]:[height:auto] [&.sandbox-video_.theme-video-self]:[flex:1] [&.sandbox-video_.theme-video-self]:[min-height:140px] [&.sandbox-video_.theme-video-self_>_svg]:[stroke:#305ed1] [&.sandbox-video_.theme-video-interviewer]:[flex:1.1] [&.sandbox-video_.theme-video-interviewer]:[border:2px_solid_#fac52e] [&.sandbox-video_.theme-video-interviewer_button]:[color:#1e3a8a] [&.sandbox-video_.theme-video-interviewer_button]:[font-size:14px] [&.sandbox-video_.theme-video-interviewer_button]:[margin-top:18px] [&.sandbox-video_.theme-video-interviewer_button_span_span]:[background:#1e3a8a] [&.sandbox-video_.theme-avatar-ring]:[box-shadow:none] [&.sandbox-video_.theme-avatar-ring]:[width:118px] [&.sandbox-video_.theme-avatar-ring]:[height:118px] [&.sandbox-video_>_div:last-child]:[border:0] [&.sandbox-video_>_div:last-child]:[padding:14px_0_0] [&.sandbox-video_>_div:last-child]:[justify-content:space-between] [&.sandbox-video_>_div:last-child]:[gap:6px] [&.sandbox-video_>_div:last-child_button]:[border:1px_solid_var(--line)] [&.sandbox-video_>_div:last-child_button]:[flex-shrink:0] [@media_(max-width:_950px)]:[&.sandbox-video_>_div:nth-child(2)]:[flex-direction:row] [@media_(max-width:_950px)]:[&.sandbox-video_.theme-video-self]:[height:auto]"}>
       <div className="flex shrink-0 items-center justify-between px-4 py-3">
         <span className="theme-main-text flex items-center gap-2 text-sm font-semibold">
           <svg {...icon} width={16} height={16} className="theme-muted-text"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>
@@ -128,7 +127,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
         <Pill className="theme-surface theme-body-text">{round}</Pill>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-2 px-2 pb-2">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-2 pb-2">
         <div className="theme-video-self relative flex h-[170px] shrink-0 flex-col items-center justify-center rounded-xl border">
           <NameTag>You</NameTag>
           {cameraStatus === "on" ? (
@@ -149,7 +148,7 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
         <div className="theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
           <NameTag>{interviewer}</NameTag>
           <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
-            🦆
+            <DuckHead className="size-[100px]" />
           </div>
           <button
             type="button"
@@ -175,12 +174,12 @@ export function VideoCallPanel({ round, interviewer, speaking = true, onEndInter
       <div className="theme-border flex shrink-0 items-center justify-center gap-2.5 border-t py-2.5">
         <button
           type="button"
-          aria-label={micEnabled ? "Mute microphone" : "Unmute microphone"}
-          aria-pressed={micEnabled}
-          onClick={() => setMicEnabled((enabled) => !enabled)}
-          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full ${micEnabled ? "theme-surface theme-body-text theme-surface-hover" : "bg-[#e2493b] text-white hover:bg-[#ee5b4d]"}`}
+          aria-label="Microphone unavailable"
+          title="Microphone is not connected"
+          disabled
+          className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60"
         >
-          {micEnabled ? <Mic /> : <MicOff />}
+          <MicOff />
         </button>
         <button
           type="button"

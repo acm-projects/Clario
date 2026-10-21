@@ -2,8 +2,6 @@ import DOMPurify from "dompurify";
 import { Panel } from "./Panel";
 import type { Problem } from "../../types";
 
-const TABS = ["Description", "Editorial", "Solutions", "Submissions"];
-
 // Styles the raw description_html (p, code, em, strong, pre) without a typography plugin.
 const htmlStyles = [
   "problem-description theme-body-text",
@@ -14,26 +12,16 @@ const htmlStyles = [
   "[&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1",
 ].join(" ");
 
-export function ProblemPanel({ problem, solved, hideGuidance = false }: { problem: Problem; solved: boolean; hideGuidance?: boolean }) {
+export function ProblemPanel({ problem, solved }: { problem: Problem; solved: boolean }) {
   return (
-    <Panel>
-      <nav className="theme-border flex shrink-0 items-center gap-2 border-b px-3 py-3 text-xs">
-        {(hideGuidance ? ["Description"] : TABS).map((tab, i) => (
-          <button
-            key={tab}
-            className={i === 0 ? "theme-main-text font-semibold" : "theme-muted-text hover:text-[var(--text-main)]"}
-          >
-            {tab}
-          </button>
-        ))}
-      </nav>
+    <Panel className={"sandbox-problem [&.sandbox-problem_.problem-title]:[font-size:26px] [&.sandbox-problem_.problem-title]:[letter-spacing:-.7px] [&.sandbox-problem_.problem-description]:[font-size:14px] [&.sandbox-problem_.problem-description]:[line-height:1.65] [&.sandbox-problem_pre]:[border:1px_solid_#817d71] [@media_(max-width:_600px)]:[&.sandbox-problem]:[max-height:480px]"}>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
         <div className="flex items-center justify-between">
           <h1 className="problem-title theme-main-text text-lg font-extrabold leading-tight">
             {problem.leetcode_id}. {problem.title}
           </h1>
-          {solved && <span className="text-[var(--success)] text-xs font-medium">Solved</span>}
+          <span className={`sandbox-difficulty [&.sandbox-difficulty]:[border:1px_solid_#8c9a8c] [&.sandbox-difficulty]:[border-radius:20px] [&.sandbox-difficulty]:[padding:3px_11px] [&.sandbox-difficulty]:[font-size:12px] [&.difficulty-easy]:[background:#e1f3e7] [&.difficulty-easy]:[color:#08734d] [&.difficulty-medium]:[background:#fff0bf] [&.difficulty-medium]:[color:#865b05] [&.difficulty-hard]:[background:#ffe6e8] [&.difficulty-hard]:[color:#b43a48] difficulty-${problem.difficulty.toLowerCase()}`}>{problem.difficulty}{solved ? " ? Solved" : ""}</span>
         </div>
 
         <div

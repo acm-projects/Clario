@@ -1,295 +1,142 @@
-import PondLife from "../components/effects/PondLife";
-import TextType from "../components/effects/TextType";
-import DecryptedText from "../components/effects/DecryptedText";
-import WaterWaves from "../components/effects/WaterWaves";
+import PageHeading from "../components/ui/PageHeading";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useLocation, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
+import DOMPurify from "dompurify";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { loadRecommendedProblem, type DashboardProblem } from "../lib/dashboard";
-import type { ProblemSummary } from "../lib/problems";
-import { fakeProblem } from "../types";
+import { createModeSession, getRandomProblem, getScenario, listScenarios, type Scenario, type ScenarioSummary } from "../lib/api";
+import { interviewModes, interviewRoomUrl, modeLabels, parseInterviewMode, type InterviewLaunch, type InterviewMode } from "../lib/interviewModes";
 import type { ProfileContext } from "../lib/profile";
+import type { Language } from "../types";
 
-// Literal Tailwind utilities keep page styling beside its markup.
-const interviewStyles = [
-  // &
-  `[&]:[position:relative] [&]:[isolation:isolate] [&]:[overflow-x:clip] [&]:[font-family:var(--font-sans)] [&]:[background:#f7f4e9] [&]:[overflow:clip]`,
-  // &::before
-  `[&::before]:[content:none] [&::before]:[position:absolute] [&::before]:[z-index:-1] [&::before]:[inset:0] [&::before]:[pointer-events:none] [&::before]:[background:none]`,
-  // & .interview-path-heading
-  `[&_.interview-path-heading]:[animation:none] [&_.interview-path-heading]:[margin-bottom:24px] [&_.interview-path-heading]:[padding-right:80px] [&_.interview-path-heading]:[min-height:112px]`,
-  // & .interview-path-options
-  `[&_.interview-path-options]:[display:grid] [&_.interview-path-options]:[grid-template-columns:repeat(2,minmax(0,1fr))] [&_.interview-path-options]:[gap:18px] [&_.interview-path-options]:[align-items:stretch]`,
-  // & .interview-path-card
-  `[&_.interview-path-card]:[position:relative] [&_.interview-path-card]:[display:flex] [&_.interview-path-card]:[flex-direction:column] [&_.interview-path-card]:[min-width:0] [&_.interview-path-card]:[padding-top:22px] [&_.interview-path-card]:[padding-right:22px] [&_.interview-path-card]:[padding-bottom:22px] [&_.interview-path-card]:[padding-left:22px] [&_.interview-path-card]:[border:1px_solid_rgb(214_225_236_/_.8)] [&_.interview-path-card]:[border-radius:24px] [&_.interview-path-card]:[background:rgb(255_255_255_/_.9)] [&_.interview-path-card]:[backdrop-filter:blur(8px)] [&_.interview-path-card]:[box-shadow:0_4px_16px_-10px_rgb(13_48_99_/_.2)] [&_.interview-path-card]:[transition:border-color_.2s_ease,box-shadow_.2s_ease] [&_.interview-path-card]:[animation:none] [&_.interview-path-card]:[color:#182137] [&_.interview-path-card]:[isolation:isolate] [&_.interview-path-card]:[overflow:hidden]`,
-  // & .interview-path-card:nth-child(2)
-  `[&_.interview-path-card:nth-child(2)]:[animation-delay:.22s]`,
-  // & .interview-path-card:hover
-  `[&_.interview-path-card:hover]:[transform:none] [&_.interview-path-card:hover]:[box-shadow:0_6px_20px_-12px_rgb(13_48_99_/_.25)] [&_.interview-path-card:hover]:[border-color:#c4d5e6]`,
-  // & .interview-path-card[data-selected="true"]
-  `[&_.interview-path-card[data-selected="true"][data-selected="true"]]:[border-color:#3054ed] [&_.interview-path-card[data-selected="true"][data-selected="true"]]:[box-shadow:0_0_0_1px_#3054ed22,0_8px_28px_-18px_#18213730]`,
-  // & .interview-path-selector
-  `[&_.interview-path-selector]:[display:block] [&_.interview-path-selector]:[width:100%] [&_.interview-path-selector]:[text-align:left] [&_.interview-path-selector]:[cursor:pointer] [&_.interview-path-selector]:[border-radius:18px] [&_.interview-path-selector]:[padding-right:28px]`,
-  // & .interview-path-selector h2
-  `[&_.interview-path-selector_h2]:[margin-top:14px] [&_.interview-path-selector_h2]:[font-size:22px] [&_.interview-path-selector_h2]:[font-weight:600] [&_.interview-path-selector_h2]:[letter-spacing:-.035em] [&_.interview-path-selector_h2]:[text-decoration:none] [&_.interview-path-selector_h2]:[text-decoration-color:#8ab9ee] [&_.interview-path-selector_h2]:[text-underline-offset:9px] [&_.interview-path-selector_h2]:[text-decoration-thickness:2px]`,
-  // & .interview-path-icon
-  `[&_.interview-path-icon]:[display:grid] [&_.interview-path-icon]:[place-items:center] [&_.interview-path-icon]:[width:40px] [&_.interview-path-icon]:[height:40px] [&_.interview-path-icon]:[border:1px_solid_white] [&_.interview-path-icon]:[border-radius:12px] [&_.interview-path-icon]:[background:#eef0ff] [&_.interview-path-icon]:[color:#3054ed] [&_.interview-path-icon]:[box-shadow:none] [&_.interview-path-icon]:[transition:none] [&_.interview-path-icon]:[border-color:#dbe8f1]`,
-  // & .interview-path-icon svg
-  `[&_.interview-path-icon_svg]:[width:21px] [&_.interview-path-icon_svg]:[height:21px]`,
-  // & .interview-path-card:hover .interview-path-icon
-  `[&_.interview-path-card:hover_.interview-path-icon]:[transform:none] [&_.interview-path-card:hover_.interview-path-icon]:[box-shadow:none]`,
-  // & .interview-path-check
-  `[&_.interview-path-check]:[position:absolute] [&_.interview-path-check]:[top:26px] [&_.interview-path-check]:[right:22px] [&_.interview-path-check]:[display:grid] [&_.interview-path-check]:[place-items:center] [&_.interview-path-check]:[width:20px] [&_.interview-path-check]:[height:20px] [&_.interview-path-check]:[border:1px_solid_#aac4df] [&_.interview-path-check]:[border-radius:50%] [&_.interview-path-check]:[font-size:12px] [&_.interview-path-check]:[transition:background_.25s_ease,transform_.25s_ease]`,
-  // & .interview-path-card[data-selected="true"] .interview-path-check
-  `[&_.interview-path-card[data-selected="true"][data-selected="true"]_.interview-path-check]:[background:#3054ed] [&_.interview-path-card[data-selected="true"][data-selected="true"]_.interview-path-check]:[border-color:#3054ed] [&_.interview-path-card[data-selected="true"][data-selected="true"]_.interview-path-check]:[color:white] [&_.interview-path-card[data-selected="true"][data-selected="true"]_.interview-path-check]:[animation:none]`,
-  // & .interview-path-description
-  `[&_.interview-path-description]:[margin-top:12px] [&_.interview-path-description]:[color:#58627b] [&_.interview-path-description]:[font-size:13px] [&_.interview-path-description]:[line-height:1.65]`,
-  // & .interview-path-benefits
-  `[&_.interview-path-benefits]:[display:grid] [&_.interview-path-benefits]:[gap:8px] [&_.interview-path-benefits]:[margin-top:18px] [&_.interview-path-benefits]:[margin-right:0] [&_.interview-path-benefits]:[margin-bottom:18px] [&_.interview-path-benefits]:[margin-left:0] [&_.interview-path-benefits]:[color:#58627b] [&_.interview-path-benefits]:[font-size:12px] [&_.interview-path-benefits]:[line-height:1.7]`,
-  // & .interview-path-benefits li
-  `[&_.interview-path-benefits_li]:[display:flex] [&_.interview-path-benefits_li]:[align-items:baseline] [&_.interview-path-benefits_li]:[gap:12px]`,
-  // & .interview-path-benefits li::before
-  `[&_.interview-path-benefits_li::before]:[content:""] [&_.interview-path-benefits_li::before]:[width:6px] [&_.interview-path-benefits_li::before]:[height:6px] [&_.interview-path-benefits_li::before]:[flex-shrink:0] [&_.interview-path-benefits_li::before]:[border-radius:50%] [&_.interview-path-benefits_li::before]:[background:#3054ed]`,
-  // & .interview-practice-problem
-  `[&_.interview-practice-problem]:[padding-top:16px] [&_.interview-practice-problem]:[padding-right:16px] [&_.interview-practice-problem]:[padding-bottom:16px] [&_.interview-practice-problem]:[padding-left:16px] [&_.interview-practice-problem]:[border:1px_solid_#acd1f7] [&_.interview-practice-problem]:[border-radius:12px] [&_.interview-practice-problem]:[background:#fff3bb] [&_.interview-practice-problem]:[transition:box-shadow_.3s_ease] [&_.interview-practice-problem]:[margin-bottom:20px] [&_.interview-practice-problem]:[border-color:#e0e8f0]`,
-  // & .interview-practice-problem:hover
-  `[&_.interview-practice-problem:hover]:[box-shadow:none]`,
-  // & .interview-practice-problem a:hover
-  `[&_.interview-practice-problem_a:hover]:[text-decoration:underline] [&_.interview-practice-problem_a:hover]:[text-underline-offset:4px]`,
-  // & .interview-path-start
-  `[&_.interview-path-start]:[display:flex] [&_.interview-path-start]:[align-items:center] [&_.interview-path-start]:[justify-content:space-between] [&_.interview-path-start]:[width:100%] [&_.interview-path-start]:[min-height:44px] [&_.interview-path-start]:[margin-top:auto] [&_.interview-path-start]:[padding-top:11px] [&_.interview-path-start]:[padding-right:18px] [&_.interview-path-start]:[padding-bottom:11px] [&_.interview-path-start]:[padding-left:18px] [&_.interview-path-start]:[border-radius:10px] [&_.interview-path-start]:[background:#3054ed] [&_.interview-path-start]:[color:white] [&_.interview-path-start]:[font-size:13px] [&_.interview-path-start]:[font-weight:600] [&_.interview-path-start]:[cursor:pointer] [&_.interview-path-start]:[transition:background_.25s_ease,transform_.25s_ease,box-shadow_.25s_ease]`,
-  // & .interview-practice-problem + .interview-path-start
-  `[&_.interview-practice-problem_+_.interview-path-start]:[margin-top:auto]`,
-  // & .interview-path-start:hover:not(:disabled)
-  `[&_.interview-path-start:hover:not(:disabled)]:[background:#2543ca] [&_.interview-path-start:hover:not(:disabled)]:[transform:none] [&_.interview-path-start:hover:not(:disabled)]:[box-shadow:none]`,
-  // & .interview-path-start span
-  `[&_.interview-path-start_span]:[transition:transform_.25s_ease]`,
-  // & .interview-path-start:hover span
-  `[&_.interview-path-start:hover_span]:[transform:translateX(4px)]`,
-  // & .interview-path-start:disabled
-  `[&_.interview-path-start:disabled]:[cursor:not-allowed] [&_.interview-path-start:disabled]:[opacity:.5]`,
-  // & .interview-mock-visual
-  `[&_.interview-mock-visual]:[position:relative] [&_.interview-mock-visual]:[display:grid] [&_.interview-mock-visual]:[place-items:center] [&_.interview-mock-visual]:[flex:1] [&_.interview-mock-visual]:[min-height:180px] [&_.interview-mock-visual]:[margin-bottom:28px] [&_.interview-mock-visual]:[overflow:hidden] [&_.interview-mock-visual]:[border-radius:22px] [&_.interview-mock-visual]:[background:radial-gradient(ellipse,#dcecff88,transparent_70%)]`,
-  // & .interview-clock
-  `[&_.interview-clock]:[display:flex] [&_.interview-clock]:[flex-direction:column] [&_.interview-clock]:[align-items:center] [&_.interview-clock]:[gap:10px] [&_.interview-clock]:[color:#3054ed] [&_.interview-clock]:[animation:interview-clock-float_5s_ease-in-out_infinite]`,
-  // & .interview-clock svg
-  `[&_.interview-clock_svg]:[width:86px] [&_.interview-clock_svg]:[height:86px]`,
-  // & .interview-clock span
-  `[&_.interview-clock_span]:[font-size:11px] [&_.interview-clock_span]:[letter-spacing:.1em]`,
-  // & .interview-mock-visual i
-  `[&_.interview-mock-visual_i]:[position:absolute] [&_.interview-mock-visual_i]:[width:5px] [&_.interview-mock-visual_i]:[height:5px] [&_.interview-mock-visual_i]:[border-radius:50%] [&_.interview-mock-visual_i]:[background:#7eb6ee] [&_.interview-mock-visual_i]:[left:20%] [&_.interview-mock-visual_i]:[top:35%] [&_.interview-mock-visual_i]:[animation:interview-clock-float_3s_ease-in-out_infinite]`,
-  // & .interview-mock-visual i:nth-of-type(2)
-  `[&_.interview-mock-visual_i:nth-of-type(2)]:[left:75%] [&_.interview-mock-visual_i:nth-of-type(2)]:[top:60%] [&_.interview-mock-visual_i:nth-of-type(2)]:[animation-delay:-1s]`,
-  // & .interview-mock-visual i:nth-of-type(3)
-  `[&_.interview-mock-visual_i:nth-of-type(3)]:[left:65%] [&_.interview-mock-visual_i:nth-of-type(3)]:[top:15%] [&_.interview-mock-visual_i:nth-of-type(3)]:[animation-delay:-2s]`,
-  // (max-width:767px) ? & .interview-path-options
-  `[@media_(max-width:767px)]:[&_.interview-path-options]:[grid-template-columns:minmax(0,1fr)] [@media_(max-width:767px)]:[&_.interview-path-options]:[gap:14px]`,
-  // (max-width:767px) ? & .interview-path-card
-  `[@media_(max-width:767px)]:[&_.interview-path-card]:[padding-top:18px] [@media_(max-width:767px)]:[&_.interview-path-card]:[padding-right:18px] [@media_(max-width:767px)]:[&_.interview-path-card]:[padding-bottom:18px] [@media_(max-width:767px)]:[&_.interview-path-card]:[padding-left:18px] [@media_(max-width:767px)]:[&_.interview-path-card]:[border-radius:20px]`,
-  // (max-width:767px) ? & .interview-path-check
-  `[@media_(max-width:767px)]:[&_.interview-path-check]:[top:22px] [@media_(max-width:767px)]:[&_.interview-path-check]:[right:18px]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-heading
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-heading]:[animation:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-card
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-card]:[animation:none] [@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-card]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-clock
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-clock]:[animation:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-mock-visual i
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-mock-visual_i]:[animation:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-card[data-selected="true"] .interview-path-check
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-card[data-selected="true"][data-selected="true"]_.interview-path-check]:[animation:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-icon
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-icon]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-check
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-check]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-practice-problem
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-practice-problem]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-start
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-start]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-start span
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-start_span]:[transition:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-card:hover
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-card:hover]:[transform:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-card:hover .interview-path-icon
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-card:hover_.interview-path-icon]:[transform:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-start:hover:not(:disabled)
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-start:hover:not(:disabled)]:[transform:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-path-start:hover span
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-path-start:hover_span]:[transform:none]`,
-  // & .interview-path-shell
-  `[&_.interview-path-shell]:[padding-top:28px] [&_.interview-path-shell]:[padding-bottom:130px] [&_.interview-path-shell]:[position:relative] [&_.interview-path-shell]:[z-index:1]`,
-  // & .interview-path-heading h1
-  `[&_.interview-path-heading_h1]:[font-size:clamp(26px,2.6vw,36px)] [&_.interview-path-heading_h1]:[line-height:1.2] [&_.interview-path-heading_h1]:[margin-top:18px] [&_.interview-path-heading_h1]:[min-height:1.2em]`,
-  // & .interview-path-heading > p:last-child
-  `[&_.interview-path-heading_>_p:last-child]:[margin-top:8px] [&_.interview-path-heading_>_p:last-child]:[font-size:13px] [&_.interview-path-heading_>_p:last-child]:[line-height:1.65] [&_.interview-path-heading_>_p:last-child]:[color:#687087]`,
-  // & .interview-practice-problem h3
-  `[&_.interview-practice-problem_h3]:[margin-top:8px] [&_.interview-practice-problem_h3]:[font-size:16px]`,
-  // & .interview-practice-problem a
-  `[&_.interview-practice-problem_a]:[margin-top:8px] [&_.interview-practice-problem_a]:[min-height:36px] [&_.interview-practice-problem_a]:[font-size:12px]`,
-  // &::after
-  `[&::after]:[content:none] [&::after]:[background:none]`,
-  // & .interview-sun
-  `[&_.interview-sun]:[position:absolute] [&_.interview-sun]:[z-index:2] [&_.interview-sun]:[top:-100px] [&_.interview-sun]:[right:-100px] [&_.interview-sun]:[width:260px] [&_.interview-sun]:[height:260px] [&_.interview-sun]:[pointer-events:none]`,
-  // & .interview-sun-art
-  `[&_.interview-sun-art]:[display:block] [&_.interview-sun-art]:[width:100%] [&_.interview-sun-art]:[height:100%] [&_.interview-sun-art]:[overflow:visible]`,
-  // & .interview-sun-art svg
-  `[&_.interview-sun-art_svg]:[display:block] [&_.interview-sun-art_svg]:[width:100%] [&_.interview-sun-art_svg]:[height:100%] [&_.interview-sun-art_svg]:[overflow:visible]`,
-  // & .interview-sun-art[data-shining="true"] .interview-sun-rays
-  `[&_.interview-sun-art[data-shining="true"]_.interview-sun-rays]:[transform-origin:100px_100px] [&_.interview-sun-art[data-shining="true"]_.interview-sun-rays]:[animation:interview-sun-shine_.65s_ease-out]`,
-  // & .interview-sunbeam
-  `[&_.interview-sunbeam]:[position:absolute] [&_.interview-sunbeam]:[inset:0] [&_.interview-sunbeam]:[z-index:0] [&_.interview-sunbeam]:[width:100%] [&_.interview-sunbeam]:[height:100%] [&_.interview-sunbeam]:[overflow:hidden] [&_.interview-sunbeam]:[pointer-events:none]`,
-  // & .interview-sunbeam polygon
-  `[&_.interview-sunbeam_polygon]:[fill:#E5D7AF] [&_.interview-sunbeam_polygon]:[opacity:.48] [&_.interview-sunbeam_polygon]:[animation:interview-beam-arrive_.45s_ease-out_both]`,
-  // & .interview-footer-waves
-  `[&_.interview-footer-waves]:[position:relative] [&_.interview-footer-waves]:[left:-1rem] [&_.interview-footer-waves]:[width:calc(100%_+_2rem)] [&_.interview-footer-waves]:[height:80px] [&_.interview-footer-waves]:[flex-shrink:0] [&_.interview-footer-waves]:[margin-top:auto] [&_.interview-footer-waves]:[overflow:hidden] [&_.interview-footer-waves]:[pointer-events:none] [&_.interview-footer-waves]:[background:#f7f4e9] [&_.interview-footer-waves]:[display:none]`,
-  // (min-width:640px) ? & .interview-footer-waves
-  `[@media_(min-width:640px)]:[&_.interview-footer-waves]:[left:-1.5rem] [@media_(min-width:640px)]:[&_.interview-footer-waves]:[width:calc(100%_+_3rem)] [@media_(min-width:640px)]:[&_.interview-footer-waves]:[height:96px]`,
-  // (min-width:1024px) ? & .interview-footer-waves
-  `[@media_(min-width:1024px)]:[&_.interview-footer-waves]:[left:calc(-1_*_(var(--sidebar-width)_+_48px))] [@media_(min-width:1024px)]:[&_.interview-footer-waves]:[width:calc(100%_+_var(--sidebar-width)_+_80px)]`,
-  // (max-width:767px) ? & .interview-sun
-  `[@media_(max-width:767px)]:[&_.interview-sun]:[top:-78px] [@media_(max-width:767px)]:[&_.interview-sun]:[right:-78px] [@media_(max-width:767px)]:[&_.interview-sun]:[width:210px] [@media_(max-width:767px)]:[&_.interview-sun]:[height:210px]`,
-  // (max-width:767px) ? & .interview-path-heading
-  `[@media_(max-width:767px)]:[&_.interview-path-heading]:[padding-right:45px]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-sun-art[data-shining="true"] .interview-sun-rays
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-sun-art[data-shining="true"]_.interview-sun-rays]:[animation:none]`,
-  // (prefers-reduced-motion:reduce) ? & .interview-sunbeam polygon
-  `[@media_(prefers-reduced-motion:reduce)]:[&_.interview-sunbeam_polygon]:[animation:none]`,
-  // & .interview-encrypted-letter
-  `[&_.interview-encrypted-letter]:[color:#89949b]`,
-  // & .interview-pond
-  `[&_.interview-pond]:[position:absolute] [&_.interview-pond]:[z-index:0] [&_.interview-pond]:[top:48%] [&_.interview-pond]:[bottom:0] [&_.interview-pond]:[left:0] [&_.interview-pond]:[right:0] [&_.interview-pond]:[background:linear-gradient(var(--water),var(--water-deep))] [&_.interview-pond]:[pointer-events:none]`,
-  // & .interview-pond-waves
-  `[&_.interview-pond-waves]:[position:absolute] [&_.interview-pond-waves]:[top:-100px] [&_.interview-pond-waves]:[width:100%] [&_.interview-pond-waves]:[height:102px]`,
-  // & .interview-pond .pond-duck
-  `[&_.interview-pond_.pond-duck]:[top:auto] [&_.interview-pond_.pond-duck]:[bottom:24px]`,
-  // & .interview-pond .pond-computer
-  `[&_.interview-pond_.pond-computer]:[top:auto] [&_.interview-pond_.pond-computer]:[bottom:42px]`,
-].join(" ");
+const companies = [
+  { name: "Bumble", aliases: ["bumble"], mark: "B" },
+  { name: "Spotify", aliases: ["spotify"], mark: "S" },
+  { name: "DoorDash", aliases: ["doordash"], mark: "D" },
+  { name: "Stripe", aliases: ["stripe"], mark: "S" },
+];
+const descriptions: Record<InterviewMode, string> = {
+  recommended: "Start with a coding problem matched to your starting difficulty. Preview the recommendation, choose Python or Java, and practice explaining your approach.",
+  custom: "Choose exactly what you want to practice. Browse the problem library, filter by difficulty or topic, and pick a question for your interview.",
+  surprise_me: "Practice tackling an unfamiliar question. Choose your language, then get a random coding problem when you start and work through it out loud.",
+  company: "Explore a company-inspired challenge from Bumble, Spotify, DoorDash, or Stripe. Choose a company and scenario, review the prompt, and plan your solution.",
+};
+const symbols: Record<InterviewMode, string> = { recommended: "01", custom: "02", surprise_me: "03", company: "04" };
 
-type SelectedProblem = Pick<ProblemSummary, "slug" | "title" | "difficulty">;
-type InterviewMode = "practice" | "mock";
+const modeCardColors: Record<InterviewMode, string> = {
+  recommended: "border-[#3054ed] bg-[#3054ed] text-white",
+  custom: "border-[#e4e2db] bg-[#fffdf8] text-[#182137]",
+  surprise_me: "border-[#ffdf4f] bg-[#ffdf4f] text-[#182137]",
+  company: "border-[#e4e2db] bg-[#fffdf8] text-[#182137]",
+};
+const modeNumberColors: Record<InterviewMode, string> = {
+  recommended: "bg-white/15 text-white",
+  custom: "bg-[#e9edff] text-[#3054ed]",
+  surprise_me: "bg-[#182137] text-[#ffdf4f]",
+  company: "bg-[#e9edff] text-[#3054ed]",
+};
+const modeDescriptionColors: Record<InterviewMode, string> = {
+  recommended: "text-[#dce3ff]",
+  custom: "text-[#687087]",
+  surprise_me: "text-[#746329]",
+  company: "text-[#687087]",
+};
 
 export default function InterviewSelection() {
   const { profile } = useOutletContext<ProfileContext>();
   const location = useLocation();
   const navigate = useNavigate();
-  const candidate = (location.state as { selectedProblem?: SelectedProblem } | null)?.selectedProblem;
-  const selectedProblem = candidate && typeof candidate.slug === "string" && candidate.slug.trim() && typeof candidate.title === "string" && ["Easy", "Medium", "Hard"].includes(candidate.difficulty) ? candidate : null;
-  const pageRef = useRef<HTMLElement>(null);
-  const sunRef = useRef<HTMLDivElement>(null);
-  const practiceRef = useRef<HTMLElement>(null);
-  const mockRef = useRef<HTMLElement>(null);
-  const [beam, setBeam] = useState("");
-  const [sunshine, setSunshine] = useState(0);
-  const [mode, setMode] = useState<InterviewMode>("practice");
+  const [searchParams] = useSearchParams();
+  const mode = parseInterviewMode(searchParams.get("mode"));
+  const candidate = (location.state as { selectedProblem?: DashboardProblem } | null)?.selectedProblem;
+  const selectedProblem = candidate && typeof candidate.slug === "string" && typeof candidate.title === "string" ? candidate : null;
+  const [language, setLanguage] = useState<Language>(() => profile.preferred_language?.toLowerCase().includes("java") ? "java" : "python3");
   const [recommendation, setRecommendation] = useState<DashboardProblem | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [recommendationError, setRecommendationError] = useState(false);
+  const [recommendationLoading, setRecommendationLoading] = useState(true);
+  const [recommendationError, setRecommendationError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
-  const [starting, setStarting] = useState<InterviewMode | null>(null);
+  const [scenarios, setScenarios] = useState<ScenarioSummary[] | null>(null);
+  const [scenarioError, setScenarioError] = useState<string | null>(null);
+  const [company, setCompany] = useState("Bumble");
+  const [scenarioSlug, setScenarioSlug] = useState("");
+  const [scenario, setScenario] = useState<Scenario | null>(null);
+  const [scenarioLoading, setScenarioLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
   const startingRef = useRef(false);
-  const practiceProblem = selectedProblem || recommendation;
+  const detailRef = useRef<HTMLElement>(null);
+  const chosenCompany = companies.find(item => item.name === company)!;
+  const companyScenarios = (scenarios ?? []).filter(item => chosenCompany.aliases.includes(item.company.toLowerCase().trim()));
+  const recommended = mode === "recommended" && selectedProblem ? selectedProblem : recommendation;
 
   useEffect(() => {
     let active = true;
-    async function load() {
-    setLoading(true);
-    setRecommendationError(false);
-    setRecommendation(null);
-    await loadRecommendedProblem(profile.starting_difficulty).then(data => {
-      if (active) setRecommendation(data);
-    }).catch(() => {
-      if (active) setRecommendationError(true);
-    }).finally(() => {
-      if (active) setLoading(false);
-    });
-    }
-    void load();
+    loadRecommendedProblem(profile.starting_difficulty ?? "Easy").then(value => {
+      if (active) { setRecommendation(value); setRecommendationLoading(false); setRecommendationError(null); }
+    }).catch(() => { if (active) { setRecommendationLoading(false); setRecommendationError("We couldn't load your recommendation."); } });
     return () => { active = false; };
   }, [profile.starting_difficulty, retry]);
 
   useEffect(() => {
-    const page = pageRef.current;
-    const sun = sunRef.current;
-    const card = mode === "practice" ? practiceRef.current : mockRef.current;
-    if (!page || !sun || !card) return;
-    function measure() {
-      if (!page || !sun || !card) return;
-      const bounds = page.getBoundingClientRect();
-      const origin = sun.getBoundingClientRect();
-      const target = card.getBoundingClientRect();
-      const x = origin.left + origin.width / 2 - bounds.left;
-      const y = origin.top + origin.height / 2 - bounds.top;
-      const left = target.left - bounds.left;
-      const right = target.right - bounds.left;
-      const top = target.top - bounds.top;
-      setBeam([x - 12, y, x + 12, y + 12, right, top + 40, left, top + 40].join(" "));
-    }
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(page);
-    observer.observe(card);
-    observer.observe(sun);
-    return () => observer.disconnect();
-  }, [mode]);
+    if (mode !== "company") return;
+    const controller = new AbortController();
+    listScenarios(controller.signal).then(value => {
+      if (!controller.signal.aborted) { setScenarios(value); setScenarioError(null); }
+    }).catch(() => { if (!controller.signal.aborted) setScenarioError("We couldn't load company scenarios. Please try again."); });
+    return () => controller.abort();
+  }, [mode, retry]);
 
-  function select(next: InterviewMode) {
-    setMode(next);
-    setSunshine(value => value + 1);
+  useEffect(() => {
+    if (!scenarioSlug || mode !== "company") return;
+    const controller = new AbortController();
+    getScenario(scenarioSlug, controller.signal).then(value => {
+      if (!controller.signal.aborted) { setScenario(value); setScenarioLoading(false); }
+    }).catch(() => { if (!controller.signal.aborted) { setPreviewError("We couldn't load this scenario. Choose it again to retry."); setScenarioLoading(false); } });
+    return () => controller.abort();
+  }, [scenarioSlug, mode]);
+
+  function chooseMode(next: InterviewMode) {
     setStartError(null);
+    if (next === "custom") { navigate("/problems?choose=custom"); return; }
+    navigate("/interview?mode=" + next);
+    requestAnimationFrame(() => detailRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest" }));
   }
-
-  function startInterview(next: InterviewMode) {
-    if (startingRef.current) return;
-    select(next);
-    startingRef.current = true;
-    setStarting(next);
+  async function start() {
+    if (!mode || startingRef.current) return;
+    startingRef.current = true; setStarting(true); setStartError(null);
     try {
-      // Temporary direct route uses the room's existing bundled sample.
-      navigate("/interview/" + encodeURIComponent(fakeProblem.slug) + "?mode=" + next);
-    } catch (error) {
-      setStartError(error instanceof Error ? error.message : "We couldn't start your interview. Please try again.");
-    } finally {
-      startingRef.current = false;
-      setStarting(null);
-    }
+      let selection: InterviewLaunch;
+      let slug: string;
+      if (mode === "company") {
+        if (!scenario || !companyScenarios.some(item => item.slug === scenario.slug)) throw new Error("Choose a company scenario first.");
+        slug = scenario.slug; selection = { mode, scenarioSlug: slug, language };
+      } else {
+        const problem = mode === "surprise_me" ? await getRandomProblem() : mode === "custom" ? selectedProblem : recommended;
+        if (!problem) throw new Error("Choose a question from the problem library first.");
+        slug = problem.slug; selection = { mode, problemSlug: slug, language };
+      }
+      const session = await createModeSession(selection);
+      navigate(interviewRoomUrl(slug, session.id, mode));
+    } catch (error) { setStartError(error instanceof Error ? error.message : "We couldn't start your interview. Please try again."); }
+    finally { startingRef.current = false; setStarting(false); }
   }
+  function chooseCompany(value: string) { setCompany(value); setScenarioSlug(""); setScenario(null); setPreviewError(null); setStartError(null); setScenarioLoading(false); }
+  function chooseScenario(value: string) { setScenarioSlug(value); setScenario(null); setPreviewError(null); setStartError(null); setScenarioLoading(Boolean(value)); }
 
-  return <main ref={pageRef} className={["interview-selection-page app-sidebar-layout flex min-h-svh flex-col bg-[#f7f4e9] px-4 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_:is(a,button):focus-visible]:outline-2 [&_:is(a,button):focus-visible]:outline-offset-4 [&_:is(a,button):focus-visible]:outline-[#3054ed]", interviewStyles].join(" ")}>
-    <NavbarDashboard /><div className="interview-pond" aria-hidden="true"><WaterWaves className="interview-pond-waves" /><PondLife /></div>
-    {sunshine > 0 && beam && <svg className="interview-sunbeam" aria-hidden="true" focusable="false"><polygon key={sunshine} points={beam} /></svg>}
-    <div ref={sunRef} className="interview-sun" aria-hidden="true">
-      <div key={sunshine} className="interview-sun-art" data-shining={sunshine > 0}>
-        <svg viewBox="0 0 200 200" fill="none" focusable="false">
-          <g className="interview-sun-rays" stroke="#e3b82d" strokeWidth="3" strokeLinecap="round">
-            {Array.from({ length: 12 }, (_, index) => <path key={index} d="M100 24V36" transform={"rotate(" + index * 30 + " 100 100)"} />)}
-          </g>
-          <circle className="interview-sun-halo" cx="100" cy="100" r="57" fill="#ffdf4f" fillOpacity=".22" />
-          <circle cx="100" cy="100" r="43" fill="#ffdf4f" />
-          <path d="M76 88C79 77 87 70 98 68" stroke="#FFE9AD" strokeWidth="5" strokeLinecap="round" />
-        </svg>
-      </div>
+  return <main className={"mode-page [&.mode-page]:[background:#f3f1eb] [&.mode-page]:[color:#182137] [&.mode-page]:[font-family:\"DM_Sans\",sans-serif] [&.mode-page_:is(a,button,select):focus-visible]:[outline:2px_solid_#3054ed] [&.mode-page_:is(a,button,select):focus-visible]:[outline-offset:4px] [&.mode-page_button]:[cursor:pointer] [&.mode-page_button:disabled]:[cursor:wait] [&.mode-page_button:disabled]:[opacity:.5] app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh px-4 pb-12 pt-2 sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]"}>
+    <NavbarDashboard />
+    <div className={"mode-page-content [&.mode-page-content]:[width:100%] [&.mode-page-content]:[max-width:1184px] [&.mode-page-content]:[margin:auto] [&.mode-page-content]:[padding:36px_0_0] [@media_(max-width:760px)]:[&.mode-page-content]:[padding-top:28px] [@media_(max-width:700px)]:[&.mode-page-content]:[padding-top:28px]" + (!mode ? " mode-page-overview [&.mode-page-overview]:[display:flex] [&.mode-page-overview]:[flex-direction:column] [&.mode-page-overview]:[min-height:calc(100svh_-_72px)] [&.mode-page-overview_.mode-card]:[min-height:270px] [&.mode-page-overview_.mode-card]:[padding:32px] [&.mode-page-overview_.mode-card-title]:[margin:24px_0_12px] [&.mode-page-overview_.mode-card-title]:[font-size:30px] [&.mode-page-overview_.mode-card-title]:[line-height:1.15] [&.mode-page-overview_.mode-card-description]:[max-width:56ch] [&.mode-page-overview_.mode-card-description]:[font-size:14px] [&.mode-page-overview_.mode-card-description]:[line-height:1.8] [&.mode-page-overview_.mode-card-footer]:[padding-top:24px] [&.mode-page-overview_.mode-card-footer]:[font-size:13px] [@media_(max-width:700px)]:[&.mode-page-overview]:[min-height:0] [@media_(max-width:700px)]:[&.mode-page-overview_.mode-card]:[min-height:250px] [@media_(max-width:700px)]:[&.mode-page-overview_.mode-card]:[padding:26px] [@media_(max-width:700px)]:[&.mode-page-overview_.mode-card-title]:[font-size:27px]" : "")}>
+      <PageHeading eyebrow="YOUR PRACTICE, YOUR WAY" title={mode ? modeLabels[mode] + " interview" : "Choose your path."} subtitle={mode ? "Review your challenge and choose your language before you start." : "Choose how you want to practice. Select a mode to set up your interview."} />
+      {!mode && <div className={"mode-cards [&.mode-cards]:[display:grid] [&.mode-cards]:[grid-template-columns:repeat(2,minmax(0,1fr))] [&.mode-cards]:[gap:20px] [&.mode-cards]:[flex:1] [@media_(max-width:1200px)]:[&.mode-cards]:[grid-template-columns:repeat(2,minmax(0,1fr))] [@media_(max-width:440px)]:[&.mode-cards]:[grid-template-columns:1fr] [@media_(max-width:700px)]:[&.mode-cards]:[grid-template-columns:1fr] [@media_(max-width:700px)]:[&.mode-cards]:[gap:16px]"} role="group" aria-label="Interview modes">{interviewModes.map(item => <button key={item} type="button" className={"mode-card flex min-w-0 flex-col rounded-3xl border p-[26px] text-left shadow-[0_12px_32px_-24px_#18213730] transition-[transform,box-shadow] duration-200 hover:-translate-y-[5px] hover:shadow-[0_18px_32px_-20px_#18213735] aria-pressed:outline-2 aria-pressed:outline-offset-4 aria-pressed:outline-[#3054ed] max-[760px]:p-[22px] motion-reduce:transform-none motion-reduce:transition-none " + modeCardColors[item]} aria-pressed={mode === item} onClick={() => chooseMode(item)} disabled={starting}><span className={"mode-card-number grid size-[38px] place-items-center rounded-xl font-mono text-[11px] " + modeNumberColors[item]}>{symbols[item]}</span><span className={"mode-card-title [&.mode-card-title]:[font-size:25px] [&.mode-card-title]:[letter-spacing:-.045em] [&.mode-card-title]:[font-weight:500] [&.mode-card-title]:[margin:34px_0_12px] [@media_(max-width:1200px)]:[&.mode-card-title]:[margin-top:24px]"}>{modeLabels[item]}</span><span className={"mode-card-description text-xs leading-[1.9] " + modeDescriptionColors[item]}>{descriptions[item]}</span><span className={"mode-card-footer [&.mode-card-footer]:[display:flex] [&.mode-card-footer]:[align-items:center] [&.mode-card-footer]:[justify-content:space-between] [&.mode-card-footer]:[gap:12px] [&.mode-card-footer]:[margin-top:auto] [&.mode-card-footer]:[padding-top:26px] [&.mode-card-footer]:[font-size:11px] [&.mode-card-footer]:[font-weight:600] [&.mode-card-footer_>_span]:[font-size:20px]"}>{item === "custom" ? "Explore the library" : item === "company" ? "Choose a company" : item === "recommended" ? "Review your recommendation" : "Set up a surprise interview"}<span aria-hidden="true">&#8594;</span></span></button>)}</div>}
+      {mode && <Link className={"mode-back-link [&.mode-back-link]:[display:inline-flex] [&.mode-back-link]:[align-items:center] [&.mode-back-link]:[min-height:44px] [&.mode-back-link]:[color:#3054ed] [&.mode-back-link]:[font-size:13px] [&.mode-back-link:hover]:[text-decoration:underline]"} to="/interview">&#8592; All interview modes</Link>}
+      {mode && <section ref={detailRef} className={"mode-detail [&.mode-detail]:[display:grid] [&.mode-detail]:[grid-template-columns:minmax(0,1fr)_280px] [&.mode-detail]:[gap:32px] [&.mode-detail]:[background:#fffdf8] [&.mode-detail]:[border:1px_solid_#e4e2db] [&.mode-detail]:[border-radius:26px] [&.mode-detail]:[padding:34px] [&.mode-detail]:[margin-top:28px] [&.mode-detail]:[scroll-margin-top:24px] [&.mode-detail_h2]:[font-size:32px] [&.mode-detail_h2]:[letter-spacing:-.045em] [&.mode-detail_h2]:[font-weight:500] [&.mode-detail_h2]:[line-height:1.15] [&.mode-detail_h2]:[margin:15px_0] [@media_(max-width:1200px)]:[&.mode-detail]:[grid-template-columns:minmax(0,1fr)_240px] [@media_(max-width:1200px)]:[&.mode-detail]:[padding:26px] [@media_(max-width:1200px)]:[&.mode-detail]:[gap:24px] [@media_(max-width:760px)]:[&.mode-detail]:[grid-template-columns:1fr] [@media_(max-width:440px)]:[&.mode-detail]:[padding:22px] [@media_(max-width:440px)]:[&.mode-detail_h2]:[font-size:28px]"} aria-labelledby="mode-detail-heading"><div className={"mode-detail-main [&.mode-detail-main_>_.reference-eyebrow]:[color:#3054ed] [&.mode-detail-main_>_p:not(.reference-eyebrow)]:[font-size:13px] [&.mode-detail-main_>_p:not(.reference-eyebrow)]:[line-height:1.8] [&.mode-detail-main_>_p:not(.reference-eyebrow)]:[color:#687087]"}><p className={"reference-eyebrow [&.reference-eyebrow]:[font-family:monospace] [&.reference-eyebrow]:[font-size:10px] [&.reference-eyebrow]:[font-weight:600] [&.reference-eyebrow]:[letter-spacing:.13em]"}>{modeLabels[mode].toUpperCase()} MODE</p><h2 id="mode-detail-heading">{mode === "recommended" ? "Your next thoughtful step." : mode === "custom" ? "A question of your choosing." : mode === "company" ? "Think beyond the code." : "A little unexpected. All you."}</h2><p>{descriptions[mode]}</p>
+        {mode === "recommended" && <div className={"mode-question-preview [&.mode-question-preview]:[border:1px_solid_#dfe5fa] [&.mode-question-preview]:[border-radius:16px] [&.mode-question-preview]:[background:#f0f3ff] [&.mode-question-preview]:[padding:24px] [&.mode-question-preview]:[margin-top:26px] [&.mode-question-preview_>_span]:[font:10px_monospace] [&.mode-question-preview_>_span]:[color:#3054ed] [&.mode-question-preview_>_span]:[text-transform:uppercase] [&.mode-question-preview_h3]:[font-size:23px] [&.mode-question-preview_h3]:[letter-spacing:-.035em] [&.mode-question-preview_h3]:[font-weight:500] [&.mode-question-preview_h3]:[margin-top:12px] [&.mode-question-preview_p]:[margin-top:10px] [&.mode-question-preview_p]:[font-size:12px] [&.mode-question-preview_p]:[color:#687087] [&.mode-question-preview_p]:[line-height:1.8] [&.mode-question-preview_:is(a,button)]:[display:inline-block] [&.mode-question-preview_:is(a,button)]:[color:#3054ed] [&.mode-question-preview_:is(a,button)]:[text-decoration:underline] [&.mode-question-preview_:is(a,button)]:[font-size:12px] [&.mode-question-preview_:is(a,button)]:[margin-top:16px]"}>{recommendationLoading && !selectedProblem ? <p role="status">Finding your next problem...</p> : recommendationError && !recommended ? <><p role="alert">{recommendationError}</p><button type="button" onClick={() => { setRecommendationLoading(true); setRetry(value => value + 1); }}>Try again</button></> : recommended ? <><span>{recommended.difficulty}</span><h3>{recommended.title}</h3><p>{recommended.topic || "Practice explaining your approach, one step at a time."}</p></> : <p>No recommendation yet. <Link to="/problems?choose=custom">Choose a question from the library.</Link></p>}</div>}
+        {mode === "custom" && <div className={"mode-question-preview [&.mode-question-preview]:[border:1px_solid_#dfe5fa] [&.mode-question-preview]:[border-radius:16px] [&.mode-question-preview]:[background:#f0f3ff] [&.mode-question-preview]:[padding:24px] [&.mode-question-preview]:[margin-top:26px] [&.mode-question-preview_>_span]:[font:10px_monospace] [&.mode-question-preview_>_span]:[color:#3054ed] [&.mode-question-preview_>_span]:[text-transform:uppercase] [&.mode-question-preview_h3]:[font-size:23px] [&.mode-question-preview_h3]:[letter-spacing:-.035em] [&.mode-question-preview_h3]:[font-weight:500] [&.mode-question-preview_h3]:[margin-top:12px] [&.mode-question-preview_p]:[margin-top:10px] [&.mode-question-preview_p]:[font-size:12px] [&.mode-question-preview_p]:[color:#687087] [&.mode-question-preview_p]:[line-height:1.8] [&.mode-question-preview_:is(a,button)]:[display:inline-block] [&.mode-question-preview_:is(a,button)]:[color:#3054ed] [&.mode-question-preview_:is(a,button)]:[text-decoration:underline] [&.mode-question-preview_:is(a,button)]:[font-size:12px] [&.mode-question-preview_:is(a,button)]:[margin-top:16px]"}>{selectedProblem ? <><span>{selectedProblem.difficulty}</span><h3>{selectedProblem.title}</h3></> : <p>Pick a question to begin.</p>}<Link to="/problems?choose=custom">{selectedProblem ? "Choose a different question" : "Open problem library"} &#8599;</Link></div>}
+        {mode === "surprise_me" && <div className={"mode-surprise-preview [&.mode-surprise-preview]:[display:flex] [&.mode-surprise-preview]:[align-items:center] [&.mode-surprise-preview]:[gap:24px] [&.mode-surprise-preview]:[border-radius:18px] [&.mode-surprise-preview]:[background:#fff3ba] [&.mode-surprise-preview]:[padding:26px] [&.mode-surprise-preview]:[margin-top:26px] [&.mode-surprise-preview_>_span]:[font-size:60px] [&.mode-surprise-preview_>_span]:[font-weight:500] [&.mode-surprise-preview_>_span]:[color:#9b7920] [&.mode-surprise-preview_p]:[font-size:13px] [&.mode-surprise-preview_p]:[line-height:1.9]"}><span aria-hidden="true">?</span><p>A fresh problem is picked when you start.<br />Take a breath, read it through, and talk us through your plan.</p></div>}
+        {mode === "company" && <div className={"mode-company-picker [&.mode-company-picker]:[margin-top:26px] [&.mode-company-picker_>_p]:[color:#687087] [&.mode-company-picker_>_p]:[font-size:12px] [&.mode-company-picker_>_p]:[line-height:1.9]"}><div className={"company-buttons [&.company-buttons]:[display:flex] [&.company-buttons]:[flex-wrap:wrap] [&.company-buttons]:[gap:8px] [&.company-buttons]:[margin-bottom:24px] [&.company-buttons_button]:[display:flex] [&.company-buttons_button]:[align-items:center] [&.company-buttons_button]:[gap:8px] [&.company-buttons_button]:[border:1px_solid_#e4e2db] [&.company-buttons_button]:[border-radius:10px] [&.company-buttons_button]:[padding:10px_12px] [&.company-buttons_button]:[font-size:11px] [&.company-buttons_button_>_span]:[font-size:18px] [&.company-buttons_button_>_span]:[font-weight:700] [&.company-buttons_button[aria-pressed=true]]:[color:#3054ed] [&.company-buttons_button[aria-pressed=true]]:[background:#e9edff] [&.company-buttons_button[aria-pressed=true]]:[border-color:#b9c9ff]"} role="group" aria-label="Choose a company">{companies.map(item => <button key={item.name} type="button" aria-pressed={company === item.name} onClick={() => chooseCompany(item.name)}><span aria-hidden="true">{item.mark}</span>{item.name}</button>)}</div>{scenarioError ? <div role="alert"><p>{scenarioError}</p><button type="button" onClick={() => setRetry(value => value + 1)}>Retry</button></div> : scenarios === null ? <p role="status">Loading company scenarios...</p> : companyScenarios.length ? <label className={"mode-scenario-label [&.mode-scenario-label_select]:[width:100%] [&.mode-scenario-label_select]:[padding:12px] [&.mode-scenario-label_select]:[border:1px_solid_#dedfdc] [&.mode-scenario-label_select]:[background:#fffdf8] [&.mode-scenario-label_select]:[border-radius:10px] [&.mode-scenario-label_select]:[color:#182137] [&.mode-scenario-label]:[display:grid] [&.mode-scenario-label]:[gap:10px] [&.mode-scenario-label]:[font-size:12px]"}>Choose a scenario<select value={scenarioSlug} onChange={event => chooseScenario(event.target.value)}><option value="">Select a scenario</option>{companyScenarios.map(item => <option key={item.slug} value={item.slug}>{item.title} &#8226; {item.difficulty}</option>)}</select></label> : <p className={"mode-empty [&.mode-empty]:[color:#687087] [&.mode-empty]:[font-size:12px] [&.mode-empty]:[line-height:1.9]"}>No scenarios are available for {company} yet. Try another company.</p>}{scenarioLoading && <p role="status">Loading your scenario...</p>}{previewError && <p role="alert">{previewError}</p>}{scenario && <div className={"mode-scenario-preview [&.mode-scenario-preview_>_span]:[font:10px_monospace] [&.mode-scenario-preview_>_span]:[color:#3054ed] [&.mode-scenario-preview_>_span]:[text-transform:uppercase] [&.mode-scenario-preview_h3]:[font-size:23px] [&.mode-scenario-preview_h3]:[letter-spacing:-.035em] [&.mode-scenario-preview_h3]:[font-weight:500] [&.mode-scenario-preview_h3]:[margin-top:12px] [&.mode-scenario-preview]:[margin-top:22px] [&.mode-scenario-preview]:[border-top:1px_solid_#e4e2db] [&.mode-scenario-preview]:[padding-top:22px] [&.mode-scenario-preview_>_div]:[margin-top:16px] [&.mode-scenario-preview_>_div]:[font-size:13px] [&.mode-scenario-preview_>_div]:[line-height:1.9] [&.mode-scenario-preview_>_div]:[white-space:pre-wrap]"}><span>{scenario.difficulty}</span><h3>{scenario.title}</h3><div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(scenario.prompt) }} /></div>}</div>}
+      </div><aside className={"mode-start-panel [&.mode-start-panel]:[border-radius:18px] [&.mode-start-panel]:[background:#f3f1eb] [&.mode-start-panel]:[padding:24px] [&.mode-start-panel_>_.reference-eyebrow]:[color:#68778e] [&.mode-start-panel_label]:[display:grid] [&.mode-start-panel_label]:[gap:10px] [&.mode-start-panel_label]:[margin-top:26px] [&.mode-start-panel_label]:[font-size:12px] [&.mode-start-panel_select]:[width:100%] [&.mode-start-panel_select]:[padding:12px] [&.mode-start-panel_select]:[border:1px_solid_#dedfdc] [&.mode-start-panel_select]:[background:#fffdf8] [&.mode-start-panel_select]:[border-radius:10px] [&.mode-start-panel_select]:[color:#182137] [&.mode-start-panel_>_p:not(.reference-eyebrow)]:[font-size:12px] [&.mode-start-panel_>_p:not(.reference-eyebrow)]:[line-height:1.8] [&.mode-start-panel_>_p:not(.reference-eyebrow)]:[color:#687087] [&.mode-start-panel_>_p:not(.reference-eyebrow)]:[margin:22px_0] [&.mode-start-panel_>_a]:[display:block] [&.mode-start-panel_>_a]:[text-align:center] [&.mode-start-panel_>_a]:[margin-top:20px] [&.mode-start-panel_>_a]:[color:#687087] [&.mode-start-panel_>_a]:[text-decoration:underline] [&.mode-start-panel_>_a]:[font-size:11px]"}><p className={"reference-eyebrow [&.reference-eyebrow]:[font-family:monospace] [&.reference-eyebrow]:[font-size:10px] [&.reference-eyebrow]:[font-weight:600] [&.reference-eyebrow]:[letter-spacing:.13em]"}>MAKE IT YOURS</p><label>Interview language<select value={language} onChange={event => setLanguage(event.target.value as Language)} disabled={starting}><option value="python3">Python 3</option><option value="java">Java</option></select></label><p>Say your plan out loud. Leave room for questions. Focus on one clear step at a time.</p><button type="button" className={"mode-start-button [&.mode-start-button]:[display:flex] [&.mode-start-button]:[align-items:center] [&.mode-start-button]:[justify-content:space-between] [&.mode-start-button]:[gap:16px] [&.mode-start-button]:[background:#3054ed] [&.mode-start-button]:[color:white] [&.mode-start-button]:[padding:14px_16px] [&.mode-start-button]:[border-radius:12px] [&.mode-start-button]:[width:100%] [&.mode-start-button]:[font-size:13px] [&.mode-start-button]:[font-weight:600]"} onClick={() => void start()} disabled={starting || (mode === "recommended" && !recommended) || (mode === "custom" && !selectedProblem) || (mode === "company" && !scenario)}>{starting ? "Getting ready..." : "Start interview"}<span aria-hidden="true">&#8594;</span></button><Link to="/interview">Back to all modes</Link></aside></section>}
+      {startError && <p className={"mode-start-error [&.mode-start-error]:[background:#fff0d7] [&.mode-start-error]:[border:1px_solid_#ead4ad] [&.mode-start-error]:[color:#76501e] [&.mode-start-error]:[border-radius:14px] [&.mode-start-error]:[padding:20px] [&.mode-start-error]:[font-size:13px] [&.mode-start-error]:[line-height:1.8] [&.mode-start-error]:[margin-top:20px]"} role="alert">{startError}</p>}
     </div>
-    <section className="interview-path-shell mx-auto w-full max-w-[1120px] flex-1 py-10 lg:py-14" aria-labelledby="mode-heading">
-      <header className="interview-path-heading mb-10"><h1 id="mode-heading" className="cloud-heading text-4xl font-semibold tracking-[-0.045em] sm:text-5xl"><TextType as="span" text="Choose your path" typingSpeed={65} initialDelay={150} loop={false} showCursor cursorBlinkDuration={0.6} /></h1><p className="mt-4 text-base leading-7 text-[#687087]">Practice with guidance or try a realistic mock interview.</p></header>
-      <div className="interview-path-options" role="group" aria-label="Interview paths">
-        <article onPointerEnter={() => setSunshine(value => value + 1)} onFocus={() => setSunshine(value => value + 1)} ref={practiceRef} className="interview-path-card" data-selected={mode === "practice"} aria-labelledby="practice-heading" onClick={() => select("practice")}>
-          <button type="button" className="interview-path-selector" aria-pressed={mode === "practice"} onClick={event => { event.stopPropagation(); select("practice"); }}><span className="interview-path-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M9 6a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0ZM5 10v2a7 7 0 0 0 14 0v-2m-7 9v3m-4 0h8" /></svg></span><span className="interview-path-check" aria-hidden="true">{mode === "practice" ? "✓" : ""}</span><h2 id="practice-heading"><DecryptedText text="Practice Interview" animateOn="inViewHover" speed={35} sequential revealDirection="start" characters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" encryptedClassName="interview-encrypted-letter" /></h2></button>
-          <p className="interview-path-description">Practice with your AI coach in a flexible, more forgiving setting.</p>
-          <ul className="interview-path-benefits"><li>Guidance when you need it</li><li>Work at your own pace</li></ul>
-          <div className="interview-practice-problem"><p className="text-[10px] font-semibold uppercase tracking-widest text-[#2946c5]">{selectedProblem ? "Your chosen problem" : "Next recommended problem"}</p>{practiceProblem ? <><h3 className="mt-3 text-lg font-semibold">{practiceProblem.title}</h3><span className="mt-2 inline-block rounded-full bg-white/60 px-3 py-1 text-xs text-[#2946c5]">{practiceProblem.difficulty}</span></> : loading ? <p role="status" className="mt-3 text-sm text-[#456075]">Finding your next problem...</p> : recommendationError ? <div className="mt-3 text-sm text-[#456075]"><p role="alert">Couldn't load your recommendation.</p><button type="button" className="mt-2 font-semibold underline" onClick={() => setRetry(value => value + 1)}>Retry</button></div> : <p className="mt-3 text-sm text-[#456075]">Pick a problem to get started.</p>}<Link to="/problems?choose=practice" className="mt-4 inline-flex min-h-10 items-center gap-3 text-sm font-semibold text-[#3054ed]">Choose from the problem library <span aria-hidden="true">&#8599;</span></Link></div>
-          <button type="button" disabled={starting !== null} onClick={() => void startInterview("practice")} className="interview-path-start">{starting === "practice" ? "Starting..." : "Start interview"}<span aria-hidden="true">&#8594;</span></button>
-        </article>
-        <article onPointerEnter={() => setSunshine(value => value + 1)} onFocus={() => setSunshine(value => value + 1)} ref={mockRef} className="interview-path-card" data-selected={mode === "mock"} aria-labelledby="mock-heading" onClick={() => select("mock")}>
-          <button type="button" className="interview-path-selector" aria-pressed={mode === "mock"} onClick={event => { event.stopPropagation(); select("mock"); }}><span className="interview-path-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="7" width="18" height="14" rx="3" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12a22 22 0 0 0 18 0M12 11v4" /></svg></span><span className="interview-path-check" aria-hidden="true">{mode === "mock" ? "✓" : ""}</span><h2 id="mock-heading"><DecryptedText text="Mock Interview" animateOn="inViewHover" speed={35} delay={150} sequential revealDirection="start" characters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" encryptedClassName="interview-encrypted-letter" /></h2></button>
-          <p className="interview-path-description">Step into a real interview setting and show what you can do.</p>
-          <ul className="interview-path-benefits"><li>Approximately 30 minutes</li><li>No hints or coaching</li><li>A surprise problem</li></ul>
-          <button type="button" disabled={starting !== null} onClick={() => void startInterview("mock")} className="interview-path-start">{starting === "mock" ? "Starting..." : "Start interview"}<span aria-hidden="true">&#8594;</span></button>
-        </article>
-      </div>
-      {startError && <p role="alert" className="mt-6 rounded-2xl border border-[#bcd5f4] bg-white/70 p-4 text-sm text-[#456075]">{startError}</p>}
-    </section>
-    <WaterWaves className="interview-footer-waves" />
   </main>;
 }

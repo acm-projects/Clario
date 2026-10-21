@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import ProblemLibrary from "./pages/ProblemLibrary";
 import Feedback from "./pages/Feedback";
+import InterviewReport from "./pages/InterviewReport";
 import ProfileGate from "./components/auth/ProfileGate";
 
 function App() {
@@ -21,7 +22,9 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/problems" element={<ProblemLibrary />} />
-      <Route path="/report" element={<Feedback />} />      <Route element={<ProfileGate />}>
+      <Route path="/report" element={<Feedback />} />
+      <Route path="/report/preview" element={<InterviewReport preview />} />
+      <Route path="/report/:sessionId" element={<InterviewReport />} />      <Route element={<ProfileGate />}>
         <Route path="/assessment" element={<Assessment />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/interview" element={<InterviewSelection />} />

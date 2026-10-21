@@ -1,4 +1,7 @@
+import PageHeading from "../components/ui/PageHeading";
 import { useEffect, useState } from "react";
+
+import { Link } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { loadFeedbackHistory, scoreColumns, type FeedbackInterview } from "../lib/feedback";
 
@@ -22,8 +25,7 @@ export default function Feedback() {
       setLoaded(null);
       setError(null);
       try {
-        const bypass = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true";
-        const interviews = bypass ? [] : await loadFeedbackHistory();
+        const interviews = await loadFeedbackHistory();
         if (active) setLoaded(interviews);
       } catch {
         if (active) setError("We couldn't load your feedback. Please try again.");
@@ -34,6 +36,7 @@ export default function Feedback() {
   }, [retry]);
 
   const history = loaded ?? [];
+  const selected = history.find(interview => interview.status === "Available");
   const interviews = history.filter((interview) =>
     (difficulty === "All" || interview.difficulty?.toLowerCase() === difficulty.toLowerCase()) &&
     (category === "All" || scoreColumns.some((column) => column.label === category && interview.scores[column.key] !== null)) &&
@@ -44,19 +47,17 @@ export default function Feedback() {
   function resetFilters() { setQuery(""); setDifficulty("All"); setCategory("All"); setStatus("All"); }
 
   return (
-    <main className="app-sidebar-layout min-h-svh bg-[#f7f4e9] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]">
+    <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-[#f7f4e9] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]"}>
       <NavbarDashboard />
       <div className="mx-auto max-w-[1120px]">
-        <div className="pb-7 pt-8 sm:pt-10">
-          <h1 className="text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Feedback Report</h1>
-          <p className="mt-2 text-sm leading-6 text-[#687087]">See where you're strong, where to focus, and how far you've come.</p>
-        </div>        {error && <section className={`${surface} mb-6`}><p role="alert">{error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 min-h-10 rounded-lg bg-[#3054ed] px-5 py-3 text-sm text-white">Retry</button></section>}
+        <div className="pt-9 max-[700px]:pt-7"><PageHeading eyebrow="YOUR PROGRESS, IN FOCUS" title="Feedback report" subtitle="See where you're strong, where to focus, and how far you've come." /></div>        {import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true" && <section className={surface + " mb-6"}><h2 className="text-xl font-semibold">Test Gemini feedback</h2><p className="mt-3 text-sm text-[#687087]">Preview feedback for an unfinished Two Sum solution and a sample transcript expressing uncertainty.</p><Link to="/report/preview" className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Open test report</Link></section>}
+        {error && <section className={`${surface} mb-6`}><p role="alert">{error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 min-h-10 rounded-lg bg-[#3054ed] px-5 py-3 text-sm text-white">Retry</button></section>}
             <section aria-labelledby="performance-heading" className={surface}>
               <h2 id="performance-heading" className="text-lg font-semibold">Performance Over Time <span className="text-sm font-normal text-[#777a7c]">(Past Few Months)</span></h2>
               {points.length > 0 && <p className="mt-2 text-xs text-[#777a7c]">{dateLabel(points[0].date)}{points.length > 1 ? ` - ${dateLabel(points[points.length - 1].date)}` : ""}</p>}
               <PerformanceChart interviews={points} loading={loaded === null && !error} />
             </section>
-            <section aria-labelledby="history-heading" className={`${surface} mt-6`}>
+            <div className={"feedback-history-layout [&.feedback-history-layout]:[display:grid] [&.feedback-history-layout]:[grid-template-columns:minmax(0,1fr)_290px] [&.feedback-history-layout]:[gap:20px] [&.feedback-history-layout]:[align-items:start] [&.feedback-history-layout]:[margin-top:24px] [&.feedback-history-layout_>_section]:[min-width:0] [@media_(max-width:1100px)]:[&.feedback-history-layout]:[grid-template-columns:minmax(0,1fr)]"}><section aria-labelledby="history-heading" className={surface}>
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 id="history-heading" className="text-xl font-semibold">Previous Interviews</h2>
                 <div className="flex flex-wrap gap-2">
@@ -76,18 +77,19 @@ export default function Feedback() {
                   <thead className="text-[10px] uppercase tracking-wide text-[#89836d]"><tr>{["ID", "Topic", "Difficulty", "Feedback summary", "Category", "Date", "Status"].map((heading) => <th key={heading} scope="col" className="border-b border-[#182137]/10 px-2 pb-3 font-medium">{heading}</th>)}</tr></thead>
                   <tbody>{interviews.map((interview) => <tr key={interview.id} className="border-b border-[#182137]/8">
                     <td className="whitespace-nowrap px-2 py-4 text-[#777a7c]">{interview.id}</td>
-                    <th scope="row" className="px-2 py-4 font-medium">{interview.topic}</th>
+                    <th scope="row" className="px-2 py-4 font-medium"><Link to={"/report/" + encodeURIComponent(interview.id)} className="text-[#3054ed] underline underline-offset-4">{interview.topic}</Link></th>
                     <td className="px-2 py-4 capitalize">{interview.difficulty || "Unavailable"}</td>
                     <td className="max-w-64 px-2 py-4 leading-5">{interview.summary || (interview.status === "Pending" ? "Feedback pending" : "No written summary available")}</td>
                     <td className="px-2 py-4"><div className="flex flex-wrap gap-1">{scoreColumns.filter((column) => interview.scores[column.key] !== null).map((column) => <span key={column.key} className="rounded-full bg-[#e9edff] px-2 py-1 text-[10px] text-[#2946c5]">{column.label}</span>)}</div></td>
                     <td className="whitespace-nowrap px-2 py-4"><time dateTime={interview.date}>{dateLabel(interview.date)}</time></td>
-                    <td className="px-2 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] ${interview.status === "Available" ? "bg-[#deeedf] text-[#477052]" : "bg-[#f5dfbb] text-[#8a6115]"}`}>{interview.status}</span></td>
+                    <td className="px-2 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] ${interview.status === "Available" ? "bg-[#deeedf] text-[#477052]" : "bg-[#f5dfbb] text-[#8a6115]"}`}>{interview.status}</span><Link to={"/report/" + encodeURIComponent(interview.id)} className="mt-3 block min-h-9 text-left text-[11px] text-[#3054ed] underline">{interview.status === "Pending" ? "Generate report" : "View report"}</Link></td>
                   </tr>)}{!interviews.length && <tr><td colSpan={7} className="py-12 text-center">{loaded === null && !error ? "Loading your interviews..." : history.length ? <>No matching interviews. <button type="button" onClick={resetFilters} className="text-[#2946c5] underline">Clear filters</button></> : <><p className="font-medium text-[#687087]">No previous interviews yet</p><p className="mt-2 text-xs text-[#777a7c]">Your completed interviews and feedback will appear here.</p></>}</td></tr>}</tbody>
                 </table>
               </div>
               <p role="status" className="mt-4 text-[10px] text-[#89836d]">{interviews.length} of {history.length} completed interviews</p>
             </section>
-
+            <aside className={"feedback-coach-note [&.feedback-coach-note]:[padding:28px] [&.feedback-coach-note]:[background:#ffdf4f] [&.feedback-coach-note]:[border-radius:24px] [&.feedback-coach-note]:[color:#182137] [&.feedback-coach-note_svg]:[width:26px] [&.feedback-coach-note_svg]:[height:26px] [&.feedback-coach-note_svg]:[margin:30px_0_16px] [&.feedback-coach-note_blockquote]:[font-size:24px] [&.feedback-coach-note_blockquote]:[line-height:1.15] [&.feedback-coach-note_blockquote]:[letter-spacing:-.04em] [&.feedback-coach-note_blockquote]:[font-weight:500] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[font-size:12px] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[line-height:1.8] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[margin-top:18px] [@media_(max-width:1100px)]:[&.feedback-coach-note]:[max-width:100%]"} aria-labelledby="coach-note-heading"><p id="coach-note-heading" className={"reference-eyebrow [&.reference-eyebrow]:[font-family:monospace] [&.reference-eyebrow]:[font-size:10px] [&.reference-eyebrow]:[font-weight:600] [&.reference-eyebrow]:[letter-spacing:.13em]"}>COACH&#8217;S NOTE</p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M4 3h16v14H9l-5 4V3Z"/><path d="M8 7h8M8 11h6"/></svg><blockquote>{selected?.coachQuote ?? "Lead with the map, then take us on the journey."}</blockquote><p>{selected?.coachNote ?? "Before typing, use one sentence to name your approach and explain why it fits the problem."}</p><span className={"feedback-note-label [&.feedback-note-label]:[display:block] [&.feedback-note-label]:[margin-top:24px] [&.feedback-note-label]:[color:#716126] [&.feedback-note-label]:[font:9px/1.6_monospace]"}>{selected ? "From your interview feedback" : "A reminder for your next interview"}</span></aside>
+            </div>
       </div>
     </main>
   );
