@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from auth import get_current_user
 from db import supabase
 from leetcode import get_problem
+from communication import CommunicationCapture
 
 logger = logging.getLogger(__name__)
 
@@ -228,3 +229,15 @@ def list_events(session_id: str, user: dict = Depends(get_current_user)):
         .data
     )
     return [event_out(r) for r in rows]
+
+@router.post("/{session_id}/communication")
+def save_communication(session_id: str, body: CommunicationCapture, user: dict = Depends(get_current_user)):
+    session = get_owned_session(session_id, user["sub"])
+    if session["status"] == "completed":
+        raise HTTPException(status_code=409, detail="Session already completed")
+    supabase.table("session_events").insert({
+        "session_id": session_id,
+        "event_type": "communication_summary",
+        "metadata": body.model_dump(mode="json"),
+    }).execute()
+    return {"saved": True}

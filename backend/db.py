@@ -1,9 +1,8 @@
 import os
 
-from dotenv import load_dotenv
+import config  # noqa: F401 - load backend environment before reading it
 from supabase import create_client
 
-load_dotenv()
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_ROLE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]

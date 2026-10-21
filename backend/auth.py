@@ -1,12 +1,11 @@
 import os
 
 import jwt
-from dotenv import load_dotenv
+import config  # noqa: F401 - load backend environment before reading it
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
 
-load_dotenv()
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]  # e.g. https://xxxx.supabase.co
 JWKS_URL = f"{SUPABASE_URL}/auth/v1/.well-known/jwks.json"

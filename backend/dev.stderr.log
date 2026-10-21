@@ -1,0 +1,21 @@
+INFO:     Will watch for changes in these directories: ['C:\\Projects\\Clario']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [23548] using StatReload
+INFO:     Started server process [14536]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'backend\main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for connections to close. (CTRL+C to force quit)
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [14536]
+INFO:     Started server process [17496]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Live problem add-binary failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/select?titleSlug=add-binary'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem add-binary failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/select?titleSlug=add-binary'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem add-binary failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/select?titleSlug=add-binary'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
