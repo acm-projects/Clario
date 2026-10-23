@@ -22,7 +22,7 @@ class Settings:
     supabase_url: str = _optional("SUPABASE_URL")
     supabase_service_role_key: str = _optional("SUPABASE_SERVICE_ROLE_KEY")
     piston_url: str = _optional(
-        "PISTON_URL", "http://localhost:2000/api/v2/execute"
+        "PISTON_URL"
     )
     leetcode_api_url: str = _optional(
         "LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com"
