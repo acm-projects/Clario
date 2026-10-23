@@ -5,12 +5,17 @@ import { fileURLToPath } from 'node:url'
 import { createClient } from '@supabase/supabase-js'
 
 export default defineConfig(({ command, mode }) => {
+  const frontendEnv = loadEnv(mode, process.cwd(), '')
   const env = loadEnv(mode, fileURLToPath(new URL('../backend', import.meta.url)), '')
   const bypass = command === 'serve' && env.DEV_BYPASS_AUTH === 'true'
+  const supabaseUrl = frontendEnv.VITE_SUPABASE_URL || env.VITE_SUPABASE_URL || env.SUPABASE_URL
+  const supabasePublishableKey = frontendEnv.VITE_SUPABASE_PUBLISHABLE_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_ANON_KEY
   return {
     server: { proxy: { '/voice': env.API_BASE_URL || 'http://127.0.0.1:8000', '/run': env.API_BASE_URL || 'http://127.0.0.1:8000', '/api': env.API_BASE_URL || 'http://127.0.0.1:8000' } },
     define: {
       'import.meta.env.VITE_DEV_BYPASS_AUTH': JSON.stringify(String(bypass)),
+      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(supabaseUrl || ''),
+      'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(supabasePublishableKey || ''),
     },
     plugins: [react(), tailwindcss(), {
       name: 'local-profile-testing',

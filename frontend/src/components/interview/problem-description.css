@@ -1,0 +1,55 @@
+.interview-page .problem-description {
+  overflow-wrap: anywhere;
+}
+.interview-page .problem-description p {
+  margin: 0 0 1rem;
+}
+.interview-page .problem-description strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+.interview-page .problem-description em { font-style: italic; }
+.interview-page .problem-description p:has(> strong:only-child),
+.interview-page .problem-description .example-title {
+  margin-top: 1rem;
+  margin-bottom: .65rem;
+}
+.interview-page .problem-description pre {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--code-surface);
+  color: var(--text-body);
+  font-size: 13px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+.interview-page .problem-description code {
+  border-radius: 4px;
+  background: var(--surface);
+  padding: .1rem .3rem;
+  font-size: .92em;
+}
+.interview-page .problem-description pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+}
+.interview-page .problem-description ul,
+.interview-page .problem-description ol {
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+}
+.interview-page .problem-description ul { list-style: disc; }
+.interview-page .problem-description ol { list-style: decimal; }
+.interview-page .problem-description li { margin-bottom: .5rem; }
+.interview-page .problem-description img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+.interview-page .problem-description sup { vertical-align: super; font-size: .75em; }
+.interview-page .problem-description sub { vertical-align: sub; font-size: .75em; }

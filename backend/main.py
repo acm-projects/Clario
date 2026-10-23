@@ -8,6 +8,7 @@ from routers.scenarios import router as scenarios_router
 from routers.sessions import router as sessions_router
 from voice.router import router as voice_router
 
+#where our python app starts
 app = FastAPI()
 
 app.add_middleware(

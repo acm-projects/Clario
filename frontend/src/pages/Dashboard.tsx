@@ -12,7 +12,7 @@ import { getGreetingCopy, loadRecommendedProblem, loadSessionSummary, loadSkillS
 
 // Dashboard styling uses Tailwind; custom animation keyframes live in index.css.
 const dashboardStyles = {
-  "practice-dashboard": `bg-[#f7f4e9] text-[#182137] group/dashboard`,
+  "practice-dashboard": `bg-[#fbf4df] text-[#182137] group/dashboard`,
   "dashboard-welcome": `flex flex-wrap items-center justify-between gap-4 pt-3 pb-0`,
   "dashboard-welcome-copy": `min-w-0 flex-1 [&>p:last-child]:mt-2 [&>p:last-child]:text-[13px] [&>p:last-child]:text-[#687087]`,
   "dashboard-water": `relative pb-10`,

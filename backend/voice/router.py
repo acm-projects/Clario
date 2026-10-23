@@ -29,7 +29,7 @@ def html_to_text(html: str) -> str:
 
 
 @router.get("/session")
-def get_session(problem_slug: str):
+def get_session(problem_slug: str, user: dict = Depends(get_current_user)):
     """Returns a signed URL + problem variables for the frontend to start a session."""
     problem = get_problem(problem_slug)
     if problem is None:

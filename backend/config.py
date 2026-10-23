@@ -11,6 +11,7 @@ load_dotenv()
 def _optional(name: str, default: str = "") -> str:
     return os.getenv(name, default)
 
+#reading env variables and packaging them into settings
 
 @dataclass(frozen=True)
 class Settings:

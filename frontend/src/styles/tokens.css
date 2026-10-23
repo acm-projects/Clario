@@ -1,6 +1,6 @@
 /* Clario's single source of visual values. Geometry in SVGs is unitless. */
 :root {
- --cream:#F7F1E4; --brand-blue:#2378DB; --navy:#12354C; --sun-yellow:#F5CB68; --teal:#147A72;
+ --cream:#FBF4DF; --brand-blue:#2378DB; --navy:#12354C; --sun-yellow:#F5CB68; --teal:#147A72;
  --primary:#1C63B5; --primary-hover:#154E91; --surface:var(--cream); 
  --surface-raised:#FFFDF8; --surface-inset:#EEE8DA; --surface-blue:#E7F0FC;
  --text:#1D2D3C; --text-muted:#53616C; --border:#CDC9BF; --border-strong:#7C898F;
