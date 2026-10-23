@@ -11,6 +11,7 @@ interface VideoCallPanelProps {
   repoChallengeId?: string;
   speaking?: boolean;
   onEndInterview: () => void;
+  onInterviewStart?: () => void;
 }
 
 const SignalBars = () => (
@@ -62,11 +63,12 @@ function voiceStartupError(error: unknown): string {
   return error instanceof Error ? error.message : "Could not start the interview.";
 }
 
-export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeId, speaking = true, onEndInterview }: VideoCallPanelProps) {
+export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeId, speaking = true, onInterviewStart, onEndInterview }: VideoCallPanelProps) {
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>("idle");
+  const [caption, setCaption] = useState("");
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -76,6 +78,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
   const startInterview = useCallback(async () => {
     if (voiceStatus === "starting" || voiceStatus === "active") return;
 
+    onInterviewStart?.();
     setVoiceStatus("starting");
     setVoiceError(null);
     try {
@@ -90,6 +93,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
       conversationRef.current = await Conversation.startSession({
         signedUrl: session.signed_url,
         dynamicVariables: session.variables,
+        onMessage: ({ message, source }) => { if (source === "user") setCaption(message); },
         onModeChange: ({ mode }) => setIsSpeaking(mode === "speaking"),
         onDisconnect: () => {
           conversationRef.current = null;
@@ -106,7 +110,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
       setVoiceError(voiceStartupError(error));
       setVoiceStatus("error");
     }
-  }, [problemSlug, repoChallengeId, voiceStatus]);
+  }, [problemSlug, repoChallengeId, voiceStatus, onInterviewStart]);
 
   const endVoiceSession = useCallback(() => {
     const conversation = conversationRef.current;
@@ -219,7 +223,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
             <DuckHead className="size-[100px]" />
           </div>
           {voiceStatus === "idle" || voiceStatus === "starting" || voiceStatus === "error" ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-gray-300/30 px-5 text-center">
+            <div className="mt-3 flex shrink-0 flex-col items-center justify-center rounded-xl px-2 text-center">
               <button
                 type="button"
                 onClick={() => void startInterview()}
@@ -247,13 +251,14 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
         </div>
       </div>
 
+      <p aria-live="polite" aria-label="Live captions" className="theme-muted-text line-clamp-2 min-h-9 shrink-0 px-2 text-xs">{caption || "Your speech captions will appear here."}</p>
       <div className="theme-border flex shrink-0 items-center justify-center gap-2.5 border-t py-2.5">
         <button
           type="button"
           aria-label="Microphone unavailable"
           title="Microphone is not connected"
           disabled
-          className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60"
+          className="theme-surface theme-body-text flex h-[40px] w-[40px] cursor-not-allowed items-center justify-center rounded-full opacity-60"
         >
           <MicOff />
         </button>
@@ -269,14 +274,14 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
               void turnCameraOn();
             }
           }}
-          className={`flex h-[46px] w-[46px] items-center justify-center rounded-full ${cameraStatus === "off" || cameraStatus === "blocked" ? "bg-[#e2493b] text-white hover:bg-[#ee5b4d]" : "theme-surface theme-body-text theme-surface-hover"}`}
+          className={`flex h-[40px] w-[40px] items-center justify-center rounded-full ${cameraStatus === "off" || cameraStatus === "blocked" ? "theme-surface theme-body-text theme-surface-hover" : "theme-surface theme-body-text theme-surface-hover"}`}
         >
           <Cam off={cameraStatus !== "on"} />
         </button>
-        <button type="button" aria-label="Screen sharing coming soon" title="Screen sharing coming soon" disabled className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
+        <button type="button" aria-label="Screen sharing coming soon" title="Screen sharing coming soon" disabled className="theme-surface theme-body-text flex h-[40px] w-[40px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
           <Screen />
         </button>
-        <button type="button" aria-label="More call options coming soon" title="More call options coming soon" disabled className="theme-surface theme-body-text flex h-[46px] w-[46px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
+        <button type="button" aria-label="More call options coming soon" title="More call options coming soon" disabled className="theme-surface theme-body-text flex h-[40px] w-[40px] cursor-not-allowed items-center justify-center rounded-full opacity-60">
           <More />
         </button>
         <button
@@ -288,7 +293,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
               onEndInterview();
             }
           }}
-          className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#e2493b] text-white hover:bg-[#ee5b4d]"
+          className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#e2493b] text-white hover:bg-[#ee5b4d]"
         >
           <HangUp />
         </button>
