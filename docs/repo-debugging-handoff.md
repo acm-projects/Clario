@@ -30,7 +30,11 @@ Validation
   tests attempt external problem/Piston calls in this restricted environment.
 - Full frontend lint has an existing set-state-in-effect violation in InterviewReport.tsx.
 - Live Piston execution unavailable: Docker daemon is stopped and PISTON_URL unset.
-- Browser checks use a mocked challenge API; they do not validate real execution.
+- Mocked browser checks passed: all five file contents, edits across tab switches,
+  draft restoration, remembered brief, submission confirmation, and editor width
+  above 50% at 1440x900 and 1280x720. Monaco CDN requests were fulfilled from the
+  installed package for the restricted-network test. These checks do not validate
+  real execution or live voice transcription.
 
 Assumptions and deviations
 
