@@ -5,6 +5,8 @@ interface ResizableSplitProps {
   storageKey: string;
   initialSize: number;
   label: string;
+  size?: number;
+  onSizeChange?: (size: number) => void;
   first: ReactNode;
   second: ReactNode;
 }
@@ -12,11 +14,11 @@ interface ResizableSplitProps {
 const clamp = (value: number) => Math.min(85, Math.max(15, value));
 
 export function ResizableSplit({
-  direction, storageKey, initialSize, label, first, second,
+  direction, storageKey, initialSize, label, first, second, size: controlledSize, onSizeChange,
 }: ResizableSplitProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef<number | null>(null);
-  const [size, setSize] = useState(() => {
+  const [internalSize, setInternalSize] = useState(() => {
     try {
       const saved = window.localStorage.getItem(storageKey);
       const value = saved === null ? initialSize : Number(saved);
@@ -25,6 +27,11 @@ export function ResizableSplit({
       return initialSize;
     }
   });
+  const size = controlledSize ?? internalSize;
+  const setSize = (next: number) => {
+    setInternalSize(next);
+    onSizeChange?.(next);
+  };
   const horizontal = direction === "horizontal";
 
   useEffect(() => {
@@ -84,7 +91,7 @@ export function ResizableSplit({
           const forward = horizontal ? "ArrowRight" : "ArrowDown";
           if (event.key === backward || event.key === forward) {
             event.preventDefault();
-            setSize((current) => clamp(current + (event.key === forward ? 2 : -2)));
+            setSize(clamp(size + (event.key === forward ? 2 : -2)));
           } else if (event.key === "Home" || event.key === "End") {
             event.preventDefault();
             setSize(event.key === "Home" ? 15 : 85);

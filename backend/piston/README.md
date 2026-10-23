@@ -6,15 +6,10 @@ Clario uses [Piston](https://github.com/engineer-man/piston) to run code submitt
 
 Make sure Docker Desktop is installed and running.
 
-From the `backend/piston` directory, create and start the Piston container:
+From the repository root, create and start the Piston container:
 
-```bash
-docker run --privileged \
-  -v $PWD/piston_data:/piston \
-  -dit \
-  -p 2000:2000 \
-  --name piston_api \
-  ghcr.io/engineer-man/piston
+```powershell
+docker compose -f backend/piston/compose.yaml up -d
 ```
 
 Piston will be available at:
@@ -25,46 +20,47 @@ http://localhost:2000
 
 ## Install Python
 
-Run this once after creating the container:
+Install runtimes once after starting the container. Installed packages persist
+in the Compose volume if the container is recreated.
 
-```bash
-curl -X POST http://localhost:2000/api/v2/packages \
-  -H "Content-Type: application/json" \
-  -d '{"language":"python","version":"*"}'
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://localhost:2000/api/v2/packages `
+  -ContentType "application/json" `
+  -Body '{"language":"python","version":"*"}'
 ```
 
 ## Install Java
 
-Run this once after creating the container:
-
-```bash
-curl -X POST http://localhost:2000/api/v2/packages \
-  -H "Content-Type: application/json" \
-  -d '{"language":"java","version":"*"}'
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://localhost:2000/api/v2/packages `
+  -ContentType "application/json" `
+  -Body '{"language":"java","version":"*"}'
 ```
 
 ## Check Installed Runtimes
 
 To confirm that Python and Java are installed:
 
-```bash
-curl http://localhost:2000/api/v2/runtimes
+```powershell
+Invoke-RestMethod http://localhost:2000/api/v2/runtimes
 ```
 
-## Starting Piston Again
+## Restarting Piston
 
 If the Piston container already exists but is stopped, you do not need to create it again.
 
 Start it with:
 
 ```bash
-docker start piston_api
+docker compose -f backend/piston/compose.yaml start
 ```
 
 ## Stopping Piston
 
 ```bash
-docker stop piston_api
+docker compose -f backend/piston/compose.yaml stop
 ```
 
 ## Removing the Container
@@ -72,10 +68,15 @@ docker stop piston_api
 If you need to completely remove the Piston container:
 
 ```bash
-docker rm -f piston_api
+docker compose -f backend/piston/compose.yaml down
 ```
 
-After removing it, run the setup steps above again to recreate it.
+The named Compose volume preserves installed runtimes. To remove those too and
+start fresh, run:
+
+```bash
+docker compose -f backend/piston/compose.yaml down --volumes
+```
 
 ## Clario API
 
@@ -107,13 +108,40 @@ Code execution has a timeout so programs such as infinite loops cannot hang the 
 ## Notes
 
 - Docker Desktop must be running before starting Piston.
-- Piston runs locally on port `2000`.
+- Piston listens on `127.0.0.1:2000`, so the code execution API is not exposed to other machines on the network.
+- The container runs privileged because Piston uses Linux isolation features for untrusted code. Keep it on a trusted development machine.
 - Clario's FastAPI backend runs separately and communicates with Piston.
 - Do not commit API keys or `.env` files.
 - Java programs currently need a `public static void main` method to run. A test harness for LeetCode-style `class Solution` code will be added later.
 
 ## How to get backend started
-1. cd backend
-2. docker start piston_api
-3. source venv/bin/activate
-4. uvicorn main:app --reload
+1. From the repository root, start Piston with `docker compose -f backend/piston/compose.yaml up -d`.
+2. Install Python and Java packages using the commands above (once per Piston data volume).
+3. Start the backend using the commands in [backend/README.md](../README.md).
+
+## Backend dependencies and tests
+
+The backend dependency source of truth is `backend/requirements.txt`.
+From the repository root:
+
+```bash
+python3 -m venv backend/venv
+backend/venv/bin/python -m pip install -r backend/requirements.txt
+```
+
+Copy `backend/.env.example` to `backend/.env` and provide the Supabase,
+Gemini, and ElevenLabs values before starting the API. The development
+authentication bypass remains available with `DEV_BYPASS_AUTH=true`.
+
+Start the API from `backend/` so its existing import paths continue to work:
+
+```bash
+cd backend
+../backend/venv/bin/uvicorn main:app --reload
+```
+
+Run the backend unit tests from the repository root:
+
+```bash
+backend/venv/bin/python -m pytest backend/tests -q
+```

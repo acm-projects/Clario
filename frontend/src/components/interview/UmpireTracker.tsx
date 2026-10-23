@@ -25,7 +25,7 @@ const stateStyles = {
 
 export function UmpireTracker() {
   return (
-    <div role="group" aria-label="UMPIRE interview steps" className="flex shrink-0 items-center gap-1">
+    <div role="group" aria-label="UMPIRE interview steps" className="flex items-center gap-1">
       {steps.map(({ letter, name, key }) => {
         const state = fakeSteps[key];
         return (
@@ -33,8 +33,7 @@ export function UmpireTracker() {
             key={key}
             title={name}
             aria-label={`${name}: ${state}`}
-            aria-current={state === "current" ? "step" : undefined}
-            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${stateStyles[state]}`}
+            className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${stateStyles[state]}`}
           >
             {letter}
           </span>

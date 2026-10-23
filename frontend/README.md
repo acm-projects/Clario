@@ -1,4 +1,15 @@
-# React + TypeScript + Vite
+# Clario frontend
+
+Run the development server from this directory:
+
+```bash
+cd frontend
+npm run dev
+```
+
+For local development, Vite reads the public Supabase URL and anonymous key
+from `backend/.env`. You can override them with `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_PUBLISHABLE_KEY` in `frontend/.env`.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

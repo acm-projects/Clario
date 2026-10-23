@@ -1,0 +1,34 @@
+/* Clario's single source of visual values. Geometry in SVGs is unitless. */
+:root {
+ --cream:#FBF4DF; --brand-blue:#2378DB; --navy:#12354C; --sun-yellow:#F5CB68; --teal:#147A72;
+ --primary:#1C63B5; --primary-hover:#154E91; --surface:var(--cream); 
+ --surface-raised:#FFFDF8; --surface-inset:#EEE8DA; --surface-blue:#E7F0FC;
+ --text:#1D2D3C; --text-muted:#53616C; --border:#CDC9BF; --border-strong:#7C898F;
+ --success:#24623F; --success-surface:#E3F0E6; --error:#A72D39; --error-surface:#FBE9EB; --warning:#78540C; --warning-surface:#FFF1CB;
+ --code-bg:#191D20; --code-raised:#242C32; --code-text:#EDF3F7; --code-muted:#ADBBC5; --code-border:#46535D;
+ --syntax-keyword:#F3A7CC; --syntax-type:#F2C078; --syntax-number:#A5DBD4;
+ --chart-technical:var(--brand-blue); --chart-reasoning:var(--navy); --chart-communication:var(--teal); --chart-overall:var(--sun-yellow);
+ --water:#4E90EE; --water-deep:#397AD5; --wave-far:#E3EEFF; --wave-mid:#BDD7FA; --wave-near:#8FB8F2; --water-text:var(--navy);
+ --white:#FFFFFF; --transparent:transparent;
+ --font-ui:'DM Sans',system-ui,sans-serif; --font-mono:'JetBrains Mono','Cascadia Code',ui-monospace,monospace;
+ --type-eyebrow:12px; --type-small:14px; --type-body:16px; --type-h2:22px; --type-h1:40px; --type-display:56px;
+ --weight-regular:400; --weight-medium:500; --weight-semibold:600; --weight-bold:700;
+ --leading-tight:1.2; --leading-body:1.6; --tracking-tight:-.035em; --tracking-eyebrow:.1em;
+ --radius-control:12px; --radius-card:20px; --radius-pill:999px;
+ --shadow-resting:0 4px 16px -12px #12354C26; --shadow-raised:0 16px 40px -20px #12354C40;
+ --space-0:0px; --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-7:28px; --space-8:32px; --space-10:40px; --space-12:48px; --space-14:56px; --space-16:64px; --space-20:80px; --space-24:96px; --space-32:128px;
+ --line:1px; --focus-width:2px; --focus-offset:4px; --icon-size:20px; --control-height:48px; --control-small:40px;
+ --sidebar-expanded:240px; --sidebar-compact:80px; --content-max:1200px; --reading-max:720px; --popover-max:320px; --chart-height:320px; --editor-min:360px; --room-min:240px;
+ --duck-xs:40px; --duck-sm:64px; --duck-md:128px; --duck-lg:240px; --duck-xl:320px;
+ --motion-fast:120ms; --motion-base:200ms; --motion-slow:400ms; --motion-count:600ms; --motion-chart:800ms; --motion-stagger:40ms; --motion-breathe:4000ms; --motion-waveform:800ms;
+ --ease-standard:cubic-bezier(.2,0,0,1); --ease-out:cubic-bezier(0,0,.2,1);
+ --opacity-disabled:.45; --opacity-muted:.7; --opacity-rest:1; --opacity-hidden:0;
+ --enter-distance:8px; --hover-distance:-4px; --press-scale:.98;
+ --z-base:0; --z-content:1; --z-sidebar:30; --z-overlay:60; --z-tooltip:80;
+}
+@theme inline {
+ --color-primary:var(--primary); --color-primary-hover:var(--primary-hover); --color-surface:var(--surface); --color-surface-raised:var(--surface-raised); --color-ink:var(--text); --color-muted:var(--text-muted); --color-line:var(--border);
+ --font-sans:var(--font-ui); --font-detail:var(--font-ui);
+ --text-xs:var(--type-eyebrow); --text-sm:var(--type-small); --text-base:var(--type-body); --text-lg:var(--type-h2); --text-xl:var(--type-h2); --text-2xl:var(--type-h2); --text-3xl:var(--type-h1); --text-4xl:var(--type-h1); --text-5xl:var(--type-display);
+ --radius-lg:var(--radius-control); --radius-xl:var(--radius-card); --radius-2xl:var(--radius-card); --radius-full:var(--radius-pill);
+}

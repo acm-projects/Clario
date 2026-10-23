@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import logging
-import os
 
 import httpx
 
+from config import settings
+
 logger = logging.getLogger(__name__)
 
-BASE_URL = os.getenv("LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com")
+BASE_URL = settings.leetcode_api_url
 TIMEOUT = 5.0  # seconds, so a slow API can't hang our server
 
 KEEP_LANGS = {"python3", "java"}
@@ -209,7 +212,6 @@ def _db_problem(slug: str):
         "example_testcases": r.get("example_testcases") or "",
         "starter_code": starter if isinstance(starter, dict) else {},
     }
-
 
 
 def _save_problem(problem: dict) -> bool:

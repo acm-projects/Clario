@@ -1,4 +1,7 @@
-import random
+from __future__ import annotations
+
+from typing import Optional
+
 import httpx
 from fastapi import APIRouter, HTTPException
 
@@ -8,26 +11,16 @@ router = APIRouter(prefix="/api/problems")
 
 
 @router.get("")
-def list_problems(difficulty: str | None = None, topic: str | None = None, search: str | None = None):
+def list_problems(
+    difficulty: Optional[str] = None,
+    topic: Optional[str] = None,
+    search: Optional[str] = None,
+):
     try:
         return get_problem_list(difficulty, topic, search)
     except httpx.HTTPError:
         # live API failed AND there is nothing saved to fall back on
         raise HTTPException(status_code=503, detail="Problem service unavailable")
-
-
-@router.get("/random")
-def random_problem(difficulty: str | None = None, topic: str | None = None):
-    try:
-        problems = get_problem_list(difficulty, topic)
-        if not problems:
-            raise HTTPException(status_code=404, detail="No matching problems found")
-        problem = get_problem(random.choice(problems)["slug"])
-    except httpx.HTTPError:
-        raise HTTPException(status_code=503, detail="Problem service unavailable")
-    if problem is None:
-        raise HTTPException(status_code=404, detail="Problem not found")
-    return problem
 
 
 @router.get("/{slug}")
