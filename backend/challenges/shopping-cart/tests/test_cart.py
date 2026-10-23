@@ -25,3 +25,9 @@ class CartTests(unittest.TestCase):
 
     def test_rounding(self):
         self.assertEqual(order_total([{"price": 9.99, "quantity": 3}], 15), 25.47)
+
+    def test_public_api_signature(self):
+        import inspect
+        parameters = inspect.signature(order_total).parameters
+        self.assertEqual(list(parameters), ["items", "discount_percent"])
+        self.assertEqual(parameters["discount_percent"].default, 0)

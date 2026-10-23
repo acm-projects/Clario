@@ -27,9 +27,9 @@ def get_challenge(challenge_id: str):
         raise HTTPException(404, "Repository challenge not found")
 
 
-async def run(challenge_id: str, files: dict):
+async def run(challenge_id: str, files: dict, *, submit: bool = True):
     try:
-        return await service.evaluate(challenge_id, files)
+        return await service.evaluate(challenge_id, files, submit=submit)
     except KeyError:
         raise HTTPException(404, "Repository challenge not found")
     except service.InvalidRepository as error:
@@ -40,7 +40,7 @@ async def run(challenge_id: str, files: dict):
 
 @router.post("/{challenge_id}/run")
 async def run_challenge(challenge_id: str, body: RepositoryInput, user: dict = Depends(get_current_user)):
-    return await run(challenge_id, body.files)
+    return await run(challenge_id, body.files, submit=False)
 
 
 @router.post("/{challenge_id}/submit")

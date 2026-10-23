@@ -24,6 +24,8 @@ def fixed(identifier):
     files = starter(identifier)
     if identifier == CART:
         files["cart.py"] = files["cart.py"].replace("discount_rate = discount_percent / 100", "discount_rate = discount_percent")
+        files["cart.py"] = files["cart.py"].replace('item["price"] for', 'item["price"] * item["quantity"] for')
+        files["discounts.py"] = files["discounts.py"].replace("round(subtotal)", "subtotal")
     else:
         files["main.py"] = "from auth import authenticate\ndef login(username, password):\n    return authenticate(username, password)\n"
         files["auth.py"] = """from users import USERS
@@ -54,7 +56,7 @@ def test_catalog_and_private_files(client):
         data = response.json()
         assert data["entrypoint"] in {file["path"] for file in data["files"]}
         assert "testNames" not in data and "testFile" not in data
-        assert all("test_" not in file["path"] for file in data["files"])
+        assert all(file["path"] != "test_cart.py" for file in data["files"])
         assert all(not file["path"].startswith(("/", "C:")) for file in data["files"])
         assert any(file["readOnly"] for file in data["files"])
 
@@ -113,7 +115,7 @@ def test_execution_failures_do_not_leak_private_output(monkeypatch, stdout, code
 
 
 def test_submission_evaluates_then_reports_real_persistence_status(client, monkeypatch):
-    async def evaluate(identifier, files):
+    async def evaluate(identifier, files, **kwargs):
         assert identifier == CART and files == starter(CART)
         return {"success": False, "passed": 2, "failed": 5, "total": 7, "tests": [], "error": None}
     saved = Mock(return_value={"saved": False, "submission_id": None, "message": "Storage unavailable"})
@@ -211,5 +213,25 @@ def test_real_submission_endpoint_evaluates_fixed_files(client, monkeypatch):
     response = client.post(f"/api/repo-challenges/{CART}/submit", json={"files": fixed(CART)})
     assert response.status_code == 200
     result = response.json()
-    assert result["success"] and result["passed"] == result["total"] == 7
+    assert result["success"] and result["passed"] == result["total"] == 11
     assert result["submission"]["saved"] is False
+
+
+@pytest.mark.parametrize("submit,expected_total", [(False, 3), (True, 11)])
+def test_cart_visible_and_submit_payloads(monkeypatch, submit, expected_total):
+    async def execute(language, files, **kwargs):
+        payload = {file["name"]: file["content"] for file in files}
+        assert "test_checkout.py" in payload
+        assert bool(payload[service.TEST_NAME]) is submit
+        manifest = service.load(CART)[1]
+        names = manifest["visibleTestNames"] + (manifest["testNames"] if submit else [])
+        return service.MARKER + json.dumps([{"name": name, "passed": True} for name in sorted(names)]), "", 0
+    monkeypatch.setattr(service, "execute_files_on_piston", execute)
+    result = asyncio.run(service.evaluate(CART, starter(CART), submit=submit))
+    assert result["success"] and result["total"] == expected_total
+
+
+@pytest.mark.parametrize("path", ["../cart.py", "nested/cart.py", "C:\\cart.py", "_clario_tests.py"])
+def test_safe_paths_reject_traversal_and_reserved_names(tmp_path, path):
+    with pytest.raises(service.InvalidRepository):
+        service.safe_path(tmp_path, path)

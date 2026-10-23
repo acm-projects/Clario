@@ -61,12 +61,12 @@ async def execute_files_on_piston(
         "language": language,
         "version": versions[language],
         "files": files,
-        "run_timeout": 3000,
+        "run_timeout": 5000 if bounded else 3000,
         "compile_timeout": 10000,
     }
     if bounded:
         payload.update(run_memory_limit=128 * 1024 * 1024, compile_memory_limit=256 * 1024 * 1024,
-                       run_cpu_time=3000, compile_cpu_time=10000)
+                       run_cpu_time=5000, compile_cpu_time=10000)
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             response = await client.post(piston_url, json=payload)

@@ -92,39 +92,42 @@ def validate_files(identifier: str, submitted: dict[str, str]) -> tuple[Path, di
     return folder, manifest, files
 
 
-async def evaluate(identifier: str, submitted: dict[str, str]) -> dict:
+async def evaluate(identifier: str, submitted: dict[str, str], *, submit: bool = True) -> dict:
     folder, manifest, files = validate_files(identifier, submitted)
+    visible = manifest.get("visibleTestFile")
     tests_path = safe_path(folder / "tests", manifest["testFile"])
     runner = (CHALLENGES / "runner.py").read_text(encoding="utf-8")
     payload = [{"name": RUNNER_NAME, "content": runner},
-               {"name": TEST_NAME, "content": tests_path.read_text(encoding="utf-8")},
+               {"name": TEST_NAME, "content": (tests_path.read_text(encoding="utf-8") if submit or not visible else "")},
                *({"name": name, "content": content} for name, content in files.items())]
     stdout, _stderr, code = await execute_files_on_piston(
         "python", payload, piston_url=settings.piston_url,
         versions={"python": settings.piston_python_version}, bounded=True,
     )
-    total = len(manifest["testNames"])
+    names = (manifest["testNames"] if submit or not visible else []) + (manifest.get("visibleTestNames", []))
+    total = len(names)
     error = None
     rows = []
     if code == 124:
-        error = "Execution timed out or exceeded a resource limit. Check for infinite loops and excessive output."
+        error = "Execution timed out after 5s or exceeded a resource limit. Check for infinite loops and excessive output."
     elif code != 0:
         error = "Execution failed. Check your Python syntax, imports, and resource usage."
     else:
         try:
             # No raw stdout/stderr or private test tracebacks are sent to the browser.
             data = json.loads(stdout.split(MARKER, 1)[1])
-            if not isinstance(data, list) or len(data) != total or [row["name"] for row in data] != sorted(manifest["testNames"]):
+            if not isinstance(data, list) or len(data) != total or [row["name"] for row in data] != sorted(names):
                 raise ValueError("Unexpected tests")
             if any(type(row["passed"]) is not bool for row in data):
                 raise ValueError("Invalid test status")
             rows = [{"name": row["name"], "passed": row["passed"],
-                     "message": None if row["passed"] else "Behavior did not satisfy this check; review the documented contract."} for row in data]
+                     "message": None if row["passed"] else (str(row.get("message", "Behavior did not satisfy this check; review the documented contract."))[:2000] if row["name"] in manifest.get("visibleTestNames", []) else "Behavior did not satisfy this check; review the documented contract.")} for row in data]
         except (ValueError, IndexError, KeyError, TypeError):
             error = "The test runner could not finish. Check syntax, imports, and unexpected process exits."
     passed = sum(row["passed"] for row in rows)
     return {"success": error is None and passed == total, "passed": passed, "failed": total - passed,
-            "total": total, "tests": rows, "error": error}
+            "total": total, "tests": rows, "error": error, "timed_out": code == 124,
+            "stderr": error or ""}
 
 
 def save_submission(user_id: str, identifier: str, files: dict, evaluation: dict) -> dict:
