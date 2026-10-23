@@ -17,7 +17,7 @@ router = APIRouter(prefix="/api/sessions")
 
 class SessionCreate(BaseModel):
     problem_slug: str
-    mode: Literal["practice", "company", "full_mock", "custom"]
+    mode: Literal["recommended", "custom", "surprise", "company"]
     language: Literal["python3", "java"]
 
 
@@ -74,7 +74,12 @@ def get_owned_session(session_id: str, user_id: str) -> dict:
         raise HTTPException(status_code=404, detail="Session not found")
     return rows[0]
 
-ALLOWED_MODES = {"practice", "company", "full_mock", "custom"}
+ALLOWED_MODES = {
+    "recommended",
+    "custom",
+    "surprise",
+    "company"
+}
 
 
 async def validate_session_mode(request: Request):

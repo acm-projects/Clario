@@ -18,14 +18,24 @@ bearer_scheme = HTTPBearer(auto_error=False)
 jwk_client = PyJWKClient(JWKS_URL)
 
 
+
 async def get_current_user(
     creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> dict:
-    if os.getenv("DEV_BYPASS_AUTH") == "true":
-        return {"sub": os.getenv("DEV_USER_ID"), "email": os.getenv("DEV_USER_EMAIL")}
+    if (
+        os.getenv("APP_ENV") == "development"
+        and os.getenv("DEV_BYPASS_AUTH") == "true"
+    ):
+        return {
+            "sub": os.getenv("DEV_USER_ID"),
+            "email": os.getenv("DEV_USER_EMAIL"),
+        }
 
     if creds is None:
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(
+            status_code=401,
+            detail="Missing token",
+        )
 
     token = creds.credentials
 

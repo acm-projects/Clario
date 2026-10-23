@@ -1,6 +1,7 @@
 ﻿import os
 import secrets
 
+from company_scenario_service import build_company_scenario
 from fastapi import APIRouter, Header, HTTPException
 
 from db import supabase
@@ -13,6 +14,22 @@ router = APIRouter(prefix="/api/scenarios")
 LIST_COLUMNS = "slug, company, title, difficulty"
 DETAIL_COLUMNS = "slug, company, title, difficulty, prompt, starter_code"
 
+PUBLIC_FIELDS = (
+    "slug",
+    "company",
+    "title",
+    "difficulty",
+    "prompt",
+    "starter_code",
+)
+
+
+def to_public_scenario(row: dict) -> dict:
+    """Return only fields safe for the frontend."""
+    return {
+        field: row.get(field)
+        for field in PUBLIC_FIELDS
+    }
 
 def fetch_scenario(slug: str) -> dict | None:
     """Full row, including hidden_details, base_problem_slug and test_cases.
@@ -49,6 +66,64 @@ def list_scenarios(company: str | None = None):
         # ilike with no wildcards is a case-insensitive match: "bumble" finds "Bumble"
         query = query.ilike("company", company)
     return query.order("company").order("title").execute().data
+
+
+@router.get("/generate")
+def generate_scenario(company: str):
+    company = company.strip()
+
+    if not company:
+        raise HTTPException(
+            status_code=400,
+            detail="Company name cannot be empty",
+        )
+
+    try:
+        # Retrieve a cached scenario or generate a new one.
+        scenario = build_company_scenario(company)
+
+        # Return only public fields.
+        return to_public_scenario(scenario)
+
+    except Exception as exc:
+        # Log the failure without exposing internal errors.
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Generation failed for %s: %s",
+            company,
+            exc,
+        )
+
+        # First fallback: hand-written scenario for this company.
+        rows = (
+            supabase.table("scenario_questions")
+            .select("*")
+            .ilike("company", company)
+            .eq("source", "hand_written")
+            .limit(1)
+            .execute()
+            .data
+        )
+
+        # Second fallback: any available hand-written scenario.
+        if not rows:
+            rows = (
+                supabase.table("scenario_questions")
+                .select("*")
+                .eq("source", "hand_written")
+                .limit(1)
+                .execute()
+                .data
+            )
+
+        if not rows:
+            raise HTTPException(
+                status_code=503,
+                detail="No scenarios currently available",
+            )
+
+        return to_public_scenario(rows[0])
 
 
 @router.get("/{slug}")
