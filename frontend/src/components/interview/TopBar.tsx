@@ -24,7 +24,7 @@ export function TopBar({
 }: TopBarProps) {
   const navigate = useNavigate();
   return (
-    <header className="theme-border relative flex h-[74px] shrink-0 items-center justify-between border-b px-5 max-[1250px]:h-auto max-[1250px]:min-h-[74px] max-[1250px]:flex-wrap max-[1250px]:gap-3 max-[1250px]:py-3">
+    <header className="relative flex h-[74px] shrink-0 items-center justify-between px-5 max-[1250px]:h-auto max-[1250px]:min-h-[74px] max-[1250px]:flex-wrap max-[1250px]:gap-3 max-[1250px]:py-3">
       <div className="flex items-center gap-5">
         <span className="flex items-center gap-2.5 font-sans text-[28px] font-semibold tracking-[-0.045em] text-[var(--text-main)] max-[1150px]:text-2xl"><BrandMark />Clario</span>
         <button onClick={() => navigate("/problems")} className="theme-muted-text text-sm hover:text-[var(--text-main)]">Problem List</button>
@@ -81,7 +81,7 @@ export function TopBar({
           <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
           {modeLabel ?? "Session live"}
         </Pill>
-        <span className={"sandbox-timer [&.sandbox-timer]:[border:1px_solid_var(--line)] [&.sandbox-timer]:[border-radius:11px] [&.sandbox-timer]:[background:var(--panel-bg)] [&.sandbox-timer]:[padding:8px_15px] [&.sandbox-timer]:[font-family:monospace] [&.sandbox-timer]:[font-size:16px] theme-body-text text-sm tabular-nums"}>{timer}</span>
+        <span className={"sandbox-timer [&.sandbox-timer]:[border:0] [&.sandbox-timer]:[border-radius:11px] [&.sandbox-timer]:[background:var(--sandbox-blue)] [&.sandbox-timer]:[color:#fff] [&.sandbox-timer]:[padding:8px_15px] [&.sandbox-timer]:[font-family:monospace] [&.sandbox-timer]:[font-size:16px] text-sm tabular-nums"}>{timer}</span>
       </div>
     </header>
   );

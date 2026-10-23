@@ -1,7 +1,7 @@
 ﻿export type PracticeLanguage = "Python" | "Java";
 export type LanguagesUsed = "Python" | "Java" | "both" | "neither" | "other";
 export type ProblemDifficulty = "easy" | "medium" | "hard";
-export type QuestionId = "leetcode" | "coding" | "used" | "language" | "languageComfort" | "interviewConfidence" | "weekly";
+export type QuestionId = "leetcode" | "coding" | "used" | "language" | "languageComfort" | "interviewConfidence" | "weekly" | "strugglingTopics" | "targetCompany" | "interviewDate";
 
 export interface OnboardingAnswers {
   hasLeetCodeExperience: boolean | null;
@@ -12,6 +12,9 @@ export interface OnboardingAnswers {
   interviewConfidence: number | null;
   weeklyInterviewGoal: number | null;
   difficulty: ProblemDifficulty | null;
+  strugglingTopics: string[];
+  targetCompany: string;
+  interviewDate: string;
 }
 
 export const initialAnswers: OnboardingAnswers = {
@@ -23,7 +26,16 @@ export const initialAnswers: OnboardingAnswers = {
   interviewConfidence: null,
   weeklyInterviewGoal: null,
   difficulty: null,
+  strugglingTopics: [],
+  targetCompany: "",
+  interviewDate: "",
 };
+
+export const topicOptions = [
+  "Array", "String", "Dynamic Programming", "Math", "Two Pointers",
+  "Backtracking", "Hash Table", "Linked List", "Matrix", "Recursion",
+  "Sorting", "Binary Search", "Stack", "Tree", "Binary Tree",
+];
 
 export function getStartingDifficulty(score: number): ProblemDifficulty {
   if (score <= 4) return "easy";
@@ -33,50 +45,67 @@ export function getStartingDifficulty(score: number): ProblemDifficulty {
 
 export function getQuestionPath(answers: OnboardingAnswers): QuestionId[] {
   if (answers.hasLeetCodeExperience !== false) {
-    if (answers.languagesUsed === "Python" || answers.languagesUsed === "Java") return ["leetcode", "used", "languageComfort", "weekly"];
-    if (answers.languagesUsed === "other") return ["leetcode", "used", "language", "weekly"];
-    return ["leetcode", "used", "language", "languageComfort", "weekly"];
+    const languageQuestions: QuestionId[] =
+      answers.languagesUsed === "Python" || answers.languagesUsed === "Java"
+        ? ["used", "languageComfort"]
+        : answers.languagesUsed === "other"
+          ? ["used", "language", "languageComfort"]
+          : ["used", "language", "languageComfort"];
+    return ["leetcode", ...languageQuestions, "strugglingTopics", "weekly", "targetCompany", "interviewDate"];
   }
-  if (answers.hasCodingExperience === false) return ["leetcode", "coding", "language", "interviewConfidence", "weekly"];
-  if (answers.languagesUsed === "Python" || answers.languagesUsed === "Java") return ["leetcode", "coding", "used", "languageComfort", "weekly"];
-  if (answers.languagesUsed === "neither") return ["leetcode", "coding", "used", "language", "weekly"];
-  return ["leetcode", "coding", "used", "language", "languageComfort", "weekly"];
+  if (answers.hasCodingExperience === false) {
+    return ["leetcode", "coding", "language", "interviewConfidence", "weekly", "targetCompany", "interviewDate"];
+  }
+  const languageQuestions: QuestionId[] =
+    answers.languagesUsed === "Python" || answers.languagesUsed === "Java"
+      ? ["used", "languageComfort"]
+      : ["used", "language", "languageComfort"];
+  return ["leetcode", "coding", ...languageQuestions, "weekly", "targetCompany", "interviewDate"];
 }
 
 export function isBeginnerPath(answers: OnboardingAnswers): boolean {
-  return answers.hasLeetCodeExperience === true ? answers.languagesUsed === "other" : answers.hasLeetCodeExperience === false && (answers.hasCodingExperience === false || answers.languagesUsed === "neither");
+  return answers.hasLeetCodeExperience === false && answers.hasCodingExperience === false;
 }
 
 export function getPracticeLanguage(answers: OnboardingAnswers): PracticeLanguage | null {
-  if ((answers.hasLeetCodeExperience === true || answers.hasLeetCodeExperience === false && answers.hasCodingExperience === true) && (answers.languagesUsed === "Python" || answers.languagesUsed === "Java")) return answers.languagesUsed;
+  if ((answers.hasLeetCodeExperience === true || (answers.hasLeetCodeExperience === false && answers.hasCodingExperience === true)) &&
+      (answers.languagesUsed === "Python" || answers.languagesUsed === "Java")) return answers.languagesUsed;
   return answers.selectedLanguage;
 }
 
-// Discard answers belonging to a previous branch before saving the profile.
 export function normalizeAnswers(answers: OnboardingAnswers): OnboardingAnswers {
   const path = getQuestionPath(answers);
   const language = getPracticeLanguage(answers);
   const comfort = path.includes("languageComfort") ? answers.languageComfort : null;
   return {
     hasLeetCodeExperience: answers.hasLeetCodeExperience,
-    hasCodingExperience: answers.hasLeetCodeExperience === true && answers.languagesUsed === "other" ? true : answers.hasLeetCodeExperience === false ? answers.hasCodingExperience : null,
+    hasCodingExperience: answers.hasLeetCodeExperience === false ? answers.hasCodingExperience : null,
     languagesUsed: path.includes("used") ? answers.languagesUsed : null,
     selectedLanguage: language,
     languageComfort: comfort,
     interviewConfidence: path.includes("interviewConfidence") ? answers.interviewConfidence : null,
     weeklyInterviewGoal: answers.weeklyInterviewGoal,
-    difficulty: isBeginnerPath(answers) ? "easy" : comfort !== null ? getStartingDifficulty(comfort) : null,
+    difficulty: isBeginnerPath(answers) ? "easy" : comfort !== null ? getStartingDifficulty(comfort) : "easy",
+    strugglingTopics: path.includes("strugglingTopics") ? [...new Set(answers.strugglingTopics)] : [],
+    targetCompany: answers.targetCompany.trim(),
+    interviewDate: answers.interviewDate,
   };
 }
 
 export function validateQuestion(id: QuestionId, answers: OnboardingAnswers): string | null {
   if (id === "leetcode" && answers.hasLeetCodeExperience === null) return "Choose Yes or No to continue.";
+
   if (id === "coding" && answers.hasCodingExperience === null) return "Choose Yes or No to continue.";
   if (id === "used" && !(answers.hasLeetCodeExperience === true ? ["Python", "Java", "both", "other"] : ["Python", "Java", "both", "neither"]).includes(answers.languagesUsed ?? "")) return "Choose which languages you've used.";
   if (id === "language" && !getPracticeLanguage(answers)) return "Choose Python or Java to continue.";
   const rating = id === "languageComfort" ? answers.languageComfort : id === "interviewConfidence" ? answers.interviewConfidence : undefined;
   if (rating !== undefined && (rating === null || !Number.isInteger(rating) || rating < 0 || rating > 10)) return "Choose a comfort level from 0 to 10.";
   if (id === "weekly" && ![1, 2, 3, 4, 5].includes(answers.weeklyInterviewGoal ?? 0)) return "Choose a weekly mock interview goal.";
+  if (id === "strugglingTopics" && answers.strugglingTopics.some(topic => !topicOptions.includes(topic))) return "Choose topics from the list.";
+  if (id === "interviewDate" && answers.interviewDate) {
+    const date = new Date(`${answers.interviewDate}T00:00:00Z`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(answers.interviewDate) || Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== answers.interviewDate) return "Choose a valid interview date.";
+  }
   return null;
 }
 
