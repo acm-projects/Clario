@@ -83,8 +83,34 @@ def get_python_method_name(starter_code: str) -> str:
 
     try:
         tree = ast.parse(starter_code)
+
+    except SyntaxError:
+        # LeetCode starter code may end with an empty method body.
+        lines = starter_code.rstrip().splitlines()
+
+    if not lines:
+        raise ValueError("Python starter code is empty")
+
+    last_line = lines[-1]
+
+    if not last_line.lstrip().startswith("def "):
+        raise ValueError("Invalid Python starter code")
+
+    indentation = len(last_line) - len(last_line.lstrip())
+
+    parseable_code = (
+        starter_code.rstrip()
+        + "\n"
+        + " " * (indentation + 4)
+        + "pass\n"
+    )
+
+    try:
+        tree = ast.parse(parseable_code)
     except SyntaxError as exc:
-        raise ValueError("Invalid Python starter code") from exc
+        raise ValueError(
+            "Invalid Python starter code"
+        ) from exc
 
     # LeetCode format: class Solution with a method
     for node in tree.body:

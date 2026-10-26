@@ -5,6 +5,7 @@ from slowapi.errors import RateLimitExceeded
 
 from auth import get_current_user
 
+from routers import code_runner
 from routers.problems import router as problems_router
 from routers.sessions import router as sessions_router
 from routers.scenarios import router as scenarios_router
