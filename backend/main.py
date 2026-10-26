@@ -11,6 +11,7 @@ from routers.sessions import router as sessions_router
 from routers.scenarios import router as scenarios_router
 from routers.code_runner import router as code_runner_routers
 from routers.companies import router as companies_router
+from routers.standard_runner import router as standard_runner_router
 
 app = FastAPI()
 
@@ -36,6 +37,7 @@ app.include_router(sessions_router)
 app.include_router(scenarios_router)
 app.include_router(companies_router)
 app.include_router(code_runner_routers)
+app.include_router(standard_runner_router)
 
 @app.get("/")
 async def root():

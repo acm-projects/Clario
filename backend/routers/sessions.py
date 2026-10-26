@@ -99,20 +99,47 @@ async def validate_session_mode(request: Request):
             ),
         )
 
-@router.post("")
+
+def validate_interview_problem(problem_slug: str, mode: str):
+    if mode == "company":
+        rows = (
+            supabase.table("scenario_questions")
+            .select("slug")
+            .eq("slug", problem_slug)
+            .limit(1)
+            .execute()
+            .data
+        )
+
+        if not rows:
+            raise HTTPException(
+                status_code=404,
+                detail="Company scenario not found",
+            )
+        return
+
+    try:
+        problem = get_problem(problem_slug)
+    except httpx.HTTPError as e:
+        logger.warning("Problem API failed: %s", e)
+        raise HTTPException(
+            status_code=503,
+            detail="Problem service unavailable",
+        )
+
+    if problem is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Problem not found",
+        )
+
 @router.post("")
 def create_session(
     body: SessionCreate,
     user: dict = Depends(get_current_user),
     _: None = Depends(validate_session_mode),
 ):
-    try:
-        problem = get_problem(body.problem_slug)
-    except httpx.HTTPError as e:
-        logger.warning("Problem API failed in create_session: %s", e)
-        raise HTTPException(status_code=503, detail="Problem service unavailable")
-    if problem is None:
-        raise HTTPException(status_code=404, detail="Problem not found")
+    validate_interview_problem(body.problem_slug, body.mode)
 
     row = (
         supabase.table("interview_sessions")
@@ -146,11 +173,45 @@ def list_sessions(user: dict = Depends(get_current_user)):
 def get_session(session_id: str, user: dict = Depends(get_current_user)):
     session = get_owned_session(session_id, user["sub"])
 
-    try:
-        problem = get_problem(session["problem_slug"])
-    except httpx.HTTPError as e:
-        logger.warning("Problem API failed in get_session: %s", e)
-        problem = None
+    if session["mode"] == "company":
+        rows = (
+            supabase.table("scenario_questions")
+            .select("slug, company, title, difficulty, prompt, starter_code")
+            .eq("slug", session["problem_slug"])
+            .limit(1)
+            .execute()
+            .data
+        )
+
+        if not rows:
+            raise HTTPException(
+                status_code=404,
+                detail="Company scenario not found",
+            )
+
+        scenario = rows[0]
+
+        # Adapt the scenario to the existing frontend Problem format.
+        problem = {
+            "slug": scenario["slug"],
+            "leetcode_id": 0,
+            "title": scenario["title"],
+            "difficulty": scenario["difficulty"],
+            "topics": [],
+            "description_html": scenario["prompt"],
+            "example_testcases": "",
+            "starter_code": scenario["starter_code"] or {},
+        }
+
+    else:
+        try:
+            problem = get_problem(session["problem_slug"])
+        except httpx.HTTPError as e:
+            logger.warning(
+                "Problem API failed in get_session: %s",
+                e,
+            )
+            problem = None
 
     latest_snapshot = (
         supabase.table("code_snapshots")

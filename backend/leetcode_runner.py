@@ -77,42 +77,38 @@ import ast
 
 
 def get_python_method_name(starter_code: str) -> str:
-    """Extract the expected function name from trusted starter code."""
+    """Extract the expected Solution method from trusted starter code."""
+    import ast
+
     if not starter_code or not starter_code.strip():
         raise ValueError("Python starter code is missing")
 
     try:
         tree = ast.parse(starter_code)
-
     except SyntaxError:
-        # LeetCode starter code may end with an empty method body.
         lines = starter_code.rstrip().splitlines()
 
-    if not lines:
-        raise ValueError("Python starter code is empty")
+        if not lines:
+            raise ValueError("Python starter code is empty")
 
-    last_line = lines[-1]
+        last_line = lines[-1]
+        if not last_line.lstrip().startswith("def "):
+            raise ValueError("Invalid Python starter code")
 
-    if not last_line.lstrip().startswith("def "):
-        raise ValueError("Invalid Python starter code")
+        indentation = len(last_line) - len(last_line.lstrip())
 
-    indentation = len(last_line) - len(last_line.lstrip())
+        parseable_code = (
+            starter_code.rstrip()
+            + "\n"
+            + " " * (indentation + 4)
+            + "pass\n"
+        )
 
-    parseable_code = (
-        starter_code.rstrip()
-        + "\n"
-        + " " * (indentation + 4)
-        + "pass\n"
-    )
+        try:
+            tree = ast.parse(parseable_code)
+        except SyntaxError as exc:
+            raise ValueError("Invalid Python starter code") from exc
 
-    try:
-        tree = ast.parse(parseable_code)
-    except SyntaxError as exc:
-        raise ValueError(
-            "Invalid Python starter code"
-        ) from exc
-
-    # LeetCode format: class Solution with a method
     for node in tree.body:
         if isinstance(node, ast.ClassDef) and node.name == "Solution":
             methods = [
@@ -125,7 +121,6 @@ def get_python_method_name(starter_code: str) -> str:
                 raise ValueError("Expected exactly one Solution method")
             return methods[0]
 
-    # Clario format: standalone function
     functions = [
         node.name
         for node in tree.body
@@ -137,6 +132,7 @@ def get_python_method_name(starter_code: str) -> str:
         raise ValueError("Expected exactly one standalone function")
 
     return functions[0]
+
 
 def run_scenario_tests(
     solution_code: str,
