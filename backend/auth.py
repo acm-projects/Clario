@@ -1,13 +1,11 @@
-import os
-
 import jwt
-import config  # noqa: F401 - load backend environment before reading it
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
 
+from config import settings, require_setting
 
-SUPABASE_URL = os.environ["SUPABASE_URL"]  # e.g. https://xxxx.supabase.co
+SUPABASE_URL = require_setting("SUPABASE_URL", settings.supabase_url)
 JWKS_URL = f"{SUPABASE_URL}/auth/v1/.well-known/jwks.json"
 
 # Update this if your project's JWT Signing Keys tab shows a different algorithm
@@ -20,8 +18,13 @@ jwk_client = PyJWKClient(JWKS_URL)
 async def get_current_user(
     creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> dict:
-    if os.getenv("DEV_BYPASS_AUTH") == "true":
-        return {"sub": os.getenv("DEV_USER_ID"), "email": os.getenv("DEV_USER_EMAIL")}
+    """
+    Verifies a Supabase-issued JWT and returns its payload
+    (contains 'sub' = user id, 'email', 'role', etc).
+    Raises 401 if the token is missing, expired, or invalid.
+    """
+    if settings.dev_bypass_auth:
+        return {"sub": settings.dev_user_id, "email": settings.dev_user_email}
 
     if creds is None:
         raise HTTPException(status_code=401, detail="Missing token")

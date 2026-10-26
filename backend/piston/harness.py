@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 harness.py  --  wraps the user's code with "driver" code that runs the test cases.
 

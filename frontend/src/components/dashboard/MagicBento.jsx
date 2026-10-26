@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -301,7 +301,7 @@ const ARROW = (
 
 const CollaborationVisual = () => (
   <div className="magic-bento__collab relative flex min-h-0 flex-col overflow-hidden [padding:16px_16px_22px] magic-bento__well relative box-border [border-radius:var(--mb-inner-radius)] [background:var(--mb-well)] [box-shadow:inset_0_0_0_1px_var(--mb-well-edge)]">
-    <span className="magic-bento__doc-title [color:var(--mb-ink)] [font-size:13px] font-semibold [line-height:18px]">Launch plan</span>
+    <span className="magic-bento__doc-title [color:var(--mb-ink)] [font-size:14px] font-semibold [line-height:18px]">Launch plan</span>
     <div className="magic-bento__lines flex flex-col [gap:10px] [margin-top:18px]">
       <span className="magic-bento__line relative [width:var(--w)] [height:6px] [border-radius:3px] [background:var(--mb-line)]" style={vars({ '--w': '92%' })} />
       <span className="magic-bento__line relative [width:var(--w)] [height:6px] [border-radius:3px] [background:var(--mb-line)]" style={vars({ '--w': '78%' })} />
@@ -346,8 +346,8 @@ const AutomationVisual = () => (
         <HugeiconsIcon icon={GitBranchIcon} size={15} strokeWidth={1.8} />
       </span>
       <span className="magic-bento__flow-copy flex min-w-0 flex-col">
-        <span className="magic-bento__flow-name overflow-hidden [color:var(--mb-ink)] [font-size:13px] font-semibold [line-height:17px] text-ellipsis whitespace-nowrap">Push to main</span>
-        <span className="magic-bento__flow-meta overflow-hidden [color:var(--mb-muted)] [font-size:11.5px] [line-height:15px] text-ellipsis whitespace-nowrap magic-bento__flow-hash [font-family:ui-monospace,_SFMono-Regular,_Menlo,_Consolas,_monospace] [font-size:11px]">a1c9f3e</span>
+        <span className="magic-bento__flow-name overflow-hidden [color:var(--mb-ink)] [font-size:14px] font-semibold [line-height:17px] text-ellipsis whitespace-nowrap">Push to main</span>
+        <span className="magic-bento__flow-meta overflow-hidden [color:var(--mb-muted)] [font-size:11.5px] [line-height:15px] text-ellipsis whitespace-nowrap magic-bento__flow-hash [font-family:ui-monospace,_SFMono-Regular,_Menlo,_Consolas,_monospace] [font-size:14px]">a1c9f3e</span>
       </span>
     </div>
     <ol className="magic-bento__steps relative flex flex-col [gap:2px] [margin:0] [padding:2px_0_0] [list-style:none] magic-bento__well relative box-border [border-radius:var(--mb-inner-radius)] [background:var(--mb-well)] [box-shadow:inset_0_0_0_1px_var(--mb-well-edge)]">
@@ -355,7 +355,7 @@ const AutomationVisual = () => (
         <span className="magic-bento__rail-fill absolute [inset:0] [background:rgba(var(--mb-accent-rgb),_0.55)] [transform-origin:50%_0]" />
       </span>
       {STEPS.map((step, index) => (
-        <li key={step.label} className="magic-bento__step relative flex [height:33px] items-center [gap:10px] [padding:0_12px_0_14px] [color:var(--mb-ink)] [font-size:13px] [line-height:16px]" style={vars({ '--i': index })}>
+        <li key={step.label} className="magic-bento__step relative flex [height:33px] items-center [gap:10px] [padding:0_12px_0_14px] [color:var(--mb-ink)] [font-size:14px] [line-height:16px]" style={vars({ '--i': index })}>
           <span className={"magic-bento__status relative grid [width:16px] [height:16px] [flex:none] place-items-center [&_>_*]:[grid-area:1_/_1]"}>
             <span className="magic-bento__pending [width:12px] [height:12px] box-border [border:1.5px_dashed_var(--mb-faint)] rounded-full [opacity:0]" />
             <span className="magic-bento__spinner [width:14px] [height:14px] box-border [border:1.5px_solid_rgba(var(--mb-accent-rgb),_0.22)] [border-top-color:rgb(var(--mb-accent-rgb))] rounded-full [opacity:0]" />
@@ -364,7 +364,7 @@ const AutomationVisual = () => (
             </span>
           </span>
           {step.label}
-          <span className="magic-bento__step-time [margin-left:auto] [color:var(--mb-muted)] [font-size:12px] [font-variant-numeric:tabular-nums]">{step.time}</span>
+          <span className="magic-bento__step-time [margin-left:auto] [color:var(--mb-muted)] [font-size:14px] [font-variant-numeric:tabular-nums]">{step.time}</span>
         </li>
       ))}
     </ol>
@@ -1078,7 +1078,7 @@ const MagicBento = ({
               {entry.content ?? (
                 <>
                   {(entry.icon || entry.label) && (
-                    <div className="magic-bento__header flex min-w-0 items-center [gap:8px] [color:var(--mb-muted)] [font-size:12px] font-medium [line-height:16px]">
+                    <div className="magic-bento__header flex min-w-0 items-center [gap:8px] [color:var(--mb-muted)] [font-size:14px] font-medium [line-height:16px]">
                       {entry.icon && <span className="magic-bento__icon grid [width:16px] [height:16px] [flex:none] place-items-center [color:var(--mb-ink)]">{entry.icon}</span>}
                       {entry.label && <span className="magic-bento__label overflow-hidden text-ellipsis whitespace-nowrap">{entry.label}</span>}
                     </div>
@@ -1091,7 +1091,7 @@ const MagicBento = ({
                   {(entry.title || entry.description) && (
                     <div className="magic-bento__text flex flex-col [gap:4px] [margin-top:auto]">
                       {entry.title && <h3 className="magic-bento__title [margin:0] [color:var(--mb-ink)] [font-size:15px] font-semibold [letter-spacing:-0.01em] [line-height:20px]">{entry.title}</h3>}
-                      {entry.description && <p className="magic-bento__description [margin:0] [color:var(--mb-muted)] [font-size:13px] [line-height:1.45]">{entry.description}</p>}
+                      {entry.description && <p className="magic-bento__description [margin:0] [color:var(--mb-muted)] [font-size:14px] [line-height:1.45]">{entry.description}</p>}
                     </div>
                   )}
                 </>

@@ -1,8 +1,10 @@
+import ProblemLoading from "../ui/ProblemLoading";
+import { useAppearance, setAppearance } from "../../lib/appearance";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
-import { TestResultPanel } from "./TestResultPanel";
+import { TestResultPanel, type ExecutionTab } from "./TestResultPanel";
 import { CodePanel } from "./CodePanel";
 import { VideoCallPanel } from "./VideoCallPanel";
 import { ResizableSplit } from "./ResizableSplit";
@@ -28,13 +30,10 @@ function InterviewPage() {
   const [runResult, setRunResult] = useState<TestsResponse | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">(() =>
-    window.localStorage.getItem("clario-theme") === "light" ? "light" : "dark",
-  );
-
-  useEffect(() => {
-    window.localStorage.setItem("clario-theme", theme);
-  }, [theme]);
+  const [executionTab, setExecutionTab] = useState<ExecutionTab>("testcases");
+  const [resultsSplitSize, setResultsSplitSize] = useState<number | undefined>(undefined);
+  const theme = useAppearance();
+  const setTheme = setAppearance;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -106,6 +105,8 @@ function InterviewPage() {
     }
 
     setRunning(true);
+    setExecutionTab("results");
+    setResultsSplitSize(45);
     setRunError(null);
     setRunResult(null);
 
@@ -121,6 +122,10 @@ function InterviewPage() {
       setRunning(false);
     }
   };
+
+  if (loadState === "loading" || (loadState === "ready" && !problem)) {
+    return <ProblemLoading fullScreen dark={theme === "dark"} />;
+  }
 
   if (loadState !== "ready" || !problem) {
     const message = {
@@ -157,17 +162,17 @@ function InterviewPage() {
         <ResizableSplit direction="horizontal" storageKey="clario-sandbox-call-width" initialSize={76}
           label="Resize workspace and interview call"
           first={
-            <ResizableSplit direction="vertical" storageKey="clario-sandbox-results-height" initialSize={81}
+            <ResizableSplit direction="vertical" storageKey="clario-sandbox-results-height" initialSize={81} size={resultsSplitSize} onSizeChange={setResultsSplitSize}
               label="Resize editor and test results"
               first={
                 <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
                   label="Resize problem and code editor"
-                  first={<ProblemPanel problem={problem} solved={session.solved} />}
+                  first={<ProblemPanel problem={problem} solved={runResult?.status === "Accepted"} />}
                   second={<CodePanel key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
                     onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }
-              second={<TestResultPanel starterCode={problem.starter_code.python3} testcases={problem.example_testcases} result={runResult} error={runError} />}
+              second={<TestResultPanel descriptionHtml={problem.description_html} tab={executionTab} onTabChange={setExecutionTab} running={running} starterCode={problem.starter_code.python3} testcases={problem.example_testcases} result={runResult} error={runError} />}
             />
           }
           second={
@@ -176,17 +181,26 @@ function InterviewPage() {
             <h2>Interview call</h2>
             <div className="flex gap-2">
               {!isMock && (["topics", "hint"] as const).map((item) => (
-                <button key={item} className={"sandbox-button [&.sandbox-button]:[padding:8px_15px] [&.sandbox-button]:[border:1px_solid_var(--line)] [&.sandbox-button]:[border-radius:9px] [&.sandbox-button]:[background:var(--panel-bg)] [&.sandbox-button]:[font-size:13px] [&.sandbox-button]:[cursor:pointer] [&.sandbox-button:hover]:[background:var(--surface-hover)] [&.sandbox-button.is-active]:[background:#fac52e] [&.sandbox-button.is-active]:[color:#122b50] [@media_(max-width:_1150px)]:[&.sandbox-button]:[padding:8px_10px]"} aria-expanded={openInfo === item}
-                  aria-controls={"sandbox-info [&.sandbox-info]:[position:absolute] [&.sandbox-info]:[top:100%] [&.sandbox-info]:[right:0] [&.sandbox-info]:[z-index:20] [&.sandbox-info]:[padding:14px] [&.sandbox-info]:[border:1px_solid_var(--line)] [&.sandbox-info]:[border-radius:10px] [&.sandbox-info]:[background:var(--panel-bg)] [&.sandbox-info]:[box-shadow:0_6px_20px_#0002]"} onClick={() => setOpenInfo(openInfo === item ? null : item)}>
+                <button key={item} className={`rounded-lg border border-[var(--line)] px-3 py-2 text-[13px] transition-colors ${openInfo === item ? "bg-[#2378db] text-white" : "bg-[var(--panel-bg)] hover:bg-[var(--surface-hover)]"}`} aria-expanded={openInfo === item}
+                  aria-controls="sandbox-info" onClick={() => setOpenInfo(openInfo === item ? null : item)}
+                  onKeyDown={(event) => { if (event.key === "Escape") setOpenInfo(null); }}>
                   {item === "topics" ? "Topics" : "Hint"}
                 </button>
               ))}
             </div>
-            {!isMock && openInfo && <div id={"sandbox-info [&.sandbox-info]:[position:absolute] [&.sandbox-info]:[top:100%] [&.sandbox-info]:[right:0] [&.sandbox-info]:[z-index:20] [&.sandbox-info]:[padding:14px] [&.sandbox-info]:[border:1px_solid_var(--line)] [&.sandbox-info]:[border-radius:10px] [&.sandbox-info]:[background:var(--panel-bg)] [&.sandbox-info]:[box-shadow:0_6px_20px_#0002]"} className={"sandbox-info [&.sandbox-info]:[position:absolute] [&.sandbox-info]:[top:100%] [&.sandbox-info]:[right:0] [&.sandbox-info]:[z-index:20] [&.sandbox-info]:[padding:14px] [&.sandbox-info]:[border:1px_solid_var(--line)] [&.sandbox-info]:[border-radius:10px] [&.sandbox-info]:[background:var(--panel-bg)] [&.sandbox-info]:[box-shadow:0_6px_20px_#0002]"} role="status">
-              {openInfo === "topics" ? problem.topics.join(" ? ") : "Hints coming soon."}
+            {!isMock && openInfo && <div id="sandbox-info"
+              className="absolute inset-x-0 top-full z-20 max-h-60 overflow-y-auto rounded-xl border border-[var(--line)] bg-[var(--panel-bg)] p-4 shadow-lg"
+              role="region" aria-label={openInfo === "topics" ? "Problem topics" : "Problem hint"}
+              onKeyDown={(event) => { if (event.key === "Escape") setOpenInfo(null); }}>
+              <p className="theme-main-text mb-3 text-sm font-semibold">{openInfo === "topics" ? "Topics" : "Hint"}</p>
+              {openInfo === "topics" ? <div className="flex flex-wrap gap-2">
+                {problem.topics.length ? problem.topics.map((topic) => <span key={topic}
+                  className="theme-surface theme-body-text max-w-full rounded-lg px-3 py-1.5 text-xs [overflow-wrap:anywhere]">{topic}</span>)
+                  : <p className="theme-muted-text text-sm">No topics available.</p>}
+              </div> : <p className="theme-muted-text text-sm">Hints coming soon.</p>}
             </div>}
           </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} onEndInterview={handleEndInterview} />
+          <VideoCallPanel round={session.round} interviewer={session.interviewer} problemSlug={problem.slug} onEndInterview={handleEndInterview} />
         </div>
           }
         />

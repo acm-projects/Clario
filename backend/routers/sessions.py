@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 import logging
 from datetime import datetime, timezone
 from typing import Literal
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel, Field, model_validator
 
+from communication import CommunicationCapture
 from auth import get_current_user
 from db import supabase
 from leetcode import get_problem
-from communication import CommunicationCapture
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +20,7 @@ router = APIRouter(prefix="/api/sessions")
 
 class SessionCreate(BaseModel):
     problem_slug: str
-    mode: Literal["practice", "full_mock"]
+    mode: Literal["practice", "company", "full_mock", "custom"]
     language: Literal["python3", "java"]
 
 
@@ -75,9 +77,32 @@ def get_owned_session(session_id: str, user_id: str) -> dict:
         raise HTTPException(status_code=404, detail="Session not found")
     return rows[0]
 
+ALLOWED_MODES = {"practice", "company", "full_mock", "custom"}
+
+
+async def validate_session_mode(request: Request):
+    try:
+        body = await request.json()
+    except (ValueError, UnicodeDecodeError):
+        raise HTTPException(status_code=400, detail="Invalid JSON request body")
+
+    mode = body.get("mode") if isinstance(body, dict) else None
+
+    if not isinstance(mode, str) or mode not in ALLOWED_MODES:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Invalid or missing mode. Allowed values: "
+                "practice, company, full_mock, custom"
+            ),
+        )
 
 @router.post("")
-def create_session(body: SessionCreate, user: dict = Depends(get_current_user)):
+def create_session(
+    body: SessionCreate,
+    user: dict = Depends(get_current_user),
+    _: None = Depends(validate_session_mode),
+):
     try:
         problem = get_problem(body.problem_slug)
     except httpx.HTTPError as e:

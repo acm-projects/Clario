@@ -1,3 +1,5 @@
+import RepoDebugging from "./pages/RepoDebugging";
+import { useAppearance } from "./lib/appearance";
 import { brandTheme } from "./lib/theme";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
@@ -14,8 +16,9 @@ import InterviewReport from "./pages/InterviewReport";
 import ProfileGate from "./components/auth/ProfileGate";
 
 function App() {
+  const appearance = useAppearance();
   const { pathname } = useLocation();
-  const sandbox = /^\/interview\/[^/]+\/?$/.test(pathname);
+  const sandbox = pathname.startsWith("/repo-debugging") || /^\/interview\/[^/]+\/?$/.test(pathname);
   const routes = (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -24,16 +27,20 @@ function App() {
       <Route path="/problems" element={<ProblemLibrary />} />
       <Route path="/report" element={<Feedback />} />
       <Route path="/report/preview" element={<InterviewReport preview />} />
-      <Route path="/report/:sessionId" element={<InterviewReport />} />      <Route element={<ProfileGate />}>
+      <Route path="/report/:sessionId" element={<InterviewReport />} />
+      <Route element={<ProfileGate />}>
         <Route path="/assessment" element={<Assessment />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/interview" element={<InterviewSelection />} />
         <Route path="/interview/:problemId" element={<InterviewRoom />} />
+        <Route path="/repo-debugging" element={<RepoDebugging />} />
+        <Route path="/repo-debugging/:challengeId" element={<RepoDebugging />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/profile" element={<Settings />} />      </Route>
+        <Route path="/profile" element={<Settings />} />
+      </Route>
     </Routes>
   );
-  return sandbox ? routes : <div className={brandTheme}>{routes}</div>;
+  return sandbox ? routes : <div data-appearance={appearance} className={brandTheme}>{routes}</div>;
 }
 
 export default App;

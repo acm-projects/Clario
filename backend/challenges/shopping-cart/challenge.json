@@ -1,0 +1,17 @@
+{
+  "id": "shopping-cart-01",
+  "title": "Shopping Cart Discount Bug",
+  "difficulty": "Easy",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 25,
+  "description": "Customers report incorrect totals when percentage discounts are applied. Follow the checkout flow across the repository to find the cause.",
+  "objective": "Fix discount calculation without breaking item quantities or checkout behavior.",
+  "expectedBehavior": "A 20% discount on a $100 subtotal returns $80. Discounts range from 0 to 100 inclusive; values outside that range raise ValueError. Empty carts total zero. Round the final total to two decimal places.",
+  "constraints": ["Keep the existing function signatures.", "Use only the Python standard library.", "Inputs contain nonnegative item prices and positive integer quantities.", "Tests are managed by Clario and cannot be edited."],
+  "editableFiles": ["main.py", "cart.py", "discounts.py"],
+  "readOnlyFiles": ["README.md"],
+  "entrypoint": "main.py",
+  "testFile": "test_cart.py",
+  "testNames": ["test_no_discount", "test_percentage_discount", "test_empty_cart", "test_full_discount", "test_invalid_discount", "test_multiple_items", "test_rounding"]
+}
