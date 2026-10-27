@@ -1,0 +1,14 @@
+import type { useSpeechCoach } from "../../lib/useSpeechCoach";
+export function SpeechCoach({ coach, prompts, demo = false, sampleName, onNextSample }: { coach: ReturnType<typeof useSpeechCoach>; prompts: boolean; demo?: boolean; sampleName?: string; onNextSample?: () => void }) {
+ const { metrics } = coach;
+ const nudge = coach.pause >= 15 ? "Talk through your next step, even if you are still deciding." : coach.fillers >= 3 ? "Try a short pause instead of a filler word." : "Explain your approach as you work.";
+ return <section aria-label="Speech coach" className="theme-border theme-body-text shrink-0 border-t px-3 py-3 text-xs">
+  <div className="flex items-center justify-between gap-2"><strong>Speech coach {demo && <span className="ml-1 rounded bg-amber-400/20 px-2 py-1 text-[14px]">TEST DATA</span>}</strong><button type="button" onClick={coach.toggle} disabled={coach.starting} className="theme-surface rounded-lg px-3 py-2 font-medium disabled:opacity-60">{coach.starting ? "Connecting..." : coach.active ? (demo ? "Pause demo" : "Pause coaching") : (demo ? "Resume demo" : "Start speech coach")}</button></div>
+  <p className="theme-muted-text mt-2">{demo ? "Sample observations only. No microphone access or speech data saved." : coach.active ? coach.transcriptionStatus : "Enable your mic to track speech. Muted time is excluded."}</p>
+  {demo && <button type="button" onClick={onNextSample} className="theme-surface mt-2 rounded-lg px-3 py-2">Sample: {sampleName} - next sample</button>}
+  <dl className="mt-3 grid grid-cols-3 gap-2"><div><dt>Silence (est.)</dt><dd className="mt-1 font-semibold">{Math.round(metrics.silent_seconds)}s</dd></div><div><dt>Filler matches</dt><dd className="mt-1 font-semibold">{metrics.transcription_available ? coach.fillers : "Unavailable"}</dd></div><div><dt>Pace (est.)</dt><dd className="mt-1 font-semibold">{coach.pace === null ? "Unavailable" : coach.pace + " wpm"}</dd></div></dl>
+  {prompts && coach.active && <p role="status" className="mt-3 rounded-lg bg-blue-500/10 p-2">{nudge}</p>}
+  {coach.error && <p role="alert" className="mt-2 text-red-500">{coach.error}</p>}
+  <details className="theme-muted-text mt-2"><summary className="cursor-pointer">{demo ? "About this demo" : "About speech tracking"}</summary><p className="mt-2">{demo ? "These preset examples demonstrate long pauses, filler words, and steady speech. Counts and pace are illustrative fixtures. This demo does not call Gemini or save communication observations." : <>Audio volume estimates pauses. Background noise may affect results. Filler matches include um, uh, erm, hmm, you know, I mean, sort of, and kind of. Speech recognition may omit fillers. Your browser may send audio to its speech service. The transcript and estimates are saved with this interview; Clario does not save raw audio.</>}</p>{metrics.transcript && <p className="mt-2 max-h-24 overflow-y-auto">{metrics.transcript}</p>}</details>
+ </section>;
+}
