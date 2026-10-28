@@ -1,0 +1,36 @@
+{
+  "id": "daily-revenue-01",
+  "title": "The Wrong Revenue Report",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Finance sees cent-level discrepancies and orders booked to the wrong day around month-end and DST.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "daily_revenue groups aware timestamps by the requested IANA timezone (default America/Los_Angeles). Convert money using Decimal(str(value)). Round each order's discounted gross half-up to cents before aggregation. paid contributes gross; refunded contributes negative gross; cancelled contributes zero; partially_refunded contributes gross minus refund_amount (already a dollar amount). Return a mapping from date to numeric dollars, including zero-total days encountered in input.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "revenue.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_revenue_report.py"
+  ],
+  "entrypoint": "revenue.py",
+  "testFile": "test_revenue_report.py",
+  "testNames": [
+    "test_cancelled",
+    "test_decimal_accumulation",
+    "test_dst_and_month_boundary",
+    "test_half_up_per_order",
+    "test_local_day",
+    "test_partial_refund",
+    "test_refunded",
+    "test_timezone_parameter"
+  ],
+  "bugs": []
+}

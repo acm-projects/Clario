@@ -8,9 +8,9 @@ export interface VoiceSession {
   };
 }
 
-export function getVoiceSession(problemSlug: string, repoChallengeId?: string): Promise<VoiceSession> {
+export function getVoiceSession(problemSlug: string, repoChallengeId?: string, systemDesignSlug?: string): Promise<VoiceSession> {
   return request<VoiceSession>(
-    repoChallengeId ? `/voice/repo-session?challenge_id=${encodeURIComponent(repoChallengeId)}` : `/voice/session?problem_slug=${encodeURIComponent(problemSlug)}`,
+    systemDesignSlug ? `/voice/system-design-session?scenario_slug=${encodeURIComponent(systemDesignSlug)}` : repoChallengeId ? `/voice/repo-session?challenge_id=${encodeURIComponent(repoChallengeId)}` : `/voice/session?problem_slug=${encodeURIComponent(problemSlug)}`,
     {},
     true,
   );

@@ -8,10 +8,54 @@
   "description": "The demo app rejects some valid logins and accepts some invalid ones. Trace the request flow and repair its authentication logic.",
   "objective": "Correct credential checking and input handling while preserving safe, consistent failure behavior.",
   "expectedBehavior": "Return a boolean: only active users with an exact, case-sensitive password may log in. Usernames are case-insensitive with surrounding whitespace ignored. Never strip or lowercase passwords. Unknown users, empty or non-string inputs, and inactive users return False without throwing.",
-  "constraints": ["Keep login(username, password) and authenticate(username, password).", "Use dummy credentials only; no network or database calls.", "Use only the Python standard library.", "Do not change the supplied user records."],
-  "editableFiles": ["main.py", "auth.py"],
-  "readOnlyFiles": ["README.md", "users.py"],
+  "constraints": [
+    "Keep login(username, password) and authenticate(username, password).",
+    "Use dummy credentials only; no network or database calls.",
+    "Use only the Python standard library.",
+    "Do not change the supplied user records."
+  ],
+  "editableFiles": [
+    "main.py",
+    "auth.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "users.py",
+    "test_auth.py"
+  ],
   "entrypoint": "main.py",
   "testFile": "test_auth.py",
-  "testNames": ["test_valid_credentials", "test_invalid_password", "test_unknown_user", "test_username_normalization", "test_password_case", "test_password_whitespace", "test_inactive_user", "test_invalid_inputs"]
+  "testNames": [
+    "test_valid_credentials",
+    "test_invalid_password",
+    "test_unknown_user",
+    "test_username_normalization",
+    "test_password_case",
+    "test_password_whitespace",
+    "test_inactive_user",
+    "test_invalid_inputs"
+  ],
+  "bugs": [
+    {
+      "file": "main.py",
+      "line": 6,
+      "description": "Stripping and lowercasing passwords changes credentials.",
+      "hint": "Are usernames and passwords supposed to use the same normalization rules?",
+      "difficulty": "easy"
+    },
+    {
+      "file": "auth.py",
+      "line": 5,
+      "description": "Raw username lookup does not normalize usernames or reject invalid input types.",
+      "hint": "Follow a mixed-case username with surrounding spaces and a non-string input.",
+      "difficulty": "medium"
+    },
+    {
+      "file": "auth.py",
+      "line": 8,
+      "description": "OR allows active users with wrong passwords and inactive users with correct passwords.",
+      "hint": "Write a truth table for activity and password equality.",
+      "difficulty": "hard"
+    }
+  ]
 }

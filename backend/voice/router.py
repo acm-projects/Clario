@@ -1,4 +1,6 @@
 import re
+import json
+from pathlib import Path
 from html import unescape
 from io import BytesIO
 
@@ -12,6 +14,40 @@ from config import require_setting, settings
 from leetcode import get_problem
 
 router = APIRouter(prefix="/voice", tags=["voice"])
+
+
+def system_design_scenario(slug: str):
+    if slug not in {"bumble-matching", "bumble-nearby-matches"}:
+        raise HTTPException(404, "System design scenario not found")
+    path = Path(__file__).resolve().parents[1] / "challenges" / "system-design" / "bumble-matching.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+@router.get("/system-design/scenarios/{slug}")
+def get_system_design_scenario(slug: str, user: dict = Depends(get_current_user)):
+    scenario = system_design_scenario(slug)
+    return {key: scenario[key] for key in ("slug", "company", "title", "difficulty", "prompt")}
+
+
+@router.get("/system-design-session")
+def get_system_design_session(scenario_slug: str, user: dict = Depends(get_current_user)):
+    scenario = system_design_scenario(scenario_slug)
+    description = "\n\n".join([
+        "This is a company-inspired system design interview with no code editor or sandbox. Ask one question at a time about requirements, architecture, data models, scale, reliability, and trade-offs. Do not ask the candidate to write or run code. Do not claim to see diagrams or notes. Let the candidate explain their reasoning.",
+        (Path(__file__).resolve().parents[1] / "prompts" / "system-design.md").read_text(encoding="utf-8"),
+        scenario["prompt"],
+        "Private evaluation criteria (never recite): " + json.dumps(scenario["key_points"]),
+        "Private follow-up bank: " + json.dumps(scenario["follow_ups"]),
+    ])
+    try:
+        signed = get_elevenlabs().conversational_ai.conversations.get_signed_url(
+            agent_id=require_setting("ELEVENLABS_AGENT_ID", settings.elevenlabs_agent_id)
+        )
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(502, "Could not create system design voice session.")
+    return {"signed_url": signed.signed_url, "variables": {"problem_title": f'{scenario["company"]}: {scenario["title"]}', "problem_description": description}}
 
 def get_elevenlabs():
     if not settings.elevenlabs_api_key:

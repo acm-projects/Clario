@@ -1,4 +1,5 @@
 import RepoDebugging from "./pages/RepoDebugging";
+import SystemDesign from "./pages/SystemDesign";
 import { useAppearance } from "./lib/appearance";
 import { brandTheme } from "./lib/theme";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -18,7 +19,7 @@ import ProfileGate from "./components/auth/ProfileGate";
 function App() {
   const appearance = useAppearance();
   const { pathname } = useLocation();
-  const sandbox = pathname.startsWith("/repo-debugging") || /^\/interview\/[^/]+\/?$/.test(pathname);
+  const sandbox = pathname.startsWith("/repo-debugging") || pathname.startsWith("/interview/repo") || /^\/interview\/[^/]+\/?$/.test(pathname);
   const routes = (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -34,6 +35,10 @@ function App() {
         <Route path="/interview" element={<InterviewSelection />} />
         <Route path="/interview/:problemId" element={<InterviewRoom />} />
         <Route path="/repo-debugging" element={<RepoDebugging />} />
+        <Route path="/interview/repo" element={<RepoDebugging />} />
+        <Route path="/interview/repo/:slug" element={<RepoDebugging />} />
+        <Route path="/interview/system-design/:slug" element={<SystemDesign />} />
+        <Route path="/system-design" element={<SystemDesign />} />
         <Route path="/repo-debugging/:challengeId" element={<RepoDebugging />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Settings />} />
