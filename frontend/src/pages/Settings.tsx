@@ -1,3 +1,4 @@
+import PageClouds from "../components/effects/PageClouds";
 import DuckHead from "../components/layout/DuckHead";
 import { useAppearance, setAppearance } from "../lib/appearance";
 import PageHeading from "../components/ui/PageHeading";
@@ -55,6 +56,7 @@ export default function Settings() {
 
   const card = "rounded-[28px] border border-[var(--border)] bg-[var(--surface-raised)] p-6 shadow-[0_16px_48px_-32px_#18213735] sm:p-8";
   return <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] [--sidebar-width:224px] [&:has(.sidebar-collapsed)]:[--sidebar-width:80px] [@media_(min-width:_1024px)]:[padding-left:calc(var(--sidebar-width)_+_48px)] [@media_(min-width:_1024px)]:[padding-right:24px] [@media_(min-width:_1024px)]:[padding-top:24px] settings-page [background:var(--page-background)] [&_:is(a,_button,_input):focus-visible]:[outline:2px_solid_#3054ed] [&_:is(a,_button,_input):focus-visible]:[outline-offset:4px] [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed [&_button:disabled]:[opacity:.5] min-h-svh px-4 pb-10 pt-2 font-sans text-[#182137] sm:px-6"}>
+    <PageClouds />
     <NavbarDashboard />
     <section className="mx-auto max-w-[1120px] py-8 sm:py-12">
       <PageHeading eyebrow="YOUR CORNER OF CLARIO" title="Settings" subtitle="Manage your profile, appearance, and practice preferences." />

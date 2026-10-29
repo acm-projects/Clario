@@ -47,7 +47,7 @@ export function CodePanel({ starterCode, theme, initialLanguage = "python3", loc
 
   return (
     <Panel className={"sandbox-code [&.sandbox-code_>_div:first-child]:[background:var(--page-bg)] [&.sandbox-code_>_div:first-child]:[border-bottom:1px_solid_var(--line)] [&.sandbox-code_>_div:last-child]:[background:#0f1a2e] [&.sandbox-code_>_div:last-child]:[color:#a9bce0] [&.sandbox-code_>_div:last-child]:[border-top:1px_solid_#202b42] [&.sandbox-code_>_div:last-child_.theme-muted-text]:[color:#a9bce0] [&.sandbox-code_>_div:last-child_.theme-muted-text]:[font-family:monospace] [@media_(max-width:_600px)]:[&.sandbox-code]:[min-height:480px]"}>
-      <div className="flex shrink-0 items-center justify-between px-4 py-3">
+      <div className="flex shrink-0 items-center justify-between px-3 py-2">
         <div className="flex gap-2" role="group" aria-label="Language">
           {LANGUAGES.map((item) => <button key={item.id} disabled={lockLanguage && lang !== item.id} aria-pressed={lang === item.id}
             className={`sandbox-button [&.sandbox-button]:[padding:8px_15px] [&.sandbox-button]:[border:1px_solid_var(--line)] [&.sandbox-button]:[border-radius:9px] [&.sandbox-button]:[background:var(--panel-bg)] [&.sandbox-button]:[font-size:13px] [&.sandbox-button]:[cursor:pointer] [&.sandbox-button:hover]:[background:var(--surface-hover)] [&.sandbox-button.is-active]:[background:#2378db] [&.sandbox-button.is-active]:[color:#fff] [@media_(max-width:_1150px)]:[&.sandbox-button]:[padding:8px_10px] ${lang === item.id ? "is-active" : ""}`}

@@ -1,3 +1,4 @@
+import PageClouds from "../components/effects/PageClouds";
 import DashboardTour from "../components/dashboard/DashboardTour";
 import { dashboardTourSteps as tourSteps } from "../components/dashboard/dashboardTourSteps";
 import PageHeading from "../components/ui/PageHeading";
@@ -148,6 +149,7 @@ export default function Dashboard() {
   const shell = "relative z-1 mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8";
   const muted = "mt-3 text-xs leading-7 text-[#687087]";
   return <main data-tour-invited={tourInvited && !tourActive} data-tour-active={tourActive} className={["practice-dashboard app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] relative isolate min-h-svh overflow-clip pt-2 font-sans lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(button,a):focus-visible]:outline-2 [&_:is(button,a):focus-visible]:outline-offset-4 [&_:is(button,a):focus-visible]:outline-[#3054ed] [&_>.app-sidebar]:mx-4 sm:[&_>.app-sidebar]:mx-6 lg:[&_>.app-sidebar]:mx-0", dashboardStyles["practice-dashboard"]].join(" ")}>
+    <PageClouds />
     <NavbarDashboard onStartTour={openTour} tourActive={tourActive} />
     <div className={shell}><header id="dashboard-welcome" className={["dashboard-welcome", dashboardStyles["dashboard-welcome"]].join(" ")}>
       <PageHeading eyebrow="YOUR PRACTICE ROOM" title={<TextType key={welcomeText} as="span" text={welcomeText} typingSpeed={75} initialDelay={200} loop={false} showCursor cursorCharacter="|" cursorBlinkDuration={0.6} startOnVisible />} subtitle={getGreetingCopy(profile)} />

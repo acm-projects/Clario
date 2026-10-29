@@ -1,3 +1,4 @@
+import PageClouds from "../components/effects/PageClouds";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
@@ -52,6 +53,7 @@ export default function InterviewReport({ preview = false }: { preview?: boolean
   }, [sessionId, preview, retry]);
 
   return <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-[var(--page-background)] px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]"}>
+    <PageClouds />
     <NavbarDashboard />
     <div className="mx-auto max-w-[1184px] pt-9 max-[700px]:pt-7">
       <Link to="/report" className="mb-6 inline-flex min-h-10 items-center text-sm text-[#3054ed] hover:underline">&#8592; All feedback reports</Link>

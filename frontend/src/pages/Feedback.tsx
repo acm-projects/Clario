@@ -1,3 +1,4 @@
+import PageClouds from "../components/effects/PageClouds";
 import PageHeading from "../components/ui/PageHeading";
 import { useEffect, useState } from "react";
 
@@ -48,6 +49,7 @@ export default function Feedback() {
 
   return (
     <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-[var(--page-background)] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]"}>
+    <PageClouds />
       <NavbarDashboard />
       <div className="mx-auto max-w-[1120px]">
         <div className="pt-9 max-[700px]:pt-7"><PageHeading eyebrow="YOUR PROGRESS, IN FOCUS" title="Feedback report" subtitle="See where you're strong, where to focus, and how far you've come." /></div>
