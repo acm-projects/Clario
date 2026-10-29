@@ -15,6 +15,7 @@ bearer_scheme = HTTPBearer(auto_error=False)
 jwk_client = PyJWKClient(JWKS_URL)
 
 
+
 async def get_current_user(
     creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> dict:
@@ -27,7 +28,10 @@ async def get_current_user(
         return {"sub": settings.dev_user_id, "email": settings.dev_user_email}
 
     if creds is None:
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(
+            status_code=401,
+            detail="Missing token",
+        )
 
     token = creds.credentials
 

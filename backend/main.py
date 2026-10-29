@@ -1,5 +1,7 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from auth import get_current_user
 from piston.router import router as piston_router
@@ -7,9 +9,21 @@ from routers.problems import router as problems_router
 from routers.scenarios import router as scenarios_router
 from routers.sessions import router as sessions_router
 from voice.router import router as voice_router
+from routers.code_runner import router as code_runner_routers
+from routers.companies import router as companies_router
+from routers.standard_runner import router as standard_runner_router
 
 #where our python app starts
 app = FastAPI()
+
+from routers.code_runner import limiter
+
+app.state.limiter = limiter
+
+app.add_exception_handler(
+    RateLimitExceeded,
+    _rate_limit_exceeded_handler,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +38,9 @@ app.include_router(voice_router)
 app.include_router(problems_router)
 app.include_router(sessions_router)
 app.include_router(scenarios_router)
-
+app.include_router(companies_router)
+app.include_router(code_runner_routers)
+app.include_router(standard_runner_router)
 
 
 @app.get("/")
