@@ -69,7 +69,10 @@ export default function ProfileGate() {
   if (loaded.error) return <main className="flex min-h-svh items-center justify-center bg-[var(--page-background)] px-6 text-[#191d20]"><div className="max-w-md rounded-2xl border border-white/90 bg-white/55 p-8"><h1 className="text-2xl font-semibold tracking-tight">We couldn&apos;t load your profile.</h1><p role="alert" className="mt-4 text-sm leading-6 text-[#55595c]">{loaded.error}</p><div className="mt-6 flex gap-6"><button onClick={() => setRetry((current) => current + 1)} className="cursor-pointer rounded-lg bg-[#3b8fe8] px-5 py-3 text-sm font-semibold">Try again</button><Link to="/login" className="py-3 text-sm underline">Log in</Link></div></div></main>;
   if (!loaded.user || !loaded.profile) return <Navigate to="/login" replace />;
   const devBypass = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true";
-  const redirect = devBypass ? null : getProfileRedirect(location.pathname, loaded.profile.assessment_completed, loaded.retakeAllowed);
+  // These routes use user_assessments as the source of truth. In particular,
+  // an old completed profile must not bounce a missing assessment back to Dashboard.
+  const usesAssessmentApi = ["/dashboard", "/interview", "/recommended", "/assessment"].includes(location.pathname.toLowerCase());
+  const redirect = devBypass || usesAssessmentApi ? null : getProfileRedirect(location.pathname, loaded.profile.assessment_completed, loaded.retakeAllowed);
   if (redirect) return <Navigate to={redirect} replace />;
   const context: ProfileContext = {
     user: loaded.user,

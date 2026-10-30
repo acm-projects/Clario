@@ -49,11 +49,15 @@ test("recommendation ignores missing or unsupported difficulty without loading p
   }
 });
 
-test("history remains empty until the sessions API contract is integrated", async () => {
-  assert.deepEqual(await loadSessionSummary(), {
+test("an empty sessions API response produces empty history", async () => {
+  assert.deepEqual(await loadSessionSummary(async () => []), {
     completedThisWeek: 0,
     recent: [],
     completedSessionIds: [],
     completionDates: [],
   });
+});
+
+test("session loading failures remain visible", async () => {
+  await assert.rejects(loadSessionSummary(async () => { throw new Error("Sessions unavailable"); }), /Sessions unavailable/);
 });

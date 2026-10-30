@@ -4,48 +4,41 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import { supabase } from "../lib/supabase";
 import { getProfileUpdate, saveAssessment, type ProfileContext } from "../lib/profile";
-import { getQuestionPath, getPracticeLanguage, initialAnswers, isBeginnerPath, validateQuestion, type OnboardingAnswers, type LanguagesUsed, type PracticeLanguage, type QuestionId, topicOptions } from "../lib/practiceProfile";
+import { getPracticeLanguage, initialAnswers, isBeginnerPath, type OnboardingAnswers, type LanguagesUsed, type PracticeLanguage, topicOptions } from "../lib/practiceProfile";
+import { buildAssessmentPayload, getAssessmentPath, getAssessmentQuestion, initialRecommendationAnswers, validateAssessmentQuestion, type AssessmentQuestionId } from "../lib/assessmentQuestions";
+import { submitAssessment } from "../lib/assessmentApi";
 
 const stages = ["Experience", "Language", "Comfort", "Practice goal", "Interview prep"];
-const stageByQuestion: Record<QuestionId, number> = { leetcode: 0, coding: 0, used: 0, language: 1, languageComfort: 2, interviewConfidence: 2, weekly: 3, strugglingTopics: 4, targetCompany: 4, interviewDate: 4 };
+const stageByQuestion: Record<AssessmentQuestionId, number> = { leetcode: 0, coding: 0, used: 0, language: 1, languageComfort: 2, interviewConfidence: 2, weekly: 3, strugglingTopics: 4, targetCompany: 4, interviewDate: 4, experience: 4, confidentTopics: 4, timeline: 4 };
 const choiceStyle = "assessment-choice [transition:background_180ms_ease,_border-color_180ms_ease,_box-shadow_180ms_ease] [&:has(input:checked)]:[box-shadow:0_0_0_1px_#3b8fe840] [@media_(prefers-reduced-motion:_reduce)]:transition-none relative flex cursor-pointer items-center gap-4 rounded-xl border px-5 py-5 text-sm transition motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-4 has-[:focus-visible]:outline-[#182137]";
 const selectedStyle = "border-[#3054ed]/75 bg-[#e9edff] shadow-[0_0_0_1px_#3b8fe830]";
 const idleStyle = "border-[#182137]/10 bg-white/75 hover:border-[#3054ed]/40 hover:bg-white";
-
-function getQuestion(id: QuestionId, answers: OnboardingAnswers) {
-  const beginner = isBeginnerPath(answers);
-  switch (id) {
-    case "leetcode": return { label: "YOUR EXPERIENCE", title: "Have you used LeetCode before?", description: "We'll use this to choose a better starting point for your practice." };
-    case "coding": return { label: "YOUR EXPERIENCE", title: "Have you coded before?", description: "No LeetCode experience is totally fine. We just want to understand your coding background." };
-    case "used": return { label: "YOUR EXPERIENCE", title: answers.hasLeetCodeExperience ? "Which language have you used on LeetCode?" : "Which of these have you used?", description: answers.hasLeetCodeExperience ? "Python, Java, both, or a different language?" : "Tell us whether you've worked with Python, Java, both, or neither." };
-    case "language": return { label: "YOUR LANGUAGE", title: answers.hasLeetCodeExperience === true && answers.languagesUsed === "other" ? "Which language would you like to practice with?" : beginner ? "Which language would you like to start with?" : "Which language do you want to practice in?", description: beginner ? "Choose a language to begin with. No prior experience needed." : "Choose the language you want to use during your mock interviews." };
-    case "languageComfort": return { label: "YOUR COMFORT", title: `How comfortable are you with ${getPracticeLanguage(answers)}?`, description: "Choose what feels right today. We'll use this to set your starting point." };
-    case "interviewConfidence": return { label: "YOUR COMFORT", title: "How comfortable do you feel with technical interviews?", description: "Think about explaining your approach, coding out loud, and answering follow-up questions." };
-    case "strugglingTopics": return { label: "YOUR FOCUS", title: "What topics do you struggle with?", description: "Select any topics you want to practice. You can leave this blank if you're unsure." };
-    case "targetCompany": return { label: "YOUR GOAL", title: "What companies are you preparing for?", description: "Optional: enter a company or companies, separated by commas." };
-    case "interviewDate": return { label: "YOUR TIMELINE", title: "When is your next interview?", description: "Optional: choose a date if you have an interview scheduled." };
-    case "weekly": return { label: "YOUR PRACTICE GOAL", title: answers.hasCodingExperience === false && answers.hasLeetCodeExperience === false ? "How many mock interviews do you want to work toward each week?" : "How many mock interviews do you want to complete per week?", description: beginner ? "Start small. You can always increase your goal later." : "Choose a goal that feels realistic. You can change this later." };
-  }
-}
 
 export default function Assessment() {
   const navigate = useNavigate();
   const { user } = useOutletContext<ProfileContext>();
   const [answers, setAnswers] = useState<OnboardingAnswers>(initialAnswers);
-  const [questionId, setQuestionId] = useState<QuestionId>("leetcode");
+  const [questionId, setQuestionId] = useState<AssessmentQuestionId>("leetcode");
+  const [recommendationAnswers, setRecommendationAnswers] = useState(initialRecommendationAnswers);
   const [comfortByLanguage, setComfortByLanguage] = useState<Record<PracticeLanguage, number>>({ Python: 5, Java: 5 });
   const [confidence, setConfidence] = useState(5);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const headingRef = useRef<HTMLHeadingElement>(null);
   const savingRef = useRef(false);
-  const path = getQuestionPath(answers);
+  const path = getAssessmentPath(answers);
   const index = path.indexOf(questionId);
   const stage = stageByQuestion[questionId];
-  const question = getQuestion(questionId, answers);
+  const question = getAssessmentQuestion(questionId, answers);
   const language = getPracticeLanguage(answers);
   const isLast = index === path.length - 1;
   const beginner = isBeginnerPath(answers);
+  const displayedAnswers = {
+    ...answers,
+    languageComfort: questionId === "languageComfort" && language ? comfortByLanguage[language] : answers.languageComfort,
+    interviewConfidence: questionId === "interviewConfidence" ? confidence : answers.interviewConfidence,
+  };
+  const incomplete = (isLast ? path : [questionId]).some(id => Boolean(validateAssessmentQuestion(id, displayedAnswers, recommendationAnswers)));
 
   useEffect(() => { headingRef.current?.focus(); }, [questionId]);
 
@@ -57,28 +50,25 @@ export default function Assessment() {
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (savingRef.current) return;
-    const currentAnswers = {
-      ...answers,
-      languageComfort: questionId === "languageComfort" && language ? comfortByLanguage[language] : answers.languageComfort,
-      interviewConfidence: questionId === "interviewConfidence" ? confidence : answers.interviewConfidence,
-    };
-    const validation = validateQuestion(questionId, currentAnswers);
+    const currentAnswers = displayedAnswers;
+    const validation = validateAssessmentQuestion(questionId, currentAnswers, recommendationAnswers);
     if (validation) { setError(validation); return; }
     setAnswers(currentAnswers);
     setError("");
-    const currentPath = getQuestionPath(currentAnswers);
+    const currentPath = getAssessmentPath(currentAnswers);
     const next = currentPath[currentPath.indexOf(questionId) + 1];
     if (next) { setQuestionId(next); return; }
     savingRef.current = true;
     setSaving(true);
     try {
+      await submitAssessment(buildAssessmentPayload(currentAnswers, recommendationAnswers));
       if (import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true") {
-        // Test answers stay in this browser tab rather than updating the real account.
+        // Preserve the local profile preview; the backend assessment is saved above.
         sessionStorage.setItem(`clario:dev-profile:${user.id}`, JSON.stringify(getProfileUpdate(currentAnswers)));
       } else {
         await saveAssessment(supabase, currentAnswers, user.id);
       }
-      navigate("/dashboard");
+      navigate("/interview");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong while saving. Please try again.");
     } finally {
@@ -102,11 +92,14 @@ export default function Assessment() {
             {questionId === "language" && <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">{(["Python", "Java"] as const).map((value) => <Choice key={value} name="practice-language" selected={answers.selectedLanguage === value} label={value} recommended={beginner && value === "Python"} description={beginner ? value === "Python" ? "Beginner-friendly syntax and great for learning technical interview patterns." : "More structured and commonly used in technical courses and interviews." : undefined} onSelect={() => update({ selectedLanguage: value })} />)}</div>}
             {questionId === "languageComfort" && language && <ComfortSlider value={comfortByLanguage[language]} onChange={(value) => { setComfortByLanguage((current) => ({ ...current, [language]: value })); setError(""); }} name="language-comfort" left="Just getting started" right="Very confident" />}
             {questionId === "interviewConfidence" && <ComfortSlider value={confidence} onChange={setConfidence} name="interview-confidence" left="Completely new to this" right="Ready to try one" />}
+            {questionId === "experience" && <div className="mt-10 grid gap-4 sm:grid-cols-3">{(["beginner", "intermediate", "advanced"] as const).map(value => <Choice key={value} name="experience" selected={recommendationAnswers.experience === value} label={value.charAt(0).toUpperCase() + value.slice(1)} onSelect={() => { setRecommendationAnswers(current => ({ ...current, experience: value })); setError(""); }} />)}</div>}
+            {questionId === "timeline" && <div className="mt-10 grid gap-4 sm:grid-cols-3">{([{ value: "this_month", label: "This month" }, { value: "one_to_three_months", label: "In 1–3 months" }, { value: "later", label: "Later" }] as const).map(({ value, label }) => <Choice key={value} name="timeline" selected={recommendationAnswers.timeline === value} label={label} onSelect={() => { setRecommendationAnswers(current => ({ ...current, timeline: value })); setError(""); }} />)}</div>}
+            {questionId === "confidentTopics" && <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">{topicOptions.map(topic => <label key={topic} className={`${choiceStyle} ${recommendationAnswers.confidentTopics.includes(topic) ? selectedStyle : idleStyle}`}><input type="checkbox" checked={recommendationAnswers.confidentTopics.includes(topic)} onChange={event => setRecommendationAnswers(current => ({ ...current, confidentTopics: event.target.checked ? [...current.confidentTopics, topic] : current.confidentTopics.filter(value => value !== topic) }))} className="accent-[#3054ed]" /><span>{topic}</span></label>)}</div>}
             {questionId === "strugglingTopics" && <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">{topicOptions.map(topic => <label key={topic} className={`${choiceStyle} ${answers.strugglingTopics.includes(topic) ? selectedStyle : idleStyle}`}><input type="checkbox" checked={answers.strugglingTopics.includes(topic)} onChange={event => update({ strugglingTopics: event.target.checked ? [...answers.strugglingTopics, topic] : answers.strugglingTopics.filter(value => value !== topic) })} className="accent-[#3054ed]" /><span>{topic}</span></label>)}</div>}
             {questionId === "targetCompany" && <div className="mt-10"><label htmlFor="target-company" className="mb-3 block text-sm">Companies (optional)</label><input id="target-company" type="text" value={answers.targetCompany} onChange={event => update({ targetCompany: event.target.value })} placeholder="e.g. Google, Microsoft" className="min-h-12 w-full rounded-xl border border-[#182137]/20 bg-white px-4 text-sm" /></div>}
             {questionId === "interviewDate" && <div className="mt-10"><label htmlFor="interview-date" className="mb-3 block text-sm">Interview date (optional)</label><input id="interview-date" type="date" value={answers.interviewDate} onChange={event => update({ interviewDate: event.target.value })} className="min-h-12 w-full rounded-xl border border-[#182137]/20 bg-white px-4 text-sm sm:max-w-xs" /></div>}
             {questionId === "weekly" && <div className="mt-10 grid grid-cols-3 gap-4 sm:grid-cols-5">{[1, 2, 3, 4, 5].map((value) => <Choice key={value} name="weekly-goal" selected={answers.weeklyInterviewGoal === value} label={value === 5 ? "5+" : String(value)} onSelect={() => update({ weeklyInterviewGoal: value })} />)}</div>}
-          </fieldset>{error && <p role="alert" className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<div className="mt-14 flex flex-wrap items-center gap-4"><button type="submit" disabled={saving} className="inline-flex min-h-12 items-center gap-6 rounded-lg bg-[#3054ed] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2543ca] disabled:opacity-60 motion-reduce:transition-none">{saving ? "Saving..." : isLast ? "Finish & open dashboard" : "Continue"}<span aria-hidden="true">&#8594;</span></button>{index > 0 && <button type="button" disabled={saving} onClick={() => { setError(""); setQuestionId(path[index - 1]); }} className="px-4 py-3 text-sm text-[#687087] hover:text-[#182137] disabled:opacity-60">Back</button>}</div></form>
+          </fieldset>{error && <p role="alert" className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<div className="mt-14 flex flex-wrap items-center gap-4"><button type="submit" disabled={saving || incomplete} className="inline-flex min-h-12 items-center gap-6 rounded-lg bg-[#3054ed] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2543ca] disabled:opacity-60 motion-reduce:transition-none">{saving ? "Saving..." : isLast ? "Finish & choose an interview" : "Continue"}<span aria-hidden="true">&#8594;</span></button>{index > 0 && <button type="button" disabled={saving} onClick={() => { setError(""); setQuestionId(path[index - 1]); }} className="px-4 py-3 text-sm text-[#687087] hover:text-[#182137] disabled:opacity-60">Back</button>}</div></form>
         </section>
       </div>
     </main>

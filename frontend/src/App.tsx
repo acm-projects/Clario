@@ -15,6 +15,8 @@ import ProblemLibrary from "./pages/ProblemLibrary";
 import Feedback from "./pages/Feedback";
 import InterviewReport from "./pages/InterviewReport";
 import ProfileGate from "./components/auth/ProfileGate";
+import Recommended from "./pages/Recommended";
+import AssessmentGate from "./components/auth/AssessmentGate";
 
 function App() {
   const appearance = useAppearance();
@@ -31,8 +33,11 @@ function App() {
       <Route path="/report/:sessionId" element={<InterviewReport />} />
       <Route element={<ProfileGate />}>
         <Route path="/assessment" element={<Assessment />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/interview" element={<InterviewSelection />} />
+        <Route path="/recommended" element={<Recommended />} />
+        <Route element={<AssessmentGate />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/interview" element={<InterviewSelection />} />
+        </Route>
         <Route path="/interview/:problemId" element={<InterviewRoom />} />
         <Route path="/repo-debugging" element={<RepoDebugging />} />
         <Route path="/interview/repo" element={<RepoDebugging />} />

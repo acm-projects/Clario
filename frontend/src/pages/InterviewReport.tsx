@@ -18,9 +18,11 @@ export default function InterviewReport({ preview = false }: { preview?: boolean
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     let active = true;
-    setReport(null); setSample(null); setError(null);
-    setPhase(preview ? "Asking Gemini to review the sample interview..." : "Loading your interview...");
     async function load() {
+      await Promise.resolve();
+      if (!active) return;
+      setReport(null); setSample(null); setError(null);
+      setPhase(preview ? "Asking Gemini to review the sample interview..." : "Loading your interview...");
       try {
         if (preview) {
           if (!(import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true")) throw new Error("The sample report is available only in local development.");
