@@ -21,7 +21,7 @@ const items: { to: string; label: string; icon: IconName }[] = [
  { to: "/dashboard", label: "Dashboard", icon: "dashboard" },
  { to: "/interview", label: "Interview", icon: "interview" },
  { to: "/problems", label: "Problem library", icon: "library" },
- { to: "/report", label: "Progress", icon: "progress" },
+ { to: "/progress", label: "Progress", icon: "progress" },
 ];
 export function Sidebar({ tourActive = false }: { onStartTour?: (trigger: HTMLButtonElement) => void; tourActive?: boolean }) {
  const context = useOutletContext<ProfileContext | undefined>();

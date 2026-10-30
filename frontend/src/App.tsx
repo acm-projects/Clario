@@ -1,4 +1,5 @@
 import RepoDebugging from "./pages/RepoDebugging";
+import Progress from "./pages/Progress";
 import SystemDesign from "./pages/SystemDesign";
 import { useAppearance } from "./lib/appearance";
 import { brandTheme } from "./lib/theme";
@@ -30,6 +31,7 @@ function App() {
       <Route path="/report/preview" element={<InterviewReport preview />} />
       <Route path="/report/:sessionId" element={<InterviewReport />} />
       <Route element={<ProfileGate />}>
+        <Route path="/progress" element={<Progress />} />
         <Route path="/assessment" element={<Assessment />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/interview" element={<InterviewSelection />} />
