@@ -9,9 +9,15 @@ from services import repo_challenge_service as service
 router = APIRouter(prefix="/api/repo-challenges", tags=["repo-debugging"])
 
 
+class TranscriptTurn(BaseModel):
+    source: str = Field(max_length=30)
+    message: str = Field(max_length=4000)
+
+
 class RepositoryInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     files: dict[str, str] = Field(min_length=1, max_length=20)
+    transcript: list[TranscriptTurn] = Field(default_factory=list, max_length=400)
 
 
 @router.get("")
@@ -46,8 +52,8 @@ async def run_challenge(challenge_id: str, body: RepositoryInput, user: dict = D
 @router.post("/{challenge_id}/submit")
 async def submit_challenge(challenge_id: str, body: RepositoryInput, user: dict = Depends(get_current_user)):
     evaluation = await run(challenge_id, body.files)
-    # A service outage is not a completed evaluation or a successful submission.
-    if evaluation["error"]:
-        return {**evaluation, "submission": {"saved": False, "submission_id": None, "message": "Resolve the execution error and submit again."}}
-    submission = await run_in_threadpool(service.save_submission, user["sub"], challenge_id, body.files, evaluation)
+    # Candidate failures still finish an interview. Infrastructure outages raise
+    # from run() before we save anything.
+    stored_evaluation = {**evaluation, "transcript": [turn.model_dump() for turn in body.transcript]}
+    submission = await run_in_threadpool(service.save_submission, user["sub"], challenge_id, body.files, stored_evaluation)
     return {**evaluation, "submission": submission}

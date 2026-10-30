@@ -1,6 +1,6 @@
 import ProblemLoading from "../ui/ProblemLoading";
 import { useAppearance } from "../../lib/appearance";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
@@ -11,7 +11,7 @@ import { ResizableSplit } from "./ResizableSplit";
 import { session } from "./data";
 import { type Problem, type TestsResponse } from "../../types";
 import { modeLabels, parseInterviewMode, type InterviewMode } from "../../lib/interviewModes";
-import { ApiError, getProblem, runTests, getSession, saveSnapshot, endSession } from "../../lib/api";
+import { ApiError, getProblem, runTests, getSession, saveSnapshot, endSession, createModeSession } from "../../lib/api";
 
 function InterviewPage() {
   const navigate = useNavigate();
@@ -19,6 +19,8 @@ function InterviewPage() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session");
   const [ending, setEnding] = useState(false);
+  const endingRef = useRef(false);
+  const createdSession = useRef<string | null>(null);
   const requestedMode = parseInterviewMode(searchParams.get("mode")) ?? "custom";
   const [activeMode, setActiveMode] = useState<InterviewMode>(requestedMode);
   const isMock = activeMode === "surprise_me" || activeMode === "company";
@@ -81,19 +83,27 @@ function InterviewPage() {
   }, [problemId, sessionId, requestedMode, navigate]);
 
   const handleEndInterview = async () => {
-    if (ending) return;
+    if (endingRef.current || !problem) return;
+    endingRef.current = true;
     setEnding(true);
     setRunError(null);
     try {
-      if (sessionId) {
-        await saveSnapshot(sessionId, code);
-        await endSession(sessionId);
+      let reportSessionId = sessionId ?? createdSession.current;
+      if (!reportSessionId) {
+        const saved = await createModeSession({ mode: "custom", problemSlug: problem.slug, language });
+        reportSessionId = saved.id;
+        createdSession.current = saved.id;
       }
-      navigate(sessionId ? "/report/" + encodeURIComponent(sessionId) : "/dashboard");
+      await saveSnapshot(reportSessionId, code);
+      await endSession(reportSessionId);
+      navigate("/report/" + encodeURIComponent(reportSessionId));
     } catch (error) {
       setRunError(error instanceof Error ? error.message : "Could not save your interview. Please try again.");
+      setExecutionTab("results");
+      setResultsSplitSize(45);
     } finally {
       setEnding(false);
+      endingRef.current = false;
     }
   };
 

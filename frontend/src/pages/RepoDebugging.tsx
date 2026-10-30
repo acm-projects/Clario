@@ -56,6 +56,7 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
   const [retry, setRetry] = useState(0);
   const [busy, setBusy] = useState<"run" | "submit" | null>(null);
   const busyRef = useRef(false);
+  const transcript = useRef<{ source: string; message: string }[]>([]);
   const [result, setResult] = useState<RepoEvaluation | null>(null);
   const [evaluatedSource, setEvaluatedSource] = useState<string | null>(null);
   const [executionError, setExecutionError] = useState<string | null>(null);
@@ -123,7 +124,13 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
     busyRef.current = true; setBusy(submit ? "submit" : "run"); setExecutionError(null); setResult(null); setResultsOpen(true);
     const snapshot = source;
     const files = Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]]));
-    try { const evaluation = await runRepoChallenge(id, files, submit); setResult(evaluation); setEvaluatedSource(snapshot); }
+    try {
+      const evaluation = await runRepoChallenge(id, files, submit, transcript.current);
+      setResult(evaluation); setEvaluatedSource(snapshot);
+      if (submit && evaluation.submission?.saved && evaluation.submission.submission_id) {
+        navigate(`/report/${encodeURIComponent(evaluation.submission.submission_id)}`);
+      }
+    }
     catch (error) { setExecutionError(error instanceof Error ? error.message : "Execution failed. Please try again."); }
     finally { busyRef.current = false; setBusy(null); }
   }
@@ -168,7 +175,7 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
         </section>
       </div>
     </div>
-    <aside aria-label="Interview call" className="theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel round="Repository debugging" interviewer="Clario" problemSlug={id} repoChallengeId={id} speaking={false} onEndInterview={() => navigate("/repo-debugging")} /></aside>
+    <aside aria-label="Interview call" className="theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel round="Repository debugging" interviewer="Clario" problemSlug={id} repoChallengeId={id} speaking={false} onTranscript={(source, message) => { transcript.current = [...transcript.current.slice(-399), { source, message: message.slice(0, 4000) }]; }} onEndInterview={() => void execute(true)} /></aside>
     </div>
     <dialog ref={resetDialog} className={`fixed inset-0 m-auto w-[calc(100%-32px)] max-w-[420px] rounded-2xl border border-[var(--repo-line)] bg-[var(--repo-panel)] p-6 text-inherit shadow-2xl backdrop:bg-[#0a1120]/65 ${theme === "dark" ? "[color-scheme:dark]" : ""}`} aria-labelledby="repo-reset-title"><h2 id="repo-reset-title" className="text-xl font-semibold">Reset this repository?</h2><p className="mt-3 text-sm leading-7 text-[var(--repo-muted)]">This replaces all edits with the original starter files. Download a draft first if you want to keep your changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => resetDialog.current?.close()} className="min-h-11 px-4 text-sm">Keep editing</button><button type="button" disabled={Boolean(busy)} onClick={reset} className="min-h-11 rounded-xl bg-[#3054ed] px-4 text-sm text-white">Reset files</button></div></dialog>
   </div>;

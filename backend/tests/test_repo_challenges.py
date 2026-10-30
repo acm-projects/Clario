@@ -186,13 +186,17 @@ def test_persistence_failure_is_explicit(monkeypatch):
 def test_persistence_success_requires_returned_row(monkeypatch):
     import db
     database = Mock()
-    database.table.return_value.insert.return_value.execute.return_value.data = [{"id": "saved-row"}]
+    query = database.table.return_value
+    query.update.return_value = query
+    query.eq.return_value = query
+    query.execute.return_value.data = [{"id": "saved-row"}]
     monkeypatch.setattr(db, "supabase", database)
     result = service.save_submission("owner", CART, starter(CART), {"passed": 2})
-    assert result["saved"] is True and result["submission_id"] == "saved-row"
-    row = database.table.return_value.insert.call_args.args[0]
-    assert row["user_id"] == "owner" and row["files"] == starter(CART)
-    database.table.return_value.insert.return_value.execute.return_value.data = []
+    assert result["saved"] is True and result["submission_id"]
+    row = query.insert.call_args_list[0].args[0]
+    assert row["user_id"] == "owner" and row["problem_slug"] == "repo-debugging:" + CART
+    assert "repo_debug_submissions" not in [call.args[0] for call in database.table.call_args_list]
+    query.execute.return_value.data = []
     assert service.save_submission("owner", CART, starter(CART), {})["saved"] is False
 
 

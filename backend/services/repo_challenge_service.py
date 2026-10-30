@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 import logging
 import re
+from datetime import datetime, timezone
+from uuid import uuid4
 from pathlib import Path
 
 from config import settings
@@ -130,16 +132,34 @@ async def evaluate(identifier: str, submitted: dict[str, str]) -> dict:
 
 
 def save_submission(user_id: str, identifier: str, files: dict, evaluation: dict) -> dict:
-    """Optional additive storage: evaluation remains usable before migration is installed."""
+    """Save a repository interview in the existing session/report infrastructure."""
+    session_id = str(uuid4())
     try:
         from db import supabase
-        result = supabase.table("repo_debug_submissions").insert({
-            "user_id": user_id, "challenge_id": identifier, "mode": "repo_debugging",
-            "files": files, "evaluation": evaluation, "status": "submitted",
+        challenge = detail(identifier)
+        language = "python3" if challenge["language"] == "python" else challenge["language"]
+        supabase.table("interview_sessions").insert({
+            "id": session_id, "user_id": user_id, "problem_slug": "repo-debugging:" + identifier,
+            "mode": "practice", "language": language, "status": "in_progress",
         }).execute()
-        if not result.data or not result.data[0].get("id"):
-            raise RuntimeError("No saved row returned")
-        return {"saved": True, "submission_id": result.data[0]["id"], "message": "Submission saved to your account."}
+        supabase.table("code_snapshots").insert({"session_id": session_id, "language": language,
+            "code": "\n\n".join(f"File: {path}\n{content}" for path, content in files.items())}).execute()
+        turns = evaluation.get("transcript") or []
+        if turns:
+            supabase.table("transcript_events").insert([{"session_id": session_id, "speaker": turn["source"], "text": turn["message"], "sequence_number": index} for index, turn in enumerate(turns)]).execute()
+        supabase.table("session_events").insert({"session_id": session_id, "event_type": "step_completed", "metadata": {
+            "step": "evaluate", "source": "manual", "repository_evaluation": {key: value for key, value in evaluation.items() if key != "transcript"},
+        }}).execute()
+        # Only publish a completed interview after all report evidence is saved.
+        result = supabase.table("interview_sessions").update({"status": "completed", "ended_at": datetime.now(timezone.utc).isoformat()}).eq("id", session_id).eq("user_id", user_id).execute()
+        if not result.data:
+            raise RuntimeError("No completed session returned")
+        return {"saved": True, "submission_id": session_id, "message": "Interview saved. Preparing your feedback report."}
     except Exception:
         logger.warning("Repository submission storage unavailable")
+        # Do not leave a partially saved interview or its evidence behind.
+        try:
+            supabase.table("interview_sessions").delete().eq("id", session_id).eq("user_id", user_id).execute()
+        except Exception:
+            logger.warning("Could not remove incomplete repository session")
         return {"saved": False, "submission_id": None, "message": "Evaluated, but account storage is unavailable. Your files remain in this browser; download a copy before leaving."}

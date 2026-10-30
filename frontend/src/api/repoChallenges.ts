@@ -15,8 +15,8 @@ export interface RepoEvaluation {
 const base = "/api/repo-challenges";
 export function listRepoChallenges(signal?: AbortSignal) { return request<RepoChallengeSummary[]>(base, { signal }); }
 export function getRepoChallenge(id: string, signal?: AbortSignal) { return request<RepoChallenge>(`${base}/${encodeURIComponent(id)}`, { signal }); }
-export function runRepoChallenge(id: string, files: Record<string, string>, submit: boolean) {
+export function runRepoChallenge(id: string, files: Record<string, string>, submit: boolean, transcript: { source: string; message: string }[] = []) {
   return request<RepoEvaluation>(`${base}/${encodeURIComponent(id)}/${submit ? "submit" : "run"}`, {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ files }),
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ files, ...(submit ? { transcript: transcript.slice(-400) } : {}) }),
   }, true);
 }

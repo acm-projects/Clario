@@ -23,6 +23,14 @@ def get_saved_report(session_id: str) -> dict | None:
 
 
 def get_stored_problem(session: dict) -> dict | None:
+    if (session.get("problem_slug") or "").startswith("repo-debugging:"):
+        from services.repo_challenge_service import detail
+        try:
+            challenge = detail(session["problem_slug"].split(":", 1)[1])
+        except KeyError:
+            return None
+        return {"slug": session["problem_slug"], "title": challenge["title"], "difficulty": challenge["difficulty"],
+                "description": "\n\n".join([challenge["description"], challenge["objective"], challenge["expectedBehavior"]])}
     query = supabase.table("problems").select("id, slug, title, difficulty, description_html")
     if session.get("problem_slug"):
         query = query.eq("slug", session["problem_slug"])
@@ -55,7 +63,7 @@ def list_feedback(user: dict = Depends(get_current_user)):
         problems += supabase.table("problems").select(columns).in_("id", problem_ids).execute().data
     by_slug = {problem["slug"]: problem for problem in problems}
     by_id = {problem["id"]: problem for problem in problems}
-    return [{"session": session, "problem": by_slug.get(session.get("problem_slug")) or by_id.get(session.get("problem_id")), "feedback": by_session.get(session["id"])} for session in sessions]
+    return [{"session": session, "problem": get_stored_problem(session) if (session.get("problem_slug") or "").startswith("repo-debugging:") else by_slug.get(session.get("problem_slug")) or by_id.get(session.get("problem_id")), "feedback": by_session.get(session["id"])} for session in sessions]
 
 
 @router.post("/preview/two-sum")
