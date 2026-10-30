@@ -9,6 +9,9 @@ interface VideoCallPanelProps {
   interviewer: string;
   problemSlug: string;
   repoChallengeId?: string;
+  systemDesignSlug?: string;
+  onVoiceStarted?: () => void;
+  onTranscript?: (source: string, message: string) => void;
   speaking?: boolean;
   onEndInterview: () => void;
 }
@@ -62,7 +65,7 @@ function voiceStartupError(error: unknown): string {
   return error instanceof Error ? error.message : "Could not start the interview.";
 }
 
-export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeId, speaking = true, onEndInterview }: VideoCallPanelProps) {
+export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeId, systemDesignSlug, onVoiceStarted, onTranscript, speaking = true, onEndInterview }: VideoCallPanelProps) {
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
@@ -86,10 +89,11 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
       const microphonePermission = await navigator.mediaDevices.getUserMedia({ audio: true });
       microphonePermission.getTracks().forEach((track) => track.stop());
 
-      const session = await getVoiceSession(problemSlug, repoChallengeId);
+      const session = await getVoiceSession(problemSlug, repoChallengeId, systemDesignSlug);
       conversationRef.current = await Conversation.startSession({
         signedUrl: session.signed_url,
         dynamicVariables: session.variables,
+        onMessage: ({ source, message }) => onTranscript?.(source, message),
         onModeChange: ({ mode }) => setIsSpeaking(mode === "speaking"),
         onDisconnect: () => {
           conversationRef.current = null;
@@ -102,11 +106,12 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
         },
       });
       setVoiceStatus("active");
+      onVoiceStarted?.();
     } catch (error) {
       setVoiceError(voiceStartupError(error));
       setVoiceStatus("error");
     }
-  }, [problemSlug, repoChallengeId, voiceStatus]);
+  }, [problemSlug, repoChallengeId, systemDesignSlug, voiceStatus, onVoiceStarted, onTranscript]);
 
   const endVoiceSession = useCallback(() => {
     const conversation = conversationRef.current;

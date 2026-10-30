@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from "react";
 
 export type Appearance = "light" | "dark";
-const key = "clario-theme";
+// Only explicit choices in Settings persist. Ignore the legacy shared interview toggle.
+const key = "clario-settings-appearance";
 let fallback: Appearance = "light";
 
 function read(): Appearance {

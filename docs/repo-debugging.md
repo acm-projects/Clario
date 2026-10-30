@@ -1,9 +1,38 @@
 # Repository debugging MVP
 
-Open **Interview → Repo Debugging**, or `/repo-debugging`. Choose a challenge,
-inspect the brief and repository, edit files, run tests, and submit for a fresh
-evaluation. This is an isolated Python exercise workspace, not a terminal or
-general-purpose cloud IDE.
+## October 27 challenge catalog
+
+The catalog now includes the replacement **The Cart That Charges the Wrong Amount**,
+plus **The Pagination Bug**, **The Oversold Event**, **The Broken TTL + LRU Cache**,
+**The Lossy Job Worker**, and **The Wrong Revenue Report**. The existing Login
+Authentication challenge is retained. These are synthetic practice scenarios,
+not actual company interview questions.
+
+Challenges live in backend folders, not Supabase. Each manifest lists editable
+sources, read-only instructions/tests, the runtime, and evaluator checks. The cart
+retains `shopping-cart-01`; changed starters invalidate older browser drafts.
+
+The cart contract specifies percentage coupons (sorted by code) before fixed-dollar
+coupons, coupon deduplication, half-up monetary rounding, per-order tax, and free
+shipping at a post-discount subtotal of at least $50. Reservation tests use SQLite
+transactions and parallel clients. The webhook exercise runs in JavaScript/Node;
+all other exercises run in Python. Piston must have both runtimes installed.
+`PISTON_JAVASCRIPT_VERSION` defaults to `*`, like the Python runtime setting.
+
+`backend/tests/fixtures/repo_solutions.json` contains trusted repaired fixtures for
+regression verification. They are not exposed by challenge endpoints. The builder
+`python -m scripts.build_debugging_challenges` regenerates these six exercises and
+the test fixtures; running it overwrites their checked-in files.
+
+Verification executes only trusted starter/repaired fixtures locally. Submitted
+candidate code still runs exclusively in Piston. Run the tests from backend:
+
+```powershell
+..\.venv\Scripts\python.exe -m pytest tests/test_debugging_catalog.py tests/test_repo_challenges.py -q
+```
+
+Open **Interview → Repo Debugging**, or `/interview/repo`. Select a challenge to
+open `/interview/repo/:slug`. Legacy `/repo-debugging` links still work.
 
 ## Architecture and data flow
 
@@ -32,7 +61,7 @@ The new path is:
 5. The existing Piston service accepts a multi-file payload. Its first file is
    Clario's trusted runner, followed by private tests and repository sources.
    Only Piston executes candidate code; FastAPI never imports or executes it.
-6. The runner executes standard-library `unittest` checks. The backend validates
+6. The runner executes standard-library `unittest` checks for Python or async assertion checks for JavaScript. The backend validates
    result names, count, and boolean statuses and returns pass/fail rows. Raw
    output and private-test tracebacks are withheld.
 7. Submit reruns the checks and attempts account persistence through
@@ -148,7 +177,8 @@ node tests/repo-debugging.browser.cjs
 
 Manual end-to-end check: choose Shopping Cart, inspect `main.py`, `cart.py`, and
 `discounts.py`; run the starter (2/7 passing), repair the percent-unit mismatch,
-then run again (7/7). Submit and inspect both the evaluation and the independent
+repair the item slice and inclusive discount boundary as well, then run again
+(7/7). Submit and inspect both the evaluation and the independent
 storage message. For Login, starter code passes 2/8; fix input normalization,
 exact password matching, and active-user checks across both public functions.
 

@@ -28,6 +28,7 @@ class Settings:
         "LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com"
     )
     piston_python_version: str = _optional("PISTON_PYTHON_VERSION", "*")
+    piston_javascript_version: str = _optional("PISTON_JAVASCRIPT_VERSION", "*")
     piston_java_version: str = _optional("PISTON_JAVA_VERSION", "*")
     elevenlabs_api_key: str = _optional("ELEVENLABS_API_KEY")
     elevenlabs_agent_id: str = _optional("ELEVENLABS_AGENT_ID")

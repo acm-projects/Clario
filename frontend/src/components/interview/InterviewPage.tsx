@@ -1,6 +1,6 @@
 import "./sandbox-skin.css";
 import ProblemLoading from "../ui/ProblemLoading";
-import { useAppearance, setAppearance } from "../../lib/appearance";
+import { useAppearance } from "../../lib/appearance";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
@@ -35,7 +35,6 @@ function InterviewPage() {
   const [executionTab, setExecutionTab] = useState<ExecutionTab>("testcases");
   const [resultsSplitSize, setResultsSplitSize] = useState<number | undefined>(undefined);
   const theme = useAppearance();
-  const setTheme = setAppearance;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -157,9 +156,7 @@ function InterviewPage() {
         timer="00:00"
         startedAt={clock.start}
         endedAt={clock.end}
-        theme={theme}
         modeLabel={modeLabels[activeMode]}
-        onThemeChange={setTheme}
         onRun={runCode}
         onSubmit={() => void handleEndInterview()}
         running={running || ending}

@@ -1,0 +1,37 @@
+{
+  "id": "seat-reservations-01",
+  "title": "The Oversold Event",
+  "difficulty": "Hard",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Concurrent seat holds oversell events, mobile retries duplicate bookings, and expiry workers release inventory twice.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Use the provided SQLite Database. reserve_seats returns a reservation dict; exactly the available number of concurrent requests may succeed, with SoldOut otherwise. Hold expiry is now+600 seconds. Positive integer quantities and nonempty keys are required. Replaying a key with identical event/user/qty returns the same reservation; conflicting reuse raises ValueError. Inventory decrement and reservation insertion must be one database transaction with rollback on failure. expire_holds releases held reservations at expires_at <= now exactly once, even with concurrent workers. Do not replace database transactions with process-local locks.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "reservations.py",
+    "expire_holds.py"
+  ],
+  "readOnlyFiles": [
+    "database.py",
+    "README.md",
+    "test_reservations.py"
+  ],
+  "entrypoint": "reservations.py",
+  "testFile": "test_reservations.py",
+  "testNames": [
+    "test_concurrent_capacity",
+    "test_concurrent_retry",
+    "test_expiry_once",
+    "test_invalid_and_conflicting_requests",
+    "test_live_hold",
+    "test_retry_idempotency",
+    "test_transaction_rollback"
+  ],
+  "bugs": []
+}

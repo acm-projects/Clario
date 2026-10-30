@@ -23,7 +23,9 @@ def starter(identifier):
 def fixed(identifier):
     files = starter(identifier)
     if identifier == CART:
-        files["cart.py"] = files["cart.py"].replace("discount_rate = discount_percent / 100", "discount_rate = discount_percent")
+        from pathlib import Path
+        solutions = json.loads((Path(__file__).parent / "fixtures" / "repo_solutions.json").read_text())
+        files.update(solutions[CART])
     else:
         files["main.py"] = "from auth import authenticate\ndef login(username, password):\n    return authenticate(username, password)\n"
         files["auth.py"] = """from users import USERS
@@ -34,6 +36,38 @@ def authenticate(username, password):
     return bool(user and user['active'] and user['password'] == password)
 """
     return files
+
+
+@pytest.mark.parametrize("identifier,initial_passes", [(LOGIN, 2)])
+def test_trusted_exercise_fixtures_broken_and_repaired(identifier, initial_passes, tmp_path):
+    """Execute only checked-in exercise fixtures, never candidate submissions."""
+    import subprocess
+    import sys
+
+    folder, manifest = service.load(identifier)
+    public = service.detail(identifier)
+    assert 3 <= len(public["files"]) <= 6
+    assert sum(len(file["content"].splitlines()) for file in public["files"]) < 300
+    assert 3 <= len(manifest["bugs"]) <= 4
+    assert (folder / "starter" / manifest["testFile"]).read_text() == (folder / "tests" / manifest["testFile"]).read_text()
+    for bug in manifest["bugs"]:
+        source = (folder / "starter" / bug["file"]).read_text().splitlines()
+        assert 1 <= bug["line"] <= len(source)
+
+    for repaired in (False, True):
+        files = {file["path"]: file["content"] for file in public["files"]}
+        if repaired:
+            files.update(fixed(identifier))
+        files[service.TEST_NAME] = (folder / "tests" / manifest["testFile"]).read_text()
+        files[service.RUNNER_NAME] = (service.CHALLENGES / "runner.py").read_text()
+        for name, content in files.items():
+            (tmp_path / name).write_text(content, encoding="utf-8")
+        run = subprocess.run([sys.executable, service.RUNNER_NAME], cwd=tmp_path,
+                             capture_output=True, text=True, timeout=10)
+        assert run.returncode == 0, run.stderr
+        rows = json.loads(run.stdout.split(service.MARKER)[1])
+        assert len(rows) == len(manifest["testNames"])
+        assert sum(row["passed"] for row in rows) == (len(rows) if repaired else initial_passes)
 
 
 @pytest.fixture
@@ -47,14 +81,17 @@ def client():
 def test_catalog_and_private_files(client):
     response = client.get("/api/repo-challenges")
     assert response.status_code == 200
-    assert {row["id"] for row in response.json()} == {CART, LOGIN}
-    for identifier in (CART, LOGIN):
+    assert {row["id"] for row in response.json()} == {CART, LOGIN, "transaction-pagination-01", "seat-reservations-01", "ttl-lru-cache-01", "webhook-worker-01", "daily-revenue-01"}
+    for identifier in {row["id"] for row in response.json()}:
         response = client.get(f"/api/repo-challenges/{identifier}")
         assert response.status_code == 200
         data = response.json()
         assert data["entrypoint"] in {file["path"] for file in data["files"]}
         assert "testNames" not in data and "testFile" not in data
-        assert all("test_" not in file["path"] for file in data["files"])
+        assert any(file["path"].startswith("test_") and file["readOnly"] for file in data["files"])
+        assert "bugs" not in data
+        for bug in service.load(identifier)[1]["bugs"]:
+            assert bug["description"] not in response.text and bug["hint"] not in response.text
         assert all(not file["path"].startswith(("/", "C:")) for file in data["files"])
         assert any(file["readOnly"] for file in data["files"])
 
@@ -180,7 +217,9 @@ def test_repository_voice_context_uses_existing_agent_without_private_tests(clie
     assert data["signed_url"] == "https://example.test/signed"
     context = data["variables"]["problem_description"]
     assert "repository debugging interview" in context and "cart.py" in context
-    assert "test_cart.py" not in context and "test_percentage_discount" not in context
+    assert "test_cart.py" in context
+    for bug in service.load(CART)[1]["bugs"]:
+        assert bug["description"] not in response.text and bug["hint"] not in response.text
     elevenlabs.conversational_ai.conversations.get_signed_url.assert_called_once_with(agent_id="test-agent")
     assert client.get("/voice/repo-session?challenge_id=missing").status_code == 404
 
@@ -211,5 +250,5 @@ def test_real_submission_endpoint_evaluates_fixed_files(client, monkeypatch):
     response = client.post(f"/api/repo-challenges/{CART}/submit", json={"files": fixed(CART)})
     assert response.status_code == 200
     result = response.json()
-    assert result["success"] and result["passed"] == result["total"] == 7
+    assert result["success"] and result["passed"] == result["total"] == len(service.load(CART)[1]["testNames"])
     assert result["submission"]["saved"] is False

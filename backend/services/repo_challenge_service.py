@@ -24,7 +24,7 @@ class InvalidRepository(ValueError):
 
 def safe_path(base: Path, name: str) -> Path:
     # MVP execution is intentionally flat; rejects Windows and POSIX traversal.
-    if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*\.(py|md|txt)", name):
+    if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*\.(py|js|md|txt)", name):
         raise InvalidRepository("Only manifest-defined, flat repository files are supported.")
     target = (base / name).resolve()
     if not target.is_relative_to(base.resolve()):
@@ -46,8 +46,8 @@ def catalog() -> dict[str, tuple[Path, dict]]:
         names = editable + readonly
         if not editable or len(names) > 20 or len(names) != len(set(names)) or manifest["entrypoint"] not in editable:
             raise InvalidRepository("Invalid challenge file configuration.")
-        if manifest["language"] != "python":
-            raise InvalidRepository("This MVP supports Python repositories only.")
+        if manifest["language"] not in {"python", "javascript"}:
+            raise InvalidRepository("Unsupported repository language.")
         for name in names:
             safe_path(folder / "starter", name)
         test_names = manifest["testNames"]
@@ -74,7 +74,7 @@ def detail(identifier: str) -> dict:
     files = []
     for name in manifest["editableFiles"] + manifest["readOnlyFiles"]:
         files.append({"path": name, "content": safe_path(folder / "starter", name).read_text(encoding="utf-8"),
-                      "language": "python" if name.endswith(".py") else "markdown", "readOnly": name in manifest["readOnlyFiles"]})
+                      "language": "python" if name.endswith(".py") else "javascript" if name.endswith(".js") else "markdown", "readOnly": name in manifest["readOnlyFiles"]})
     return {**metadata(manifest), "files": files}
 
 
@@ -95,13 +95,15 @@ def validate_files(identifier: str, submitted: dict[str, str]) -> tuple[Path, di
 async def evaluate(identifier: str, submitted: dict[str, str]) -> dict:
     folder, manifest, files = validate_files(identifier, submitted)
     tests_path = safe_path(folder / "tests", manifest["testFile"])
-    runner = (CHALLENGES / "runner.py").read_text(encoding="utf-8")
-    payload = [{"name": RUNNER_NAME, "content": runner},
-               {"name": TEST_NAME, "content": tests_path.read_text(encoding="utf-8")},
+    language = manifest["language"]
+    runner_name, test_name = (RUNNER_NAME, TEST_NAME) if language == "python" else ("_clario_runner.js", "_clario_tests.js")
+    runner = (CHALLENGES / ("runner.py" if language == "python" else "runner.js")).read_text(encoding="utf-8")
+    payload = [{"name": runner_name, "content": runner},
+               {"name": test_name, "content": tests_path.read_text(encoding="utf-8")},
                *({"name": name, "content": content} for name, content in files.items())]
     stdout, _stderr, code = await execute_files_on_piston(
-        "python", payload, piston_url=settings.piston_url,
-        versions={"python": settings.piston_python_version}, bounded=True,
+        language, payload, piston_url=settings.piston_url,
+        versions={"python": settings.piston_python_version, "javascript": settings.piston_javascript_version}, bounded=True,
     )
     total = len(manifest["testNames"])
     error = None
@@ -109,7 +111,7 @@ async def evaluate(identifier: str, submitted: dict[str, str]) -> dict:
     if code == 124:
         error = "Execution timed out or exceeded a resource limit. Check for infinite loops and excessive output."
     elif code != 0:
-        error = "Execution failed. Check your Python syntax, imports, and resource usage."
+        error = "Execution failed. Check your syntax, imports, and resource usage."
     else:
         try:
             # No raw stdout/stderr or private test tracebacks are sent to the browser.
