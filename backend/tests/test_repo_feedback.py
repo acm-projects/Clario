@@ -38,6 +38,7 @@ def test_repository_evidence_is_saved_before_session_completion(monkeypatch):
             operations.append((name, "update", payload))
             return query
         query.insert.side_effect = insert
+        query.upsert.side_effect = lambda payload, **kwargs: insert(payload)
         query.update.side_effect = update
         query.eq.return_value = query
         query.execute.return_value.data = [{"id": "saved"}]
@@ -53,15 +54,17 @@ def test_repository_evidence_is_saved_before_session_completion(monkeypatch):
     assert operations[1][2]["code"] == "File: cart.py\ncandidate code"
     assert operations[2][0] == "transcript_events"
     assert operations[2][2][0]["text"] == turn["message"]
-    assert operations[3][2]["metadata"]["repository_evaluation"]["passed"] == 1
+    assert not any(name == "repo_debug_submissions" for name, _, _ in operations)
 
 
-@pytest.mark.parametrize("execution_error", [None, "Execution failed. Check your syntax."])
-def test_submit_persists_transcript_for_automatic_report(client, monkeypatch, execution_error):
-    monkeypatch.setattr(service, "evaluate", AsyncMock(return_value={"error": execution_error, "success": False}))
+def test_end_interview_persists_evidence_without_executing_code(client, monkeypatch):
+    evaluate = AsyncMock(side_effect=AssertionError("Ending must not run tests"))
+    monkeypatch.setattr(service, "evaluate", evaluate)
     saved = Mock(return_value={"saved": True, "submission_id": str(uuid4()), "message": "Saved"})
     monkeypatch.setattr(service, "save_submission", saved)
     turn = {"source": "user", "message": "I have not fixed it yet."}
-    response = client.post("/api/repo-challenges/shopping-cart-01/submit", json={"files": {"cart.py": "pass"}, "transcript": [turn]})
-    assert response.status_code == 200 and response.json()["submission"]["saved"]
+    files = {file["path"]: file["content"] for file in service.detail("shopping-cart-01")["files"] if not file["readOnly"]}
+    response = client.post("/api/repo-challenges/shopping-cart-01/finish", json={"files": files, "transcript": [turn]})
+    assert response.status_code == 200 and response.json()["saved"]
     assert saved.call_args.args[3]["transcript"] == [turn]
+    evaluate.assert_not_awaited()

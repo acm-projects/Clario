@@ -5,6 +5,7 @@ import logging
 import httpx
 
 from config import settings
+from problem_fallbacks import bundled_problem
 
 logger = logging.getLogger(__name__)
 
@@ -261,13 +262,15 @@ def get_problem_list(difficulty=None, topic=None, search=None) -> list[dict]:
 def get_problem(slug: str) -> dict | None:
     try:
         problem = fetch_live_problem(slug)
+        if problem is None and slug == "two-sum":
+            return bundled_problem(slug)
         if problem is not None:
             _save_problem(problem)
         logger.info("problem %s served from live API", slug)
         return problem
     except (httpx.HTTPError, ValueError) as e:
         logger.warning("Live problem %s failed (%s); trying Supabase fallback", slug, e)
-        row = _db_problem(slug)
+        row = _db_problem(slug) or bundled_problem(slug)
         if row is None:
             raise httpx.HTTPError("Live API failed and no Supabase fallback is available") from e
         logger.info("problem %s served from Supabase fallback", slug)

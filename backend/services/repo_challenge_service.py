@@ -144,12 +144,8 @@ def save_submission(user_id: str, identifier: str, files: dict, evaluation: dict
         }).execute()
         supabase.table("code_snapshots").insert({"session_id": session_id, "language": language,
             "code": "\n\n".join(f"File: {path}\n{content}" for path, content in files.items())}).execute()
-        turns = evaluation.get("transcript") or []
-        if turns:
-            supabase.table("transcript_events").insert([{"session_id": session_id, "speaker": turn["source"], "text": turn["message"], "sequence_number": index} for index, turn in enumerate(turns)]).execute()
-        supabase.table("session_events").insert({"session_id": session_id, "event_type": "step_completed", "metadata": {
-            "step": "evaluate", "source": "manual", "repository_evaluation": {key: value for key, value in evaluation.items() if key != "transcript"},
-        }}).execute()
+        from interview_evidence import InterviewEvidence, persist_evidence
+        persist_evidence(supabase, session_id, InterviewEvidence.model_validate({key: evaluation[key] for key in ("transcript", "communication") if key in evaluation}))
         # Only publish a completed interview after all report evidence is saved.
         result = supabase.table("interview_sessions").update({"status": "completed", "ended_at": datetime.now(timezone.utc).isoformat()}).eq("id", session_id).eq("user_id", user_id).execute()
         if not result.data:

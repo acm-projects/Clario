@@ -40,7 +40,8 @@ const { historyMock: history, summaryMock: summary, topicsMock: topics, emptySum
     await page.getByText('65.3', { exact: true }).waitFor();
     await page.getByText('▲ 27.6 since your first interview', { exact: true }).waitFor();
     await page.getByText('Skipped in 56%', { exact: true }).waitFor();
-    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Recent interviews', exact: true }) });
+    await page.getByRole('heading', { name: 'Questions completed', exact: true }).waitFor();
+    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Previous questions', exact: true }) });
     assert.equal(await recent.locator('li').count(), 5);
     assert.match(await recent.locator('li').first().innerText(), /Company Interview/);
     assert.equal(await recent.locator('li a').first().getAttribute('href'), '/report/mock-9');

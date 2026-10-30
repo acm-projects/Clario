@@ -12,8 +12,31 @@ from google import genai
 from auth import get_current_user
 from config import require_setting, settings
 from leetcode import get_problem
+from interview_evidence import InterviewEvidence, persist_evidence
+from datetime import datetime, timezone
+from uuid import uuid4
+from starlette.concurrency import run_in_threadpool
 
 router = APIRouter(prefix="/voice", tags=["voice"])
+
+
+@router.post("/system-design/{scenario_slug}/finish")
+async def finish_system_design(scenario_slug: str, body: InterviewEvidence, user: dict = Depends(get_current_user)):
+    system_design_scenario(scenario_slug)
+    def save():
+        from db import supabase
+        session_id = str(uuid4())
+        try:
+            supabase.table("interview_sessions").insert({"id": session_id, "user_id": user["sub"], "problem_slug": "system-design:" + scenario_slug, "mode": "practice", "status": "in_progress"}).execute()
+            persist_evidence(supabase, session_id, body)
+            rows = supabase.table("interview_sessions").update({"status": "completed", "ended_at": datetime.now(timezone.utc).isoformat()}).eq("id", session_id).eq("user_id", user["sub"]).execute().data
+            if not rows:
+                raise RuntimeError("Session was not saved")
+            return {"session_id": session_id}
+        except Exception:
+            supabase.table("interview_sessions").delete().eq("id", session_id).eq("user_id", user["sub"]).execute()
+            raise HTTPException(503, "Could not save your interview. Please try again.") from None
+    return await run_in_threadpool(save)
 
 
 def system_design_scenario(slug: str):
@@ -89,7 +112,7 @@ def get_repo_session(challenge_id: str, user: dict = Depends(get_current_user)):
         raise
     except Exception:
         raise HTTPException(502, "Could not create repository voice session. Check the configured ElevenLabs agent and API permissions.")
-    return {"signed_url": signed.signed_url, "variables": {"problem_title": challenge["title"], "problem_description": description}}
+    return {"signed_url": signed.signed_url, "voice_id": settings.elevenlabs_voice_id, "variables": {"problem_title": challenge["title"], "problem_description": description}}
 
 
 @router.get("/session")

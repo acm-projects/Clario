@@ -1,6 +1,6 @@
 
 export const scoreColumns = [
-  { label: "Technical", key: "technical_score", color: "#4c83a3" },
+  { label: "Coding", key: "technical_score", color: "#4c83a3" },
   { label: "Reasoning", key: "reasoning_score", color: "#9b8ca9" },
   { label: "Communication", key: "communication_score", color: "#78aaa2" },
   { label: "Overall", key: "overall_score", color: "#d3a34f" },
@@ -10,6 +10,7 @@ export type CommunicationMetrics = {
   monitored_seconds: number; silent_seconds: number; silence_percent: number;
   longest_pause_seconds: number; filler_count: number | null;
   words_per_speaking_minute: number | null; limitations: string[];
+  silence_intervals: { start_seconds: number; end_seconds: number; duration_seconds: number }[];
 };
 function communicationMetrics(value: unknown): CommunicationMetrics | null {
   const row = record(value);
@@ -18,7 +19,12 @@ function communicationMetrics(value: unknown): CommunicationMetrics | null {
   const optional = (v: unknown) => typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : null;
   return { monitored_seconds: row.monitored_seconds as number, silent_seconds: row.silent_seconds as number,
     silence_percent: row.silence_percent as number, longest_pause_seconds: row.longest_pause_seconds as number,
-    filler_count: optional(row.filler_count), words_per_speaking_minute: optional(row.words_per_speaking_minute), limitations: strings(row.limitations) };
+    filler_count: optional(row.filler_count), words_per_speaking_minute: optional(row.words_per_speaking_minute), limitations: strings(row.limitations),
+    silence_intervals: (Array.isArray(row.silence_intervals) ? row.silence_intervals : []).flatMap(value => {
+      const interval = record(value);
+      const start = optional(interval.start_seconds), end = optional(interval.end_seconds), duration = optional(interval.duration_seconds);
+      return start !== null && end !== null && duration !== null && end >= start ? [{ start_seconds: start, end_seconds: end, duration_seconds: duration }] : [];
+    }) };
 }
 export type FeedbackInterview = {
   id: string; topic: string; difficulty: string | null; date: string;
@@ -27,6 +33,7 @@ export type FeedbackInterview = {
   communicationMetrics: CommunicationMetrics | null;
   coachQuote: string | null; coachNote: string | null;
   strengths: string[]; weaknesses: string[]; recommendations: string[]; limitations: string[];
+  techniqueGaps: { technique: string; evidence: string; practice: string }[];
 };
 export function validScore(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100 ? value : null;
@@ -54,6 +61,7 @@ export function parseFeedbackHistory(payload: unknown): FeedbackInterview[] {
       communicationMetrics: communicationMetrics(report.communication_metrics),
       coachQuote: text(report.coach_quote), coachNote: text(report.coach_note),
       strengths: strings(feedback.strengths), weaknesses: strings(feedback.weaknesses), recommendations: strings(feedback.recommendations), limitations: strings(report.evidence_limitations),
+      techniqueGaps: (Array.isArray(report.technique_gaps) ? report.technique_gaps : []).flatMap(value => { const gap = record(value); return typeof gap.technique === "string" && typeof gap.evidence === "string" && typeof gap.practice === "string" ? [{ technique: gap.technique, evidence: gap.evidence, practice: gap.practice }] : []; }),
     };
   });
 }

@@ -23,6 +23,13 @@ def get_saved_report(session_id: str) -> dict | None:
 
 
 def get_stored_problem(session: dict) -> dict | None:
+    if (session.get("problem_slug") or "").startswith("system-design:"):
+        from voice.router import system_design_scenario
+        try:
+            scenario = system_design_scenario(session["problem_slug"].split(":", 1)[1])
+        except HTTPException:
+            return None
+        return {"slug": session["problem_slug"], "title": scenario["title"], "difficulty": scenario["difficulty"], "description": scenario["prompt"]}
     if (session.get("problem_slug") or "").startswith("repo-debugging:"):
         from services.repo_challenge_service import detail
         try:
@@ -40,7 +47,9 @@ def get_stored_problem(session: dict) -> dict | None:
         return None
     rows = query.limit(1).execute().data
     if not rows:
-        return None
+        from problem_fallbacks import bundled_problem
+        fallback = bundled_problem(session.get("problem_slug"))
+        return {"slug": fallback["slug"], "title": fallback["title"], "difficulty": fallback["difficulty"], "description": fallback["description_html"]} if fallback else None
     row = rows[0]
     return {"slug": row["slug"], "title": row["title"], "difficulty": row["difficulty"], "description": (row.get("description_html") or "")[:15000]}
 
@@ -63,7 +72,7 @@ def list_feedback(user: dict = Depends(get_current_user)):
         problems += supabase.table("problems").select(columns).in_("id", problem_ids).execute().data
     by_slug = {problem["slug"]: problem for problem in problems}
     by_id = {problem["id"]: problem for problem in problems}
-    return [{"session": session, "problem": get_stored_problem(session) if (session.get("problem_slug") or "").startswith("repo-debugging:") else by_slug.get(session.get("problem_slug")) or by_id.get(session.get("problem_id")), "feedback": by_session.get(session["id"])} for session in sessions]
+    return [{"session": session, "problem": get_stored_problem(session) if (session.get("problem_slug") or "").startswith(("repo-debugging:", "system-design:")) else by_slug.get(session.get("problem_slug")) or by_id.get(session.get("problem_id")), "feedback": by_session.get(session["id"])} for session in sessions]
 
 
 @router.post("/preview/two-sum")

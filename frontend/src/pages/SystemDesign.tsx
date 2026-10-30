@@ -1,9 +1,10 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import PageHeading from "../components/ui/PageHeading";
 import { VideoCallPanel } from "../components/interview/VideoCallPanel";
 import { request } from "../lib/api";
+import type { VoiceControls } from "../lib/interviewVoice";
 
 type DesignScenario = { slug: string; company: string; title: string; difficulty: string; prompt: string };
 
@@ -16,18 +17,34 @@ function DesignCall({ slug }: { slug: string }) {
   const [transcript, setTranscript] = useState<{ source: string; message: string }[]>([]);
   const [deadline, setDeadline] = useState<number | null>(null);
   const [remaining, setRemaining] = useState(45 * 60);
-  const [ended, setEnded] = useState(false);
+  const [ending, setEnding] = useState(false);
+  const [finishError, setFinishError] = useState<string | null>(null);
+  const controls = useRef<VoiceControls>(null);
+  const busy = useRef(false);
+  const expirationTriggered = useRef(false);
+  const endHandler = useRef<() => void>(() => {});
+  async function finishInterview() {
+    if (busy.current) return;
+    busy.current = true; setEnding(true); setFinishError(null);
+    try {
+      const evidence = await controls.current?.finish() ?? { transcript: [], communication: null };
+      const saved = await request<{ session_id: string }>(`/voice/system-design/${encodeURIComponent(slug)}/finish`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(evidence) }, true);
+      navigate(`/report/${encodeURIComponent(saved.session_id)}`);
+    } catch (error) { setFinishError(error instanceof Error ? error.message : "Could not save this interview."); }
+    finally { busy.current = false; setEnding(false); }
+  }
+  useEffect(() => { endHandler.current = () => { void finishInterview(); }; });
   useEffect(() => {
-    if (deadline === null || ended) return;
+    if (deadline === null) return;
     const update = () => {
       const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
       setRemaining(seconds);
-      if (seconds === 0) setEnded(true);
+      if (seconds === 0 && !expirationTriggered.current) { expirationTriggered.current = true; endHandler.current(); }
     };
     update();
     const timer = window.setInterval(update, 1000);
     return () => window.clearInterval(timer);
-  }, [deadline, ended]);
+  }, [deadline]);
   useEffect(() => {
     const controller = new AbortController();
     request<DesignScenario>(`/voice/system-design/scenarios/${encodeURIComponent(slug)}`, { signal: controller.signal }, true)
@@ -44,7 +61,8 @@ function DesignCall({ slug }: { slug: string }) {
       </header>
       {error ? <section role="alert" className="rounded-2xl border border-[#c5c8ce] bg-[#fffdf8] p-7"><p>{error}</p><button onClick={() => { setError(null); setRetry(value => value + 1); }} className="mt-4 rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Try again</button></section> : !scenario ? <p role="status">Loading company scenario...</p> : <div className="grid items-start gap-6 xl:grid-cols-[280px_minmax(0,1fr)_340px]">
         <section aria-label="Interview call" className="order-3 flex min-w-0 flex-col rounded-[26px] border border-[#c5c8ce] bg-[#fffdf8] p-4 [--line:#c5c8ce] [&_.theme-panel]:bg-[#fffdf8] [&_.theme-main-text]:text-[#182137] [&_.theme-muted-text]:text-[#687087] [&_.theme-body-text]:text-[#182137] [&_.theme-surface]:bg-[#e9edff] [&_.theme-video-self]:bg-[#f5f0e3] [&_.theme-video-interviewer]:bg-[#3054ed] [&_.sandbox-video]:min-h-[600px] [&_.sandbox-video>div:nth-child(2)]:flex-col! sm:[&_.sandbox-video>div:nth-child(2)]:flex-row! xl:[&_.sandbox-video>div:nth-child(2)]:flex-col! [&_.theme-video-self]:min-h-[260px]! [&_.theme-video-interviewer]:min-h-[280px]! [&_.theme-video-interviewer]:flex-1! [&_.theme-video-interviewer>div:first-child>span:first-child]:bg-[#fffdf8] [&_.theme-video-interviewer>div:first-child>span:first-child]:text-[#182137]">
-          {ended ? <div role="status" className="p-8"><h2 className="text-2xl font-medium">Interview ended</h2><p className="mt-4 text-sm">Your notes and transcript remain below for this visit.</p><button onClick={() => navigate("/system-design")} className="mt-5 rounded-xl bg-[#3054ed] px-5 py-3 text-white">Choose a company</button></div> : <VideoCallPanel round="System Design" interviewer="Ducky" problemSlug="" systemDesignSlug={scenario.slug} speaking={false} onVoiceStarted={() => setDeadline(previous => previous ?? Date.now() + 45 * 60 * 1000)} onTranscript={(source, message) => setTranscript(previous => [...previous, { source, message }])} onEndInterview={() => setEnded(true)} />}
+          {finishError && <p role="alert" className="p-3 text-sm text-red-700">{finishError}</p>}
+          <VideoCallPanel controlsRef={controls} ending={ending} round="System Design" interviewer="Ducky" problemSlug="" systemDesignSlug={scenario.slug} speaking={false} onVoiceStarted={() => setDeadline(previous => previous ?? Date.now() + 45 * 60 * 1000)} onTranscript={(source, message) => setTranscript(previous => [...previous, { source, message }])} onEndInterview={() => void finishInterview()} />
         </section>
         <aside aria-labelledby="company-scenario-heading" className="order-1 rounded-[26px] border border-[#c5c8ce] bg-[#fffdf8] p-6 sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#3054ed]">{scenario.company} scenario</p>

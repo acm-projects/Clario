@@ -9,6 +9,7 @@ import TopicBreakdown from "../components/progress/TopicBreakdown";
 import UmpireHabits from "../components/progress/UmpireHabits";
 import RecentInterviews from "../components/progress/RecentInterviews";
 import EmptyProgress from "../components/progress/EmptyProgress";
+import CompletedQuestions from "../components/progress/CompletedQuestions";
 import "../components/progress/progress.css";
 
 // Real endpoints are the default. Explicit development previews never mask API failures.
@@ -38,7 +39,7 @@ export default function Progress() {
     <NavbarDashboard />
     <div className="mx-auto max-w-6xl space-y-6"><header className="flex items-center justify-between gap-4 py-4"><div><p className="progress-eyebrow mb-2">A little better, every interview</p><h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Your Progress</h1><p className="progress-muted mt-3">Look back at your growth. Find your next focus.</p></div><DuckHead className="w-16 sm:w-24" /></header>
       {mock && <p role="status" className="rounded-xl bg-[#fff1cb] p-3 text-sm text-[#78540c]">Preview data · These are sample interviews.</p>}
-      {loading ? <section className="progress-card py-16 text-center" role="status">Loading your progress…</section> : error ? <section className="progress-card py-12 text-center" role="alert"><p>{error}</p><button type="button" className="mt-5 rounded-xl bg-[#3054ed] px-5 py-3 text-sm text-white" onClick={() => { setLoading(true); setError(null); setRetry(v => v + 1); }}>Try again</button></section> : data && data.summary.total_sessions === 0 ? <EmptyProgress /> : data ? <><StatCards summary={data.summary} /><ScoreTrendChart history={data.history} /><div className="grid min-w-0 gap-6 lg:grid-cols-2"><TopicBreakdown topics={data.topics} /><UmpireHabits missRate={data.summary.umpire_miss_rate} /></div><RecentInterviews history={data.history} /></> : null}
+      {loading ? <section className="progress-card py-16 text-center" role="status">Loading your progress…</section> : error ? <section className="progress-card py-12 text-center" role="alert"><p>{error}</p><button type="button" className="mt-5 rounded-xl bg-[#3054ed] px-5 py-3 text-sm text-white" onClick={() => { setLoading(true); setError(null); setRetry(v => v + 1); }}>Try again</button></section> : data && data.summary.total_sessions === 0 ? <EmptyProgress /> : data ? <><StatCards summary={data.summary} /><ScoreTrendChart history={data.history} /><CompletedQuestions history={data.history} /><div className="grid min-w-0 gap-6 lg:grid-cols-2"><TopicBreakdown topics={data.topics} /><UmpireHabits missRate={data.summary.umpire_miss_rate} /></div><RecentInterviews history={data.history} /></> : null}
     </div>
   </main>;
 }

@@ -154,6 +154,7 @@ export type FeedbackPreview = {
     weaknesses: string[];
     recommendations: string[];
     evidence_limitations: string[];
+    technique_gaps?: { technique: string; evidence: string; practice: string }[];
     model: string;
   };
 };

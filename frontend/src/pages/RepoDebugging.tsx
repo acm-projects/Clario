@@ -3,7 +3,8 @@ import { VideoCallPanel } from "../components/interview/VideoCallPanel";
 import { useEffect, useRef, useState } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
 import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { getRepoChallenge, listRepoChallenges, runRepoChallenge, type RepoChallenge, type RepoChallengeSummary, type RepoEvaluation } from "../api/repoChallenges";
+import { getRepoChallenge, listRepoChallenges, runRepoChallenge, finishRepoChallenge, type RepoChallenge, type RepoChallengeSummary, type RepoEvaluation } from "../api/repoChallenges";
+import type { VoiceControls } from "../lib/interviewVoice";
 import RepositoryExplorer, { RepositoryFileIcon } from "../components/interview/RepositoryExplorer";
 import ProblemLoading from "../components/ui/ProblemLoading";
 import DuckHead from "../components/layout/DuckHead";
@@ -54,9 +55,10 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
   const [tabs, setTabs] = useState<string[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
-  const [busy, setBusy] = useState<"run" | "submit" | null>(null);
+  const [busy, setBusy] = useState<"run" | "submit" | "end" | null>(null);
   const busyRef = useRef(false);
-  const transcript = useRef<{ source: string; message: string }[]>([]);
+  const voiceControls = useRef<VoiceControls>(null);
+  const [reviewStatus, setReviewStatus] = useState("");
   const [result, setResult] = useState<RepoEvaluation | null>(null);
   const [evaluatedSource, setEvaluatedSource] = useState<string | null>(null);
   const [executionError, setExecutionError] = useState<string | null>(null);
@@ -125,13 +127,27 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
     const snapshot = source;
     const files = Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]]));
     try {
-      const evaluation = await runRepoChallenge(id, files, submit, transcript.current);
-      setResult(evaluation); setEvaluatedSource(snapshot);
-      if (submit && evaluation.submission?.saved && evaluation.submission.submission_id) {
-        navigate(`/report/${encodeURIComponent(evaluation.submission.submission_id)}`);
+      if (submit) {
+        if (!voiceControls.current) throw new Error("The interview call is not ready yet.");
+        await voiceControls.current.reviewCode(Object.entries(files).map(([path, content]) => `File: ${path}\n${content}`).join("\n\n"));
+        setReviewStatus("Code sent to the duck for review. Your interview is still in progress.");
+      } else {
+        const evaluation = await runRepoChallenge(id, files);
+        setResult(evaluation); setEvaluatedSource(snapshot);
       }
     }
     catch (error) { setExecutionError(error instanceof Error ? error.message : "Execution failed. Please try again."); }
+    finally { busyRef.current = false; setBusy(null); }
+  }
+  async function finishInterview() {
+    if (!challenge || busyRef.current) return;
+    busyRef.current = true; setBusy("end"); setExecutionError(null);
+    try {
+      const evidence = await voiceControls.current?.finish() ?? { transcript: [], communication: null };
+      const files = Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]]));
+      const saved = await finishRepoChallenge(id, files, evidence);
+      navigate(`/report/${encodeURIComponent(saved.submission_id)}`);
+    } catch (error) { setExecutionError(error instanceof Error ? error.message : "Could not finish your interview. Please try again."); setResultsOpen(true); }
     finally { busyRef.current = false; setBusy(null); }
   }
   function download() {
@@ -149,6 +165,7 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
   return <div className="flex min-h-svh flex-col lg:h-svh lg:overflow-hidden">
     <div className="[&_header]:h-auto [&_header]:min-h-[74px] [&_header]:flex-wrap [&_header]:gap-3 [&_header]:py-3 max-xl:[&_header>div:nth-child(2)]:static max-xl:[&_header>div:nth-child(2)]:translate-x-0 max-sm:[&_header>div:first-child]:flex-wrap max-sm:[&_header>div:first-child]:gap-3 max-sm:[&_header>div:last-child]:hidden">
       <TopBar showBrand={false} timer={`${String(Math.floor(elapsed / 60)).padStart(2, "0")}:${String(elapsed % 60).padStart(2, "0")}`} modeLabel="Repo Debugging" onRun={() => void execute(false)} onSubmit={() => void execute(true)} running={Boolean(busy)} listLabel="Repositories" listPath="/repo-debugging" runLabel="Run Tests" />
+      {reviewStatus && <p role="status" className="border-b border-[var(--repo-line)] px-5 py-2 text-xs text-[var(--repo-muted)]">{reviewStatus}</p>}
     </div>
     <div className="flex shrink-0 items-center gap-3 border-b border-[var(--repo-line)] px-4 py-2 text-xs"><button type="button" aria-expanded={explorerOpen} aria-controls="repo-file-explorer" onClick={() => setExplorerOpen(value => !value)} className="flex min-h-9 items-center gap-2 rounded-lg border border-[var(--repo-line)] bg-[var(--repo-panel)] px-3 text-[var(--repo-muted)]"><span aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16" /></svg></span>{explorerOpen ? "Hide files" : "Show files"}</button><h1 className="min-w-0 flex-1 truncate font-semibold">{challenge.title}</h1><span className="rounded-full border border-[var(--repo-line)] px-3 py-1 text-[10px] text-[var(--repo-muted)]">{challenge.difficulty} &middot; {challenge.language === "javascript" ? "JavaScript" : "Python"}</span></div>
     <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 p-3 lg:grid-cols-[minmax(0,1fr)_minmax(290px,24%)] lg:p-4">
@@ -170,12 +187,12 @@ function RepoWorkspace({ id, userId }: { id: string; userId: string }) {
         <section aria-label="Test results" aria-busy={Boolean(busy)} className="shrink-0 border-t border-[var(--repo-line)] bg-[var(--repo-panel)]">
           <button type="button" aria-expanded={resultsOpen} aria-controls="repo-results" onClick={() => setResultsOpen(value => !value)} className="flex min-h-11 w-full items-center justify-between px-4 text-[10px] font-semibold tracking-widest"><span>TEST RESULTS {result ? `· ${result.passed}/${result.total} PASSED` : ""}{stale ? " · FILES CHANGED — RUN AGAIN" : ""}</span><span>{resultsOpen ? "−" : "+"}</span></button>
           {resultsOpen && <div id="repo-results" className="max-h-[260px] min-h-20 overflow-y-auto px-4 pb-4">
-            {busy ? <p role="status" className="flex items-center gap-3 py-4 text-xs text-[var(--repo-muted)]"><span aria-hidden="true" className="size-4 rounded-full border-2 border-[#3054ed]/30 border-t-[#3054ed] motion-safe:animate-spin" />{busy === "submit" ? "Running final evaluation in Piston…" : "Running repository tests in Piston…"}</p> : executionError ? <p role="alert" className="py-3 text-xs text-[#dd697c]">{executionError}</p> : result ? <div aria-live="polite"><p className={`mb-3 text-xs ${result.success ? "text-[#4baf83]" : "text-[#d6963b]"}`}>{stale ? "These results are from an earlier version of your files." : result.success ? "All behavior checks passed." : `${result.failed} checks did not pass.`}</p>{result.error && <p role="alert" className="mb-3 text-xs text-[#dd697c]">{result.error}</p>}<ul className="grid gap-2 sm:grid-cols-2">{result.tests.map(test => <li key={test.name} className="text-xs"><span className={test.passed ? "text-[#4baf83]" : "text-[#dd697c]"}>{test.passed ? "✓" : "×"}</span> {test.name.replace(/^test_/, "").replaceAll("_", " ")}{test.message && <p className="mt-1 pl-4 text-[10px] text-[var(--repo-muted)]">{test.message}</p>}</li>)}</ul>{result.submission && <p role="status" className="mt-4 rounded-lg border border-[var(--repo-line)] p-3 text-xs leading-6">{result.submission.message}{result.submission.saved && <span className="block text-[10px] text-[var(--repo-muted)]">Submission {result.submission.submission_id}</span>}</p>}</div> : <p className="py-4 text-xs leading-6 text-[var(--repo-muted)]">Explore the repository, form a hypothesis, then run the tests. The starter code contains intentional bugs.</p>}
+            {busy ? <p role="status" className="flex items-center gap-3 py-4 text-xs text-[var(--repo-muted)]"><span aria-hidden="true" className="size-4 rounded-full border-2 border-[#3054ed]/30 border-t-[#3054ed] motion-safe:animate-spin" />{busy === "submit" ? "Sending your code to the duck..." : busy === "end" ? "Saving your interview and opening feedback..." : "Running repository tests..."}</p> : executionError ? <p role="alert" className="py-3 text-xs text-[#dd697c]">{executionError}</p> : result ? <div aria-live="polite"><p className={`mb-3 text-xs ${result.success ? "text-[#4baf83]" : "text-[#d6963b]"}`}>{stale ? "These results are from an earlier version of your files." : result.success ? "All behavior checks passed." : `${result.failed} checks did not pass.`}</p>{result.error && <p role="alert" className="mb-3 text-xs text-[#dd697c]">{result.error}</p>}<ul className="grid gap-2 sm:grid-cols-2">{result.tests.map(test => <li key={test.name} className="text-xs"><span className={test.passed ? "text-[#4baf83]" : "text-[#dd697c]"}>{test.passed ? "✓" : "×"}</span> {test.name.replace(/^test_/, "").replaceAll("_", " ")}{test.message && <p className="mt-1 pl-4 text-[10px] text-[var(--repo-muted)]">{test.message}</p>}</li>)}</ul>{result.submission && <p role="status" className="mt-4 rounded-lg border border-[var(--repo-line)] p-3 text-xs leading-6">{result.submission.message}{result.submission.saved && <span className="block text-[10px] text-[var(--repo-muted)]">Submission {result.submission.submission_id}</span>}</p>}</div> : <p className="py-4 text-xs leading-6 text-[var(--repo-muted)]">Explore the repository, form a hypothesis, then run the tests. The starter code contains intentional bugs.</p>}
           </div>}
         </section>
       </div>
     </div>
-    <aside aria-label="Interview call" className="theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel round="Repository debugging" interviewer="Clario" problemSlug={id} repoChallengeId={id} speaking={false} onTranscript={(source, message) => { transcript.current = [...transcript.current.slice(-399), { source, message: message.slice(0, 4000) }]; }} onEndInterview={() => void execute(true)} /></aside>
+    <aside aria-label="Interview call" className="theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel controlsRef={voiceControls} ending={busy === "end"} round="Repository debugging" interviewer="Clario" problemSlug={id} repoChallengeId={id} speaking={false} onEndInterview={() => void finishInterview()} /></aside>
     </div>
     <dialog ref={resetDialog} className={`fixed inset-0 m-auto w-[calc(100%-32px)] max-w-[420px] rounded-2xl border border-[var(--repo-line)] bg-[var(--repo-panel)] p-6 text-inherit shadow-2xl backdrop:bg-[#0a1120]/65 ${theme === "dark" ? "[color-scheme:dark]" : ""}`} aria-labelledby="repo-reset-title"><h2 id="repo-reset-title" className="text-xl font-semibold">Reset this repository?</h2><p className="mt-3 text-sm leading-7 text-[var(--repo-muted)]">This replaces all edits with the original starter files. Download a draft first if you want to keep your changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => resetDialog.current?.close()} className="min-h-11 px-4 text-sm">Keep editing</button><button type="button" disabled={Boolean(busy)} onClick={reset} className="min-h-11 rounded-xl bg-[#3054ed] px-4 text-sm text-white">Reset files</button></div></dialog>
   </div>;

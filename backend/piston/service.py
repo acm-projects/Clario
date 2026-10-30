@@ -153,6 +153,14 @@ async def run_problem_tests(
             limit_output(stderr) or "Your code crashed.",
         )
 
+    if not isinstance(results, list) or len(results) != total or any(
+        not isinstance(row, dict) or type(row.get("ok")) is not bool
+        or (row["ok"] and "output" not in row)
+        or (not row["ok"] and not isinstance(row.get("error"), str))
+        for row in results
+    ):
+        return TestRunResult("Runtime Error", 0, total, [], user_stdout, "The test runner returned incomplete or invalid results.")
+
     case_rows: list[dict[str, Any]] = []
     passed = 0
     first_error = None

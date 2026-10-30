@@ -1,5 +1,9 @@
 # Repository debugging MVP
 
+## Current interview controls
+
+The duck connects automatically when the workspace opens; microphone permission is still required by the browser. Submit sends the current code snapshot to the live interviewer for a neutral follow-up, without running tests or ending the session. Run Tests alone executes test cases. End Call saves final code, transcript, and measured silence, then opens the automatically generated interview feedback report. Retry connection clears stale handles and restores previous interview context.
+
 ## October 27 challenge catalog
 
 The catalog now includes the replacement **The Cart That Charges the Wrong Amount**,
@@ -41,9 +45,7 @@ Existing code uses `@monaco-editor/react` in `components/interview/CodePanel.tsx
 `piston/service.py` for execution. Existing coding sessions use
 `interview_sessions`, `code_snapshots`, and `session_events` through
 `routers/sessions.py`. They represent a single LeetCode problem and source file.
-The checked-in repository has no complete definition of those tables, their
-foreign keys, or mode constraints. This implementation does not guess new columns
-or insert repository IDs into the existing problem-session flow.
+Repository report persistence uses those existing tables with a `repo-debugging:<challenge_id>` slug marker and public challenge context. The deployed table schema was inspected and temporary-session persistence was verified; no new columns or table migration are required.
 
 The new path is:
 
@@ -55,7 +57,7 @@ The new path is:
 3. React builds the explorer from returned paths. Monaco uses a separate URI
    per user, challenge, and file. Change events identify the current **model URI**,
    avoiding stale tab callbacks. Starter content remains separate from edits.
-4. Run/submit send exactly the editable file map through the existing authenticated
+4. Run Tests and End Call send exactly the editable file map through the existing authenticated
    API client. The backend rejects additional, missing, read-only, or oversized
    files and restores read-only content from disk.
 5. The existing Piston service accepts a multi-file payload. Its first file is
@@ -64,9 +66,7 @@ The new path is:
 6. The runner executes standard-library `unittest` checks for Python or async assertion checks for JavaScript. The backend validates
    result names, count, and boolean statuses and returns pass/fail rows. Raw
    output and private-test tracebacks are withheld.
-7. Submit reruns the checks and attempts account persistence through
-   `save_submission`. Responses distinguish evaluation from successful storage.
-   An execution failure does not report a completed or saved submission.
+7. End Call validates the file map and saves the interview through `save_submission`, without executing code. It returns the saved session ID for `/report/{session_id}`. Storage failures keep the workspace open. Submit is a separate voice-review cue; the compatibility `/submit` endpoint only validates files and never runs or saves an interview.
 
 The repository workspace reuses the sandbox top bar and video-call panel, with
 a retractable file explorer and a repository-aware voice session. The selection
@@ -82,16 +82,7 @@ Starter metadata is checked before restoring a draft. Tab closing does not delet
 file contents. Reset requires confirmation. Download draft exports the repository
 and its current evaluation as JSON; it is a backup, not a cloud save or ZIP export.
 
-For account-level final submission storage, run `docs/repo-debugging.sql` in your
-Supabase SQL editor. This additive migration creates `repo_debug_submissions` with
-the user, challenge, mode, edited files, evaluation, status, and submission time.
-RLS permits users to read their own submissions; only the backend service role
-writes evaluated submissions. Existing tables and records are unchanged.
-
-The migration is **provided, not applied automatically**. Without it, evaluation
-still works and submission returns `saved: false` with an explicit warning. A
-save is successful only if Supabase returns a row ID. Cloud draft sessions,
-start/end timing, report integration, and history UI are outside this MVP.
+Account-level interview evidence is saved to the existing interview, code snapshot, transcript, and session-event tables. Completion is recorded only after evidence writes succeed. Feedback uses the existing `feedback_reports` table and appears in history and Progress. The older `docs/repo-debugging.sql` migration is retained for reference but is not required by this flow.
 
 ## Start locally (PowerShell, from repository root)
 

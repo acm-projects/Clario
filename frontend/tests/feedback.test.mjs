@@ -30,7 +30,7 @@ test('unfinished sessions and invalid dates are rejected', () => {
 test('speech observations preserve unavailable fields and old reports remain compatible', () => {
   const metrics = {monitored_seconds:60,silent_seconds:15,silence_percent:25,longest_pause_seconds:8,filler_count:null,words_per_speaking_minute:null,limitations:['Volume is approximate.']};
   const [item] = parseFeedbackHistory([{session,feedback:{id:'report-1',report:{communication_metrics:metrics}}}]);
-  assert.deepEqual(item.communicationMetrics,metrics);
+  assert.deepEqual(item.communicationMetrics,{...metrics,silence_intervals:[]});
   const [old] = parseFeedbackHistory([{session,feedback:{id:'old',report:{}}}]);
   assert.equal(old.communicationMetrics,null);
 });

@@ -42,10 +42,13 @@ export function getGreetingCopy(profile: UserProfile) {
 }
 
 export async function loadRecommendedProblem(difficulty: string | null): Promise<DashboardProblem | null> {
-  if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return null;
-  const problems = await loadProblems();
-  const problem = problems.find((item) => item.difficulty.toLowerCase() === difficulty.toLowerCase());
-  return problem ? { slug: problem.slug, title: problem.title, difficulty: problem.difficulty, topic: problem.topics.join(" / ") || null } : null;
+  const fallback = { slug: "two-sum", title: "Two Sum", difficulty: "Easy", topic: "Array / Hash Table" };
+  if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return fallback;
+  try {
+    const problems = await loadProblems();
+    const problem = problems.find((item) => item.difficulty.toLowerCase() === difficulty.toLowerCase());
+    return problem ? { slug: problem.slug, title: problem.title, difficulty: problem.difficulty, topic: problem.topics.join(" / ") || null } : fallback;
+  } catch { return fallback; }
 }
 
 // Inspect returned session fields before using them. Unknown completion schemas fail

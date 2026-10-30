@@ -1,4 +1,5 @@
 import { request } from "../lib/api";
+import type { InterviewEvidence } from "../lib/interviewVoice";
 
 export interface RepositoryFile { path: string; content: string; language: string; readOnly: boolean }
 export interface RepoChallengeSummary {
@@ -15,8 +16,13 @@ export interface RepoEvaluation {
 const base = "/api/repo-challenges";
 export function listRepoChallenges(signal?: AbortSignal) { return request<RepoChallengeSummary[]>(base, { signal }); }
 export function getRepoChallenge(id: string, signal?: AbortSignal) { return request<RepoChallenge>(`${base}/${encodeURIComponent(id)}`, { signal }); }
-export function runRepoChallenge(id: string, files: Record<string, string>, submit: boolean, transcript: { source: string; message: string }[] = []) {
-  return request<RepoEvaluation>(`${base}/${encodeURIComponent(id)}/${submit ? "submit" : "run"}`, {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ files, ...(submit ? { transcript: transcript.slice(-400) } : {}) }),
+export function runRepoChallenge(id: string, files: Record<string, string>) {
+  return request<RepoEvaluation>(`${base}/${encodeURIComponent(id)}/run`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ files }),
+  }, true);
+}
+export function finishRepoChallenge(id: string, files: Record<string, string>, evidence: InterviewEvidence) {
+  return request<{ saved: boolean; submission_id: string; message: string }>(`${base}/${encodeURIComponent(id)}/finish`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ files, ...evidence }),
   }, true);
 }

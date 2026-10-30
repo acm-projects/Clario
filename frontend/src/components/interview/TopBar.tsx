@@ -36,6 +36,7 @@ export function TopBar({
       <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
         <button
           data-sandbox-run
+          title="Run test cases"
           onClick={onRun}
           disabled={running}
           className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
@@ -46,6 +47,7 @@ export function TopBar({
         <button
           disabled={running}
           onClick={onSubmit}
+          title="Send your current code to the interviewer for review"
           className="h-[42px] rounded-lg border border-[var(--line)] bg-[#fac52e] px-6 text-sm font-semibold text-[#122b50] disabled:opacity-50"
         >
           Submit

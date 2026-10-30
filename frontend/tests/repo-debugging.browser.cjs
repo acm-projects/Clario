@@ -39,7 +39,7 @@ const solutions = require('../../backend/tests/fixtures/repo_solutions.json')['s
   await page.waitForFunction(() => window.monaco?.editor?.getModels().some(model => model.uri.path.endsWith('/main.py')), { timeout: 45000 });
   const explorer = page.getByRole('navigation', { name: 'Repository files' });
   await page.getByRole('complementary', { name: 'Interview call' }).waitFor();
-  await page.getByRole('button', { name: 'Start interview', exact: true }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Start interview', exact: true }).count(), 0);
   await page.getByRole('button', { name: 'Hide files', exact: false }).click();
   assert.equal(await explorer.count(), 0);
   await page.getByRole('button', { name: 'Show files', exact: false }).click();

@@ -12,6 +12,8 @@ import { session } from "./data";
 import { type Problem, type TestsResponse } from "../../types";
 import { modeLabels, parseInterviewMode, type InterviewMode } from "../../lib/interviewModes";
 import { ApiError, getProblem, runTests, getSession, saveSnapshot, endSession, createModeSession } from "../../lib/api";
+import { request } from "../../lib/api";
+import type { VoiceControls } from "../../lib/interviewVoice";
 
 function InterviewPage() {
   const navigate = useNavigate();
@@ -21,6 +23,9 @@ function InterviewPage() {
   const [ending, setEnding] = useState(false);
   const endingRef = useRef(false);
   const createdSession = useRef<string | null>(null);
+  const voiceControls = useRef<VoiceControls>(null);
+  const [reviewing, setReviewing] = useState(false);
+  const [reviewStatus, setReviewStatus] = useState("");
   const requestedMode = parseInterviewMode(searchParams.get("mode")) ?? "custom";
   const [activeMode, setActiveMode] = useState<InterviewMode>(requestedMode);
   const isMock = activeMode === "surprise_me" || activeMode === "company";
@@ -88,6 +93,7 @@ function InterviewPage() {
     setEnding(true);
     setRunError(null);
     try {
+      const evidence = await voiceControls.current?.finish();
       let reportSessionId = sessionId ?? createdSession.current;
       if (!reportSessionId) {
         const saved = await createModeSession({ mode: "custom", problemSlug: problem.slug, language });
@@ -95,6 +101,9 @@ function InterviewPage() {
         createdSession.current = saved.id;
       }
       await saveSnapshot(reportSessionId, code);
+      if (evidence) await request(`/api/sessions/${encodeURIComponent(reportSessionId)}/evidence`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(evidence),
+      }, true);
       await endSession(reportSessionId);
       navigate("/report/" + encodeURIComponent(reportSessionId));
     } catch (error) {
@@ -105,6 +114,19 @@ function InterviewPage() {
       setEnding(false);
       endingRef.current = false;
     }
+  };
+
+  const reviewCode = async () => {
+    if (reviewing || ending || !voiceControls.current) return;
+    setReviewing(true); setRunError(null); setReviewStatus("");
+    try {
+      if (sessionId) await saveSnapshot(sessionId, code);
+      await voiceControls.current.reviewCode(code);
+      setReviewStatus("Code sent to the duck for review. Your interview is still in progress.");
+    } catch (error) {
+      setRunError(error instanceof Error ? error.message : "Could not send your code to the duck.");
+      setExecutionTab("results"); setResultsSplitSize(45);
+    } finally { setReviewing(false); }
   };
 
   const runCode = async () => {
@@ -161,9 +183,11 @@ function InterviewPage() {
         timer={session.timer}
         modeLabel={modeLabels[activeMode]}
         onRun={runCode}
-        onSubmit={() => void handleEndInterview()}
-        running={running || ending}
+        onSubmit={() => void reviewCode()}
+        running={running || ending || reviewing}
+        runLabel="Run Tests"
       />
+      {reviewStatus && <p role="status" className="theme-surface theme-body-text px-5 py-2 text-sm">{reviewStatus}</p>}
 
       <main className={"sandbox-layout [&.sandbox-layout]:[display:grid] [&.sandbox-layout]:[grid-template-columns:minmax(0,_1fr)_minmax(290px,_24.2%)] [&.sandbox-layout]:[gap:16px] [&.sandbox-layout]:[flex:1] [&.sandbox-layout]:[min-height:0] [&.sandbox-layout]:[padding:16px] [@media_(max-width:_950px)]:[&.sandbox-layout]:[grid-template-columns:minmax(0,_1fr)] [@media_(max-width:_600px)]:[&.sandbox-layout]:[padding:10px] [@media_(max-width:_600px)]:[&.sandbox-layout]:[gap:10px] [&.sandbox-layout_>_.resizable-split]:[flex:1] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[height:auto] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[grid-template-columns:minmax(0,_1fr)]! [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[gap:16px] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_[role=separator]]:[display:none] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_div:first-child]:[height:850px] [@media_(max-width:_600px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_div:first-child]:[height:1100px]"}>
         <ResizableSplit direction="horizontal" storageKey="clario-sandbox-call-width" initialSize={76}
@@ -207,7 +231,7 @@ function InterviewPage() {
               </div> : <p className="theme-muted-text text-sm">Hints coming soon.</p>}
             </div>}
           </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} problemSlug={problem.slug} onEndInterview={handleEndInterview} />
+          <VideoCallPanel controlsRef={voiceControls} ending={ending} round={session.round} interviewer={session.interviewer} problemSlug={problem.slug} onEndInterview={handleEndInterview} />
         </div>
           }
         />

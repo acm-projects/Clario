@@ -9,10 +9,10 @@ export type ProgressHistoryItem = {
   problem_title: string | null;
   difficulty: Difficulty | null;
   mode: string;
-  overall_score: number;
-  problem_solving_score: number;
-  technical_score: number;
-  communication_score: number;
+  overall_score: number | null;
+  problem_solving_score: number | null;
+  technical_score: number | null;
+  communication_score: number | null;
 };
 
 export type ProgressSummary = {

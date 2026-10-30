@@ -12,6 +12,12 @@ import config  # noqa: F401
 
 Score = Annotated[int, Field(strict=True, ge=0, le=100)]
 
+class TechniqueGap(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    technique: str = Field(min_length=1, max_length=120)
+    evidence: str = Field(min_length=1, max_length=800)
+    practice: str = Field(min_length=1, max_length=800)
+
 
 class FeedbackContent(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -25,6 +31,7 @@ class FeedbackContent(BaseModel):
     coach_quote: str = Field(min_length=1, max_length=240)
     coach_note: str = Field(min_length=1, max_length=800)
     evidence_limitations: list[str] = Field(max_length=8)
+    technique_gaps: list[TechniqueGap] = Field(default_factory=list, max_length=5)
 
 
 SYSTEM_PROMPT = """You are Clario's technical interview feedback coach.
@@ -44,6 +51,11 @@ anxiety, or confidence. Filler matches are literal and may be transcription erro
 Use null for technical if no nonblank code or no problem context is provided.
 Use null for reasoning and communication if no candidate transcript is present.
 Include evidence limitations, strengths, weaknesses, and actionable recommendations.
+Strengths should explain what to keep doing; weaknesses what is not working;
+recommendations what to fix next. Identify specific weak coding techniques in
+technique_gaps, with concrete evidence from supplied code or candidate words and
+a focused practice suggestion. Use an empty list if no technique gap is supported.
+Never infer weak techniques from problem topics alone or penalize productive silence.
 The coach quote must be your own coaching advice, never an invented candidate quote.
 Do not expose hidden solutions or test cases. Use plain text, not HTML.
 """

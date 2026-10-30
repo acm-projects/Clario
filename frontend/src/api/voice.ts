@@ -2,6 +2,7 @@ import { request } from "../lib/api";
 
 export interface VoiceSession {
   signed_url: string;
+  voice_id?: string;
   variables: {
     problem_title: string;
     problem_description: string;

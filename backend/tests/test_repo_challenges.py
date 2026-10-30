@@ -149,16 +149,15 @@ def test_execution_failures_do_not_leak_private_output(monkeypatch, stdout, code
     assert "private test" not in json.dumps(result)
 
 
-def test_submission_evaluates_then_reports_real_persistence_status(client, monkeypatch):
+def test_submit_neither_executes_tests_nor_ends_the_interview(client, monkeypatch):
     async def evaluate(identifier, files):
-        assert identifier == CART and files == starter(CART)
-        return {"success": False, "passed": 2, "failed": 5, "total": 7, "tests": [], "error": None}
+        raise AssertionError("Submit must not execute code")
     saved = Mock(return_value={"saved": False, "submission_id": None, "message": "Storage unavailable"})
     monkeypatch.setattr(service, "evaluate", evaluate)
     monkeypatch.setattr(service, "save_submission", saved)
     response = client.post(f"/api/repo-challenges/{CART}/submit", json={"files": starter(CART)})
-    assert response.status_code == 200 and response.json()["submission"]["saved"] is False
-    assert saved.call_args.args[0] == "test-owner"
+    assert response.status_code == 200 and response.json()["review_requested"] is True
+    saved.assert_not_called()
 
 
 def test_routes_reject_bad_input_and_missing_challenge(client):
@@ -213,12 +212,13 @@ def test_repository_voice_context_uses_existing_agent_without_private_tests(clie
     elevenlabs = Mock()
     elevenlabs.conversational_ai.conversations.get_signed_url.return_value = SimpleNamespace(signed_url="https://example.test/signed")
     monkeypatch.setattr(voice, "get_elevenlabs", lambda: elevenlabs)
-    monkeypatch.setattr(voice, "settings", SimpleNamespace(elevenlabs_agent_id="test-agent"))
+    monkeypatch.setattr(voice, "settings", SimpleNamespace(elevenlabs_agent_id="test-agent", elevenlabs_voice_id="test-voice"))
     monkeypatch.setattr(voice, "get_problem", Mock(side_effect=AssertionError("Repo voice must not call LeetCode")))
     response = client.get(f"/voice/repo-session?challenge_id={CART}")
     assert response.status_code == 200
     data = response.json()
     assert data["signed_url"] == "https://example.test/signed"
+    assert data["voice_id"] == "test-voice"
     context = data["variables"]["problem_description"]
     assert "repository debugging interview" in context and "cart.py" in context
     assert "test_cart.py" in context
@@ -249,10 +249,10 @@ def test_real_piston_timeout_and_syntax_error():
 
 
 @pytest.mark.skipif(os.getenv("PISTON_REPO_TESTS") != "1", reason="Requires local Piston")
-def test_real_submission_endpoint_evaluates_fixed_files(client, monkeypatch):
+def test_real_run_endpoint_evaluates_fixed_files(client, monkeypatch):
     monkeypatch.setattr(service, "save_submission", lambda *args: {"saved": False, "submission_id": None, "message": "Test intentionally disables database writes"})
-    response = client.post(f"/api/repo-challenges/{CART}/submit", json={"files": fixed(CART)})
+    response = client.post(f"/api/repo-challenges/{CART}/run", json={"files": fixed(CART)})
     assert response.status_code == 200
     result = response.json()
     assert result["success"] and result["passed"] == result["total"] == len(service.load(CART)[1]["testNames"])
-    assert result["submission"]["saved"] is False
+    assert "submission" not in result
