@@ -74,7 +74,9 @@
 .brand-ui[data-appearance="dark"] .reference-library .library-difficulty-hard { background: #3a1c20; color: #ffa2ac; }
 
 :root{
- --cream:#fbf4df; --cream-gradient:linear-gradient(135deg,#fffdf7 0%,#fbf4df 50%,#f2e5c4 100%); --brand-blue:#2378DB; --navy:#12354C; --sun-yellow:#F5CB68; --teal:#147A72;
+ --page-background:#fbf4df;
+ --cream:var(--page-background); --brand-blue:#2378DB; --navy:#12354C; --sun-yellow:#F5CB68; --teal:#147A72;
+ --cream-gradient:linear-gradient(135deg,#fffdf7 0%,#fbf4df 50%,#f2e5c4 100%);
  --primary:#1C63B5; --primary-hover:#154E91; --surface:var(--cream); 
  --surface-raised:#FFFDF8; --surface-inset:#EEE8DA; --surface-blue:#E7F0FC;
  --text:#1D2D3C; --text-muted:#53616C; --border:#CDC9BF; --border-strong:#7C898F;
@@ -350,6 +352,20 @@ meter{ font-family:var(--font-mono); font-variant-numeric:tabular-nums;
 @keyframes pond-bob { 0%,100% { transform:translate(0,0) rotate(-3deg); } 50% { transform:translate(12px,7px) rotate(3deg); } }
 @keyframes pond-rise { from { transform:translateY(0); opacity:0; } 10%,80% { opacity:.8; } to { transform:translate(24px,-650px); opacity:0; } }
 @keyframes pond-swim { from { transform:translateX(0); } to { transform:translateX(180px); } }
+
+/* Keep blue on accent surfaces and neutral text on the cream workspace. */
+.interview-page .sandbox-video .theme-video-interviewer .theme-avatar-ring {
+  background: #fffdf8;
+}
+.interview-page .sandbox-video .theme-video-interviewer > div:first-child > span:first-child {
+  background: #fffdf8;
+  color: #292929;
+}
+
+.interview-page[data-theme="light"] .theme-panel,
+.interview-page[data-theme="light"] .sandbox-call {
+  box-shadow: 0 4px 18px -10px #18213726;
+}
 
 @utility bg-cream-gradient {
   background-color: var(--cream);

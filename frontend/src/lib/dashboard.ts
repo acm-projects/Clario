@@ -1,4 +1,3 @@
-import { listSessions } from "./api";
 import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
 
@@ -78,8 +77,10 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
   return { completedThisWeek, completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
 }
 
-export async function loadSessionSummary(): Promise<SessionSummary> {
-  return summarizeSessions(await listSessions());
+export async function loadSessionSummary(
+  fetchSessions: () => Promise<Record<string, unknown>[]> = async () => (await import("./api")).listSessions(),
+): Promise<SessionSummary> {
+  return summarizeSessions(await fetchSessions());
 }
 
 export interface SkillScore { label: string; score: number | null }

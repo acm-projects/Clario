@@ -1,0 +1,41 @@
+.interview-page {
+  --sandbox-blue: #627be8 !important;
+  --skin-ink: #182137;
+  --skin-yellow: #ffdf4f;
+}
+.interview-page[data-theme="light"] {
+  --page-bg: #fbf4df !important;
+  --panel-bg: #fffdf7 !important;
+  --line: transparent !important;
+  --text-main: #182137 !important;
+  --text-body: #182137 !important;
+  --text-muted: #626c86 !important;
+  --surface: #fbf4df !important;
+  --surface-hover: #f3e9c9 !important;
+}
+.interview-page > header { height: 70px; min-height: 70px; padding: 12px 28px; background: var(--sandbox-blue); border: 2px solid transparent; border-radius: 24px; color: #fffdf7; }
+.interview-page > header > div:first-child > span,
+.interview-page > header > div:first-child > button { color: #fffdf7 !important; }
+.interview-page > header > div:nth-child(2) > button,
+.interview-page .sandbox-button,
+.interview-page .sandbox-timer { border: 2px solid transparent !important; border-radius: 999px !important; background: #fffdf7 !important; color: var(--skin-ink) !important; font-weight: 600; }
+.interview-page > header > div:nth-child(2) > button { height: 36px; }
+.interview-page > header > div:nth-child(2) > button:last-child,
+.interview-page .sandbox-button.is-active { background: var(--skin-yellow) !important; }
+.interview-page .sandbox-problem,
+.interview-page .sandbox-code,
+.interview-page .sandbox-results,
+.interview-page .sandbox-call { border: 2px solid var(--line) !important; border-radius: 26px !important; box-shadow: none !important; }
+.interview-page .sandbox-code > div:first-child { background: var(--surface) !important; border-bottom: 2px solid var(--line) !important; }
+.interview-page .sandbox-code > div:first-child .sandbox-button { padding: 5px 12px; font-size: 13px; line-height: 18px; }
+.interview-page .sandbox-results [role="tablist"] { flex-wrap: wrap; gap: 8px; padding: 2px 4px 4px; }
+.interview-page .sandbox-results [role="tab"] { border: 0; border-radius: 999px; padding: 6px 14px; font-size: 14px; line-height: 20px; background: var(--surface); }
+.interview-page .sandbox-results [role="tab"][aria-selected="true"] { background: var(--skin-yellow); color: var(--skin-ink); }
+.interview-page .sandbox-results [role="tabpanel"] button { padding: 5px 12px; font-size: 13px; line-height: 20px; border: 2px solid var(--line); border-radius: 999px; background: var(--panel-bg); color: var(--text-main); box-shadow: 0 1px 2px #1821370d; }
+.interview-page .sandbox-results [role="tabpanel"] button[aria-pressed="true"] { background: var(--sandbox-blue); color: #fff; }
+.interview-page .sandbox-video .theme-video-interviewer { background: var(--sandbox-blue) !important; border-color: transparent !important; border-radius: 22px; }
+.interview-page .sandbox-video .theme-avatar-ring { background: #fffdf7 !important; border: 2px solid transparent; }
+.interview-page .theme-video-interviewer > .absolute.inset-0 { position: relative; inset: auto; margin-top: 20px; padding-inline: 0; background: transparent; }
+.interview-page .theme-video-interviewer button { background: var(--skin-yellow) !important; color: var(--skin-ink) !important; margin-top: 0 !important; }
+.interview-page[data-theme="dark"] { --line: transparent !important; }
+@media (max-width: 1250px) { .interview-page > header { height: auto; } }

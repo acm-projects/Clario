@@ -9,3 +9,4 @@ python-multipart==0.0.20
 supabase==2.27.0
 uvicorn==0.39.0
 pytest==8.3.5
+tzdata==2026.6; sys_platform == "win32"

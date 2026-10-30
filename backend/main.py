@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from routers import assessment
 from routers.feedback import router as feedback_router
 from routers.repo_challenges import router as repo_challenges_router
 from auth import get_current_user
@@ -28,6 +29,7 @@ app.include_router(sessions_router)
 app.include_router(scenarios_router)
 app.include_router(feedback_router)
 app.include_router(repo_challenges_router)
+app.include_router(assessment.router)
 
 #routers
 

@@ -27,9 +27,9 @@ function mockClient({ user = { id: "user-1" }, authError = null, updateError = n
   return { client, calls };
 }
 
-test("maps exactly the existing profile columns, with title-case difficulty and 5+ as 5", () => {
+test("maps the assessment profile columns, with title-case difficulty and 5+ as 5", () => {
   const update = getProfileUpdate(answers);
-  assert.deepEqual(Object.keys(update).sort(), ["has_leetcode_experience", "has_coding_experience", "preferred_language", "language_comfort", "starting_difficulty", "interview_confidence", "weekly_interview_goal", "assessment_completed", "updated_at"].sort());
+  assert.deepEqual(Object.keys(update).sort(), ["has_leetcode_experience", "has_coding_experience", "preferred_language", "language_comfort", "starting_difficulty", "interview_confidence", "weekly_interview_goal", "assessment_completed", "updated_at", "language_to_learn", "struggling_topics", "target_company", "target_date"].sort());
   assert.equal(update.starting_difficulty, "Medium");
   assert.equal(update.weekly_interview_goal, 5);
   assert.equal(update.assessment_completed, true);
@@ -43,14 +43,14 @@ test("difficulty boundaries match Easy / Medium / Hard", () => {
   }
 });
 
-test("Other preserves coding experience, skips comfort, and starts Easy", () => {
+test("Other asks for practice language and uses its comfort rating", () => {
   const other = { ...answers, languagesUsed: "other", languageComfort: 10, interviewConfidence: 10 };
-  assert.deepEqual(getQuestionPath(other), ["leetcode", "used", "language", "weekly"]);
+  assert.deepEqual(getQuestionPath(other), ["leetcode", "used", "language", "languageComfort", "strugglingTopics", "weekly", "targetCompany", "interviewDate"]);
   const update = getProfileUpdate(other);
-  assert.equal(update.has_coding_experience, true);
-  assert.equal(update.language_comfort, null);
+  assert.equal(update.has_coding_experience, null);
+  assert.equal(update.language_comfort, 10);
   assert.equal(update.interview_confidence, null);
-  assert.equal(update.starting_difficulty, "Easy");
+  assert.equal(update.starting_difficulty, "Hard");
 });
 
 test("Neither and no coding experience keep their distinct paths and accurate data", () => {
@@ -58,8 +58,8 @@ test("Neither and no coding experience keep their distinct paths and accurate da
     const beginner = { ...answers, hasLeetCodeExperience: false, hasCodingExperience, languagesUsed: "neither", interviewConfidence: 10 };
     const update = getProfileUpdate(beginner);
     assert.equal(update.has_coding_experience, hasCodingExperience);
-    assert.equal(update.language_comfort, null);
-    assert.equal(update.starting_difficulty, "Easy");
+    assert.equal(update.language_comfort, hasCodingExperience ? 5 : null);
+    assert.equal(update.starting_difficulty, hasCodingExperience ? "Medium" : "Easy");
     assert.equal(update.interview_confidence, hasCodingExperience ? null : 10);
   }
 });
@@ -147,4 +147,14 @@ test("display name writes reject missing sessions, account changes, and denied o
   for (const options of [{ updateError: new Error("RLS denied") }, { row: null }, { row: { id: "other-user" } }]) {
     await assert.rejects(saveDisplayName(mockClient(options).client, "Ada", "user-1"));
   }
+});
+test("saves optional prep answers and clears topics when the path changes", () => {
+  const prep = { ...answers, strugglingTopics: ["Array", "Array", "Tree"], targetCompany: "  Google, Microsoft  ", interviewDate: "2027-01-15" };
+  const update = getProfileUpdate(prep);
+  assert.deepEqual(update.struggling_topics, ["Array", "Tree"]);
+  assert.equal(update.target_company, "Google, Microsoft");
+  assert.equal(update.target_date, "2027-01-15");
+  assert.deepEqual(getProfileUpdate({ ...prep, hasLeetCodeExperience: false, hasCodingExperience: true }).struggling_topics, []);
+  assert.equal(getProfileUpdate(answers).target_date, null);
+  assert.throws(() => getProfileUpdate({ ...prep, interviewDate: "2027-02-30" }), /valid interview date/);
 });

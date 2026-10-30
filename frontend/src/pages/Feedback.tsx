@@ -1,3 +1,4 @@
+import PageClouds from "../components/effects/PageClouds";
 import PageHeading from "../components/ui/PageHeading";
 import { useEffect, useState } from "react";
 
@@ -47,10 +48,12 @@ export default function Feedback() {
   function resetFilters() { setQuery(""); setDifficulty("All"); setCategory("All"); setStatus("All"); }
 
   return (
-    <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-cream-gradient px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]"}>
+    <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-[var(--page-background)] px-4 pb-12 pt-2 font-sans text-[#29251d] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px] [&_button]:cursor-pointer [&_:is(a,button,input,select):focus-visible]:outline-2 [&_:is(a,button,input,select):focus-visible]:outline-offset-4 [&_:is(a,button,input,select):focus-visible]:outline-[#3054ed]"}>
+    <PageClouds />
       <NavbarDashboard />
       <div className="mx-auto max-w-[1120px]">
-        <div className="pt-9 max-[700px]:pt-7"><PageHeading eyebrow="YOUR PROGRESS, IN FOCUS" title="Feedback report" subtitle="See where you're strong, where to focus, and how far you've come." /></div>        {import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true" && <section className={surface + " mb-6"}><h2 className="text-xl font-semibold">Test Gemini feedback</h2><p className="mt-3 text-sm text-[#687087]">Preview feedback for an unfinished Two Sum solution and a sample transcript expressing uncertainty.</p><Link to="/report/preview" className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Open test report</Link></section>}
+        <div className="pt-9 max-[700px]:pt-7"><PageHeading eyebrow="YOUR PROGRESS, IN FOCUS" title="Feedback report" subtitle="See where you're strong, where to focus, and how far you've come." /></div>
+        {import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === "true" && <section className={surface + " mb-6"}><h2 className="text-xl font-semibold">Test Gemini feedback</h2><p className="mt-3 text-sm text-[#687087]">Preview feedback for an unfinished Two Sum solution and a sample transcript expressing uncertainty.</p><Link to="/report/preview" className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Open test report</Link></section>}
         {error && <section className={`${surface} mb-6`}><p role="alert">{error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 min-h-10 rounded-lg bg-[#3054ed] px-5 py-3 text-sm text-white">Retry</button></section>}
             <section aria-labelledby="performance-heading" className={surface}>
               <h2 id="performance-heading" className="text-lg font-semibold">Performance Over Time <span className="text-sm font-normal text-[#777a7c]">(Past Few Months)</span></h2>
