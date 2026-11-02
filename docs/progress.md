@@ -1,8 +1,8 @@
 # Progress page
 
-`/progress` is protected by the existing profile gate and uses the shared authenticated API helper. The sidebar Progress link opens it; `/report` still opens feedback history.
+`/progress` is protected by the existing profile gate and uses the shared authenticated API helper. The sidebar Progress link opens it; `/report` redirects to Progress.
 
-The page includes three summary cards, a score trend with four independently selectable series (at least one remains visible), a completion pie chart, sorted topic averages, UMPIRE habits, and five previous-question report links. The pie counts unique problem slugs from completed interviews once, grouped by difficulty; it does not claim that a submitted solution passed tests. Null metrics display as unavailable. Dates use America/Chicago. Desktop columns stack on phones.
+The page includes three tinted summary cards, a line chart with all four score categories visible initially, and Previous Sessions with duration, percentage and out-of-100 score, mode, difficulty, and a See Report link. Scores use percentages and null metrics remain unavailable. There is no topic breakdown, completion pie, UMPIRE habits card, or separate feedback history. UMPIRE coaching appears only in a session report. Dates use America/Chicago. The layout uses the shared page heading and sidebar and stacks on phones.
 
 ## Live data
 
@@ -10,7 +10,7 @@ Live API calls are the default (`USE_MOCK` is false unless explicitly enabled in
 
 - `GET /api/progress/history` → `ProgressHistoryItem[]`
 - `GET /api/progress/summary` → `ProgressSummary`
-- `GET /api/progress/topics` → `ProgressTopics`
+- Available for other consumers, not requested by this page: `GET /api/progress/topics` → `ProgressTopics`
 
 Types are in `frontend/src/types/progress.ts`, matching the supplied CLA-81 contract. Requests include the signed-in user's authorization through the existing shared helper. Backend handlers must scope data to that user.
 
@@ -30,4 +30,4 @@ Previews are development-only and visibly marked as sample data. Production alwa
 
 Run `npm run build` in `frontend`. For browser checks, run the local Vite server with the existing development auth bypass enabled, install Playwright temporarily (`npm install --no-save --package-lock=false playwright`), and run `node tests/progress.browser.cjs`. Set `PLAYWRIGHT_MODULE` to an existing Playwright installation if needed. The script uses headless Microsoft Edge and intercepts profile/progress responses without writing account data.
 
-Browser coverage: loading, API rendering, line toggles including the last-visible guard, tooltip title/date/scores, completion pie, weak-topic bars, Plan at 56%, previous-question links, 390px layout without horizontal overflow, empty state, one-session/null observations, error/retry, and explicit mock preview. Screenshots are saved in the OS temporary directory. Backend tests cover user scoping, missing scores, and observed-step aggregation.
+Browser coverage: loading, percentage scores, four trend lines, detailed session links, 390px layout without horizontal overflow, empty and single-session states, error/retry, explicit mock preview, and the legacy report-index redirect. Screenshots are saved in the OS temporary directory. Backend tests cover user scoping, missing scores, and measured session duration. See [interview-flow.md](interview-flow.md) for timing sources and limitations.

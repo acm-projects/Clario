@@ -65,7 +65,7 @@ async def finish_challenge(challenge_id: str, body: RepositoryInput, user: dict 
         raise HTTPException(404, "Repository challenge not found")
     except service.InvalidRepository as error:
         raise HTTPException(422, str(error))
-    evidence = {"transcript": [turn.model_dump() for turn in body.transcript], "communication": body.communication.model_dump(mode="json") if body.communication else None}
+    evidence = {"transcript": [turn.model_dump(mode="json", exclude_none=True) for turn in body.transcript], "communication": body.communication.model_dump(mode="json") if body.communication else None, "duration_seconds": body.duration_seconds}
     submission = await run_in_threadpool(service.save_submission, user["sub"], challenge_id, body.files, evidence)
     if not submission["saved"]:
         raise HTTPException(503, submission["message"])

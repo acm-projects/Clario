@@ -6,3 +6,8 @@
 .progress-page button { cursor: pointer; }
 .progress-page :is(a,button):focus-visible { outline: 2px solid #3054ed; outline-offset: 4px; }
 @media (max-width: 480px) { .progress-page .progress-card { padding: 18px; } }
+
+.progress-page .progress-card { border-color: var(--border, #e7e5df); border-radius: var(--radius-card, 24px); }
+.progress-page .progress-stat-card:nth-child(1) { background: #eaf1fb; }
+.progress-page .progress-stat-card:nth-child(2) { background: #f9efcf; }
+.progress-page .progress-stat-card:nth-child(3) { background: #e9f1e8; }

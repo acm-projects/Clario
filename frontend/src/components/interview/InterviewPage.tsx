@@ -23,6 +23,7 @@ function InterviewPage() {
   const [ending, setEnding] = useState(false);
   const endingRef = useRef(false);
   const createdSession = useRef<string | null>(null);
+  const sessionCreation = useRef<ReturnType<typeof createModeSession> | null>(null);
   const voiceControls = useRef<VoiceControls>(null);
   const [reviewing, setReviewing] = useState(false);
   const [reviewStatus, setReviewStatus] = useState("");
@@ -68,6 +69,10 @@ function InterviewPage() {
         } else {
           const loaded = await getProblem(problemId, controller.signal);
           if (controller.signal.aborted) return;
+          sessionCreation.current ??= createModeSession({ mode: requestedMode === "company" ? "custom" : requestedMode, problemSlug: loaded.slug, language: "python3" });
+          const saved = await sessionCreation.current;
+          createdSession.current = saved.id;
+          if (controller.signal.aborted) return;
           setProblem(loaded);
           setCode(loaded.starter_code.python3 ?? "");
         }
@@ -96,7 +101,7 @@ function InterviewPage() {
       const evidence = await voiceControls.current?.finish();
       let reportSessionId = sessionId ?? createdSession.current;
       if (!reportSessionId) {
-        const saved = await createModeSession({ mode: "custom", problemSlug: problem.slug, language });
+        const saved = await createModeSession({ mode: activeMode === "company" ? "custom" : activeMode, problemSlug: problem.slug, language });
         reportSessionId = saved.id;
         createdSession.current = saved.id;
       }
@@ -120,7 +125,7 @@ function InterviewPage() {
     if (reviewing || ending || !voiceControls.current) return;
     setReviewing(true); setRunError(null); setReviewStatus("");
     try {
-      if (sessionId) await saveSnapshot(sessionId, code);
+      if (sessionId ?? createdSession.current) await saveSnapshot((sessionId ?? createdSession.current)!, code);
       await voiceControls.current.reviewCode(code);
       setReviewStatus("Code sent to the duck for review. Your interview is still in progress.");
     } catch (error) {
@@ -143,7 +148,7 @@ function InterviewPage() {
 
     try {
       const sourceCode = code;
-      if (sessionId) await saveSnapshot(sessionId, sourceCode);
+      if (sessionId ?? createdSession.current) await saveSnapshot((sessionId ?? createdSession.current)!, sourceCode);
       setRunResult(
         await runTests({ slug: problem.slug, language, code: sourceCode }),
       );
@@ -199,7 +204,7 @@ function InterviewPage() {
                 <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
                   label="Resize problem and code editor"
                   first={<ProblemPanel problem={problem} solved={runResult?.status === "Accepted"} />}
-                  second={<CodePanel key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
+                  second={<CodePanel key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId ?? createdSession.current)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
                     onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }

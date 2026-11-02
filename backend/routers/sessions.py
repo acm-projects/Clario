@@ -276,3 +276,12 @@ def save_interview_evidence(session_id: str, body: InterviewEvidence, user: dict
         raise HTTPException(409, "Session already completed")
     persist_evidence(supabase, session_id, body)
     return {"saved": True}
+
+
+@router.get("/{session_id}/transcript")
+def read_transcript(session_id: str, user: dict = Depends(get_current_user)):
+    get_owned_session(session_id, user["sub"])
+    rows = supabase.table("transcript_events").select("speaker,text,sequence_number").eq("session_id", session_id).order("sequence_number").limit(400).execute().data
+    events = supabase.table("session_events").select("metadata").eq("session_id", session_id).eq("event_type", "transcript_timing").limit(400).execute().data
+    timing = {event["metadata"]["sequence_number"]: event["metadata"] for event in events}
+    return [{**row, **timing.get(row["sequence_number"], {})} for row in rows]

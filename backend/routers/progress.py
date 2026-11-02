@@ -1,5 +1,6 @@
 """Progress derived from the signed-in user's saved interviews and reports."""
 from collections import defaultdict
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from auth import get_current_user
 from db import supabase
@@ -19,15 +20,35 @@ def all_rows(query):
         offset += 500
 
 
+def session_duration(session):
+    try:
+        start = datetime.fromisoformat(session["started_at"].replace("Z", "+00:00"))
+        end = datetime.fromisoformat(session["ended_at"].replace("Z", "+00:00"))
+        return max(0, (end - start).total_seconds())
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def recorded_duration(session, events):
+    for event in events:
+        if event.get("session_id") == session["id"] and event.get("event_type") == "session_duration":
+            value = (event.get("metadata") or {}).get("duration_seconds")
+            if isinstance(value, (float, int)) and value >= 0:
+                return value
+    if (session.get("problem_slug") or "").startswith(("repo-debugging:", "system-design:")):
+        return None
+    return session_duration(session)
+
+
 def progress_rows(user_id):
-    sessions = all_rows(supabase.table("interview_sessions").select("id,problem_slug,problem_id,mode,ended_at").eq("user_id", user_id).eq("status", "completed").order("ended_at").order("id"))
+    sessions = all_rows(supabase.table("interview_sessions").select("id,problem_slug,problem_id,mode,started_at,ended_at").eq("user_id", user_id).eq("status", "completed").order("ended_at").order("id"))
     reports, events = {}, []
     for start in range(0, len(sessions), 200):
         ids = [s["id"] for s in sessions[start:start + 200]]
         saved = all_rows(supabase.table("feedback_reports").select("id,session_id,overall_score,technical_score,reasoning_score,communication_score,created_at").in_("session_id", ids).order("created_at", desc=True).order("id"))
         for report in saved:
             reports.setdefault(report["session_id"], report)
-        events.extend(all_rows(supabase.table("session_events").select("session_id,event_type,metadata,created_at").in_("session_id", ids).in_("event_type", ["step_completed", "step_skipped"]).order("created_at").order("id")))
+        events.extend(all_rows(supabase.table("session_events").select("session_id,event_type,metadata,created_at").in_("session_id", ids).in_("event_type", ["step_completed", "step_skipped", "session_duration"]).order("created_at").order("id")))
     problems = {}
     history = []
     for session in sessions:
@@ -40,6 +61,7 @@ def progress_rows(user_id):
         report = reports.get(session["id"], {})
         slug = session.get("problem_slug")
         history.append({"session_id": session["id"], "date": session["ended_at"], "problem_slug": slug,
+            "duration_seconds": recorded_duration(session, events),
             "problem_title": problem.get("title"), "difficulty": problem.get("difficulty"),
             "mode": "repo_debugging" if (slug or "").startswith("repo-debugging:") else "system_design" if (slug or "").startswith("system-design:") else session["mode"],
             "overall_score": report.get("overall_score"), "problem_solving_score": report.get("reasoning_score"),

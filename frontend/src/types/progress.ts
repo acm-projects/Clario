@@ -5,6 +5,7 @@ export type UmpireStep = "understand" | "match" | "plan" | "implement" | "review
 export type ProgressHistoryItem = {
   session_id: string;
   date: string;
+  duration_seconds?: number | null;
   problem_slug: string | null;
   problem_title: string | null;
   difficulty: Difficulty | null;

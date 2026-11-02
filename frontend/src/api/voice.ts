@@ -6,6 +6,8 @@ export interface VoiceSession {
   variables: {
     problem_title: string;
     problem_description: string;
+    repo_name: string;
+    bug_summary: string;
   };
 }
 

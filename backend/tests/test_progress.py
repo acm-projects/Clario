@@ -46,3 +46,12 @@ def test_history_reads_only_owned_completed_sessions(monkeypatch):
         query.eq.assert_any_call("status", "completed")
     finally:
         app.dependency_overrides.clear()
+
+
+def test_duration_prefers_observed_room_time_and_never_uses_finish_only_session_dates():
+    session = {"id": "one", "started_at": "2026-11-02T18:00:00Z", "ended_at": "2026-11-02T18:10:30Z"}
+    assert progress.recorded_duration(session, []) == 630
+    session["problem_slug"] = "repo-debugging:example"
+    assert progress.recorded_duration(session, []) is None
+    events = [{"session_id": "other", "event_type": "session_duration", "metadata": {"duration_seconds": 99}}, {"session_id": "one", "event_type": "session_duration", "metadata": {"duration_seconds": 615}}]
+    assert progress.recorded_duration(session, events) == 615

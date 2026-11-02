@@ -64,3 +64,29 @@ def test_evidence_endpoint_requires_an_owned_active_session(monkeypatch):
         assert persist.call_count == 1
     finally:
         app.dependency_overrides.clear()
+
+
+def test_transcript_receipt_times_and_duration_are_saved_separately():
+    database = Mock()
+    evidence = InterviewEvidence.model_validate({"transcript": [{"source": "user", "message": "Use a map", "received_at": "2026-11-02T18:00:00Z", "elapsed_seconds": 2.5}], "duration_seconds": 65})
+    persist_evidence(database, "session-one", evidence)
+    writes = database.table.return_value.upsert.call_args_list
+    assert writes[0].args[0][0]["text"] == "Use a map"
+    timing = writes[1].args[0][0]
+    assert timing["event_type"] == "transcript_timing"
+    assert timing["metadata"]["elapsed_seconds"] == 2.5
+    assert timing["metadata"]["received_at"] == "2026-11-02T18:00:00+00:00"
+    assert writes[2].args[0]["metadata"]["duration_seconds"] == 65
+
+
+def test_transcript_read_checks_ownership_before_querying(monkeypatch):
+    from fastapi import HTTPException
+    app.dependency_overrides[get_current_user] = lambda: {"sub": "owner"}
+    owned = Mock(side_effect=HTTPException(404, "Session not found"))
+    monkeypatch.setattr(sessions, "get_owned_session", owned)
+    try:
+        response = TestClient(app).get("/api/sessions/other-session/transcript")
+        assert response.status_code == 404
+        owned.assert_called_once_with("other-session", "owner")
+    finally:
+        app.dependency_overrides.clear()

@@ -1,10 +1,10 @@
-export type TranscriptTurn = { source: string; message: string };
+export type TranscriptTurn = { source: string; message: string; received_at?: string; elapsed_seconds?: number };
 export type SilenceInterval = { start_seconds: number; end_seconds: number; duration_seconds: number };
 export type CommunicationCapture = {
   capture_id: string; monitored_seconds: number; silent_seconds: number; longest_pause_seconds: number;
   transcript: string; transcription_available: boolean; silence_intervals: SilenceInterval[];
 };
-export type InterviewEvidence = { transcript: TranscriptTurn[]; communication: CommunicationCapture | null };
+export type InterviewEvidence = { transcript: TranscriptTurn[]; communication: CommunicationCapture | null; duration_seconds?: number };
 export type VoiceControls = { reviewCode(code: string): Promise<void>; finish(): Promise<InterviewEvidence> };
 export const CODE_REVIEW_CUE = "The candidate clicked Submit to request a code review. Check the submitted snapshot and continue the interview with one relevant follow-up question. Do not give hints, a solution, or scores.";
 

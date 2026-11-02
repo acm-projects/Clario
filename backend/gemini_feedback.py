@@ -85,7 +85,7 @@ async def generate_feedback(evidence: dict) -> dict:
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
     if not api_key:
         raise HTTPException(status_code=503, detail="Feedback generation is not configured on the server.")
-    model = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
+    model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
     if not re.fullmatch(r"[A-Za-z0-9._-]+", model):
         raise HTTPException(status_code=503, detail="Feedback model configuration is invalid.")
     body = {
@@ -96,6 +96,8 @@ async def generate_feedback(evidence: dict) -> dict:
             "responseFormat": {"text": {"mimeType": "APPLICATION_JSON", "schema": FeedbackContent.model_json_schema()}},
         },
     }
+    if model.startswith("gemini-3"):
+        body["generationConfig"]["thinkingConfig"] = {"thinkingLevel": "low"}
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(75.0, connect=10.0)) as client:
             response = await client.post(

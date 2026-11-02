@@ -20,6 +20,20 @@ from starlette.concurrency import run_in_threadpool
 router = APIRouter(prefix="/voice", tags=["voice"])
 
 
+def interview_variables(title: str, description: str, opening_summary: str) -> dict[str, str]:
+    """Supply the shared agent's prompt and first-message variables in every mode.
+
+    Keep the opening summary candidate-visible: descriptions may contain private
+    evaluation instructions that must never be read in the greeting.
+    """
+    return {
+        "problem_title": title,
+        "problem_description": description,
+        "repo_name": title,
+        "bug_summary": opening_summary,
+    }
+
+
 @router.post("/system-design/{scenario_slug}/finish")
 async def finish_system_design(scenario_slug: str, body: InterviewEvidence, user: dict = Depends(get_current_user)):
     system_design_scenario(scenario_slug)
@@ -70,7 +84,7 @@ def get_system_design_session(scenario_slug: str, user: dict = Depends(get_curre
         raise
     except Exception:
         raise HTTPException(502, "Could not create system design voice session.")
-    return {"signed_url": signed.signed_url, "variables": {"problem_title": f'{scenario["company"]}: {scenario["title"]}', "problem_description": description}}
+    return {"signed_url": signed.signed_url, "variables": interview_variables(f'{scenario["company"]}: {scenario["title"]}', description, scenario["prompt"])}
 
 def get_elevenlabs():
     if not settings.elevenlabs_api_key:
@@ -112,7 +126,7 @@ def get_repo_session(challenge_id: str, user: dict = Depends(get_current_user)):
         raise
     except Exception:
         raise HTTPException(502, "Could not create repository voice session. Check the configured ElevenLabs agent and API permissions.")
-    return {"signed_url": signed.signed_url, "voice_id": settings.elevenlabs_voice_id, "variables": {"problem_title": challenge["title"], "problem_description": description}}
+    return {"signed_url": signed.signed_url, "voice_id": settings.elevenlabs_voice_id, "variables": interview_variables(challenge["title"], description, challenge["description"])}
 
 
 @router.get("/session")
@@ -131,10 +145,11 @@ def get_session(problem_slug: str, user: dict = Depends(get_current_user)):
 
     return {
         "signed_url": signed.signed_url,
-        "variables": {
-            "problem_title": problem["slug"].replace("-", " ").title(),
-            "problem_description": html_to_text(problem["description_html"]),
-        },
+        "variables": interview_variables(
+            problem.get("title") or problem["slug"].replace("-", " ").title(),
+            html_to_text(problem["description_html"]),
+            html_to_text(problem["description_html"]),
+        ),
     }
 
 

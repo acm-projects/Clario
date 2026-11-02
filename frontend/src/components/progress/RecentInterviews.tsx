@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import type { ProgressHistoryItem } from "../../types/progress";
-import { chronological, formatScore, formatShortDate, sessionTitle, scoreColor } from "../../utils/progressFormat";
-const badges = { Easy: "bg-[#e3f0e6] text-[#24623f]", Medium: "bg-[#fff1cb] text-[#78540c]", Hard: "bg-[#fbe9eb] text-[#a72d39]" };
+import { chronological, formatScore, formatShortDate, sessionTitle, modeLabel } from "../../utils/progressFormat";
+const duration = (seconds: number | null | undefined) => seconds == null ? "Not recorded" : `${Math.floor(seconds / 60)}m ${Math.floor(seconds % 60)}s`;
 export default function RecentInterviews({ history }: { history: ProgressHistoryItem[] }) {
-  return <section className="progress-card"><div className="flex flex-wrap justify-between gap-2"><h2>Previous questions</h2><Link to="/report" className="text-sm text-[#3054ed] underline underline-offset-4">View all feedback</Link></div><ul className="mt-4 divide-y divide-[#e7e5df]">{chronological(history).reverse().slice(0, 5).map(item => <li key={item.session_id}><Link to={`/report/${encodeURIComponent(item.session_id)}`} className="flex items-center justify-between gap-3 rounded-lg py-4 hover:bg-[#f4f3ef]"><div className="min-w-0"><p className="font-medium break-words">{sessionTitle(item)}</p><p className="progress-muted mt-1">{formatShortDate(item.date)}</p></div><div className="flex shrink-0 flex-wrap items-center justify-end gap-2 sm:gap-4">{item.difficulty && <span className={`rounded-full px-2 py-1 text-xs ${badges[item.difficulty]}`}>{item.difficulty}</span>}<span className={`text-lg font-semibold ${item.overall_score === null ? "text-[#687087]" : scoreColor(item.overall_score)}`}>{formatScore(item.overall_score)}</span><span aria-hidden="true">→</span></div></Link></li>)}</ul></section>;
+  return <section className="progress-card"><h2 className="border-b border-[#d9dedc] pb-5">Previous Sessions</h2>
+    <ol className="divide-y divide-[#e7e5df]">{chronological(history).reverse().map(item => <li key={item.session_id} className="py-6">
+      <div className="flex flex-wrap items-center justify-between gap-4"><div><h3 className="font-semibold">{sessionTitle(item)}</h3><p className="progress-muted mt-1">{formatShortDate(item.date)}</p></div><Link to={`/report/${encodeURIComponent(item.session_id)}`} className="rounded-xl border border-[#3054ed] px-4 py-2 text-sm font-medium text-[#3054ed] hover:bg-[#e9edff]">See Report</Link></div>
+      <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">{[["Duration", duration(item.duration_seconds)], ["Score", item.overall_score === null ? "Awaiting report" : `${formatScore(item.overall_score)}% (${formatScore(item.overall_score)} / 100)`], ["Mode", modeLabel(item.mode)], ["Difficulty", item.difficulty ?? "Not specified"]].map(([label, value]) => <div key={label}><dt className="progress-eyebrow">{label}</dt><dd className="mt-2 text-sm font-medium">{value}</dd></div>)}</dl>
+    </li>)}</ol>
+  </section>;
 }

@@ -3,7 +3,7 @@ import Progress from "./pages/Progress";
 import SystemDesign from "./pages/SystemDesign";
 import { useAppearance } from "./lib/appearance";
 import { brandTheme } from "./lib/theme";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -13,7 +13,6 @@ import InterviewRoom from "./pages/InterviewRoom";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import ProblemLibrary from "./pages/ProblemLibrary";
-import Feedback from "./pages/Feedback";
 import InterviewReport from "./pages/InterviewReport";
 import ProfileGate from "./components/auth/ProfileGate";
 
@@ -27,7 +26,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/problems" element={<ProblemLibrary />} />
-      <Route path="/report" element={<Feedback />} />
+      <Route path="/report" element={<Navigate to="/progress" replace />} />
       <Route path="/report/preview" element={<InterviewReport preview />} />
       <Route path="/report/:sessionId" element={<InterviewReport />} />
       <Route element={<ProfileGate />}>

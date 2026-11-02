@@ -56,7 +56,6 @@ export function TopBar({
 
       <div className="flex items-center gap-4">
         <Pill className="theme-surface theme-body-text flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#4a8cf0]" />
           {modeLabel ?? "Session live"}
         </Pill>
         <span className={"sandbox-timer [&.sandbox-timer]:[border:1px_solid_var(--line)] [&.sandbox-timer]:[border-radius:11px] [&.sandbox-timer]:[background:var(--panel-bg)] [&.sandbox-timer]:[padding:8px_15px] [&.sandbox-timer]:[font-family:monospace] [&.sandbox-timer]:[font-size:16px] theme-body-text text-sm tabular-nums"}>{timer}</span>

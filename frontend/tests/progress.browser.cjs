@@ -9,7 +9,8 @@ const path = require('node:path');
 const compiled = ts.transpileModule(fs.readFileSync(require('node:path').join(__dirname, '../src/mocks/progressMock.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } });
 const fixture = { exports: {} };
 vm.runInNewContext(compiled.outputText, fixture);
-const { historyMock: history, summaryMock: summary, topicsMock: topics, emptySummaryMock } = fixture.exports;
+const { historyMock, summaryMock: summary, topicsMock: topics, emptySummaryMock } = fixture.exports;
+const history = historyMock.map(item => ({ ...item, duration_seconds: 1234 }));
 
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
@@ -37,26 +38,22 @@ const { historyMock: history, summaryMock: summary, topicsMock: topics, emptySum
     await page.getByText('Loading your progress…', { exact: true }).waitFor();
     state = 'success'; release();
     await page.getByRole('heading', { name: 'Your Progress' }).waitFor();
-    await page.getByText('65.3', { exact: true }).waitFor();
-    await page.getByText('▲ 27.6 since your first interview', { exact: true }).waitFor();
-    await page.getByText('Skipped in 56%', { exact: true }).waitFor();
-    await page.getByRole('heading', { name: 'Questions completed', exact: true }).waitFor();
-    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Previous questions', exact: true }) });
-    assert.equal(await recent.locator('li').count(), 5);
+    await page.getByText('65.3%', { exact: true }).waitFor();
+    await page.getByText('▲ 27.6 percentage points since your first interview', { exact: true }).waitFor();
+    assert.equal(await page.getByRole('heading', { name: 'UMPIRE habits' }).count(), 0);
+    assert.equal(await page.getByRole('heading', { name: 'Topic breakdown' }).count(), 0);
+    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Previous Sessions', exact: true }) });
+    assert.equal(await recent.locator('li').count(), 9);
     assert.match(await recent.locator('li').first().innerText(), /Company Interview/);
     assert.equal(await recent.locator('li a').first().getAttribute('href'), '/report/mock-9');
-    const overall = page.getByRole('button', { name: 'Overall', exact: true });
-    await overall.click();
-    assert.equal(await overall.getAttribute('aria-pressed'), 'true');
-    const technical = page.getByRole('button', { name: 'Technical', exact: true });
-    await technical.click(); await overall.click();
-    assert.equal(await technical.getAttribute('aria-pressed'), 'true');
-    assert.equal(await overall.getAttribute('aria-pressed'), 'false');
-    await overall.click();
-    await page.locator('.recharts-line-dots .recharts-dot').first().hover();
-    await page.locator('.recharts-tooltip-wrapper').filter({ hasText: 'Two Sum' }).waitFor();
-    const barColors = await page.locator('.recharts-bar-rectangle path').evaluateAll(nodes => nodes.map(n => n.getAttribute('fill')));
-    assert.equal(barColors.filter(color => color === '#c87819').length, 3);
+    for (const name of ['Overall', 'Problem Solving', 'Technical', 'Communication']) {
+      assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true');
+    }
+    assert.equal(await page.locator('.recharts-line-curve').count(), 4);
+    assert.equal(await page.locator('.recharts-line-dots .recharts-dot').count(), 0);
+    assert.equal(await recent.getByRole('link', { name: 'See Report' }).count(), 9);
+    await recent.getByText('Duration', { exact: true }).first().waitFor();
+    await recent.getByText('20m 34s', { exact: true }).first().waitFor();
     await page.screenshot({ path: path.join(os.tmpdir(), 'clario-progress-desktop.png'), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(400);
@@ -65,15 +62,18 @@ const { historyMock: history, summaryMock: summary, topicsMock: topics, emptySum
     state = 'empty'; await page.reload();
     await page.getByRole('heading', { name: 'No interviews yet.' }).waitFor();
     state = 'single'; await page.reload();
-    await page.getByText('No UMPIRE observations recorded yet.').waitFor();
+    await page.getByRole('heading', { name: 'Previous Sessions', exact: true }).waitFor();
     assert.equal(await page.getByText('since your first interview', { exact: false }).count(), 0);
     state = 'error'; await page.reload();
     await page.getByRole('alert').filter({ hasText: "We couldn't load your progress" }).waitFor();
     state = 'success'; await page.getByRole('button', { name: 'Try again', exact: true }).click();
-    await page.getByText('65.3', { exact: true }).waitFor();
+    await page.getByText('65.3%', { exact: true }).waitFor();
     await page.goto(`${base}/progress?preview=mock`);
     await page.getByText('Preview data · These are sample interviews.').waitFor();
+    await page.goto(`${base}/report`);
+    await page.waitForURL('**/progress');
+    await page.getByRole('heading', { name: 'Your Progress', exact: true }).waitFor();
     assert.deepEqual(errors, []);
-    console.log('Progress browser checks passed: API data, loading, toggles, tooltip, weak topics, recent links, mobile, empty, single, error/retry, mock preview.');
+    console.log('Progress browser checks passed: API data, loading, toggles, line charts, session links, mobile, empty, single, error/retry, mock preview.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

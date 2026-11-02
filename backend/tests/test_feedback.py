@@ -52,9 +52,10 @@ class ProviderTests(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn("test-secret", str(request.url))
             body = json.loads(request.content)
             self.assertEqual(body["generationConfig"]["responseFormat"]["text"]["mimeType"], "APPLICATION_JSON")
+            self.assertEqual(body["generationConfig"]["thinkingConfig"], {"thinkingLevel": "low"})
             return httpx.Response(200, json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(CONTENT)}]}}]})
         client = httpx.AsyncClient(transport=httpx.MockTransport(respond))
-        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret", "GEMINI_MODEL": "gemini-test"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret", "GEMINI_MODEL": "gemini-3.6-flash"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
             report = await generate_feedback({"code": "return 1", "problem": {"title": "Example"}, "candidate_transcript": ""})
         self.assertEqual(report["provider"], "gemini")
         self.assertIsNone(report["communication_score"])
