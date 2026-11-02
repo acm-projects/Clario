@@ -9,6 +9,7 @@ from routers.problems import router as problems_router
 from routers.scenarios import router as scenarios_router
 from routers.sessions import router as sessions_router
 from voice.router import router as voice_router
+from voice.tools import router as voice_tools_router
 from routers.code_runner import router as code_runner_routers
 from routers.companies import router as companies_router
 from routers.standard_runner import router as standard_runner_router
@@ -35,6 +36,7 @@ app.add_middleware(
 
 app.include_router(piston_router)
 app.include_router(voice_router)
+app.include_router(voice_tools_router)
 app.include_router(problems_router)
 app.include_router(sessions_router)
 app.include_router(scenarios_router)

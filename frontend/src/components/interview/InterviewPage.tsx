@@ -1,22 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
 import { ProblemPanel } from "./ProblemPanel";
 import { TestResultPanel, type ExecutionTab } from "./TestResultPanel";
 import { CodePanel } from "./CodePanel";
-import { VideoCallPanel } from "./VideoCallPanel";
+import { VideoCallPanel, type VoiceCallHandle } from "./VideoCallPanel";
 import { ResizableSplit } from "./ResizableSplit";
 import { session } from "./data";
 import { type Problem, type TestsResponse } from "../../types";
 import { modeLabels, parseInterviewMode, type InterviewMode } from "../../lib/interviewModes";
-import { ApiError, getProblem, runTests, getSession, saveSnapshot, endSession } from "../../lib/api";
+import { ApiError, getProblem, runTests, getSession, endSession, createSession } from "../../lib/api";
+
+import { useCodeSnapshots } from "../../lib/useCodeSnapshots";
+import { summarizeRun, summarizeRunError } from "../../lib/runContext";
+import { CODE_ACTIVITY_UPDATE } from "../../lib/codeActivity";
+import { isCompletedSessionError } from "../../lib/snapshotWriter";
 
 function InterviewPage() {
   const navigate = useNavigate();
   const { problemId } = useParams<{ problemId: string }>();
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get("session");
+  const routeSessionId = searchParams.get("session");
+  const [sessionId, setSessionId] = useState(routeSessionId);
   const [ending, setEnding] = useState(false);
+  const endStarted = useRef(false);
   const requestedMode = parseInterviewMode(searchParams.get("mode")) ?? "custom";
   const [activeMode, setActiveMode] = useState<InterviewMode>(requestedMode);
   const isMock = activeMode === "surprise_me" || activeMode === "company";
@@ -25,6 +32,9 @@ function InterviewPage() {
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
   const [language, setLanguage] = useState<"python3" | "java">("python3");
   const [code, setCode] = useState("");
+  const voiceCall = useRef<VoiceCallHandle>(null);
+  const snapshots = useCodeSnapshots(sessionId, code, loadState === "ready" && !ending,
+    () => voiceCall.current?.sendContextualUpdate(CODE_ACTIVITY_UPDATE) ?? false);
   const [runResult, setRunResult] = useState<TestsResponse | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
@@ -53,9 +63,13 @@ function InterviewPage() {
       }
 
       try {
-        if (sessionId) {
-          const saved = await getSession(sessionId, controller.signal);
+        if (routeSessionId) {
+          const saved = await getSession(routeSessionId, controller.signal);
           if (controller.signal.aborted) return;
+          if (saved.status === "completed") {
+            navigate("/report/" + encodeURIComponent(routeSessionId), { replace: true });
+            return;
+          }
           setActiveMode(parseInterviewMode(saved.mode) ?? requestedMode);
           if (saved.problem_slug !== problemId) throw new Error("Session problem mismatch.");
           const loaded = saved.problem ?? await getProblem(problemId, controller.signal);
@@ -82,22 +96,40 @@ function InterviewPage() {
 
     void loadProblem();
     return () => controller.abort();
-  }, [problemId, sessionId, requestedMode, navigate]);
+  }, [problemId, routeSessionId, requestedMode, navigate]);
+
+  const ensureSession = async () => {
+    if (sessionId) {
+      await snapshots.save(sessionId, code, false);
+      return sessionId;
+    }
+    if (!problem) throw new Error("Problem is not loaded.");
+    const created = await createSession(problem.slug, activeMode === "surprise_me" ? "surprise" : activeMode, language);
+    setSessionId(created.id);
+    await snapshots.save(created.id, code);
+    return created.id;
+  };
 
   const handleEndInterview = async () => {
-    if (ending) return;
+    if (endStarted.current) return;
+    endStarted.current = true;
+    snapshots.stop();
     setEnding(true);
     setRunError(null);
     try {
       if (sessionId) {
-        await saveSnapshot(sessionId, code);
+        await snapshots.save(sessionId, code);
         await endSession(sessionId);
       }
       navigate(sessionId ? "/report/" + encodeURIComponent(sessionId) : "/dashboard");
     } catch (error) {
-      setRunError(error instanceof Error ? error.message : "Could not save your interview. Please try again.");
-    } finally {
+      if (sessionId && isCompletedSessionError(error)) {
+        navigate("/report/" + encodeURIComponent(sessionId));
+        return;
+      }
+      endStarted.current = false;
       setEnding(false);
+      setRunError(error instanceof Error ? error.message : "Could not save your interview. Please try again.");
     }
   };
 
@@ -115,10 +147,15 @@ function InterviewPage() {
 
     try {
       const sourceCode = code;
-      if (sessionId) await saveSnapshot(sessionId, sourceCode);
-      setRunResult(
-        await runTests({ slug: problem.slug, language, code: sourceCode }),
-      );
+      if (sessionId) await snapshots.save(sessionId, sourceCode);
+      try {
+        const result = await runTests({ slug: problem.slug, language, code: sourceCode });
+        setRunResult(result);
+        voiceCall.current?.sendContextualUpdate(summarizeRun(result));
+      } catch (error) {
+        voiceCall.current?.sendContextualUpdate(summarizeRunError(error));
+        throw error;
+      }
     } catch (error) {
       setRunError(error instanceof Error ? error.message : "Unable to run code.");
     } finally {
@@ -157,6 +194,7 @@ function InterviewPage() {
         running={running || ending}
       />
 
+      {snapshots.error && <p role="alert" className="px-5 py-2 text-sm text-red-500">{snapshots.error}</p>}
       <main className={"sandbox-layout [&.sandbox-layout]:[display:grid] [&.sandbox-layout]:[grid-template-columns:minmax(0,_1fr)_minmax(290px,_24.2%)] [&.sandbox-layout]:[gap:16px] [&.sandbox-layout]:[flex:1] [&.sandbox-layout]:[min-height:0] [&.sandbox-layout]:[padding:16px] [@media_(max-width:_950px)]:[&.sandbox-layout]:[grid-template-columns:minmax(0,_1fr)] [@media_(max-width:_600px)]:[&.sandbox-layout]:[padding:10px] [@media_(max-width:_600px)]:[&.sandbox-layout]:[gap:10px] [&.sandbox-layout_>_.resizable-split]:[flex:1] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[height:auto] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[grid-template-columns:minmax(0,_1fr)]! [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal]:[gap:16px] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_[role=separator]]:[display:none] [@media_(max-width:_950px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_div:first-child]:[height:850px] [@media_(max-width:_600px)]:[&.sandbox-layout_>_.resizable-split-horizontal_>_div:first-child]:[height:1100px]"}>
         <ResizableSplit direction="horizontal" storageKey="clario-sandbox-call-width" initialSize={76}
           label="Resize workspace and interview call"
@@ -167,7 +205,7 @@ function InterviewPage() {
                 <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
                   label="Resize problem and code editor"
                   first={<ProblemPanel problem={problem} solved={runResult?.status === "Accepted"} />}
-                  second={<CodePanel key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
+                  second={<CodePanel key={problem.slug} lockLanguage={Boolean(sessionId)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
                     onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }
@@ -199,7 +237,7 @@ function InterviewPage() {
               </div> : <p className="theme-muted-text text-sm">Hints coming soon.</p>}
             </div>}
           </div>
-          <VideoCallPanel round={session.round} interviewer={session.interviewer} problemSlug={problem.slug} onEndInterview={handleEndInterview} />
+          <VideoCallPanel ref={voiceCall} round={session.round} interviewer={session.interviewer} ensureSession={ensureSession} onEndInterview={handleEndInterview} />
         </div>
           }
         />

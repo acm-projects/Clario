@@ -1,0 +1,24 @@
+{
+  "type": "webhook",
+  "name": "get_current_code",
+  "description": "Fetch the candidate's latest saved code before discussing their implementation. The session and conversation are supplied automatically. If available is false, ask the candidate to explain; do not invent code.",
+  "response_timeout_secs": 10,
+  "api_schema": {
+    "url": "https://YOUR-PUBLIC-HOST/api/voice-tools/sessions/{session_id}/code",
+    "method": "GET",
+    "path_params_schema": {
+      "session_id": {
+        "type": "string",
+        "dynamic_variable": "session_id"
+      }
+    },
+    "request_headers": {
+      "X-ElevenLabs-Tool-Secret": {
+        "secret_id": "YOUR-ELEVENLABS-SECRET-ID"
+      },
+      "X-Conversation-Id": {
+        "variable_name": "system__conversation_id"
+      }
+    }
+  }
+}

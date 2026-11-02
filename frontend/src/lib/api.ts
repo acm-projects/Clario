@@ -85,7 +85,7 @@ export interface InterviewSession {
   ended_at: string | null;
 }
 
-export function createSession(problem_slug: string, mode: "practice" | "full_mock", language: Language) {
+export function createSession(problem_slug: string, mode: "recommended" | "custom" | "surprise" | "company", language: Language) {
   return request<InterviewSession>("/api/sessions", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ problem_slug, mode, language }),

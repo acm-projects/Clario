@@ -1,13 +1,18 @@
 import DuckHead from "../layout/DuckHead";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { Conversation } from "@elevenlabs/client";
-import { getVoiceSession } from "../../api/voice";
+import { getVoiceSession, linkConversation, saveTranscript } from "../../api/voice";
 import { Panel, Pill } from "./Panel";
 
+export interface VoiceCallHandle {
+  sendContextualUpdate: (summary: string) => boolean;
+}
+
 interface VideoCallPanelProps {
+  ref?: Ref<VoiceCallHandle>;
   round: string;
   interviewer: string;
-  problemSlug: string;
+  ensureSession: () => Promise<string>;
   speaking?: boolean;
   onEndInterview: () => void;
 }
@@ -49,6 +54,9 @@ const HangUp = () => (<svg {...icon}><path d="M3 14c5-4 13-4 18 0l-2 3-3-1.5V13c
 type VoiceStatus = "idle" | "starting" | "active" | "error";
 
 function voiceStartupError(error: unknown): string {
+  if (error instanceof Error && /quota_exceeded|out of credits/i.test(error.message)) {
+    return "Voice interviews are unavailable because the configured ElevenLabs workspace has run out of credits. The app owner needs to check that workspace's usage and billing, add credits or upgrade, or wait for its quota to reset before trying again.";
+  }
   if (error instanceof DOMException && error.name === "NotAllowedError") {
     return "Microphone access was blocked. Allow microphone access for this site in your browser settings, then try again.";
   }
@@ -61,7 +69,7 @@ function voiceStartupError(error: unknown): string {
   return error instanceof Error ? error.message : "Could not start the interview.";
 }
 
-export function VideoCallPanel({ round, interviewer, problemSlug, speaking = true, onEndInterview }: VideoCallPanelProps) {
+export function VideoCallPanel({ ref, round, interviewer, ensureSession, speaking = true, onEndInterview }: VideoCallPanelProps) {
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
@@ -72,8 +80,26 @@ export function VideoCallPanel({ round, interviewer, problemSlug, speaking = tru
   const cameraRequestRef = useRef(0);
   const conversationRef = useRef<Awaited<ReturnType<typeof Conversation.startSession>> | null>(null);
 
+  const startingRef = useRef(false);
+  const transcriptQueue = useRef<Promise<void>>(Promise.resolve());
+
+  useImperativeHandle(ref, () => ({
+    sendContextualUpdate(summary: string) {
+      const conversation = conversationRef.current;
+      if (!conversation?.isOpen()) return false;
+      try {
+        conversation.sendContextualUpdate(summary);
+        return true;
+      } catch {
+        setVoiceError("An interview context update could not be sent to the interviewer.");
+        return false;
+      }
+    },
+  }), []);
+
   const startInterview = useCallback(async () => {
-    if (voiceStatus === "starting" || voiceStatus === "active") return;
+    if (startingRef.current || voiceStatus === "active") return;
+    startingRef.current = true;
 
     setVoiceStatus("starting");
     setVoiceError(null);
@@ -85,10 +111,25 @@ export function VideoCallPanel({ round, interviewer, problemSlug, speaking = tru
       const microphonePermission = await navigator.mediaDevices.getUserMedia({ audio: true });
       microphonePermission.getTracks().forEach((track) => track.stop());
 
-      const session = await getVoiceSession(problemSlug);
+      const sessionId = await ensureSession();
+      const session = await getVoiceSession(sessionId);
+      let markLinked!: (success: boolean) => void;
+      const linked = new Promise<boolean>((resolve) => { markLinked = resolve; });
+      let sequence = 0;
+      try {
       conversationRef.current = await Conversation.startSession({
         signedUrl: session.signed_url,
         dynamicVariables: session.variables,
+        overrides: { agent: { prompt: { prompt: session.instructions } } },
+        onMessage: ({ message, role }) => {
+          if (!message.trim()) return;
+          const turn = { speaker: role, text: message, received_at: new Date().toISOString(), sequence_number: sequence++ };
+          transcriptQueue.current = transcriptQueue.current.then(async () => {
+            if (await linked) await saveTranscript(sessionId, turn);
+          }).catch(() => {
+            setVoiceError("A transcript message could not be saved. Please end the interview and check your connection.");
+          });
+        },
         onModeChange: ({ mode }) => setIsSpeaking(mode === "speaking"),
         onDisconnect: () => {
           conversationRef.current = null;
@@ -100,12 +141,22 @@ export function VideoCallPanel({ round, interviewer, problemSlug, speaking = tru
           setVoiceStatus("error");
         },
       });
+      await linkConversation(sessionId, conversationRef.current.getId());
+      markLinked(true);
+      } catch (error) {
+        markLinked(false);
+        await conversationRef.current?.endSession();
+        conversationRef.current = null;
+        throw error;
+      }
       setVoiceStatus("active");
     } catch (error) {
       setVoiceError(voiceStartupError(error));
       setVoiceStatus("error");
+    } finally {
+      startingRef.current = false;
     }
-  }, [problemSlug, voiceStatus]);
+  }, [ensureSession, voiceStatus]);
 
   const endVoiceSession = useCallback(() => {
     const conversation = conversationRef.current;
@@ -186,6 +237,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, speaking = tru
 
   return (
     <Panel className={"sandbox-video [&.sandbox-video]:[flex:1] [&.sandbox-video]:[border:0] [&.sandbox-video]:[border-radius:0] [&.sandbox-video_>_div:first-child]:[display:none] [&.sandbox-video_>_div:nth-child(2)]:[padding:0] [&.sandbox-video_>_div:nth-child(2)]:[gap:12px] [&.sandbox-video_.theme-video-self]:[height:auto] [&.sandbox-video_.theme-video-self]:[flex:1] [&.sandbox-video_.theme-video-self]:[min-height:140px] [&.sandbox-video_.theme-video-self_>_svg]:[stroke:#305ed1] [&.sandbox-video_.theme-video-interviewer]:[flex:1.1] [&.sandbox-video_.theme-video-interviewer]:[border:2px_solid_var(--line)] [&.sandbox-video_.theme-video-interviewer_button]:[color:#122b50] [&.sandbox-video_.theme-video-interviewer_button]:[font-size:14px] [&.sandbox-video_.theme-video-interviewer_button]:[margin-top:18px] [&.sandbox-video_.theme-video-interviewer_button_span_span]:[background:#93c5fd] [&.sandbox-video_.theme-avatar-ring]:[box-shadow:none] [&.sandbox-video_.theme-avatar-ring]:[width:118px] [&.sandbox-video_.theme-avatar-ring]:[height:118px] [&.sandbox-video_>_div:last-child]:[border:0] [&.sandbox-video_>_div:last-child]:[padding:14px_0_0] [&.sandbox-video_>_div:last-child]:[justify-content:space-between] [&.sandbox-video_>_div:last-child]:[gap:6px] [&.sandbox-video_>_div:last-child_button]:[border:1px_solid_var(--line)] [&.sandbox-video_>_div:last-child_button]:[flex-shrink:0] [@media_(max-width:_950px)]:[&.sandbox-video_>_div:nth-child(2)]:[flex-direction:row] [@media_(max-width:_950px)]:[&.sandbox-video_.theme-video-self]:[height:auto]"}>
+      {voiceError && voiceStatus === "active" && <p role="alert" className="px-3 py-2 text-sm text-red-500">{voiceError}</p>}
       <div className="flex shrink-0 items-center justify-between px-4 py-3">
         <span className="theme-main-text flex items-center gap-2 text-sm font-semibold">
           <svg {...icon} width={16} height={16} className="theme-muted-text"><rect x="3" y="6" width="12" height="12" rx="2" /><path d="M15 10l6-3v10l-6-3" /></svg>

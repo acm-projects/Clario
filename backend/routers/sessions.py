@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timezone
 from typing import Literal
+from uuid import UUID
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -141,11 +142,26 @@ def create_session(
     _: None = Depends(validate_session_mode),
 ):
     validate_interview_problem(body.problem_slug, body.mode)
+    problem_id = None
+    if body.mode != "company":
+        problems = supabase.table("problems").select("id").eq("slug", body.problem_slug).limit(1).execute().data
+        if not problems:
+            problem = get_problem(body.problem_slug)
+            problems = supabase.table("problems").insert({
+                "slug": body.problem_slug,
+                "title": problem.get("title") or body.problem_slug,
+                "description": problem.get("description_html") or "",
+                "description_html": problem.get("description_html") or "",
+                "starter_code": problem.get("starter_code") or {},
+            }).execute().data
+        problem_id = problems[0]["id"]
 
     row = (
         supabase.table("interview_sessions")
         .insert({
             "user_id": user["sub"],
+            "problem_id": problem_id,
+            "started_at": datetime.now(timezone.utc).isoformat(),
             "problem_slug": body.problem_slug,
             "mode": body.mode,
             "language": body.language,
@@ -319,3 +335,51 @@ def list_events(session_id: str, user: dict = Depends(get_current_user)):
         .data
     )
     return [event_out(r) for r in rows]
+
+
+class ConversationLink(BaseModel):
+    conversation_id: str = Field(min_length=1, max_length=200)
+
+
+@router.patch("/{session_id}/conversation")
+def link_conversation(session_id: UUID, body: ConversationLink, user: dict = Depends(get_current_user)):
+    session_id = str(session_id)
+    session = get_owned_session(session_id, user["sub"])
+    if session["status"] != "in_progress":
+        raise HTTPException(400, "Session is not in progress")
+    if session.get("conversation_id") and session["conversation_id"] != body.conversation_id:
+        raise HTTPException(409, "Session already has a different conversation")
+    if session.get("conversation_id") == body.conversation_id:
+        return session
+    rows = (supabase.table("interview_sessions")
+            .update({"conversation_id": body.conversation_id})
+            .eq("id", session_id).eq("user_id", user["sub"])
+            .eq("status", "in_progress").is_("conversation_id", "null").execute().data)
+    if not rows:
+        raise HTTPException(409, "Session changed while linking conversation")
+    return rows[0]
+
+
+class TranscriptCreate(BaseModel):
+    speaker: Literal["user", "agent"]
+    text: str = Field(min_length=1, max_length=50000)
+    received_at: datetime
+    sequence_number: int = Field(ge=0)
+
+    @model_validator(mode="after")
+    def require_timezone(self):
+        if self.received_at.tzinfo is None:
+            raise ValueError("received_at must include a timezone")
+        return self
+
+
+@router.post("/{session_id}/transcript")
+def save_transcript(session_id: UUID, body: TranscriptCreate, user: dict = Depends(get_current_user)):
+    session_id = str(session_id)
+    session = get_owned_session(session_id, user["sub"])
+    if not session.get("conversation_id"):
+        raise HTTPException(409, "Link the conversation before saving transcript")
+    # created_at is receipt time. Speech timing stays null until authoritative data arrives.
+    row = {"session_id": session_id, "speaker": body.speaker, "text": body.text,
+           "created_at": body.received_at.isoformat(), "sequence_number": body.sequence_number}
+    return supabase.table("transcript_events").insert(row).execute().data[0]
