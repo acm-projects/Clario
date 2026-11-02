@@ -58,7 +58,7 @@ class LiveInterviewTests(unittest.TestCase):
         self.session['conversation_id'] = 'conv_1'
         turn = self.turn()
         sessions.save_transcript(SID, turn, USER)
-        row = self.q.insert.call_args.args[0]
+        row = self.db.rpc.call_args.args[1]['p_turn']
         self.assertEqual(row['session_id'], str(SID))
         self.assertEqual(row['created_at'], turn.received_at.isoformat())
         self.assertNotIn('started_at', row)

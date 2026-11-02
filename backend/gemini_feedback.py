@@ -39,7 +39,11 @@ Do not infer reasoning or communication from source code, elapsed time, or step 
 Do not invent audio metrics, confidence, filler-word counts, pacing, test outcomes,
 or an executed/passed verdict. State that code was reviewed without execution.
 When communication_metrics are supplied, discuss them as approximate observations
-with their stated limitations. Silence alone does not establish poor reasoning,
+with their stated limitations. Final transcript filler_word_count and questions_asked
+are transcript-based observations. average_response_time_seconds and words_per_minute
+are unavailable when null: never treat null as zero or infer timings from turn starts
+or model/service latency. Speech-to-text may omit fillers, so filler counts can undercount.
+Silence alone does not establish poor reasoning,
 anxiety, or confidence. Filler matches are literal and may be transcription errors.
 Use null for technical if no nonblank code or no problem context is provided.
 Use null for reasoning and communication if no candidate transcript is present.

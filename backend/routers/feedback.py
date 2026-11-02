@@ -11,6 +11,7 @@ from communication import summarize_captures
 from routers.sessions import get_owned_session
 
 router = APIRouter(prefix="/api/feedback")
+sessions_feedback_router = APIRouter(prefix="/api/sessions")
 # Serialize generation in this process; deterministic report IDs also prevent
 # duplicate saved reports across workers. Existing reports are returned for free.
 generation_lock = asyncio.Lock()
@@ -78,14 +79,30 @@ def read_feedback(session_id: UUID, user: dict = Depends(get_current_user)):
 
 
 @router.post("/{session_id}")
+@sessions_feedback_router.post("/{session_id}/feedback")
 async def create_feedback(session_id: UUID, user: dict = Depends(get_current_user)):
     session_id = str(session_id)
     session = get_owned_session(session_id, user["sub"])
     if session["status"] != "completed" or not session.get("ended_at"):
         raise HTTPException(status_code=409, detail="Finish your interview before generating feedback.")
+    return await generate_feedback_for_session({**session, "id": session_id})
+
+
+async def generate_feedback_for_session(session: dict, *, refresh: bool = False,
+                                        final_metrics: dict | None = None, final_transcript: bool = False):
+    """Shared trusted service; HTTP callers must authorize ownership first."""
+    session_id = session["id"]
+    if session["status"] != "completed" or not session.get("ended_at"):
+        raise HTTPException(status_code=409, detail="Finish your interview before generating feedback.")
     async with generation_lock:
+        if session.get("conversation_id") and not final_transcript:
+            rows = (supabase.table("communication_metrics")
+                    .select("filler_word_count, questions_asked, average_response_time_seconds, words_per_minute")
+                    .eq("session_id", session_id).limit(1).execute().data)
+            final_metrics = rows[0] if rows else None
+            final_transcript = True
         saved = get_saved_report(session_id)
-        if saved:
+        if saved and not refresh:
             return saved
         problem = get_stored_problem(session)
         snapshots = supabase.table("code_snapshots").select("code, language, created_at").eq("session_id", session_id).order("created_at", desc=True).limit(1).execute().data
@@ -96,9 +113,12 @@ async def create_feedback(session_id: UUID, user: dict = Depends(get_current_use
         speech = [row["text"][:4000] for row in transcript if (row.get("speaker") or "").lower() in candidate_speakers and (row.get("text") or "").strip()]
         speech = "\n".join(speech)[:50000]
         # Load communication separately so ordinary step events cannot hide it.
-        captures = supabase.table("session_events").select("event_type, metadata, created_at").eq("session_id", session_id).eq("event_type", "communication_summary").order("created_at", desc=True).limit(1000).execute().data
-        communication = summarize_captures(reversed(captures))
-        if communication and communication["candidate_transcript"]:
+        captures = [] if final_transcript else supabase.table("session_events").select("event_type, metadata, created_at").eq("session_id", session_id).eq("event_type", "communication_summary").order("created_at", desc=True).limit(1000).execute().data
+        communication = summarize_captures(reversed(captures)) if not final_transcript else None
+        if final_transcript:
+            # Never replace unavailable final timing with browser volume estimates.
+            communication = final_metrics
+        if communication and communication.get("candidate_transcript"):
             speech = "\n".join(filter(None, [speech, communication["candidate_transcript"]]))[:50000]
         if not code.strip() and not speech:
             raise HTTPException(status_code=422, detail="This interview has no saved code or candidate transcript to review.")
@@ -106,8 +126,8 @@ async def create_feedback(session_id: UUID, user: dict = Depends(get_current_use
         report = await generate_feedback(evidence)
         if communication:
             report["communication_metrics"] = {k: v for k, v in communication.items() if k != "candidate_transcript"}
-        row = {"id": str(uuid5(NAMESPACE_URL, "clario:gemini-feedback:" + session_id)), "session_id": session_id, **{key: report[key] for key in ("technical_score", "reasoning_score", "communication_score", "overall_score", "strengths", "weaknesses", "recommendations")}, "report": report}
-        supabase.table("feedback_reports").upsert(row, on_conflict="id", ignore_duplicates=True).execute()
+        row = {"id": saved["id"] if saved else str(uuid5(NAMESPACE_URL, "clario:gemini-feedback:" + session_id)), "session_id": session_id, **{key: report[key] for key in ("technical_score", "reasoning_score", "communication_score", "overall_score", "strengths", "weaknesses", "recommendations")}, "report": report}
+        supabase.table("feedback_reports").upsert(row, on_conflict="session_id").execute()
         saved = get_saved_report(session_id)
         if not saved:
             raise HTTPException(status_code=503, detail="Could not save the feedback report. Please try again.")

@@ -3,11 +3,12 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timezone
 from typing import Literal
-from uuid import UUID
+from uuid import UUID, NAMESPACE_URL, uuid5
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from pydantic import BaseModel, Field, model_validator
+from postgrest.exceptions import APIError
 
 from auth import get_current_user
 from db import supabase
@@ -280,7 +281,7 @@ def create_snapshot(session_id: str, body: SnapshotCreate, user: dict = Depends(
 
 
 @router.patch("/{session_id}/end")
-def end_session(session_id: str, user: dict = Depends(get_current_user)):
+def end_session(session_id: str, background_tasks: BackgroundTasks, user: dict = Depends(get_current_user)):
     session = get_owned_session(session_id, user["sub"])
 
     if session["status"] == "completed":
@@ -293,6 +294,11 @@ def end_session(session_id: str, user: dict = Depends(get_current_user)):
         .execute()
         .data
     )
+    if session.get("conversation_id"):
+        from config import settings
+        if settings.elevenlabs_webhook_secret:
+            from voice.webhooks import process_post_call
+            background_tasks.add_task(process_post_call, session["conversation_id"])
     return row[0]
 
 
@@ -382,4 +388,12 @@ def save_transcript(session_id: UUID, body: TranscriptCreate, user: dict = Depen
     # created_at is receipt time. Speech timing stays null until authoritative data arrives.
     row = {"session_id": session_id, "speaker": body.speaker, "text": body.text,
            "created_at": body.received_at.isoformat(), "sequence_number": body.sequence_number}
-    return supabase.table("transcript_events").insert(row).execute().data[0]
+    row["id"] = str(uuid5(NAMESPACE_URL, f"clario:live-turn:{session_id}:{body.sequence_number}"))
+    try:
+        return supabase.rpc("save_live_transcript", {"p_session_id": session_id, "p_turn": row}).execute().data
+    except APIError as error:
+        if error.code != "PGRST202":
+            raise
+        # Keep existing live interviews usable while the additive post-call migration
+        # is being applied. Once installed, the RPC serializes late/final turns.
+        return supabase.table("transcript_events").upsert(row, on_conflict="id").execute().data[0]

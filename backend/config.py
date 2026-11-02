@@ -27,6 +27,7 @@ class Settings:
     piston_java_version: str = _optional("PISTON_JAVA_VERSION", "*")
     elevenlabs_api_key: str = _optional("ELEVENLABS_API_KEY")
     elevenlabs_agent_id: str = _optional("ELEVENLABS_AGENT_ID")
+    elevenlabs_webhook_secret: str = _optional("ELEVENLABS_WEBHOOK_SECRET")
     elevenlabs_tool_secret: str = _optional("ELEVENLABS_TOOL_SECRET")
     elevenlabs_voice_id: str = _optional(
         "ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb"
