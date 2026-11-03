@@ -1,0 +1,5124 @@
+{
+  "phase": "after fixes",
+  "storage": "isolated in-memory with captured real public problem catalog",
+  "checks": [
+    {
+      "name": "New user Dashboard redirects to blank Assessment",
+      "status": "PASS"
+    },
+    {
+      "name": "Assessment validates and saves; user reaches Interview Selection",
+      "status": "PASS"
+    },
+    {
+      "name": "Selection links to /recommended; 25 unique cards with reasons",
+      "status": "PASS",
+      "details": {
+        "count": 25
+      }
+    },
+    {
+      "name": "Exact problem/Java open in Interview Room; actual session row stores recommended",
+      "status": "PASS",
+      "details": {
+        "sessionId": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+        "slug": "find-first-and-last-position-of-element-in-sorted-array",
+        "mode": "recommended"
+      }
+    },
+    {
+      "name": "Completed recommended problem is excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "Recalibrate starts blank and preserves previous saved assessment until submit",
+      "status": "PASS"
+    },
+    {
+      "name": "Recalibration replaces answers and refreshes recommendation focus",
+      "status": "PASS",
+      "details": {
+        "firstFocus": [
+          "Hash Table",
+          "Binary Search"
+        ],
+        "secondFocus": [
+          "Tree",
+          "Dynamic Programming"
+        ]
+      }
+    },
+    {
+      "name": "Ducky and Recommended use the same ranked snapshot",
+      "status": "PASS",
+      "details": {
+        "featured": "Unique Binary Search Trees II"
+      }
+    },
+    {
+      "name": "Ducky Start opens the exact featured problem with Java and persisted recommended mode",
+      "status": "PASS",
+      "details": {
+        "slug": "unique-binary-search-trees-ii",
+        "mode": "recommended"
+      }
+    },
+    {
+      "name": "No browser runtime errors or unexpected API errors",
+      "status": "PASS",
+      "details": {
+        "console": [
+          {
+            "type": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "location": {
+              "url": "http://127.0.0.1:5173/api/assessment/me",
+              "line": 0,
+              "column": 0,
+              "lineNumber": 0,
+              "columnNumber": 0
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "console": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:5173/api/assessment/me",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "runtimeErrors": [],
+  "requests": [
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 404,
+      "sent": null,
+      "received": {
+        "detail": "No assessment yet"
+      }
+    },
+    {
+      "path": "/api/assessment",
+      "method": "POST",
+      "status": 200,
+      "sent": {
+        "preferred_language": "Java",
+        "other_language_used": null,
+        "language_comfort": {
+          "python": 6,
+          "java": 7
+        },
+        "interview_date": "2026-11-02",
+        "has_leetcode_experience": true,
+        "has_coding_experience": null,
+        "languages_used": "Java",
+        "weekly_interview_goal": 3,
+        "interview_confidence": null,
+        "experience": "intermediate",
+        "language": "java",
+        "confident_topics": [
+          "Math"
+        ],
+        "struggle_topics": [
+          "Hash Table",
+          "Binary Search"
+        ],
+        "companies": [
+          "Google"
+        ]
+      },
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Hash Table",
+            "Binary Search"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:40.744144+00:00"
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Hash Table",
+            "Binary Search"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:40.744144+00:00"
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Hash Table",
+            "Binary Search"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:40.744144+00:00"
+      }
+    },
+    {
+      "path": "/api/sessions",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": []
+    },
+    {
+      "path": "/api/recommendations",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "has_assessment": true,
+        "problems": [
+          {
+            "slug": "find-first-and-last-position-of-element-in-sorted-array",
+            "title": "Find First and Last Position of Element in Sorted Array",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Binary Search"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "search-in-rotated-sorted-array",
+            "title": "Search in Rotated Sorted Array",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Binary Search"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "valid-sudoku",
+            "title": "Valid Sudoku",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Matrix"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "group-anagrams",
+            "title": "Group Anagrams",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "String",
+              "Sorting"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "minimum-size-subarray-sum",
+            "title": "Minimum Size Subarray Sum",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Binary Search",
+              "Sliding Window",
+              "Prefix Sum"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "search-a-2d-matrix",
+            "title": "Search a 2D Matrix",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Binary Search",
+              "Matrix"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "letter-combinations-of-a-phone-number",
+            "title": "Letter Combinations of a Phone Number",
+            "difficulty": "Medium",
+            "topics": [
+              "Hash Table",
+              "String",
+              "Backtracking"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "set-matrix-zeroes",
+            "title": "Set Matrix Zeroes",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Matrix"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "longest-consecutive-sequence",
+            "title": "Longest Consecutive Sequence",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Union-Find"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "top-k-frequent-elements",
+            "title": "Top K Frequent Elements",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Divide and Conquer",
+              "Sorting",
+              "Heap (Priority Queue)",
+              "Bucket Sort",
+              "Counting",
+              "Quickselect"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "search-in-rotated-sorted-array-ii",
+            "title": "Search in Rotated Sorted Array II",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Binary Search"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "subarray-sum-equals-k",
+            "title": "Subarray Sum Equals K",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Prefix Sum"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "longest-substring-without-repeating-characters",
+            "title": "Longest Substring Without Repeating Characters",
+            "difficulty": "Medium",
+            "topics": [
+              "Hash Table",
+              "String",
+              "Sliding Window"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "median-of-two-sorted-arrays",
+            "title": "Median of Two Sorted Arrays",
+            "difficulty": "Hard",
+            "topics": [
+              "Array",
+              "Binary Search",
+              "Divide and Conquer"
+            ],
+            "reason": "You said you struggle with Binary Search."
+          },
+          {
+            "slug": "minimum-window-substring",
+            "title": "Minimum Window Substring",
+            "difficulty": "Hard",
+            "topics": [
+              "Hash Table",
+              "String",
+              "Sliding Window"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "first-missing-positive",
+            "title": "First Missing Positive",
+            "difficulty": "Hard",
+            "topics": [
+              "Array",
+              "Hash Table"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "substring-with-concatenation-of-all-words",
+            "title": "Substring with Concatenation of All Words",
+            "difficulty": "Hard",
+            "topics": [
+              "Hash Table",
+              "String",
+              "Sliding Window"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "sudoku-solver",
+            "title": "Sudoku Solver",
+            "difficulty": "Hard",
+            "topics": [
+              "Array",
+              "Hash Table",
+              "Backtracking",
+              "Matrix",
+              "Algorithm X",
+              "Dancing Links"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "integer-to-roman",
+            "title": "Integer to Roman",
+            "difficulty": "Medium",
+            "topics": [
+              "Hash Table",
+              "Math",
+              "String"
+            ],
+            "reason": "You said you struggle with Hash Table."
+          },
+          {
+            "slug": "interleaving-string",
+            "title": "Interleaving String",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Dynamic Programming"
+            ],
+            "reason": "Builds related skills in String for your focus topics."
+          },
+          {
+            "slug": "longest-palindromic-substring",
+            "title": "Longest Palindromic Substring",
+            "difficulty": "Medium",
+            "topics": [
+              "Two Pointers",
+              "String",
+              "Dynamic Programming",
+              "Manacher"
+            ],
+            "reason": "Builds related skills in Two Pointers, String for your focus topics."
+          },
+          {
+            "slug": "remove-nth-node-from-end-of-list",
+            "title": "Remove Nth Node From End of List",
+            "difficulty": "Medium",
+            "topics": [
+              "Linked List",
+              "Two Pointers"
+            ],
+            "reason": "Builds related skills in Two Pointers for your focus topics."
+          },
+          {
+            "slug": "container-with-most-water",
+            "title": "Container With Most Water",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Two Pointers",
+              "Greedy"
+            ],
+            "reason": "Builds related skills in Array, Two Pointers for your focus topics."
+          },
+          {
+            "slug": "count-and-say",
+            "title": "Count and Say",
+            "difficulty": "Medium",
+            "topics": [
+              "String"
+            ],
+            "reason": "Builds related skills in String for your focus topics."
+          },
+          {
+            "slug": "restore-ip-addresses",
+            "title": "Restore IP Addresses",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Backtracking"
+            ],
+            "reason": "Builds related skills in String for your focus topics."
+          }
+        ],
+        "target_count": 25,
+        "minimum_count": 20,
+        "eligible_count": 112,
+        "shortfall_message": null
+      }
+    },
+    {
+      "path": "/api/sessions",
+      "method": "POST",
+      "status": 200,
+      "sent": {
+        "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+        "mode": "recommended",
+        "language": "java"
+      },
+      "received": {
+        "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+        "created_at": "2026-11-02T23:39:40.975259+00:00",
+        "started_at": "2026-11-02T23:39:40.975259+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+        "mode": "recommended",
+        "language": "java",
+        "status": "in_progress"
+      }
+    },
+    {
+      "path": "/api/sessions/3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+        "created_at": "2026-11-02T23:39:40.975259+00:00",
+        "started_at": "2026-11-02T23:39:40.975259+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+        "mode": "recommended",
+        "language": "java",
+        "status": "in_progress",
+        "problem": {
+          "slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "title": "Find First and Last Position of Element in Sorted Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "60",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        "latest_code": null,
+        "steps": {
+          "understand": "todo",
+          "match": "todo",
+          "plan": "todo",
+          "implement": "todo",
+          "review": "todo",
+          "evaluate": "todo"
+        }
+      }
+    },
+    {
+      "path": "/api/assessment",
+      "method": "POST",
+      "status": 200,
+      "sent": {
+        "preferred_language": "Java",
+        "other_language_used": null,
+        "language_comfort": {
+          "python": 6,
+          "java": 7
+        },
+        "interview_date": "2026-11-02",
+        "has_leetcode_experience": true,
+        "has_coding_experience": null,
+        "languages_used": "Java",
+        "weekly_interview_goal": 3,
+        "interview_confidence": null,
+        "experience": "intermediate",
+        "language": "java",
+        "confident_topics": [
+          "Math"
+        ],
+        "struggle_topics": [
+          "Tree",
+          "Dynamic Programming"
+        ],
+        "companies": [
+          "Google"
+        ]
+      },
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/sessions",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+          "created_at": "2026-11-02T23:39:40.975259+00:00",
+          "started_at": "2026-11-02T23:39:40.975259+00:00",
+          "ended_at": "2026-11-02T23:39:41.028564+00:00",
+          "user_id": "part5-isolated-user",
+          "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "mode": "recommended",
+          "language": "java",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "path": "/api/recommendations",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "has_assessment": true,
+        "problems": [
+          {
+            "slug": "unique-binary-search-trees-ii",
+            "title": "Unique Binary Search Trees II",
+            "difficulty": "Medium",
+            "topics": [
+              "Dynamic Programming",
+              "Backtracking",
+              "Tree",
+              "Binary Search Tree",
+              "Binary Tree"
+            ],
+            "reason": "You said you struggle with Dynamic Programming, Tree."
+          },
+          {
+            "slug": "unique-binary-search-trees",
+            "title": "Unique Binary Search Trees",
+            "difficulty": "Medium",
+            "topics": [
+              "Math",
+              "Dynamic Programming",
+              "Tree",
+              "Binary Search Tree",
+              "Binary Tree"
+            ],
+            "reason": "You said you struggle with Dynamic Programming, Tree."
+          },
+          {
+            "slug": "validate-binary-search-tree",
+            "title": "Validate Binary Search Tree",
+            "difficulty": "Medium",
+            "topics": [
+              "Tree",
+              "Depth-First Search",
+              "Binary Search Tree",
+              "Binary Tree"
+            ],
+            "reason": "You said you struggle with Tree."
+          },
+          {
+            "slug": "generate-parentheses",
+            "title": "Generate Parentheses",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Dynamic Programming",
+              "Backtracking",
+              "Bracket Sequences"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "recover-binary-search-tree",
+            "title": "Recover Binary Search Tree",
+            "difficulty": "Medium",
+            "topics": [
+              "Tree",
+              "Depth-First Search",
+              "Binary Search Tree",
+              "Binary Tree"
+            ],
+            "reason": "You said you struggle with Tree."
+          },
+          {
+            "slug": "longest-palindromic-substring",
+            "title": "Longest Palindromic Substring",
+            "difficulty": "Medium",
+            "topics": [
+              "Two Pointers",
+              "String",
+              "Dynamic Programming",
+              "Manacher"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "edit-distance",
+            "title": "Edit Distance",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Dynamic Programming"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "decode-ways",
+            "title": "Decode Ways",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Dynamic Programming"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "jump-game",
+            "title": "Jump Game",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Dynamic Programming",
+              "Greedy"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "unique-paths-ii",
+            "title": "Unique Paths II",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Dynamic Programming",
+              "Matrix"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "interleaving-string",
+            "title": "Interleaving String",
+            "difficulty": "Medium",
+            "topics": [
+              "String",
+              "Dynamic Programming"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "minimum-path-sum",
+            "title": "Minimum Path Sum",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Dynamic Programming",
+              "Matrix"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "maximum-subarray",
+            "title": "Maximum Subarray",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Divide and Conquer",
+              "Dynamic Programming"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "jump-game-ii",
+            "title": "Jump Game II",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Dynamic Programming",
+              "Greedy"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "regular-expression-matching",
+            "title": "Regular Expression Matching",
+            "difficulty": "Hard",
+            "topics": [
+              "String",
+              "Dynamic Programming",
+              "Recursion"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "wildcard-matching",
+            "title": "Wildcard Matching",
+            "difficulty": "Hard",
+            "topics": [
+              "String",
+              "Dynamic Programming",
+              "Greedy",
+              "Recursion"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "trapping-rain-water",
+            "title": "Trapping Rain Water",
+            "difficulty": "Hard",
+            "topics": [
+              "Array",
+              "Two Pointers",
+              "Dynamic Programming",
+              "Stack",
+              "Monotonic Stack"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "scramble-string",
+            "title": "Scramble String",
+            "difficulty": "Hard",
+            "topics": [
+              "String",
+              "Dynamic Programming"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "maximal-rectangle",
+            "title": "Maximal Rectangle",
+            "difficulty": "Hard",
+            "topics": [
+              "Array",
+              "Dynamic Programming",
+              "Stack",
+              "Matrix",
+              "Monotonic Stack"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "longest-valid-parentheses",
+            "title": "Longest Valid Parentheses",
+            "difficulty": "Hard",
+            "topics": [
+              "String",
+              "Dynamic Programming",
+              "Stack",
+              "Bracket Sequences"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "unique-paths",
+            "title": "Unique Paths",
+            "difficulty": "Medium",
+            "topics": [
+              "Math",
+              "Dynamic Programming",
+              "Combinatorics"
+            ],
+            "reason": "You said you struggle with Dynamic Programming."
+          },
+          {
+            "slug": "combination-sum",
+            "title": "Combination Sum",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Backtracking"
+            ],
+            "reason": "Builds related skills in Backtracking for your focus topics."
+          },
+          {
+            "slug": "letter-combinations-of-a-phone-number",
+            "title": "Letter Combinations of a Phone Number",
+            "difficulty": "Medium",
+            "topics": [
+              "Hash Table",
+              "String",
+              "Backtracking"
+            ],
+            "reason": "Builds related skills in Backtracking for your focus topics."
+          },
+          {
+            "slug": "subsets-ii",
+            "title": "Subsets II",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "Backtracking",
+              "Bit Manipulation"
+            ],
+            "reason": "Builds related skills in Backtracking for your focus topics."
+          },
+          {
+            "slug": "word-search",
+            "title": "Word Search",
+            "difficulty": "Medium",
+            "topics": [
+              "Array",
+              "String",
+              "Backtracking",
+              "Depth-First Search",
+              "Matrix"
+            ],
+            "reason": "Builds related skills in Backtracking, Depth-First Search for your focus topics."
+          }
+        ],
+        "target_count": 25,
+        "minimum_count": 20,
+        "eligible_count": 111,
+        "shortfall_message": null
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/problems",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "slug": "best-time-to-buy-and-sell-stock",
+          "title": "Best Time to Buy and Sell Stock",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Dynamic Programming"
+          ],
+          "id": "0",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "container-with-most-water",
+          "title": "Container With Most Water",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Greedy"
+          ],
+          "id": "1",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-consecutive-sequence",
+          "title": "Longest Consecutive Sequence",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Union-Find"
+          ],
+          "id": "2",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "binary-tree-inorder-traversal",
+          "title": "Binary Tree Inorder Traversal",
+          "difficulty": "Easy",
+          "topics": [
+            "Stack",
+            "Tree",
+            "Depth-First Search",
+            "Binary Tree"
+          ],
+          "id": "3",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-intervals",
+          "title": "Merge Intervals",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Sorting",
+            "Quicksort"
+          ],
+          "id": "4",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "add-two-numbers",
+          "title": "Add Two Numbers",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Math",
+            "Recursion"
+          ],
+          "id": "5",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "binary-search",
+          "title": "Binary Search",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "6",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-substring-without-repeating-characters",
+          "title": "Longest Substring Without Repeating Characters",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "7",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-list",
+          "title": "Remove Duplicates from Sorted List",
+          "difficulty": "Easy",
+          "topics": [
+            "Linked List"
+          ],
+          "id": "8",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-common-prefix",
+          "title": "Longest Common Prefix",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "String",
+            "Trie"
+          ],
+          "id": "9",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "length-of-last-word",
+          "title": "Length of Last Word",
+          "difficulty": "Easy",
+          "topics": [
+            "String"
+          ],
+          "id": "10",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "move-zeroes",
+          "title": "Move Zeroes",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "11",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "plus-one",
+          "title": "Plus One",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Math"
+          ],
+          "id": "12",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "add-binary",
+          "title": "Add Binary",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "String",
+            "Bit Manipulation",
+            "Simulation"
+          ],
+          "id": "13",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "group-anagrams",
+          "title": "Group Anagrams",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "String",
+            "Sorting"
+          ],
+          "id": "14",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subsets",
+          "title": "Subsets",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "15",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-size-subarray-sum",
+          "title": "Minimum Size Subarray Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Sliding Window",
+            "Prefix Sum"
+          ],
+          "id": "16",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-parentheses",
+          "title": "Valid Parentheses",
+          "difficulty": "Easy",
+          "topics": [
+            "String",
+            "Stack",
+            "Bracket Sequences"
+          ],
+          "id": "17",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "climbing-stairs",
+          "title": "Climbing Stairs",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Memoization"
+          ],
+          "id": "18",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-palindrome",
+          "title": "Valid Palindrome",
+          "difficulty": "Easy",
+          "topics": [
+            "Two Pointers",
+            "String"
+          ],
+          "id": "19",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-anagram",
+          "title": "Valid Anagram",
+          "difficulty": "Easy",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sorting"
+          ],
+          "id": "20",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "3sum",
+          "title": "3Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "21",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "maximum-subarray",
+          "title": "Maximum Subarray",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Divide and Conquer",
+            "Dynamic Programming"
+          ],
+          "id": "22",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "roman-to-integer",
+          "title": "Roman to Integer",
+          "difficulty": "Easy",
+          "topics": [
+            "Hash Table",
+            "Math",
+            "String"
+          ],
+          "id": "23",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-sorted-array",
+          "title": "Merge Sorted Array",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "24",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "kth-largest-element-in-an-array",
+          "title": "Kth Largest Element in an Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Divide and Conquer",
+            "Sorting",
+            "Heap (Priority Queue)",
+            "Quickselect"
+          ],
+          "id": "25",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subarray-sum-equals-k",
+          "title": "Subarray Sum Equals K",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Prefix Sum"
+          ],
+          "id": "26",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "trapping-rain-water",
+          "title": "Trapping Rain Water",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Dynamic Programming",
+            "Stack",
+            "Monotonic Stack"
+          ],
+          "id": "27",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sort-colors",
+          "title": "Sort Colors",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting",
+            "Quicksort",
+            "Bubble Sort"
+          ],
+          "id": "28",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "product-of-array-except-self",
+          "title": "Product of Array Except Self",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Prefix Sum"
+          ],
+          "id": "29",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "n-queens-ii",
+          "title": "N-Queens II",
+          "difficulty": "Hard",
+          "topics": [
+            "Backtracking",
+            "Algorithm X"
+          ],
+          "id": "30",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "contains-duplicate",
+          "title": "Contains Duplicate",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Sorting"
+          ],
+          "id": "31",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "top-k-frequent-elements",
+          "title": "Top K Frequent Elements",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Divide and Conquer",
+            "Sorting",
+            "Heap (Priority Queue)",
+            "Bucket Sort",
+            "Counting",
+            "Quickselect"
+          ],
+          "id": "32",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "n-queens",
+          "title": "N-Queens",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Algorithm X"
+          ],
+          "id": "33",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "two-sum",
+          "title": "Two Sum",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Hash Table"
+          ],
+          "id": "34",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "median-of-two-sorted-arrays",
+          "title": "Median of Two Sorted Arrays",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Divide and Conquer"
+          ],
+          "id": "35",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-palindromic-substring",
+          "title": "Longest Palindromic Substring",
+          "difficulty": "Medium",
+          "topics": [
+            "Two Pointers",
+            "String",
+            "Dynamic Programming",
+            "Manacher"
+          ],
+          "id": "36",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "zigzag-conversion",
+          "title": "Zigzag Conversion",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "37",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-integer",
+          "title": "Reverse Integer",
+          "difficulty": "Medium",
+          "topics": [
+            "Math"
+          ],
+          "id": "38",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "string-to-integer-atoi",
+          "title": "String to Integer (atoi)",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "39",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "palindrome-number",
+          "title": "Palindrome Number",
+          "difficulty": "Easy",
+          "topics": [
+            "Math"
+          ],
+          "id": "40",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "regular-expression-matching",
+          "title": "Regular Expression Matching",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Recursion"
+          ],
+          "id": "41",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "integer-to-roman",
+          "title": "Integer to Roman",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "Math",
+            "String"
+          ],
+          "id": "42",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "3sum-closest",
+          "title": "3Sum Closest",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "43",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "letter-combinations-of-a-phone-number",
+          "title": "Letter Combinations of a Phone Number",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Backtracking"
+          ],
+          "id": "44",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "4sum",
+          "title": "4Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "45",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-nth-node-from-end-of-list",
+          "title": "Remove Nth Node From End of List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "46",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-two-sorted-lists",
+          "title": "Merge Two Sorted Lists",
+          "difficulty": "Easy",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "47",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "generate-parentheses",
+          "title": "Generate Parentheses",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Backtracking",
+            "Bracket Sequences"
+          ],
+          "id": "48",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-k-sorted-lists",
+          "title": "Merge k Sorted Lists",
+          "difficulty": "Hard",
+          "topics": [
+            "Linked List",
+            "Divide and Conquer",
+            "Heap (Priority Queue)",
+            "Merge Sort",
+            "Tournament Sort"
+          ],
+          "id": "49",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "swap-nodes-in-pairs",
+          "title": "Swap Nodes in Pairs",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "50",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-nodes-in-k-group",
+          "title": "Reverse Nodes in k-Group",
+          "difficulty": "Hard",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "51",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-array",
+          "title": "Remove Duplicates from Sorted Array",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "52",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-element",
+          "title": "Remove Element",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "53",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "find-the-index-of-the-first-occurrence-in-a-string",
+          "title": "Find the Index of the First Occurrence in a String",
+          "difficulty": "Easy",
+          "topics": [
+            "Two Pointers",
+            "String",
+            "String Matching",
+            "Z Algorithm",
+            "Knuth–Morris–Pratt Algorithm",
+            "Boyer–Moore String-Search Algorithm"
+          ],
+          "id": "54",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "divide-two-integers",
+          "title": "Divide Two Integers",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Bit Manipulation"
+          ],
+          "id": "55",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "substring-with-concatenation-of-all-words",
+          "title": "Substring with Concatenation of All Words",
+          "difficulty": "Hard",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "56",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "next-permutation",
+          "title": "Next Permutation",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "57",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-valid-parentheses",
+          "title": "Longest Valid Parentheses",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Stack",
+            "Bracket Sequences"
+          ],
+          "id": "58",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-in-rotated-sorted-array",
+          "title": "Search in Rotated Sorted Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "59",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "title": "Find First and Last Position of Element in Sorted Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "60",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-insert-position",
+          "title": "Search Insert Position",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "61",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-sudoku",
+          "title": "Valid Sudoku",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Matrix"
+          ],
+          "id": "62",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sudoku-solver",
+          "title": "Sudoku Solver",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Backtracking",
+            "Matrix",
+            "Algorithm X",
+            "Dancing Links"
+          ],
+          "id": "63",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "count-and-say",
+          "title": "Count and Say",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "64",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combination-sum",
+          "title": "Combination Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "65",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combination-sum-ii",
+          "title": "Combination Sum II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "66",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "first-missing-positive",
+          "title": "First Missing Positive",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Hash Table"
+          ],
+          "id": "67",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "multiply-strings",
+          "title": "Multiply Strings",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "String",
+            "Simulation"
+          ],
+          "id": "68",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "wildcard-matching",
+          "title": "Wildcard Matching",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Greedy",
+            "Recursion"
+          ],
+          "id": "69",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "jump-game-ii",
+          "title": "Jump Game II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Greedy"
+          ],
+          "id": "70",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutations",
+          "title": "Permutations",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "71",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutations-ii",
+          "title": "Permutations II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Sorting"
+          ],
+          "id": "72",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "rotate-image",
+          "title": "Rotate Image",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Math",
+            "Matrix"
+          ],
+          "id": "73",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "powx-n",
+          "title": "Pow(x, n)",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Recursion"
+          ],
+          "id": "74",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "spiral-matrix",
+          "title": "Spiral Matrix",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Matrix",
+            "Simulation"
+          ],
+          "id": "75",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "jump-game",
+          "title": "Jump Game",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Greedy"
+          ],
+          "id": "76",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "insert-interval",
+          "title": "Insert Interval",
+          "difficulty": "Medium",
+          "topics": [
+            "Array"
+          ],
+          "id": "77",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "spiral-matrix-ii",
+          "title": "Spiral Matrix II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Matrix",
+            "Simulation"
+          ],
+          "id": "78",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutation-sequence",
+          "title": "Permutation Sequence",
+          "difficulty": "Hard",
+          "topics": [
+            "Math",
+            "Recursion"
+          ],
+          "id": "79",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "rotate-list",
+          "title": "Rotate List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "80",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-paths",
+          "title": "Unique Paths",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Combinatorics"
+          ],
+          "id": "81",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-paths-ii",
+          "title": "Unique Paths II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Matrix"
+          ],
+          "id": "82",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-path-sum",
+          "title": "Minimum Path Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Matrix"
+          ],
+          "id": "83",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-number",
+          "title": "Valid Number",
+          "difficulty": "Hard",
+          "topics": [
+            "String"
+          ],
+          "id": "84",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "text-justification",
+          "title": "Text Justification",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "String",
+            "Simulation"
+          ],
+          "id": "85",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sqrtx",
+          "title": "Sqrt(x)",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "Binary Search",
+            "Newton's Method"
+          ],
+          "id": "86",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "simplify-path",
+          "title": "Simplify Path",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Stack"
+          ],
+          "id": "87",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "edit-distance",
+          "title": "Edit Distance",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "88",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "set-matrix-zeroes",
+          "title": "Set Matrix Zeroes",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Matrix"
+          ],
+          "id": "89",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-a-2d-matrix",
+          "title": "Search a 2D Matrix",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Matrix"
+          ],
+          "id": "90",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-window-substring",
+          "title": "Minimum Window Substring",
+          "difficulty": "Hard",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "91",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combinations",
+          "title": "Combinations",
+          "difficulty": "Medium",
+          "topics": [
+            "Backtracking"
+          ],
+          "id": "92",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "word-search",
+          "title": "Word Search",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "String",
+            "Backtracking",
+            "Depth-First Search",
+            "Matrix"
+          ],
+          "id": "93",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-array-ii",
+          "title": "Remove Duplicates from Sorted Array II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "94",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-in-rotated-sorted-array-ii",
+          "title": "Search in Rotated Sorted Array II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "95",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-list-ii",
+          "title": "Remove Duplicates from Sorted List II",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "96",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "largest-rectangle-in-histogram",
+          "title": "Largest Rectangle in Histogram",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Stack",
+            "Monotonic Stack",
+            "Range Minimum/Maximum Query"
+          ],
+          "id": "97",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "maximal-rectangle",
+          "title": "Maximal Rectangle",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Stack",
+            "Matrix",
+            "Monotonic Stack"
+          ],
+          "id": "98",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "partition-list",
+          "title": "Partition List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "99",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "scramble-string",
+          "title": "Scramble String",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "100",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "gray-code",
+          "title": "Gray Code",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "101",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subsets-ii",
+          "title": "Subsets II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "102",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "decode-ways",
+          "title": "Decode Ways",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "103",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-linked-list-ii",
+          "title": "Reverse Linked List II",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List"
+          ],
+          "id": "104",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "restore-ip-addresses",
+          "title": "Restore IP Addresses",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Backtracking"
+          ],
+          "id": "105",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-binary-search-trees-ii",
+          "title": "Unique Binary Search Trees II",
+          "difficulty": "Medium",
+          "topics": [
+            "Dynamic Programming",
+            "Backtracking",
+            "Tree",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "106",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-binary-search-trees",
+          "title": "Unique Binary Search Trees",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Tree",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "107",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "interleaving-string",
+          "title": "Interleaving String",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "108",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "validate-binary-search-tree",
+          "title": "Validate Binary Search Tree",
+          "difficulty": "Medium",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "109",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "recover-binary-search-tree",
+          "title": "Recover Binary Search Tree",
+          "difficulty": "Medium",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "110",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "same-tree",
+          "title": "Same Tree",
+          "difficulty": "Easy",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Breadth-First Search",
+            "Binary Tree"
+          ],
+          "id": "111",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        }
+      ]
+    },
+    {
+      "path": "/api/sessions",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+          "created_at": "2026-11-02T23:39:40.975259+00:00",
+          "started_at": "2026-11-02T23:39:40.975259+00:00",
+          "ended_at": "2026-11-02T23:39:41.028564+00:00",
+          "user_id": "part5-isolated-user",
+          "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "mode": "recommended",
+          "language": "java",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/sessions",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+          "created_at": "2026-11-02T23:39:40.975259+00:00",
+          "started_at": "2026-11-02T23:39:40.975259+00:00",
+          "ended_at": "2026-11-02T23:39:41.028564+00:00",
+          "user_id": "part5-isolated-user",
+          "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "mode": "recommended",
+          "language": "java",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "path": "/api/problems",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "slug": "best-time-to-buy-and-sell-stock",
+          "title": "Best Time to Buy and Sell Stock",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Dynamic Programming"
+          ],
+          "id": "0",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "container-with-most-water",
+          "title": "Container With Most Water",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Greedy"
+          ],
+          "id": "1",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-consecutive-sequence",
+          "title": "Longest Consecutive Sequence",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Union-Find"
+          ],
+          "id": "2",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "binary-tree-inorder-traversal",
+          "title": "Binary Tree Inorder Traversal",
+          "difficulty": "Easy",
+          "topics": [
+            "Stack",
+            "Tree",
+            "Depth-First Search",
+            "Binary Tree"
+          ],
+          "id": "3",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-intervals",
+          "title": "Merge Intervals",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Sorting",
+            "Quicksort"
+          ],
+          "id": "4",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "add-two-numbers",
+          "title": "Add Two Numbers",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Math",
+            "Recursion"
+          ],
+          "id": "5",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "binary-search",
+          "title": "Binary Search",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "6",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-substring-without-repeating-characters",
+          "title": "Longest Substring Without Repeating Characters",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "7",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-list",
+          "title": "Remove Duplicates from Sorted List",
+          "difficulty": "Easy",
+          "topics": [
+            "Linked List"
+          ],
+          "id": "8",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-common-prefix",
+          "title": "Longest Common Prefix",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "String",
+            "Trie"
+          ],
+          "id": "9",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "length-of-last-word",
+          "title": "Length of Last Word",
+          "difficulty": "Easy",
+          "topics": [
+            "String"
+          ],
+          "id": "10",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "move-zeroes",
+          "title": "Move Zeroes",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "11",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "plus-one",
+          "title": "Plus One",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Math"
+          ],
+          "id": "12",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "add-binary",
+          "title": "Add Binary",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "String",
+            "Bit Manipulation",
+            "Simulation"
+          ],
+          "id": "13",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "group-anagrams",
+          "title": "Group Anagrams",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "String",
+            "Sorting"
+          ],
+          "id": "14",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subsets",
+          "title": "Subsets",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "15",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-size-subarray-sum",
+          "title": "Minimum Size Subarray Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Sliding Window",
+            "Prefix Sum"
+          ],
+          "id": "16",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-parentheses",
+          "title": "Valid Parentheses",
+          "difficulty": "Easy",
+          "topics": [
+            "String",
+            "Stack",
+            "Bracket Sequences"
+          ],
+          "id": "17",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "climbing-stairs",
+          "title": "Climbing Stairs",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Memoization"
+          ],
+          "id": "18",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-palindrome",
+          "title": "Valid Palindrome",
+          "difficulty": "Easy",
+          "topics": [
+            "Two Pointers",
+            "String"
+          ],
+          "id": "19",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-anagram",
+          "title": "Valid Anagram",
+          "difficulty": "Easy",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sorting"
+          ],
+          "id": "20",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "3sum",
+          "title": "3Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "21",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "maximum-subarray",
+          "title": "Maximum Subarray",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Divide and Conquer",
+            "Dynamic Programming"
+          ],
+          "id": "22",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "roman-to-integer",
+          "title": "Roman to Integer",
+          "difficulty": "Easy",
+          "topics": [
+            "Hash Table",
+            "Math",
+            "String"
+          ],
+          "id": "23",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-sorted-array",
+          "title": "Merge Sorted Array",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "24",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "kth-largest-element-in-an-array",
+          "title": "Kth Largest Element in an Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Divide and Conquer",
+            "Sorting",
+            "Heap (Priority Queue)",
+            "Quickselect"
+          ],
+          "id": "25",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subarray-sum-equals-k",
+          "title": "Subarray Sum Equals K",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Prefix Sum"
+          ],
+          "id": "26",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "trapping-rain-water",
+          "title": "Trapping Rain Water",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Dynamic Programming",
+            "Stack",
+            "Monotonic Stack"
+          ],
+          "id": "27",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sort-colors",
+          "title": "Sort Colors",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting",
+            "Quicksort",
+            "Bubble Sort"
+          ],
+          "id": "28",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "product-of-array-except-self",
+          "title": "Product of Array Except Self",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Prefix Sum"
+          ],
+          "id": "29",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "n-queens-ii",
+          "title": "N-Queens II",
+          "difficulty": "Hard",
+          "topics": [
+            "Backtracking",
+            "Algorithm X"
+          ],
+          "id": "30",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "contains-duplicate",
+          "title": "Contains Duplicate",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Sorting"
+          ],
+          "id": "31",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "top-k-frequent-elements",
+          "title": "Top K Frequent Elements",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Divide and Conquer",
+            "Sorting",
+            "Heap (Priority Queue)",
+            "Bucket Sort",
+            "Counting",
+            "Quickselect"
+          ],
+          "id": "32",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "n-queens",
+          "title": "N-Queens",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Algorithm X"
+          ],
+          "id": "33",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "two-sum",
+          "title": "Two Sum",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Hash Table"
+          ],
+          "id": "34",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "median-of-two-sorted-arrays",
+          "title": "Median of Two Sorted Arrays",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Divide and Conquer"
+          ],
+          "id": "35",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-palindromic-substring",
+          "title": "Longest Palindromic Substring",
+          "difficulty": "Medium",
+          "topics": [
+            "Two Pointers",
+            "String",
+            "Dynamic Programming",
+            "Manacher"
+          ],
+          "id": "36",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "zigzag-conversion",
+          "title": "Zigzag Conversion",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "37",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-integer",
+          "title": "Reverse Integer",
+          "difficulty": "Medium",
+          "topics": [
+            "Math"
+          ],
+          "id": "38",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "string-to-integer-atoi",
+          "title": "String to Integer (atoi)",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "39",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "palindrome-number",
+          "title": "Palindrome Number",
+          "difficulty": "Easy",
+          "topics": [
+            "Math"
+          ],
+          "id": "40",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "regular-expression-matching",
+          "title": "Regular Expression Matching",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Recursion"
+          ],
+          "id": "41",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "integer-to-roman",
+          "title": "Integer to Roman",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "Math",
+            "String"
+          ],
+          "id": "42",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "3sum-closest",
+          "title": "3Sum Closest",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "43",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "letter-combinations-of-a-phone-number",
+          "title": "Letter Combinations of a Phone Number",
+          "difficulty": "Medium",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Backtracking"
+          ],
+          "id": "44",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "4sum",
+          "title": "4Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers",
+            "Sorting"
+          ],
+          "id": "45",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-nth-node-from-end-of-list",
+          "title": "Remove Nth Node From End of List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "46",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-two-sorted-lists",
+          "title": "Merge Two Sorted Lists",
+          "difficulty": "Easy",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "47",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "generate-parentheses",
+          "title": "Generate Parentheses",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Backtracking",
+            "Bracket Sequences"
+          ],
+          "id": "48",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "merge-k-sorted-lists",
+          "title": "Merge k Sorted Lists",
+          "difficulty": "Hard",
+          "topics": [
+            "Linked List",
+            "Divide and Conquer",
+            "Heap (Priority Queue)",
+            "Merge Sort",
+            "Tournament Sort"
+          ],
+          "id": "49",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "swap-nodes-in-pairs",
+          "title": "Swap Nodes in Pairs",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "50",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-nodes-in-k-group",
+          "title": "Reverse Nodes in k-Group",
+          "difficulty": "Hard",
+          "topics": [
+            "Linked List",
+            "Recursion"
+          ],
+          "id": "51",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-array",
+          "title": "Remove Duplicates from Sorted Array",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "52",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-element",
+          "title": "Remove Element",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "53",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "find-the-index-of-the-first-occurrence-in-a-string",
+          "title": "Find the Index of the First Occurrence in a String",
+          "difficulty": "Easy",
+          "topics": [
+            "Two Pointers",
+            "String",
+            "String Matching",
+            "Z Algorithm",
+            "Knuth–Morris–Pratt Algorithm",
+            "Boyer–Moore String-Search Algorithm"
+          ],
+          "id": "54",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "divide-two-integers",
+          "title": "Divide Two Integers",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Bit Manipulation"
+          ],
+          "id": "55",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "substring-with-concatenation-of-all-words",
+          "title": "Substring with Concatenation of All Words",
+          "difficulty": "Hard",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "56",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "next-permutation",
+          "title": "Next Permutation",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "57",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "longest-valid-parentheses",
+          "title": "Longest Valid Parentheses",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Stack",
+            "Bracket Sequences"
+          ],
+          "id": "58",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-in-rotated-sorted-array",
+          "title": "Search in Rotated Sorted Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "59",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "title": "Find First and Last Position of Element in Sorted Array",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "60",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-insert-position",
+          "title": "Search Insert Position",
+          "difficulty": "Easy",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "61",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-sudoku",
+          "title": "Valid Sudoku",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Matrix"
+          ],
+          "id": "62",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sudoku-solver",
+          "title": "Sudoku Solver",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Backtracking",
+            "Matrix",
+            "Algorithm X",
+            "Dancing Links"
+          ],
+          "id": "63",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "count-and-say",
+          "title": "Count and Say",
+          "difficulty": "Medium",
+          "topics": [
+            "String"
+          ],
+          "id": "64",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combination-sum",
+          "title": "Combination Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "65",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combination-sum-ii",
+          "title": "Combination Sum II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "66",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "first-missing-positive",
+          "title": "First Missing Positive",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Hash Table"
+          ],
+          "id": "67",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "multiply-strings",
+          "title": "Multiply Strings",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "String",
+            "Simulation"
+          ],
+          "id": "68",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "wildcard-matching",
+          "title": "Wildcard Matching",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming",
+            "Greedy",
+            "Recursion"
+          ],
+          "id": "69",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "jump-game-ii",
+          "title": "Jump Game II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Greedy"
+          ],
+          "id": "70",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutations",
+          "title": "Permutations",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking"
+          ],
+          "id": "71",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutations-ii",
+          "title": "Permutations II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Sorting"
+          ],
+          "id": "72",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "rotate-image",
+          "title": "Rotate Image",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Math",
+            "Matrix"
+          ],
+          "id": "73",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "powx-n",
+          "title": "Pow(x, n)",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Recursion"
+          ],
+          "id": "74",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "spiral-matrix",
+          "title": "Spiral Matrix",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Matrix",
+            "Simulation"
+          ],
+          "id": "75",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "jump-game",
+          "title": "Jump Game",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Greedy"
+          ],
+          "id": "76",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "insert-interval",
+          "title": "Insert Interval",
+          "difficulty": "Medium",
+          "topics": [
+            "Array"
+          ],
+          "id": "77",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "spiral-matrix-ii",
+          "title": "Spiral Matrix II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Matrix",
+            "Simulation"
+          ],
+          "id": "78",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "permutation-sequence",
+          "title": "Permutation Sequence",
+          "difficulty": "Hard",
+          "topics": [
+            "Math",
+            "Recursion"
+          ],
+          "id": "79",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "rotate-list",
+          "title": "Rotate List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "80",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-paths",
+          "title": "Unique Paths",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Combinatorics"
+          ],
+          "id": "81",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-paths-ii",
+          "title": "Unique Paths II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Matrix"
+          ],
+          "id": "82",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-path-sum",
+          "title": "Minimum Path Sum",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Matrix"
+          ],
+          "id": "83",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "valid-number",
+          "title": "Valid Number",
+          "difficulty": "Hard",
+          "topics": [
+            "String"
+          ],
+          "id": "84",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "text-justification",
+          "title": "Text Justification",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "String",
+            "Simulation"
+          ],
+          "id": "85",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "sqrtx",
+          "title": "Sqrt(x)",
+          "difficulty": "Easy",
+          "topics": [
+            "Math",
+            "Binary Search",
+            "Newton's Method"
+          ],
+          "id": "86",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "simplify-path",
+          "title": "Simplify Path",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Stack"
+          ],
+          "id": "87",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "edit-distance",
+          "title": "Edit Distance",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "88",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "set-matrix-zeroes",
+          "title": "Set Matrix Zeroes",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Hash Table",
+            "Matrix"
+          ],
+          "id": "89",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-a-2d-matrix",
+          "title": "Search a 2D Matrix",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search",
+            "Matrix"
+          ],
+          "id": "90",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "minimum-window-substring",
+          "title": "Minimum Window Substring",
+          "difficulty": "Hard",
+          "topics": [
+            "Hash Table",
+            "String",
+            "Sliding Window"
+          ],
+          "id": "91",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "combinations",
+          "title": "Combinations",
+          "difficulty": "Medium",
+          "topics": [
+            "Backtracking"
+          ],
+          "id": "92",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "word-search",
+          "title": "Word Search",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "String",
+            "Backtracking",
+            "Depth-First Search",
+            "Matrix"
+          ],
+          "id": "93",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-array-ii",
+          "title": "Remove Duplicates from Sorted Array II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Two Pointers"
+          ],
+          "id": "94",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "search-in-rotated-sorted-array-ii",
+          "title": "Search in Rotated Sorted Array II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Binary Search"
+          ],
+          "id": "95",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "remove-duplicates-from-sorted-list-ii",
+          "title": "Remove Duplicates from Sorted List II",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "96",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "largest-rectangle-in-histogram",
+          "title": "Largest Rectangle in Histogram",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Stack",
+            "Monotonic Stack",
+            "Range Minimum/Maximum Query"
+          ],
+          "id": "97",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "maximal-rectangle",
+          "title": "Maximal Rectangle",
+          "difficulty": "Hard",
+          "topics": [
+            "Array",
+            "Dynamic Programming",
+            "Stack",
+            "Matrix",
+            "Monotonic Stack"
+          ],
+          "id": "98",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "partition-list",
+          "title": "Partition List",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List",
+            "Two Pointers"
+          ],
+          "id": "99",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "scramble-string",
+          "title": "Scramble String",
+          "difficulty": "Hard",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "100",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "gray-code",
+          "title": "Gray Code",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "101",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "subsets-ii",
+          "title": "Subsets II",
+          "difficulty": "Medium",
+          "topics": [
+            "Array",
+            "Backtracking",
+            "Bit Manipulation"
+          ],
+          "id": "102",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "decode-ways",
+          "title": "Decode Ways",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "103",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "reverse-linked-list-ii",
+          "title": "Reverse Linked List II",
+          "difficulty": "Medium",
+          "topics": [
+            "Linked List"
+          ],
+          "id": "104",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "restore-ip-addresses",
+          "title": "Restore IP Addresses",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Backtracking"
+          ],
+          "id": "105",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-binary-search-trees-ii",
+          "title": "Unique Binary Search Trees II",
+          "difficulty": "Medium",
+          "topics": [
+            "Dynamic Programming",
+            "Backtracking",
+            "Tree",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "106",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "unique-binary-search-trees",
+          "title": "Unique Binary Search Trees",
+          "difficulty": "Medium",
+          "topics": [
+            "Math",
+            "Dynamic Programming",
+            "Tree",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "107",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "interleaving-string",
+          "title": "Interleaving String",
+          "difficulty": "Medium",
+          "topics": [
+            "String",
+            "Dynamic Programming"
+          ],
+          "id": "108",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "validate-binary-search-tree",
+          "title": "Validate Binary Search Tree",
+          "difficulty": "Medium",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "109",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "recover-binary-search-tree",
+          "title": "Recover Binary Search Tree",
+          "difficulty": "Medium",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Binary Search Tree",
+            "Binary Tree"
+          ],
+          "id": "110",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        },
+        {
+          "slug": "same-tree",
+          "title": "Same Tree",
+          "difficulty": "Easy",
+          "topics": [
+            "Tree",
+            "Depth-First Search",
+            "Breadth-First Search",
+            "Binary Tree"
+          ],
+          "id": "111",
+          "description_html": "<p>Isolated audit fixture; execution and voice are disabled.</p>",
+          "starter_code": {
+            "python3": "# Isolated audit fixture",
+            "java": "// Isolated audit fixture"
+          },
+          "example_testcases": ""
+        }
+      ]
+    },
+    {
+      "path": "/api/assessment/me",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": {
+        "id": "e3e20b3e-db5a-4247-998b-142edb00b55d",
+        "created_at": "2026-11-02T23:39:40.744168+00:00",
+        "started_at": "2026-11-02T23:39:40.744168+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "answers": {
+          "experience": "intermediate",
+          "confident_topics": [
+            "Math"
+          ],
+          "struggle_topics": [
+            "Tree",
+            "Dynamic Programming"
+          ],
+          "companies": [
+            "Google"
+          ],
+          "language": "java",
+          "timeline": null,
+          "preferred_language": "Java",
+          "other_language_used": null,
+          "language_comfort": {
+            "python": 6,
+            "java": 7
+          },
+          "interview_date": "2026-11-02",
+          "has_leetcode_experience": true,
+          "has_coding_experience": null,
+          "languages_used": "Java",
+          "weekly_interview_goal": 3,
+          "interview_confidence": null
+        },
+        "updated_at": "2026-11-02T23:39:44.926687+00:00"
+      }
+    },
+    {
+      "path": "/api/sessions",
+      "method": "GET",
+      "status": 200,
+      "sent": null,
+      "received": [
+        {
+          "id": "3a6b3f24-dd80-4d12-bf25-cd232b62b9d8",
+          "created_at": "2026-11-02T23:39:40.975259+00:00",
+          "started_at": "2026-11-02T23:39:40.975259+00:00",
+          "ended_at": "2026-11-02T23:39:41.028564+00:00",
+          "user_id": "part5-isolated-user",
+          "problem_slug": "find-first-and-last-position-of-element-in-sorted-array",
+          "mode": "recommended",
+          "language": "java",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "path": "/api/sessions",
+      "method": "POST",
+      "status": 200,
+      "sent": {
+        "problem_slug": "unique-binary-search-trees-ii",
+        "mode": "recommended",
+        "language": "java"
+      },
+      "received": {
+        "id": "32f93e9f-8ac9-43b7-8ed4-bf0288e1094c",
+        "created_at": "2026-11-02T23:39:45.625745+00:00",
+        "started_at": "2026-11-02T23:39:45.625745+00:00",
+        "ended_at": null,
+        "user_id": "part5-isolated-user",
+        "problem_slug": "unique-binary-search-trees-ii",
+        "mode": "recommended",
+        "language": "java",
+        "status": "in_progress"
+      }
+    }
+  ],
+  "unexpectedResponses": [],
+  "browserHTTPerrors": [
+    {
+      "url": "http://127.0.0.1:5173/api/assessment/me",
+      "status": 404
+    }
+  ]
+}

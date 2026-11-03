@@ -1,0 +1,16 @@
+{
+  "scope": "new disposable account and session only; no existing users modified",
+  "created": true,
+  "recommended_mode_persisted": true,
+  "cleanup": {
+    "test_session_removed": true,
+    "test_account_removed": true
+  },
+  "test_user_id": "bf203068-2215-46ae-87cb-b63166530a61",
+  "session": {
+    "id": "fb9ba0f9-0efc-4332-bea8-8f6cd1f6cac7",
+    "mode": "recommended",
+    "language": "java",
+    "problem_slug": "two-sum"
+  }
+}

@@ -13,5 +13,5 @@ export async function submitAssessment(answers: AssessmentAnswers, signal?: Abor
 }
 
 export async function getRecommendations(signal?: AbortSignal) {
-  return parseRecommendations(await request<unknown>("/api/recommendations?limit=5", { signal }, true));
+  return parseRecommendations(await request<unknown>("/api/recommendations?limit=25", { signal }, true));
 }

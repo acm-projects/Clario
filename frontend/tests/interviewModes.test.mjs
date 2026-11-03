@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { sessionRequestFor, interviewRoomUrl, parseInterviewMode } from '../src/lib/interviewModes.ts';
-for (const [mode, stored] of [['recommended','practice'], ['custom','practice'], ['surprise_me','full_mock']]) {
+for (const [mode, stored] of [['recommended','recommended'], ['custom','practice'], ['surprise_me','full_mock']]) {
   test(mode + ' creates a request accepted by the coding-session API', () => {
     assert.deepEqual(sessionRequestFor({mode, problemSlug:'two-sum', language:'python3'}), {problem_slug:'two-sum', mode:stored, language:'python3'});
   });

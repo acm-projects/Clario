@@ -85,7 +85,7 @@ export interface InterviewSession {
   ended_at: string | null;
 }
 
-export function createSession(problem_slug: string, mode: "practice" | "full_mock", language: Language) {
+export function createSession(problem_slug: string, mode: "recommended" | "practice" | "full_mock", language: Language) {
   return request<InterviewSession>("/api/sessions", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ problem_slug, mode, language }),
@@ -111,7 +111,7 @@ export function endSession(id: string) {
   return request<InterviewSession>("/api/sessions/" + encodeURIComponent(id) + "/end", { method: "PATCH" }, true);
 }
 
-// Adapt selection modes to the existing practice/full_mock session contract.
+// Preserve recommended storage mode; adapt Custom/Surprise me to their existing session modes.
 export async function createModeSession(selection: InterviewLaunch): Promise<InterviewSession> {
   const body = sessionRequestFor(selection);
   return createSession(body.problem_slug, body.mode, body.language);

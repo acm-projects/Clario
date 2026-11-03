@@ -2,7 +2,8 @@
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');
 const base = process.env.CLARIO_TEST_URL || 'http://127.0.0.1:5173';
-const answers = { experience: 'intermediate', confident_topics: ['Array'], struggle_topics: ['Hash Table'], companies: ['Google'], language: 'java', timeline: 'this_month' };
+const today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Chicago'}).format(new Date());
+const answers = { experience: 'intermediate', confident_topics: ['Array'], struggle_topics: ['Hash Table'], companies: ['Google'], language: 'java', preferred_language: 'Java', other_language_used: null, language_comfort: {python:1,java:1}, interview_date:today, has_leetcode_experience:true, has_coding_experience:null, languages_used:'Java', weekly_interview_goal:3, interview_confidence:null };
 const problem = { slug: 'two-sum', title: 'Two Sum', difficulty: 'Easy', topics: ['Array', 'Hash Table'], reason: 'You said you struggle with Hash Table.' };
 const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numbers.</p>', starter_code: { python3: 'class Solution: pass', java: 'class Solution {}' }, example_testcases: '[2,7]\n9' };
 
@@ -35,7 +36,7 @@ const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numb
         return route.fulfill({ json: saved() });
       }
       if (path === '/api/recommendations') {
-        assert.equal(new URL(request.url()).searchParams.get('limit'), '5');
+        assert.equal(new URL(request.url()).searchParams.get('limit'), '25');
         if (state.recommendationWait) await state.recommendationWait;
         return route.fulfill({ status: state.recommendationError ? 503 : 200, json: state.recommendationError ? { detail: 'Recommendation service unavailable' } : { has_assessment: state.assessed, problems: state.problems } });
       }
@@ -44,7 +45,7 @@ const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numb
         if (state.sessionFailure) return route.fulfill({ status: 503, json: { detail: 'Could not start interview' } });
         return route.fulfill({ json: { id: 'part4-session', ...request.postDataJSON(), status: 'in_progress', started_at: new Date().toISOString(), ended_at: null } });
       }
-      if (path === '/api/sessions/part4-session') return route.fulfill({ json: { id: 'part4-session', mode: 'practice', problem_slug: problem.slug, language: 'java', status: 'in_progress', started_at: new Date().toISOString(), ended_at: null, problem: detail, latest_code: null } });
+      if (path === '/api/sessions/part4-session') return route.fulfill({ json: { id: 'part4-session', mode: 'recommended', problem_slug: problem.slug, language: 'java', status: 'in_progress', started_at: new Date().toISOString(), ended_at: null, problem: detail, latest_code: null } });
       return route.fulfill({ json: path === '/api/problems/two-sum' ? detail : [] });
     });
     try { await run(page, state); passed++; console.log('PASS:', name); }
@@ -60,17 +61,17 @@ const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numb
       await next.waitFor(); assert.equal(await next.isDisabled(), true);
       await page.getByText('Yes', { exact: true }).click(); await continueForm(page);
       await page.getByText('Java', { exact: true }).last().click(); await continueForm(page);
-      await continueForm(page); // Explicitly accept the displayed comfort rating.
+      assert.equal(await next.isDisabled(), true);
+      for (const slider of await page.getByRole('slider').all()) await slider.press('Home'); await continueForm(page);
       await page.getByText('Hash Table', { exact: true }).click(); await continueForm(page);
       await page.getByText('3', { exact: true }).click(); await continueForm(page);
       await page.getByLabel('Companies (optional)').fill('Google'); await continueForm(page);
-      await continueForm(page); // The date stays optional.
+      await page.getByLabel('Next interview date', {exact:true}).fill(today); await continueForm(page);
       assert.equal(await next.isDisabled(), true);
       await page.getByText('Intermediate', { exact: true }).click(); await continueForm(page);
-      await page.getByText('Array', { exact: true }).click(); await continueForm(page);
+      await page.getByText('Array', { exact: true }).click();
       const finish = page.getByRole('button', { name: 'Finish & choose an interview' });
-      assert.equal(await finish.isDisabled(), true);
-      await page.getByText('This month', { exact: true }).click();
+      assert.equal(await finish.isDisabled(), false);
       let release;
       state.submitWait = new Promise(resolve => { release = resolve; });
       await finish.click();
@@ -80,7 +81,7 @@ const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numb
       assert.deepEqual(state.posts[0], answers);
       release(); await waitText(page, 'Please retry saving');
       assert.equal(new URL(page.url()).pathname, '/assessment');
-      assert.equal(await page.getByRole('radio', { name: 'This month' }).isChecked(), true);
+      assert.equal(await page.getByRole('checkbox', { name: 'Array' }).isChecked(), true);
       state.submitWait = null;
       await finish.click(); await page.waitForURL(`${base}/interview`);
       await page.locator('.mode-page').waitFor();
@@ -125,7 +126,7 @@ const detail = { ...problem, leetcode_id: 1, description_html: '<p>Find two numb
       await page.reload(); await page.getByRole('button', { name: 'Two Sum' }).waitFor();
       await page.getByRole('button', { name: 'Start interview', exact: true }).click();
       await page.waitForURL(/\/interview\/two-sum\?session=part4-session&mode=recommended/);
-      assert.deepEqual(state.sessions, [{ problem_slug: 'two-sum', mode: 'practice', language: 'java' }]);
+      assert.deepEqual(state.sessions, [{ problem_slug: 'two-sum', mode: 'recommended', language: 'java' }]);
     });
     await scenario('recommendations request shows loading before content', {}, async (page, state) => {
       let release; state.recommendationWait = new Promise(resolve => { release = resolve; });

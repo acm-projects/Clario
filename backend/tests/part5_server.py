@@ -116,6 +116,8 @@ class Query:
 
 store = Store()
 assessment.supabase = store
+# The small fixture intentionally exercises shortfalls; never mix live catalog rows.
+assessment.load_additional_problems = lambda: []
 sessions.supabase = store
 app.dependency_overrides[get_current_user] = lambda: {"sub": USER, "email": "isolated@example.test"}
 

@@ -1,10 +1,11 @@
 import test from "node:test";
+import { chicagoDate } from "../src/lib/interviewCalendar.ts";
 import assert from "node:assert/strict";
 import { getProfileUpdate, saveAssessment, saveDisplayName, validateDisplayName } from "../src/lib/profile.ts";
 import { initialAnswers, getQuestionPath } from "../src/lib/practiceProfile.ts";
 import { createRetakeAccess, getProfileRedirect } from "../src/lib/profileRouting.ts";
 
-const answers = { ...initialAnswers, hasLeetCodeExperience: true, languagesUsed: "both", selectedLanguage: "Java", languageComfort: 5, weeklyInterviewGoal: 5 };
+const answers = { ...initialAnswers, hasLeetCodeExperience: true, languagesUsed: "both", selectedLanguage: "Java", languageComfort: 5, languageRatings: {python: 5, java: 5}, interviewDate: chicagoDate(), weeklyInterviewGoal: 5 };
 
 function mockClient({ user = { id: "user-1" }, authError = null, updateError = null, row = { id: "user-1" } } = {}) {
   const calls = [];
@@ -38,13 +39,13 @@ test("maps the assessment profile columns, with title-case difficulty and 5+ as 
 });
 
 test("difficulty boundaries match Easy / Medium / Hard", () => {
-  for (const [score, difficulty] of [[0,"Easy"],[4,"Easy"],[5,"Medium"],[7,"Medium"],[8,"Hard"],[10,"Hard"]]) {
-    assert.equal(getProfileUpdate({ ...answers, languageComfort: score }).starting_difficulty, difficulty);
+  for (const [score, difficulty] of [[1,"Easy"],[4,"Easy"],[5,"Medium"],[7,"Medium"],[8,"Hard"],[10,"Hard"]]) {
+    assert.equal(getProfileUpdate({ ...answers, languageRatings: {python: 5, java: score} }).starting_difficulty, difficulty);
   }
 });
 
 test("Other asks for practice language and uses its comfort rating", () => {
-  const other = { ...answers, languagesUsed: "other", languageComfort: 10, interviewConfidence: 10 };
+  const other = { ...answers, languagesUsed: "other", otherLanguageUsed: "Go", languageComfort: 10, languageRatings: {python: 5, java: 10, go: 3}, interviewConfidence: 10 };
   assert.deepEqual(getQuestionPath(other), ["leetcode", "used", "language", "languageComfort", "strugglingTopics", "weekly", "targetCompany", "interviewDate"]);
   const update = getProfileUpdate(other);
   assert.equal(update.has_coding_experience, null);
@@ -58,7 +59,7 @@ test("Neither and no coding experience keep their distinct paths and accurate da
     const beginner = { ...answers, hasLeetCodeExperience: false, hasCodingExperience, languagesUsed: "neither", interviewConfidence: 10 };
     const update = getProfileUpdate(beginner);
     assert.equal(update.has_coding_experience, hasCodingExperience);
-    assert.equal(update.language_comfort, hasCodingExperience ? 5 : null);
+    assert.equal(update.language_comfort, 5);
     assert.equal(update.starting_difficulty, hasCodingExperience ? "Medium" : "Easy");
     assert.equal(update.interview_confidence, hasCodingExperience ? null : 10);
   }
@@ -155,6 +156,6 @@ test("saves optional prep answers and clears topics when the path changes", () =
   assert.equal(update.target_company, "Google, Microsoft");
   assert.equal(update.target_date, "2027-01-15");
   assert.deepEqual(getProfileUpdate({ ...prep, hasLeetCodeExperience: false, hasCodingExperience: true }).struggling_topics, []);
-  assert.equal(getProfileUpdate(answers).target_date, null);
+  assert.equal(getProfileUpdate(answers).target_date, chicagoDate());
   assert.throws(() => getProfileUpdate({ ...prep, interviewDate: "2027-02-30" }), /valid interview date/);
 });

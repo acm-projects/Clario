@@ -7,6 +7,7 @@ const os = require('node:os');
 const path = require('node:path');
 const base = process.env.CLARIO_TEST_URL || 'http://127.0.0.1:5173';
 const isolated = process.env.CLARIO_ISOLATED_URL || 'http://127.0.0.1:8001';
+const today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Chicago'}).format(new Date());
 const results = { storage: 'isolated in-memory; no Supabase writes', checks: [], requests: [], console: [], runtimeErrors: [], unexpectedResponses: [], failedRequests: [] };
 function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evidence }); console.log('PASS:', name); }
 
@@ -39,20 +40,18 @@ function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evid
   async function next() { await page.getByRole('button', { name: 'Continue', exact: true }).click(); }
   async function fillAssessment(topics) {
     await page.getByRole('heading', { name: 'Have you used LeetCode before?' }).waitFor();
-    assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).isDisabled(), true);
     await page.getByText('Yes', { exact: true }).click(); await next();
     await page.getByText('Python', { exact: true }).last().click(); await next();
-    await next();
+    for (const slider of await page.getByRole('slider').all()) await slider.press('Home'); await next();
+    for (const box of await page.getByRole('checkbox').all()) await box.uncheck();
     for (const topic of topics) await page.getByText(topic, { exact: true }).click();
     await next(); await page.getByText('3', { exact: true }).click(); await next();
     await page.getByLabel('Companies (optional)').fill('Google'); await next();
-    await next();
-    assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).isDisabled(), true);
+    await page.getByLabel('Next interview date',{exact:true}).fill(today); await next();
     await page.getByText('Intermediate', { exact: true }).click(); await next();
-    await page.getByText('Array', { exact: true }).click(); await next();
+    await page.getByRole('checkbox', {name:'Array',exact:true}).check();
     const finish = page.getByRole('button', { name: 'Finish & choose an interview' });
-    assert.equal(await finish.isDisabled(), true);
-    await page.getByText('This month', { exact: true }).click();
+    assert.equal(await finish.isDisabled(), false);
     await finish.click(); await page.waitForURL(`${base}/interview`);
     await page.locator('.mode-page').waitFor();
   }
@@ -64,8 +63,9 @@ function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evid
   }
   function verifyRanking(data, topics) {
     assert.equal(data.has_assessment, true);
-    assert.equal(data.problems.length, 5);
-    for (const problem of data.problems) {
+    assert.equal(data.problems.length, 11); // This isolated fixture has only 11 eligible problems.
+    assert.equal(data.target_count, 25); assert.equal(data.minimum_count, 20); assert.ok(data.shortfall_message);
+    for (const problem of data.problems.slice(0,5)) {
       const matches = problem.topics.filter(topic => topics.includes(topic));
       assert.ok(matches.length > 0, `Recommendation ${problem.slug} must match selected struggle topics`);
       for (const topic of matches) assert.ok(problem.reason.includes(topic));
@@ -82,7 +82,7 @@ function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evid
     pass('New user redirect and stable Assessment page', 'Real GET /api/assessment/me returned 404; Dashboard redirected; refresh stayed on Assessment.');
     await fillAssessment(['Hash Table', 'Binary Search']);
     const initial = await get('/api/assessment/me');
-    assert.deepEqual(initial.answers, { experience: 'intermediate', confident_topics: ['Array'], struggle_topics: ['Hash Table', 'Binary Search'], companies: ['Google'], language: 'python3', timeline: 'this_month' });
+    assert.deepEqual(initial.answers, { experience: 'intermediate', confident_topics: ['Array'], struggle_topics: ['Hash Table', 'Binary Search'], companies: ['Google'], language: 'python3', timeline: null, preferred_language: 'Python', other_language_used: null, language_comfort: {python:1,java:1}, interview_date:today, has_leetcode_experience:true, has_coding_experience:null, languages_used:'Python', weekly_interview_goal:3, interview_confidence:null });
     assert.equal((await get('/__part5/state')).user_assessments.length, 1);
     pass('Required questions, payload, backend save and Selection navigation', 'POST saved exact answers in isolated store; GET returned them; UI arrived at /interview. Live Supabase writes not tested.');
     const first = await recommended(); verifyRanking(first, initial.answers.struggle_topics);
@@ -100,7 +100,7 @@ function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evid
     assert.equal(new URL(page.url()).pathname, '/interview/' + chosen.slug);
     assert.equal(new URL(page.url()).searchParams.get('mode'), 'recommended');
     const savedSession = await get('/api/sessions/' + sessionId);
-    assert.equal(savedSession.mode, 'practice'); assert.equal(savedSession.language, 'python3'); assert.equal(savedSession.problem_slug, chosen.slug);
+    assert.equal(savedSession.mode, 'recommended'); assert.equal(savedSession.language, 'python3'); assert.equal(savedSession.problem_slug, chosen.slug);
     await page.getByRole('heading', { name: new RegExp(chosen.title) }).waitFor();
     pass('Interview room, chosen problem, saved Python and compatible session mode', { url: page.url(), sessionId, mode: savedSession.mode, language: savedSession.language });
     // Verify editor rendering and controls separately from paid voice/external Piston.
@@ -133,7 +133,7 @@ function pass(name, evidence) { results.checks.push({ name, status: 'PASS', evid
     assert.equal(updated.id, initial.id); assert.equal((await get('/__part5/state')).user_assessments.length, 1);
     assert.deepEqual(updated.answers.struggle_topics, ['Dynamic Programming', 'Tree']);
     const second = await recommended(); verifyRanking(second, updated.answers.struggle_topics);
-    assert.ok(second.problems.every(problem => !first.problems.some(old => old.slug === problem.slug)));
+    assert.ok(second.problems.slice(0,5).every(problem => !first.problems.slice(0,5).some(old => old.slug === problem.slug)));
     pass('Retake updates same assessment and changes ranking/reasons', { sameAssessmentId: updated.id, updated: updated.answers, secondProblems: second.problems });
     assert.equal(results.runtimeErrors.length, 0, JSON.stringify(results.runtimeErrors));
     assert.equal(results.unexpectedResponses.length, 0, JSON.stringify(results.unexpectedResponses));

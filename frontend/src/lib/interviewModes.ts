@@ -18,7 +18,7 @@ export function interviewRoomUrl(slug: string, sessionId: string, mode: Intervie
 }
 export function sessionRequestFor(selection: InterviewLaunch): {
   problem_slug: string;
-  mode: "practice" | "full_mock";
+  mode: "recommended" | "practice" | "full_mock";
   language: Language;
 } {
   if (!["python3", "java"].includes(selection.language)) {
@@ -32,7 +32,7 @@ export function sessionRequestFor(selection: InterviewLaunch): {
   }
   return {
     problem_slug: selection.problemSlug,
-    mode: selection.mode === "surprise_me" ? "full_mock" : "practice",
+    mode: selection.mode === "recommended" ? "recommended" : selection.mode === "surprise_me" ? "full_mock" : "practice",
     language: selection.language,
   };
 }
