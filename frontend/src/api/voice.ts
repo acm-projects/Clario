@@ -15,3 +15,29 @@ export function getVoiceSession(problemSlug: string, repoChallengeId?: string): 
     true,
   );
 }
+
+export interface SystemDesignVoiceSession {
+  signed_url: string;
+  variables: {
+    company: string;
+    prompt: string;
+    functional_requirements: string;
+    non_functional_requirements: string;
+    scale: string;
+    out_of_scope: string;
+    deep_dive_topics: string;
+    curveballs: string;
+    strong_signals: string;
+    red_flags: string;
+  };
+}
+
+export function getSystemDesignVoiceSession(
+  slug: string
+): Promise<SystemDesignVoiceSession> {
+  return request<SystemDesignVoiceSession>(
+    `/api/voice/system-design-session?slug=${encodeURIComponent(slug)}`,
+    {},
+    true
+  );
+}

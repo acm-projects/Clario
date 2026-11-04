@@ -1,7 +1,10 @@
 import DuckHead from "../layout/DuckHead";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Conversation } from "@elevenlabs/client";
-import { getVoiceSession } from "../../api/voice";
+import {
+  getVoiceSession,
+  getSystemDesignVoiceSession,
+} from "../../api/voice";
 import { Panel, Pill } from "./Panel";
 
 interface VideoCallPanelProps {
@@ -9,8 +12,10 @@ interface VideoCallPanelProps {
   interviewer: string;
   problemSlug: string;
   repoChallengeId?: string;
+  interviewMode?: "coding" | "system_design";
+  designNotes?: string;
   speaking?: boolean;
-  onEndInterview: () => void;
+  onEndInterview: () => void | Promise<void>;
 }
 
 const SignalBars = () => (
@@ -62,7 +67,16 @@ function voiceStartupError(error: unknown): string {
   return error instanceof Error ? error.message : "Could not start the interview.";
 }
 
-export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeId, speaking = true, onEndInterview }: VideoCallPanelProps) {
+export function VideoCallPanel({
+  round,
+  interviewer,
+  problemSlug,
+  repoChallengeId,
+  interviewMode = "coding",
+  designNotes = "",
+  speaking = true,
+  onEndInterview,
+}: VideoCallPanelProps) {
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
@@ -72,6 +86,13 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
   const streamRef = useRef<MediaStream | null>(null);
   const cameraRequestRef = useRef(0);
   const conversationRef = useRef<Awaited<ReturnType<typeof Conversation.startSession>> | null>(null);
+  const timeUpdateRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopTimeUpdates = useCallback(() => {
+    if (timeUpdateRef.current !== null) {
+      clearInterval(timeUpdateRef.current);
+      timeUpdateRef.current = null;
+    }
+  }, []);
 
   const startInterview = useCallback(async () => {
     if (voiceStatus === "starting" || voiceStatus === "active") return;
@@ -86,12 +107,17 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
       const microphonePermission = await navigator.mediaDevices.getUserMedia({ audio: true });
       microphonePermission.getTracks().forEach((track) => track.stop());
 
-      const session = await getVoiceSession(problemSlug, repoChallengeId);
+      const session =
+        interviewMode === "system_design"
+          ? await getSystemDesignVoiceSession(problemSlug)
+          : await getVoiceSession(problemSlug, repoChallengeId);
+
       conversationRef.current = await Conversation.startSession({
         signedUrl: session.signed_url,
         dynamicVariables: session.variables,
         onModeChange: ({ mode }) => setIsSpeaking(mode === "speaking"),
         onDisconnect: () => {
+          stopTimeUpdates();
           conversationRef.current = null;
           setVoiceStatus("idle");
           setIsSpeaking(false);
@@ -102,19 +128,68 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
         },
       });
       setVoiceStatus("active");
+      if (interviewMode === "system_design" && conversationRef.current) {
+        stopTimeUpdates();
+
+        let elapsedMinutes = 0;
+        const conversation = conversationRef.current;
+
+        timeUpdateRef.current = setInterval(() => {
+
+          if (conversationRef.current !== conversation) {
+            stopTimeUpdates();
+            return;
+          }
+
+          elapsedMinutes += 5;
+
+          if (elapsedMinutes <= 45) {
+            const timeMessage =
+              `[TIME, do not respond] ${elapsedMinutes} minutes elapsed of 45.`;
+
+            conversation.sendContextualUpdate(timeMessage);
+          }
+
+          if (elapsedMinutes >= 45) {
+            stopTimeUpdates();
+          }
+        }, 5 * 60 * 1000);
+      }
     } catch (error) {
       setVoiceError(voiceStartupError(error));
       setVoiceStatus("error");
     }
-  }, [problemSlug, repoChallengeId, voiceStatus]);
+  }, [problemSlug, repoChallengeId, interviewMode, voiceStatus, stopTimeUpdates]);
+
+  useEffect(() => {
+    if (interviewMode !== "system_design" || voiceStatus !== "active") {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const conversation = conversationRef.current;
+      if (!conversation) return;
+
+      const notesUpdate =
+        `[NOTES UPDATE, do not respond] ${designNotes.trim() || "(Notes cleared)"}`;
+
+      conversation.sendContextualUpdate(notesUpdate);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [designNotes, interviewMode, voiceStatus]);
 
   const endVoiceSession = useCallback(() => {
+    stopTimeUpdates();
+
     const conversation = conversationRef.current;
     conversationRef.current = null;
+
     if (conversation) void conversation.endSession();
+
     setVoiceStatus("idle");
     setIsSpeaking(false);
-  }, []);
+  }, [stopTimeUpdates]);
 
   const turnCameraOn = useCallback(async () => {
     const requestId = ++cameraRequestRef.current;
@@ -170,6 +245,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
 
     return () => {
       disposed = true;
+      stopTimeUpdates();
       cameraRequestRef.current += 1;
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
@@ -177,7 +253,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
       conversationRef.current = null;
       if (conversation) void conversation.endSession();
     };
-  }, []);
+  }, [stopTimeUpdates]);
 
   useEffect(() => {
     if (videoRef.current) {

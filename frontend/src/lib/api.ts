@@ -200,3 +200,31 @@ export function previewGeminiFeedback(): Promise<FeedbackPreview> {
 export function getSessionFeedback(sessionId: string): Promise<unknown> {
   return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), {}, true);
 }
+
+export interface SystemDesignQuestion {
+  id: string;
+  company: string;
+  title: string;
+  slug: string;
+  prompt: string;
+  difficulty: "easy" | "medium" | "hard";
+  key_points: string[];
+  follow_ups: string[];
+  created_at: string;
+}
+
+export interface SystemDesignResponse {
+  company: string;
+  count: number;
+  questions: SystemDesignQuestion[];
+}
+
+export function getSystemDesignQuestions(
+  company: string,
+  signal?: AbortSignal
+): Promise<SystemDesignResponse> {
+  return request<SystemDesignResponse>(
+    `/api/system-design?company=${encodeURIComponent(company)}`,
+    { signal }
+  );
+}

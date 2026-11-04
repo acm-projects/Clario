@@ -10,7 +10,14 @@ const palettes = [
 
 export default function InterviewModeGrid({ descriptions, onChoose, disabled }: { descriptions: Record<InterviewMode, string>; onChoose: (mode: InterviewMode | "repo_debugging") => void; disabled: boolean }) {
   const options = [...interviewModes, "repo_debugging"] as const;
-  const actions = { recommended: "Review your recommendation", custom: "Explore the library", surprise_me: "Set up a surprise interview", company: "Choose a company", repo_debugging: "Choose a repository" };
+  const actions = {
+  recommended: "Review your recommendation",
+  custom: "Explore the library",
+  surprise_me: "Set up a surprise interview",
+  company: "Choose a company",
+  system_design: "Explore system design questions",
+  repo_debugging: "Choose a repository",
+};
   return <section aria-label="Interview mode selector" className="grid grid-cols-1 gap-5 sm:grid-cols-2">
     {options.map((mode, index) => {
       const palette = palettes[index % palettes.length];

@@ -14,6 +14,8 @@ interface TopBarProps {
   listPath?: string;
   runLabel?: string;
   showBrand?: boolean;
+  showRun?: boolean;
+  showSubmit?: boolean;
 }
 
 export function TopBar({
@@ -28,6 +30,8 @@ export function TopBar({
   listPath = "/problems",
   runLabel = "Run",
   showBrand = true,
+  showRun = true,
+  showSubmit = true,
 }: TopBarProps) {
   const navigate = useNavigate();
   return (
@@ -64,24 +68,34 @@ export function TopBar({
         </div>
       </div>
 
+    {(showRun || showSubmit) && (
       <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
-        <button
-          data-sandbox-run
-          onClick={onRun}
-          disabled={running}
-          className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
-          {running ? "Running..." : runLabel}
-        </button>
-        <button
-          disabled={running}
-          onClick={onSubmit}
-          className="h-[42px] rounded-lg border border-[var(--line)] bg-[#fac52e] px-6 text-sm font-semibold text-[#122b50] disabled:opacity-50"
-        >
-          Submit
-        </button>
+        {showRun && (
+          <button
+            data-sandbox-run
+            onClick={onRun}
+            disabled={running}
+            className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor">
+              <path d="M0 0l8 4.5L0 9z" />
+            </svg>
+            {running ? "Running..." : runLabel}
+          </button>
+        )}
+
+        {showSubmit && (
+          <button
+            disabled={running}
+            onClick={onSubmit}
+            className="h-[42px] rounded-lg border border-[var(--line)] bg-[#fac52e] px-6 text-sm font-semibold text-[#122b50] disabled:opacity-50"
+          >
+            Submit
+          </button>
+        )}
       </div>
+    )}
+
 
       <div className="flex items-center gap-4">
         <Pill className="theme-surface theme-body-text flex items-center gap-2">

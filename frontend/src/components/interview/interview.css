@@ -621,3 +621,58 @@
 .interview-page[data-theme="light"] .sandbox-input-cases .sandbox-case.failed .sandbox-case-dot {
   background: #cc3c09;
 }
+
+
+/* System Design: reuse the original Clario sandbox appearance */
+
+.system-design-sandbox .theme-panel {
+  background-color: var(--panel-bg);
+  border-color: var(--line);
+}
+
+.system-design-sandbox .theme-border {
+  border-color: var(--line);
+}
+
+.system-design-sandbox .theme-main-text {
+  color: var(--text-main);
+}
+
+.system-design-sandbox .theme-body-text {
+  color: var(--text-body);
+}
+
+.system-design-sandbox .theme-muted-text {
+  color: var(--text-muted);
+}
+
+.system-design-sandbox .theme-surface {
+  background-color: var(--surface);
+}
+
+.system-design-sandbox .theme-video-self {
+  background-color: var(--video-self);
+  border-color: var(--line);
+}
+
+.system-design-sandbox .theme-video-interviewer {
+  background-color: var(--video-interviewer);
+}
+
+.system-design-sandbox .theme-avatar-ring {
+  --tw-ring-color: var(--avatar-ring);
+}
+
+.system-design-sandbox .sandbox-problem {
+  border-radius: 18px;
+}
+
+.system-design-sandbox .sandbox-video {
+  border: 0;
+  border-radius: 0;
+}
+
+.system-design-sandbox .sandbox-call {
+  background-color: var(--panel-bg);
+  border-color: var(--line);
+}

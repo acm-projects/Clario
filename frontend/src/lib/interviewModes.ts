@@ -1,10 +1,20 @@
 import type { Language } from "../types";
 
 // Selection modes map to the existing coding-session API at the request boundary.
-export const interviewModes = ["recommended", "custom", "surprise_me", "company"] as const;
+export const interviewModes = [
+  "recommended",
+  "custom",
+  "surprise_me",
+  "company",
+  "system_design",
+] as const;
 export type InterviewMode = typeof interviewModes[number];
 export const modeLabels: Record<InterviewMode, string> = {
-  recommended: "Recommended", custom: "Custom", surprise_me: "Surprise me", company: "Company",
+  recommended: "Recommended",
+  custom: "Custom",
+  surprise_me: "Surprise me",
+  company: "Company",
+  system_design: "System Design",
 };
 export function parseInterviewMode(value: unknown): InterviewMode | null {
   return interviewModes.includes(value as InterviewMode) ? value as InterviewMode : null;

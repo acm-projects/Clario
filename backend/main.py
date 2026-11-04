@@ -12,7 +12,9 @@ from routers.scenarios import router as scenarios_router
 from routers.code_runner import router as code_runner_routers
 from routers.companies import router as companies_router
 from routers.standard_runner import router as standard_runner_router
+from routers.system_design import router as system_design_router
 from routers.progress import router as progress_router
+from routers.system_design_voice import router as system_design_voice_router
 
 app = FastAPI()
 
@@ -39,7 +41,9 @@ app.include_router(scenarios_router)
 app.include_router(companies_router)
 app.include_router(code_runner_routers)
 app.include_router(standard_runner_router)
+app.include_router(system_design_router)
 app.include_router(progress_router)
+app.include_router(system_design_voice_router)
 
 @app.get("/")
 async def root():

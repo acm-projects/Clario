@@ -14,11 +14,15 @@ import ProblemLibrary from "./pages/ProblemLibrary";
 import Feedback from "./pages/Feedback";
 import InterviewReport from "./pages/InterviewReport";
 import ProfileGate from "./components/auth/ProfileGate";
+import SystemDesignRoom from "./pages/SystemDesignRoom";
 
 function App() {
   const appearance = useAppearance();
   const { pathname } = useLocation();
-  const sandbox = pathname.startsWith("/repo-debugging") || /^\/interview\/[^/]+\/?$/.test(pathname);
+  const sandbox =
+  pathname.startsWith("/repo-debugging") ||
+  /^\/interview\/[^/]+\/?$/.test(pathname) ||
+  /^\/system-design\/[^/]+\/?$/.test(pathname);
   const routes = (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -37,6 +41,7 @@ function App() {
         <Route path="/repo-debugging/:challengeId" element={<RepoDebugging />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Settings />} />
+        <Route path="/system-design/:slug" element={<SystemDesignRoom />} />
       </Route>
     </Routes>
   );
