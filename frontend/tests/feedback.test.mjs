@@ -34,3 +34,39 @@ test('speech observations preserve unavailable fields and old reports remain com
   const [old] = parseFeedbackHistory([{session,feedback:{id:'old',report:{}}}]);
   assert.equal(old.communicationMetrics,null);
 });
+
+test('UMPIRE uses saved ratings and rates missing recorded demonstrations zero without deriving stars from category scores', () => {
+  const [old] = parseFeedbackHistory([{session,feedback:{id:'old',technical_score:100,report:{}}}]);
+  assert.equal(old.umpire.plan.stars,0);
+  assert.equal(old.detailed,false);
+  assert.equal(old.fillerWords.available,false);
+  const [item] = parseFeedbackHistory([{session,feedback:{id:'new',report:{umpire:{plan:{stars:4,summary:'Clear plan.',details:'Explained a map.',evidence_quotes:['use a map']},match:{stars:6}},actions:{fix:['Only recorded action'],keep:[]},filler_words:{available:true,items:[{word:'um',count:2},{word:'bad',count:-1}]}}}}]);
+  assert.equal(item.umpire.plan.stars,4);
+  assert.equal(item.umpire.match.stars,0);
+  assert.deepEqual(item.actions.fix,['Only recorded action']);
+  assert.deepEqual(item.fillerWords.items,[{word:'um',count:2}]);
+});
+
+
+test('report preserves exact submitted source and full summary without inventing legacy fields', () => {
+  const code = 'def solve():\n    return 1\n';
+  const summary = 'Observed strength.\n\nObserved weakness and next step.';
+  const [item] = parseFeedbackHistory([{ session, feedback: { id: 'new', report: { submitted_code: code, full_summary: summary, corrected_solution: 'def solve():\n    return 2' } } }]);
+  assert.equal(item.submittedCode, code);
+  assert.equal(item.fullSummary, summary);
+  assert.equal(item.correctedSolution, 'def solve():\n    return 2');
+  const [old] = parseFeedbackHistory([{ session, feedback: { id: 'old', report: {} } }]);
+  assert.equal(old.submittedCode, null);
+  assert.equal(old.fullSummary, null);
+  assert.equal(old.correctedSolution, null);
+});
+
+test('structured fixes preserve coaching steps and exact solution excerpts with legacy fallback', () => {
+  const detail = {title:'Handle duplicates',explanation:'Keep the earlier index before updating the map.',steps:['Look up the complement before inserting.'],verification:'Trace [3, 3] with target 6.',code_excerpt:'return [seen[complement], i]'};
+  const [item] = parseFeedbackHistory([{session,feedback:{id:'new',report:{actions:{fix:['Check duplicates.'],fix_details:[detail]}}}}]);
+  assert.equal(item.fixDetails[0].title,detail.title);
+  assert.deepEqual(item.fixDetails[0].steps,detail.steps);
+  assert.equal(item.fixDetails[0].codeExcerpt,detail.code_excerpt);
+  const [old] = parseFeedbackHistory([{session,feedback:{id:'old',report:{}}}]);
+  assert.deepEqual(old.fixDetails,[]);
+});

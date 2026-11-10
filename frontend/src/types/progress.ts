@@ -9,6 +9,10 @@ export type ProgressHistoryItem = {
   problem_slug: string | null;
   problem_title: string | null;
   difficulty: Difficulty | null;
+  topics?: string[];
+  feedback_id?: string | null;
+  feedback_summary?: string | null;
+  feedback_status?: "reviewed" | "pending";
   mode: string;
   overall_score: number | null;
   problem_solving_score: number | null;
@@ -25,6 +29,7 @@ export type ProgressSummary = {
     communication: number | null;
   };
   latest_overall: number | null;
+  latest_session_id?: string | null;
   change_vs_first: number | null;
   umpire_miss_rate: Record<UmpireStep, number | null>;
 };

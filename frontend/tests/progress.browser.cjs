@@ -9,8 +9,13 @@ const path = require('node:path');
 const compiled = ts.transpileModule(fs.readFileSync(require('node:path').join(__dirname, '../src/mocks/progressMock.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } });
 const fixture = { exports: {} };
 vm.runInNewContext(compiled.outputText, fixture);
-const { historyMock, summaryMock: summary, topicsMock: topics, emptySummaryMock } = fixture.exports;
-const history = historyMock.map(item => ({ ...item, duration_seconds: 1234 }));
+const { historyMock, summaryMock, topicsMock: topics, emptySummaryMock } = fixture.exports;
+const summary = { ...summaryMock, latest_session_id: "mock-9" };
+const history = historyMock.map((item, index) => ({ ...item, duration_seconds: 1234,
+  topics: index === 8 ? [] : index % 2 ? ['Sorting'] : ['Array', 'Hash Table'],
+  feedback_id: 'saved-' + item.session_id, feedback_status: 'reviewed',
+  feedback_summary: index === 5 ? null : 'Saved feedback: explain the invariant and check boundary conditions.',
+}));
 
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
@@ -26,12 +31,14 @@ const history = historyMock.map(item => ({ ...item, duration_seconds: 1234 }));
     let state = 'success';
     let release;
     let pending = new Promise(resolve => { release = resolve; });
-    await page.route('**/api/progress/*', async route => {
+    let overviewReads = 0;
+    await page.route(/\/api\/progress(?:\/(history|summary|topics))?(?:\?.*)?$/, async route => {
       if (state === 'loading') await pending;
       if (state === 'error') return route.fulfill({ status: 503, json: { detail: 'Unavailable' } });
       const endpoint = new URL(route.request().url()).pathname.split('/').pop();
       const data = state === 'empty' ? { history: [], summary: emptySummaryMock, topics: { topics: [], weak_topics: [] } } : state === 'single' ? { history: [history[0]], summary: { ...summary, total_sessions: 1, change_vs_first: null, umpire_miss_rate: emptySummaryMock.umpire_miss_rate }, topics: { topics: [], weak_topics: [] } } : { history, summary, topics };
-      await route.fulfill({ json: data[endpoint] });
+      if (endpoint === 'progress') overviewReads++;
+      await route.fulfill({ json: endpoint === 'progress' ? { history: data.history, summary: data.summary } : data[endpoint] });
     });
     state = 'loading';
     await page.goto(`${base}/progress`);
@@ -42,18 +49,51 @@ const history = historyMock.map(item => ({ ...item, duration_seconds: 1234 }));
     await page.getByText('▲ 27.6 percentage points since your first interview', { exact: true }).waitFor();
     assert.equal(await page.getByRole('heading', { name: 'UMPIRE habits' }).count(), 0);
     assert.equal(await page.getByRole('heading', { name: 'Topic breakdown' }).count(), 0);
-    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Previous Sessions', exact: true }) });
-    assert.equal(await recent.locator('li').count(), 9);
-    assert.match(await recent.locator('li').first().innerText(), /Company Interview/);
-    assert.equal(await recent.locator('li a').first().getAttribute('href'), '/report/mock-9');
-    for (const name of ['Overall', 'Problem Solving', 'Technical', 'Communication']) {
-      assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true');
-    }
-    assert.equal(await page.locator('.recharts-line-curve').count(), 4);
-    assert.equal(await page.locator('.recharts-line-dots .recharts-dot').count(), 0);
-    assert.equal(await recent.getByRole('link', { name: 'See Report' }).count(), 9);
-    await recent.getByText('Duration', { exact: true }).first().waitFor();
-    await recent.getByText('20m 34s', { exact: true }).first().waitFor();
+    const recent = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Previous Interviews', exact: true }) });
+    assert.equal(await recent.locator('tbody tr').count(), 9);
+    assert.match(await recent.locator('tbody tr').first().innerText(), /Practice interview/);
+    assert.equal(await recent.locator('tbody tr a').first().getAttribute('href'), '/report/mock-9');
+    const colors = await page.locator('.progress-stat-card').evaluateAll(cards => cards.map(card => getComputedStyle(card).backgroundColor));
+    assert.deepEqual(colors, ['rgb(69, 102, 237)', 'rgb(255, 223, 79)', 'rgb(69, 102, 237)']);
+    await recent.getByLabel('Search interviews', { exact: true }).fill('Two Sum');
+    assert.equal(await recent.locator('tbody tr').count(), 1);
+    await recent.getByRole('group', { name: 'Interview difficulty' }).getByRole('button', { name: 'Medium', exact: true }).click();
+    await recent.getByText('No interviews match these filters.', { exact: true }).waitFor();
+    await recent.getByRole('button', { name: 'Clear filters', exact: true }).click();
+    await recent.getByLabel('Interview topic', { exact: true }).selectOption('Hash Table');
+    assert.equal(await recent.locator('tbody tr').count(), 4);
+    await recent.getByLabel('Interview topic', { exact: true }).selectOption('All');
+    await recent.getByLabel('Feedback status', { exact: true }).selectOption('pending');
+    await recent.getByText('No interviews match these filters.', { exact: true }).waitFor();
+    await recent.getByRole('button', { name: 'Clear filters', exact: true }).click();
+    assert.equal(await recent.getByRole('columnheader', { name: 'Feedback summary', exact: true }).count(), 0);
+    assert.equal(overviewReads, 1);
+    await page.getByRole('heading', { name: 'Your trend', exact: true }).waitFor();
+    assert.equal(await page.locator('.recharts-line-curve').count(), 1);
+    assert.equal(await page.getByText('Latest overall score', { exact: true }).count(), 0);
+    await page.getByText('Your average percentage', { exact: true }).waitFor();
+    assert.equal(await page.getByRole('link', { name: 'View your most recent interview report' }).getAttribute('href'), '/report/mock-9');
+    await page.waitForFunction(() => document.querySelectorAll('.recharts-line-dots .recharts-dot').length === 9);
+    assert.equal(await page.getByRole('group', { name: 'Score categories' }).count(), 0);
+    assert.equal(await recent.locator('.history-score').count(), 9);
+    await recent.getByRole('columnheader', { name: 'Date', exact: true }).waitFor();
+    assert.equal(await recent.locator('.history-duration').first().innerText(), '20 min 34 sec');
+    assert.match(await recent.locator('.history-mode-label').first().innerText(), /Mode: Company Interview/);
+    assert.equal(await recent.getByRole('columnheader', {name:'Mode',exact:true}).count(),1);
+    assert.ok(await recent.locator('.history-icon-math').count() > 0);
+    assert.ok(await recent.locator('.history-icon-text').count() > 0);
+    assert.equal(await recent.locator('thead th').count(), 5);
+    assert.equal(await page.locator('.progress-category-rows > div').count(), 3);
+    assert.ok(await recent.locator('.history-score strong').first().evaluate(el => parseFloat(getComputedStyle(el).fontSize)) >= 32);
+    await page.waitForTimeout(1400); // Capture the completed line-draw animation.
+    await page.locator('.recharts-line-dots circle').last().hover();
+    const tooltip = page.locator('.recharts-tooltip-wrapper');
+    await tooltip.getByText('Technical', { exact: true }).waitFor();
+    assert.match(await tooltip.innerText(), /84\/100/);
+    await tooltip.getByText('Reasoning', { exact: true }).waitFor();
+    await tooltip.getByText('Communication', { exact: true }).waitFor();
+    assert.equal(await page.locator('.recharts-line-curve').evaluate(el => getComputedStyle(el).stroke), 'rgb(69, 102, 237)');
+    await page.mouse.move(0,0);
     await page.screenshot({ path: path.join(os.tmpdir(), 'clario-progress-desktop.png'), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(400);
@@ -62,18 +102,33 @@ const history = historyMock.map(item => ({ ...item, duration_seconds: 1234 }));
     state = 'empty'; await page.reload();
     await page.getByRole('heading', { name: 'No interviews yet.' }).waitFor();
     state = 'single'; await page.reload();
-    await page.getByRole('heading', { name: 'Previous Sessions', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Previous Interviews', exact: true }).waitFor();
     assert.equal(await page.getByText('since your first interview', { exact: false }).count(), 0);
     state = 'error'; await page.reload();
     await page.getByRole('alert').filter({ hasText: "We couldn't load your progress" }).waitFor();
     state = 'success'; await page.getByRole('button', { name: 'Try again', exact: true }).click();
     await page.getByText('65.3%', { exact: true }).waitFor();
     await page.goto(`${base}/progress?preview=mock`);
-    await page.getByText('Preview data · These are sample interviews.').waitFor();
+    await page.getByRole('heading', { name: 'Previous Interviews', exact: true }).waitFor();
+    assert.equal(await page.getByText('Preview data', { exact: false }).count(), 0);
+    assert.ok(overviewReads > 1, 'Preview query parameters must still load owned API records');
     await page.goto(`${base}/report`);
     await page.waitForURL('**/progress');
     await page.getByRole('heading', { name: 'Your Progress', exact: true }).waitFor();
+    await page.route('**/api/feedback/report-fixture', route => route.fulfill({ json: {
+      session: { id: 'report-fixture', status: 'completed', ended_at: '2026-10-29T18:00:00Z', problem_slug: 'two-sum' },
+      problem: { title: 'Two Sum', difficulty: 'Easy' },
+      feedback: { id: 'saved-report', overall_score: 82.1, technical_score: 84, reasoning_score: 80, communication_score: 82, report: { summary: 'A saved report.', full_summary: 'A saved detailed report.', umpire: Object.fromEntries(['understand','match','plan','implement','review','evaluate'].map(key => [key, {stars: 3, summary: 'Explain your approach.', details: 'Practice explaining the steps.'}])), actions: { fix: [], keep: [] } }, strengths: [], weaknesses: [], recommendations: [] },
+    } }));
+    await page.route('**/api/sessions/report-fixture/transcript', route => route.fulfill({ json: [] }));
+    await page.goto(`${base}/report/report-fixture`);
+    await page.getByRole('heading', { name: 'Two Sum report', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Your UMPIRE breakdown', exact: true }).waitFor();
+    assert.equal(await page.locator('.report-stage').count(), 6);
+    assert.equal(await page.locator('.report-score').count(), 3);
+    await page.waitForTimeout(1400);
+    await page.screenshot({ path: path.join(os.tmpdir(), 'clario-feedback-overall.png'), fullPage: true });
     assert.deepEqual(errors, []);
-    console.log('Progress browser checks passed: API data, loading, toggles, line charts, session links, mobile, empty, single, error/retry, mock preview.');
+    console.log('Progress browser checks passed: API data, loading, overall-score line chart, shared landing colors, interview metadata table, combined filters, report links, mobile, empty/single/error/retry, and no mock preview override.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

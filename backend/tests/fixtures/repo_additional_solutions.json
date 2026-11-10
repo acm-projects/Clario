@@ -1,0 +1,54 @@
+{
+  "rate-limiter-01": {
+    "service.py": "from policy import STRICT\nclass RateLimiter:\n    def __init__(self, limit, window):\n        if type(limit) is not int or limit <= 0 or window <= 0: raise ValueError(\"invalid config\")\n        self.limit, self.window, self.events, self.last = limit, window, {}, {}\n    def allow(self, key, now):\n        if now < self.last.get(key, now): raise ValueError(\"time moved backwards\")\n        self.last[key] = now\n        events = [t for t in self.events.get(key, []) if t > now-self.window]\n        allowed = len(events) < self.limit\n        if allowed: events.append(now)\n        self.events[key] = events\n        return allowed\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "inventory-allocation-01": {
+    "service.py": "from policy import STRICT\ndef allocate(stock, requests):\n    if any(type(n) is not int or n < 0 for n in stock.values()): raise ValueError(\"invalid stock\")\n    result = dict(stock)\n    for sku, qty in requests.items():\n        if type(qty) is not int or qty <= 0: raise ValueError(\"invalid quantity\")\n        if sku not in result or result[sku] < qty: raise ValueError(\"unavailable\")\n        result[sku] -= qty\n    return result\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "job-scheduler-01": {
+    "service.py": "from policy import STRICT\ndef schedule(dependencies):\n    remaining={job:set(needs) for job,needs in dependencies.items()}\n    if any(need not in remaining for needs in remaining.values() for need in needs): raise ValueError(\"missing job\")\n    result=[]\n    while remaining:\n        ready=sorted(job for job,needs in remaining.items() if not needs)\n        if not ready: raise ValueError(\"cycle\")\n        job=ready[0]; result.append(job); del remaining[job]\n        for needs in remaining.values(): needs.discard(job)\n    return result\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "booking-intervals-01": {
+    "service.py": "from policy import STRICT\ndef merge_bookings(intervals):\n    if any(start>=end for start,end in intervals): raise ValueError(\"invalid interval\")\n    result=[]\n    for start,end in sorted(intervals):\n        if result and start < result[-1][1]: result[-1]=(result[-1][0], max(result[-1][1],end))\n        else: result.append((start,end))\n    return result\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "account-ledger-01": {
+    "service.py": "from policy import STRICT\nclass Ledger:\n    def __init__(self, balances):\n        if any(type(n) is not int or n<0 for n in balances.values()): raise ValueError(\"invalid balance\")\n        self.balances=dict(balances); self.seen={}\n    def transfer(self,key,source,target,cents):\n        request=(source,target,cents)\n        if key in self.seen:\n            if self.seen[key]!=request: raise ValueError(\"conflicting key\")\n            return\n        if not key or source==target or type(cents) is not int or cents<=0: raise ValueError(\"invalid request\")\n        if source not in self.balances or target not in self.balances or self.balances[source]<cents: raise ValueError(\"unavailable\")\n        self.balances[source]-=cents; self.balances[target]+=cents\n        self.seen[key]=request\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "csv-import-01": {
+    "service.py": "from policy import STRICT\ndef parse_row(line):\n    if \"\\n\" in line or \"\\r\" in line: raise ValueError(\"one record only\")\n    fields=[]; value=\"\"; quoted=False; closed=False; i=0\n    while i<len(line):\n        c=line[i]\n        if quoted:\n            if c=='\"':\n                if i+1<len(line) and line[i+1]=='\"': value+='\"'; i+=1\n                else: quoted=False; closed=True\n            else: value+=c\n        elif c==',': fields.append(value); value=\"\"; closed=False\n        elif closed: raise ValueError(\"characters after quote\")\n        elif c=='\"':\n            if value: raise ValueError(\"quote inside unquoted field\")\n            quoted=True\n        else: value+=c\n        i+=1\n    if quoted: raise ValueError(\"unterminated quote\")\n    fields.append(value)\n    return fields\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "feature-rollout-01": {
+    "service.py": "from policy import STRICT\ndef enabled(user,bucket,percent,allow,deny):\n    if type(bucket) is not int or type(percent) is not int or not 0<=bucket<100 or not 0<=percent<=100: raise ValueError(\"invalid rollout\")\n    if user in deny: return False\n    if user in allow: return True\n    return bucket < percent\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "route-matcher-01": {
+    "service.py": "from policy import STRICT\ndef match_route(path,routes):\n    path=path.split(\"?\",1)[0]\n    if not path.startswith(\"/\"): raise ValueError(\"absolute path required\")\n    candidates=[]\n    for prefix,handler in routes.items():\n        if not prefix.startswith(\"/\"): raise ValueError(\"absolute prefix required\")\n        prefix=prefix.rstrip(\"/\") or \"/\"\n        if prefix==\"/\" or path==prefix or path.startswith(prefix+\"/\"): candidates.append((len(prefix),prefix,handler))\n    return max(candidates)[2] if candidates else None\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "event-dedup-01": {
+    "service.py": "from policy import STRICT\ndef latest_events(rows):\n    latest={}\n    for row in rows:\n        if not row[\"id\"] or row[\"version\"]<0: raise ValueError(\"invalid event\")\n        if row[\"id\"] not in latest or row[\"version\"]>latest[row[\"id\"]][\"version\"]: latest[row[\"id\"]]=dict(row)\n    return [latest[key] for key in sorted(latest)]\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "sensor-window-01": {
+    "service.py": "from policy import STRICT\ndef window_average(rows,device,now,window):\n    if window<=0: raise ValueError(\"invalid window\")\n    values=[r[\"value\"] for r in rows if r[\"device\"]==device and now-window<r[\"time\"]<=now]\n    return sum(values)/len(values) if values else None\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "refund-ledger-01": {
+    "service.py": "from policy import STRICT\nclass RefundLedger:\n    def __init__(self, charged_cents):\n        if type(charged_cents) is not int or charged_cents<0: raise ValueError(\"charge\")\n        self.charged=charged_cents; self.total=0; self.seen={}\n    def refund(self,key,cents):\n        if not key or type(cents) is not int or cents<=0: raise ValueError(\"refund\")\n        if key in self.seen:\n            if self.seen[key]!=cents: raise ValueError(\"conflict\")\n            return self.total\n        if self.total+cents>self.charged: raise ValueError(\"excess refund\")\n        self.total+=cents; self.seen[key]=cents\n        return self.total\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "permission-roles-01": {
+    "service.py": "from policy import STRICT\ndef can_access(roles, assigned, permission):\n    visiting=set(); visited=set(); allowed=False; denied=False\n    def visit(name):\n        nonlocal allowed,denied\n        if name in visiting: raise ValueError(\"cycle\")\n        if name in visited: return\n        if name not in roles: raise ValueError(\"unknown role\")\n        visiting.add(name); role=roles[name]\n        allowed=allowed or permission in role[\"allow\"]\n        denied=denied or permission in role[\"deny\"]\n        for parent in role[\"parents\"]: visit(parent)\n        visiting.remove(name); visited.add(name)\n    for name in assigned: visit(name)\n    return allowed and not denied\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  },
+  "search-ranking-01": {
+    "service.py": "from policy import STRICT\nimport re\ndef search(documents,query):\n    tokens=lambda text: re.findall(r\"[a-z0-9]+\",text.lower())\n    words=set(tokens(query)); seen=set(); scored=[]\n    for doc in documents:\n        if not doc[\"id\"] or doc[\"id\"] in seen: raise ValueError(\"duplicate or empty id\")\n        seen.add(doc[\"id\"]); body=tokens(doc[\"text\"])\n        if words and all(word in body for word in words): scored.append((-sum(body.count(w) for w in words),doc[\"id\"]))\n    return [identifier for _,identifier in sorted(scored)]\n",
+    "policy.py": "\"\"\"Shared policy: reject invalid requests without changing caller-owned data.\"\"\"\nSTRICT = True\n"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "rate-limiter-01",
+  "title": "The Rate Limiter That Blocks Everyone",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "One customer's requests block unrelated accounts, and requests are rejected after the rolling window should reset.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "RateLimiter(limit, window) requires positive values. allow(key, now) counts accepted requests in (now-window, now], separately per key. Rejecting a request must not extend its window. Timestamps are nondecreasing per key; reject backwards timestamps. C++ uses double seconds and string keys. Python rejects boolean limits.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_account_isolation",
+    "test_invalid_config_and_time",
+    "test_rejection_does_not_extend",
+    "test_window_boundary"
+  ],
+  "bugs": []
+}

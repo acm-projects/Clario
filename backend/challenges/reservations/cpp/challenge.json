@@ -1,0 +1,36 @@
+{
+  "id": "seat-reservations-01",
+  "title": "The Oversold Event",
+  "difficulty": "Hard",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Concurrent seat holds oversell events, mobile retries duplicate bookings, and expiry workers release inventory twice.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "The C++ port uses the provided read-only transactional Database simulator, not SQLite. Database.transaction serializes access, commits on success and rolls back on exceptions. Use its State exclusively inside transactions; do not add your own locks or alter support.hpp. Reservation fields mirror the Python rows. reserve_seats validates positive qty/nonempty keys, enforces capacity, atomically inserts and decrements, and replays identical keys only. expire_holds releases held rows at expires_at <= now once. Holds last 600 seconds.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp",
+    "support.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_concurrent_capacity",
+    "test_concurrent_retry",
+    "test_expiry_once",
+    "test_invalid_and_conflicting_requests",
+    "test_live_hold",
+    "test_retry_idempotency",
+    "test_transaction_rollback"
+  ],
+  "bugs": []
+}

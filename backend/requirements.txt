@@ -8,4 +8,4 @@ python-dotenv==1.2.1
 python-multipart==0.0.20
 supabase==2.27.0
 uvicorn==0.39.0
-pytest==8.3.5
+pytest==8.3.5slowapi==0.1.9

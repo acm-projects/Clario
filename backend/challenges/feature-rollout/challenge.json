@@ -1,0 +1,33 @@
+{
+  "id": "feature-rollout-01",
+  "title": "The Feature Flag That Ignores Opt-Outs",
+  "difficulty": "Easy",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Customers who explicitly opted out still receive a new feature, while allowlisted customers are blocked by rollout percentages.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "enabled(user,bucket,percent,allow,deny) validates percent in 0..100 and bucket in 0..99. Deny overrides allow; allow overrides percentage. Other users are enabled exactly when bucket < percent. Inputs are immutable. C++ uses vector<string> allow/deny and integer bucket/percent.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_allow_overrides_zero",
+    "test_deny_wins",
+    "test_invalid_and_no_mutation",
+    "test_rollout_boundary"
+  ],
+  "bugs": []
+}

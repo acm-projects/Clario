@@ -9,8 +9,9 @@ for (const [mode, stored] of [['recommended','practice'], ['custom','custom'], [
 test('Java language is retained', () => {
   assert.equal(sessionRequestFor({mode:'custom', problemSlug:'two-sum', language:'java'}).language,'java');
 });
-test('company scenarios are not silently submitted as coding problems', () => {
-  assert.throws(() => sessionRequestFor({mode:'company', scenarioSlug:'company-task', language:'python3'}), /Company scenarios/);
+test('company scenarios create company sessions with the selected scenario', () => {
+  assert.deepEqual(sessionRequestFor({mode:'company', scenarioSlug:'company-task', language:'python3'}), {problem_slug:'company-task', mode:'company', language:'python3'});
+  assert.throws(() => sessionRequestFor({mode:'company', scenarioSlug:' ', language:'python3'}), /scenario/);
 });
 test('missing problem or unsupported language fails before a request', () => {
   assert.throws(() => sessionRequestFor({mode:'custom', problemSlug:' ', language:'python3'}), /question/);

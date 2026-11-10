@@ -1,0 +1,32 @@
+{
+  "id": "search-ranking-01",
+  "title": "The Search That Matches the Wrong Products",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Searching for a complete word matches unrelated substrings, and changing input order changes tied search results.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "search(documents,query) tokenizes ASCII alphanumeric words case-insensitively. Every distinct query word must occur as a complete token in the document text. Rank matching documents by total occurrences of query words descending, then ID ascending. Empty queries return empty. Reject duplicate/empty IDs. Never mutate input. Python documents are {id,text}; C++ Document has string id,text.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_all_terms_and_whole_words",
+    "test_case_and_duplicates_in_query",
+    "test_empty_and_invalid_ids",
+    "test_ranking_and_ties"
+  ],
+  "bugs": []
+}

@@ -1,0 +1,33 @@
+{
+  "id": "account-ledger-01",
+  "title": "The Transfer That Charges Twice",
+  "difficulty": "Hard",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Retried payment transfers debit accounts twice and rejected transfers leave balances inconsistent.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "Ledger stores nonnegative integer cent balances. transfer(key,source,target,cents) validates a positive amount, distinct existing accounts, sufficient funds and a nonempty key. Replaying the identical key/request has no effect; conflicting reuse throws. Failed requests change neither balances nor replay keys. C++ exposes Ledger.balances as map<string,long long>.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_failed_request_atomicity",
+    "test_idempotency_and_conflict",
+    "test_input_isolation_and_validation",
+    "test_transfer_and_conservation"
+  ],
+  "bugs": []
+}

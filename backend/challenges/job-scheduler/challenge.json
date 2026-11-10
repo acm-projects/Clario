@@ -1,0 +1,33 @@
+{
+  "id": "job-scheduler-01",
+  "title": "The Scheduler That Runs Jobs Too Soon",
+  "difficulty": "Hard",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Deployment jobs sometimes run before their prerequisites, and circular pipelines silently produce partial schedules.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "schedule(dependencies) returns each job once, after all prerequisites, picking the lexicographically smallest ready job each step. Every dependency must be a declared job. Duplicate dependency entries count once. Cycles and missing jobs throw; empty input returns empty. Never mutate the dependency graph. C++ uses map<string,vector<string>>.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_cycles_and_missing",
+    "test_dependency_order",
+    "test_empty_and_immutable",
+    "test_lexical_and_duplicates"
+  ],
+  "bugs": []
+}

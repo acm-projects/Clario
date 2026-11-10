@@ -58,3 +58,16 @@ class ProblemCacheTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+import pytest
+
+@pytest.fixture(autouse=True)
+def clear_public_problem_cache():
+    leetcode.get_problem.cache_clear()
+    leetcode.get_problem_list.cache_clear()
+    leetcode._live_retry_at = 0
+    yield
+    leetcode.get_problem.cache_clear()
+    leetcode.get_problem_list.cache_clear()
+    leetcode._live_retry_at = 0

@@ -81,7 +81,10 @@ def client():
 def test_catalog_and_private_files(client):
     response = client.get("/api/repo-challenges")
     assert response.status_code == 200
-    assert {row["id"] for row in response.json()} == {CART, LOGIN, "transaction-pagination-01", "seat-reservations-01", "ttl-lru-cache-01", "webhook-worker-01", "daily-revenue-01"}
+    from pathlib import Path
+    additional = json.loads((Path(__file__).parent / "fixtures/repo_additional_solutions.json").read_text())
+    assert len(response.json()) == 20
+    assert {row["id"] for row in response.json()} == {CART, LOGIN, "transaction-pagination-01", "seat-reservations-01", "ttl-lru-cache-01", "webhook-worker-01", "daily-revenue-01"} | set(additional)
     for identifier in {row["id"] for row in response.json()}:
         response = client.get(f"/api/repo-challenges/{identifier}")
         assert response.status_code == 200

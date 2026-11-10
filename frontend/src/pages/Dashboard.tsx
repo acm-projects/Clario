@@ -119,28 +119,18 @@ export default function Dashboard() {
 
   useEffect(() => {
     let active = true;
-    async function load() {
-      setSessions(initialLoad);
-      setSkills(initialLoad);
-      try {
-        const data = await loadSessionSummary();
-        if (active) setSessions({ loading: false, data, error: null });
-        try {
-          const scores = await loadSkillScores();
-          if (active) setSkills({ loading: false, data: scores, error: null });
-        } catch (err) {
-          if (import.meta.env.DEV) console.error("Skill feedback loading failed", err);
-          if (active) setSkills({ loading: false, data: null, error: "We couldn't load your skill feedback." });
-        }
-      } catch (err) {
-        if (import.meta.env.DEV) console.error("Interview history loading failed", err);
-        if (active) {
-          setSessions({ loading: false, data: null, error: "We couldn't load your interview history." });
-          setSkills({ loading: false, data: null, error: "We couldn't load your skill feedback." });
-        }
-      }
-    }
-    void load();
+    setSessions(initialLoad);
+    setSkills(initialLoad);
+    void loadSessionSummary().then(data => {
+      if (active) setSessions({ loading: false, data, error: null });
+    }).catch(() => {
+      if (active) setSessions({ loading: false, data: null, error: "We couldn't load your interview history." });
+    });
+    void loadSkillScores().then(data => {
+      if (active) setSkills({ loading: false, data, error: null });
+    }).catch(() => {
+      if (active) setSkills({ loading: false, data: null, error: "We couldn't load your skill feedback." });
+    });
     return () => { active = false; };
   }, [sessionRetry]);
 
@@ -186,9 +176,9 @@ export default function Dashboard() {
 // A previous profile can be supplied later without inventing historical scores.
 function SkillRadar({ scores, previousScores }: { scores: SkillScore[]; previousScores?: SkillScore[] }) {
   const axes = [
-    { key: "Coding", label: "Coding", x: 170, y: 46 },
+    { key: "Technical", label: "Technical", x: 170, y: 46 },
     { key: "Communication", label: "Communication", x: 88, y: 188 },
-    { key: "Reasoning", label: "Problem Solving / Reasoning", x: 252, y: 188 },
+    { key: "Reasoning", label: "Reasoning", x: 252, y: 188 },
   ];
   const center = { x: 170, y: 141 };
   const values = (data: SkillScore[]) => axes.map((axis) => {
@@ -211,14 +201,14 @@ function SkillRadar({ scores, previousScores }: { scores: SkillScore[]; previous
       {axes.map((axis) => <line key={axis.key} x1={center.x} y1={center.y} x2={axis.x} y2={axis.y} stroke="#182137" strokeWidth="1.2" strokeDasharray="2 4" />)}
       {previous?.every((score) => score !== null) && <polygon points={polygon(previous.map((score) => score! / 100))} fill="none" stroke="#9faebd" strokeWidth="1.5" strokeDasharray="4 4" />}
       {complete && <polygon points={polygon(current.map((score) => score! / 100))} fill="#8bbef2" fillOpacity="0.32" stroke="none" />}
-      <text x="170" y="21" textAnchor="middle" fontSize="12" fill="#687087">Coding</text>
+      <text x="170" y="21" textAnchor="middle" fontSize="12" fill="#687087">Technical</text>
       <text x="88" y="260" textAnchor="middle" fontSize="12" fill="#687087">Communication</text>
-      <text x="252" y="256" textAnchor="middle" fontSize="12" fill="#687087">Problem Solving<tspan x="252" dy="12">/ Reasoning</tspan></text>
+      <text x="252" y="256" textAnchor="middle" fontSize="12" fill="#687087">Reasoning</text>
     </svg>
     <dl className={["dashboard-skill-values", dashboardStyles["dashboard-skill-values"]].join(" ")}>{axes.map((axis, index) => <div key={axis.key}><dt>{axis.key === "Reasoning" ? "Reasoning" : axis.label}</dt><dd>{current[index] === null ? "Awaiting feedback" : current[index] + " / 100"}</dd></div>)}</dl>
     <figcaption className="rounded-xl bg-cream-gradient px-4 py-3 text-left">
       <p className="text-sm font-medium text-[#58627b]">{hasData ? "Your interview profile" : "Your skill profile will take shape here."}</p>
-      <p className="mt-2 text-xs leading-6 text-[#777a7c]">{hasData ? complete ? "Built from your latest interview feedback, one conversation at a time." : "Some skills are still awaiting feedback. Missing scores stay unplotted." : "Complete your first interview to unlock your baseline."}</p>
+      <p className="mt-2 text-xs leading-6 text-[#777a7c]">{hasData ? complete ? "Averages from your saved interview feedback, matching Your Progress." : "Some skills are still awaiting feedback. Missing scores stay unplotted." : "Complete your first interview to unlock your baseline."}</p>
       {previous?.every((score) => score !== null) && <p className="mt-2 text-[14px] text-[#777a7c]">Blue: current Ã‚Â· Dotted: previous</p>}
     </figcaption>
   </figure>;

@@ -1,0 +1,45 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+(async () => {
+ const browser = await chromium.launch({channel:'msedge',headless:true});
+ try {
+ const page = await browser.newPage({viewport:{width:1440,height:1000}});
+ let profileRequests=0;
+ let problemRequests=0;
+ await page.route('**/api/problems',r=>{problemRequests++;return r.fulfill({json:[]})});
+ await page.route('**/__dev/profile',r=>{profileRequests++;return r.fulfill({json:{user:{id:'local-test'},profile:{id:'local-test',assessment_completed:true,preferred_language:'Python'}}})});
+ await page.route('**/api/companies',r=>r.fulfill({json:['Bumble','Stripe','Amazon']}));
+ await page.route('**/api/scenarios',r=>r.fulfill({json:[]}));
+ await page.route('**/api/scenarios/generate?*',r=>r.fulfill({json:{slug:'stripe-payments',company:'Stripe',title:'Payments Queue',difficulty:'Medium',prompt:'Process payment events.',starter_code:{python3:'class Solution: pass'}}}));
+ await page.route('**/api/scenarios/stripe-payments',r=>r.fulfill({json:{slug:'stripe-payments',company:'Stripe',title:'Payments Queue',difficulty:'Medium',prompt:'Process payment events.',starter_code:{python3:'class Solution: pass'}}}));
+ await page.route('**/api/system-design?*',r=>r.fulfill({json:{questions:[{slug:'stripe-architecture',company:'Stripe',title:'Payments architecture',difficulty:'Medium',prompt:'Design payments.'}]}}));
+ await page.goto('http://127.0.0.1:5180/interview');
+ const grid=page.getByRole('region',{name:'Interview mode selector'});
+ await grid.waitFor();
+ assert.equal(await grid.locator('article').count(),6);
+ assert.equal(await grid.getByRole('button').count(),6);
+ const colors=await grid.locator('article').evaluateAll(cards=>cards.map(card=>getComputedStyle(card).backgroundColor));
+ assert.deepEqual(Object.values(colors.reduce((counts,color)=>(counts[color]=(counts[color]||0)+1,counts),{})).sort(),[2,2,2]);
+ assert.equal(problemRequests,0,'mode overview must not request recommendations');
+ await grid.locator('article').last().getByRole('button').click();
+ await page.waitForURL('**/system-design');
+ await page.getByRole('combobox',{name:'Company',exact:true}).waitFor();
+ assert.equal(profileRequests,1,'ordinary SPA navigation must reuse verified profile');
+ await page.goto('http://127.0.0.1:5180/interview?mode=company');
+ await page.getByRole('combobox',{name:'Browse companies'}).selectOption('Stripe');
+ await page.getByRole('button',{name:'Find or generate a company scenario'}).click();
+ await page.getByRole('heading',{name:'Payments Queue'}).waitFor();
+ let submitted;
+ await page.route('**/api/sessions',r=>{submitted=r.request().postDataJSON();return r.fulfill({json:{id:'session-company',problem_slug:'stripe-payments',language:'python3',status:'in_progress',mode:'company',started_at:new Date().toISOString(),ended_at:null}})});
+ await page.route('**/api/sessions/session-company',r=>r.fulfill({json:{id:'session-company',problem_slug:'stripe-payments',language:'python3',status:'in_progress',mode:'company',started_at:new Date().toISOString(),ended_at:null,latest_code:null,problem:{slug:'stripe-payments',title:'Payments Queue',difficulty:'Medium',topics:[],description_html:'Process payments.',example_testcases:'',starter_code:{python3:'class Solution: pass'}}}}));
+ await page.getByRole('button',{name:'Start interview',exact:true}).click();
+ await page.waitForURL('**/interview/stripe-payments?*');
+ assert.equal(submitted.mode,'company');assert.equal(submitted.problem_slug,'stripe-payments');
+ await page.goto('http://127.0.0.1:5180/system-design');
+ await page.getByRole('combobox',{name:'Company',exact:true}).selectOption('Stripe');
+ await page.getByRole('link',{name:/Payments architecture/}).waitFor();
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
+ console.log('Passed: balanced card colors/buttons, dynamic company picker, generation preview, company launch, database system design selection, mobile fit.');
+ } finally {await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1});

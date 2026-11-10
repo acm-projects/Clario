@@ -1,0 +1,32 @@
+{
+  "id": "event-dedup-01",
+  "title": "The Event Feed That Keeps Stale Updates",
+  "difficulty": "Easy",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Replayed messages replace newer event data, and event order changes when the same batch is imported twice.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "latest_events(rows) selects the greatest version per event ID; equal versions keep the first record. Output is sorted by event ID. Reject empty IDs or negative versions, never mutate input. Python rows are dicts with id/version/value. C++ Event has string id, int version, string value.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_invalid_empty_and_copy",
+    "test_latest_and_stale",
+    "test_sorted_output",
+    "test_ties_keep_first"
+  ],
+  "bugs": []
+}

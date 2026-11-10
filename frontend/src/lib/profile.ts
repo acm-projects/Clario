@@ -12,6 +12,10 @@ export interface UserProfile {
   has_coding_experience: boolean | null;
   language_comfort: number | null;
   interview_confidence: number | null;
+  struggling_topics?: string[] | null;
+  language_to_learn?: string | null;
+  target_company?: string | null;
+  target_date?: string | null;
 }
 
 export interface ProfileContext {
@@ -28,10 +32,14 @@ export function getProfileUpdate(answers: OnboardingAnswers) {
     has_leetcode_experience: result.hasLeetCodeExperience,
     has_coding_experience: result.hasCodingExperience,
     preferred_language: result.selectedLanguage,
+    language_to_learn: result.hasCodingExperience === false ? result.selectedLanguage : null,
     language_comfort: result.languageComfort,
     starting_difficulty: result.difficulty.charAt(0).toUpperCase() + result.difficulty.slice(1),
     interview_confidence: result.interviewConfidence,
     weekly_interview_goal: result.weeklyInterviewGoal,
+    struggling_topics: result.strugglingTopics,
+    target_company: result.targetCompany || null,
+    target_date: result.interviewDate || null,
     assessment_completed: true,
     updated_at: new Date().toISOString(),
   };
@@ -46,11 +54,8 @@ export async function saveAssessment(client: SupabaseClient, answers: Onboarding
   const update = getProfileUpdate(answers);
   const { data, error } = await client.from("profiles").update(update).eq("id", user.id).select("id").single();
   if (error) throw error;
-  // A successful HTTP response with zero rows is not a successful assessment save.
   if (!data || data.id !== user.id) throw new Error("Your profile could not be updated. Please try again.");
 }
-
-
 
 export function validateDisplayName(value: string): string {
   const name = value.trim();

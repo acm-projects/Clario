@@ -64,6 +64,6 @@ mute/resume, a 15-second pause, and final report observations with a real mic.
 
 ## Vrinda sandbox integration
 
-Sandbox components were selectively merged from origin/Vrinda at f415abb. Existing routing, authentication, selection pages, session persistence, speech coach, and feedback remain in place. Component styles use Tailwind v4 in TSX files; index.css remains the only source stylesheet. All required Python dependencies, including voice and multipart dependencies, are in backend/requirements.txt; a duplicate root requirements file is not needed.
+Sandbox components were selectively merged from origin/Vrinda; the latest sandbox UI was brought forward from a0207abf. Existing routing, authentication, selection pages, session persistence, speech coach, and feedback remain in place. Component styles use Tailwind v4 with the shared interview/repo sandbox skin in frontend/src/components/interview/sandbox-skin.css. All required Python dependencies, including voice and multipart dependencies, are in backend/requirements.txt; a duplicate root requirements file is not needed.
 
 Recommended, Custom, and Surprise me launch through the existing session API; company scenario sessions remain pending as documented in docs/interview-modes.md. Existing owned-session room URLs and direct /interview/{problem-slug} sandbox URLs are supported. Direct sandbox runs do not save interview history. Test execution evaluates available public examples, not hidden judge tests.

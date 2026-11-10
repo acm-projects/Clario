@@ -1,0 +1,32 @@
+{
+  "id": "sensor-window-01",
+  "title": "The Dashboard That Mixes Sensor Readings",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "A sensor dashboard includes stale/future readings and leaks one device's samples into another device's average.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "window_average(rows,device,now,window) returns the arithmetic mean for that device at timestamps in (now-window,now], or None/nullopt if no matching readings. Require positive window. Input readings have device, time, value; zero and negative values are valid. C++ Reading has string device and double time/value. Never mutate rows.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_boundaries",
+    "test_device_isolation",
+    "test_empty_and_invalid",
+    "test_zero_and_negative"
+  ],
+  "bugs": []
+}

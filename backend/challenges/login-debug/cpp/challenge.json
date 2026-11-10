@@ -1,0 +1,36 @@
+{
+  "id": "login-debug-01",
+  "title": "Login Authentication Debugging",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "The demo app rejects some valid logins and accepts some invalid ones. Trace the request flow and repair its authentication logic.",
+  "objective": "Correct credential checking and input handling while preserving safe, consistent failure behavior.",
+  "expectedBehavior": "login/authenticate accept optional<string>. Nullopt represents invalid/missing input. Normalize usernames only; passwords are exact and only active users may log in. Do not change USERS.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_inactive_user",
+    "test_invalid_inputs",
+    "test_invalid_password",
+    "test_password_case",
+    "test_password_whitespace",
+    "test_unknown_user",
+    "test_username_normalization",
+    "test_valid_credentials"
+  ],
+  "bugs": []
+}

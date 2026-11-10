@@ -1,0 +1,37 @@
+{
+  "id": "daily-revenue-01",
+  "title": "The Wrong Revenue Report",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Finance sees cent-level discrepancies and orders booked to the wrong day around month-end and DST.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Order.created_at is UTC epoch seconds. Use the supplied read-only local_day helper for timezone conversion, including DST; it supports UTC and America/Los_Angeles for this exercise. Money uses long double input and integer cents; half-up round each discounted order before aggregation. Refund amounts are already dollars. Include zero-total input days. This port narrows the Python IANA timezone interface to the supplied helper's two documented zones.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp",
+    "support.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_cancelled",
+    "test_decimal_accumulation",
+    "test_dst_and_month_boundary",
+    "test_half_up_per_order",
+    "test_local_day",
+    "test_partial_refund",
+    "test_refunded",
+    "test_timezone_parameter"
+  ],
+  "bugs": []
+}

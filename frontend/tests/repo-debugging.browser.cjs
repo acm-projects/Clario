@@ -72,7 +72,7 @@ const solutions = require('../../backend/tests/fixtures/repo_solutions.json')['s
     await set(name, source);
   }
   await page.getByRole('button', { name: 'Run Tests', exact: false }).click();
-  await page.getByText('All behavior checks passed.', { exact: true }).waitFor();
+  await page.getByText('All unit tests passed.', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Submit', exact: false }).click();
   await page.getByText('Browser smoke test: evaluation complete; persistence intentionally mocked.').waitFor();
   await page.waitForTimeout(300);

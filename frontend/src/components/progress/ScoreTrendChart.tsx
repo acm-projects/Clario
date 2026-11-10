@@ -1,24 +1,28 @@
-import { useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import type { ProgressHistoryItem } from "../../types/progress";
-import { chronological, formatShortDate, sessionTitle } from "../../utils/progressFormat";
+import { overallScorePoints } from "../../utils/scoreTrend";
 
-const SERIES = [
-  { key: "overall_score", label: "Overall", color: "#3054ed" },
-  { key: "problem_solving_score", label: "Problem Solving", color: "#7952b3" },
-  { key: "technical_score", label: "Technical", color: "#16836d" },
-  { key: "communication_score", label: "Communication", color: "#b6750a" },
-] as const;
-type Key = typeof SERIES[number]["key"];
 export default function ScoreTrendChart({ history }: { history: ProgressHistoryItem[] }) {
-  const [visible, setVisible] = useState<Record<Key, boolean>>({ overall_score: true, problem_solving_score: true, technical_score: true, communication_score: true });
-  function toggle(key: Key) {
-    setVisible(previous => { const next = { ...previous, [key]: !previous[key] }; return Object.values(next).some(Boolean) ? next : previous; });
-  }
-  const data = chronological(history).map(item => ({ ...item, title: sessionTitle(item), label: formatShortDate(item.date) }));
-  return <section className="progress-card" aria-label="Score trend">
-    <div className="flex flex-wrap items-start justify-between gap-4"><div><h2>Score trend</h2><p className="progress-muted mt-1">See how your skills develop over time.</p></div><span className="progress-eyebrow">Percentage score</span></div>
-    <div className="my-5 flex flex-wrap gap-2" role="group" aria-label="Score categories">{SERIES.map(s => <button key={s.key} type="button" aria-pressed={visible[s.key]} onClick={() => toggle(s.key)} className="rounded-full border border-[#e4e2db] px-3 py-2 text-xs aria-pressed:bg-[#e9edff] aria-pressed:border-[#b9c9ff]"><span aria-hidden="true" style={{ background: s.color }} className="mr-2 inline-block h-0.5 w-5 rounded-full" />{s.label}</button>)}</div>
-    {data.length ? <div className="h-72 min-w-0" role="img" aria-label={`Scores across ${data.length} interviews. Use category buttons to compare scores.`}><ResponsiveContainer width="100%" height="100%"><LineChart accessibilityLayer data={data} margin={{ top: 10, right: 14, bottom: 8, left: -20 }}><CartesianGrid strokeDasharray="3 5" vertical={false} stroke="#e7e5df" /><XAxis dataKey="session_id" tickFormatter={id => data.find(item => item.session_id === id)?.label ?? id} tick={{ fontSize: 11 }} minTickGap={25} /><YAxis domain={[0, 100]} tickFormatter={value => `${value}%`} tick={{ fontSize: 11 }} /><Tooltip labelFormatter={(_label, payload) => { const point = payload?.[0]?.payload; return point ? `${point.title} · ${point.label}` : ""; }} />{SERIES.filter(s => visible[s.key]).map(s => <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={2.5} dot={data.length === 1 ? { r: 4 } : false} activeDot={{ r: 6 }} isAnimationActive={false} />)}</LineChart></ResponsiveContainer></div> : <p className="progress-muted py-12">No scored interviews to chart yet.</p>}
+  const reducedMotion = useReducedMotion();
+  const data = overallScorePoints(history);
+  return <section className="progress-card overall-score-card relative overflow-hidden rounded-3xl border border-[var(--border,#e7e5df)] bg-[var(--surface-raised,#fffdf8)] p-6 sm:p-8" aria-label="Overall score progress">
+    <h2 className="text-xl font-semibold">Your trend</h2>
+    {data.length ? <>
+      <div className="mt-7 h-80 min-w-0 overflow-hidden" aria-hidden="true"><ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 18, right: 24, bottom: 12, left: 0 }}>
+          <CartesianGrid stroke="var(--border, #d9dde0)" strokeWidth={1} vertical horizontal />
+          <XAxis dataKey="id" tickFormatter={id => data.find(point => point.id === id)?.label ?? ""} tick={{ fontSize: 11, fill: "var(--text-muted, #687087)" }} angle={-40} textAnchor="end" height={54} minTickGap={20} tickLine={false} axisLine={{ stroke: "var(--text, #667078)", strokeWidth: 2 }} />
+          <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} width={38} tick={{ fontSize: 11, fill: "var(--text-muted, #687087)" }} tickLine={false} axisLine={{ stroke: "var(--text, #667078)", strokeWidth: 2 }} />
+          <Tooltip content={({ active, payload }) => {
+            const point = payload?.[0]?.payload;
+            if (!active || !point) return null;
+            return <div className="min-w-52 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 text-[var(--text)] shadow-lg"><p className="text-sm font-semibold">{point.title}</p><p className="mt-1 text-xs text-[var(--text-muted)]">{point.label}</p><dl className="mt-3 space-y-2 text-xs">{[["Overall", point.value], ["Technical", point.technical], ["Reasoning", point.reasoning], ["Communication", point.communication]].map(([label, score]) => <div key={label} className="flex justify-between gap-6"><dt>{label}</dt><dd className="font-semibold tabular-nums">{typeof score === "number" && Number.isFinite(score) && score >= 0 && score <= 100 ? `${score}/100` : "Not scored"}</dd></div>)}</dl></div>;
+          }} />
+          <Line type="linear" dataKey="value" name="Overall score" stroke="var(--landing-blue)" strokeWidth={3.5} dot={{ r: 4.5, stroke: "var(--landing-blue)", strokeWidth: 3, fill: "var(--surface-raised, #fffdf8)" }} activeDot={{ r: 6 }} isAnimationActive={!reducedMotion} animationDuration={1200} animationEasing="ease-in-out" />
+        </LineChart>
+      </ResponsiveContainer></div>
+      <div className="sr-only"><table><caption>Overall scores by interview, oldest first</caption><thead><tr><th>Date</th><th>Interview</th><th>Overall score out of 100</th><th>Technical</th><th>Reasoning</th><th>Communication</th></tr></thead><tbody>{data.map(point => <tr key={point.id}><td>{point.label}</td><td>{point.title}</td><td>{point.value}</td><td>{point.technical ?? "Not scored"}</td><td>{point.reasoning ?? "Not scored"}</td><td>{point.communication ?? "Not scored"}</td></tr>)}</tbody></table></div>
+    </> : <p className="py-12 text-sm text-[var(--text-muted,#687087)]">No overall scores recorded yet. Your scored interviews will appear here.</p>}
   </section>;
 }

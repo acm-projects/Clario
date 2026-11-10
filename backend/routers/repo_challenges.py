@@ -6,6 +6,7 @@ from auth import get_current_user
 from piston.service import PistonServiceError
 from services import repo_challenge_service as service
 from interview_evidence import InterviewEvidence
+from typing import Literal
 
 router = APIRouter(prefix="/api/repo-challenges", tags=["repo-debugging"])
 
@@ -13,6 +14,7 @@ router = APIRouter(prefix="/api/repo-challenges", tags=["repo-debugging"])
 class RepositoryInput(InterviewEvidence):
     model_config = ConfigDict(extra="forbid")
     files: dict[str, str] = Field(min_length=1, max_length=20)
+    language: Literal["python", "cpp", "javascript"] | None = None
 
 
 @router.get("")
@@ -21,33 +23,35 @@ def list_challenges():
 
 
 @router.get("/{challenge_id}")
-def get_challenge(challenge_id: str):
+def get_challenge(challenge_id: str, language: Literal["python", "cpp", "javascript"] | None = None):
     try:
-        return service.detail(challenge_id)
+        return service.detail(challenge_id, language)
     except KeyError:
         raise HTTPException(404, "Repository challenge not found")
+    except service.InvalidRepository as error:
+        raise HTTPException(422, str(error))
 
 
-async def run(challenge_id: str, files: dict):
+async def run(challenge_id: str, files: dict, language: str | None = None):
     try:
-        return await service.evaluate(challenge_id, files)
+        return await service.evaluate(challenge_id, files, language)
     except KeyError:
         raise HTTPException(404, "Repository challenge not found")
     except service.InvalidRepository as error:
         raise HTTPException(422, str(error))
     except PistonServiceError:
-        raise HTTPException(503, "Piston is unavailable or Python is not installed. Start Piston and install its Python runtime.")
+        raise HTTPException(503, "Code execution is unavailable. Start Piston and install the selected language runtime.")
 
 
 @router.post("/{challenge_id}/run")
 async def run_challenge(challenge_id: str, body: RepositoryInput, user: dict = Depends(get_current_user)):
-    return await run(challenge_id, body.files)
+    return await run(challenge_id, body.files, body.language)
 
 
 @router.post("/{challenge_id}/submit")
 async def submit_challenge(challenge_id: str, body: RepositoryInput, user: dict = Depends(get_current_user)):
     try:
-        service.validate_files(challenge_id, body.files)
+        service.validate_files(challenge_id, body.files, body.language)
     except KeyError:
         raise HTTPException(404, "Repository challenge not found")
     except service.InvalidRepository as error:
@@ -60,13 +64,13 @@ async def submit_challenge(challenge_id: str, body: RepositoryInput, user: dict 
 @router.post("/{challenge_id}/finish")
 async def finish_challenge(challenge_id: str, body: RepositoryInput, user: dict = Depends(get_current_user)):
     try:
-        service.validate_files(challenge_id, body.files)
+        service.validate_files(challenge_id, body.files, body.language)
     except KeyError:
         raise HTTPException(404, "Repository challenge not found")
     except service.InvalidRepository as error:
         raise HTTPException(422, str(error))
-    evidence = {"transcript": [turn.model_dump(mode="json", exclude_none=True) for turn in body.transcript], "communication": body.communication.model_dump(mode="json") if body.communication else None, "duration_seconds": body.duration_seconds}
-    submission = await run_in_threadpool(service.save_submission, user["sub"], challenge_id, body.files, evidence)
+    evidence = {"transcript": [turn.model_dump(mode="json", exclude_none=True) for turn in body.transcript], "communication": body.communication.model_dump(mode="json") if body.communication else None, "duration_seconds": body.duration_seconds, "run_events": [event.model_dump() for event in body.run_events]}
+    submission = await run_in_threadpool(service.save_submission, user["sub"], challenge_id, body.files, evidence, body.language)
     if not submission["saved"]:
         raise HTTPException(503, submission["message"])
     return submission

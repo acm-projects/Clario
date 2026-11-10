@@ -18,7 +18,7 @@ def signed_session(monkeypatch):
 def assert_required_variables(session):
     assert session["signed_url"] == "wss://example.test/session"
     assert all(isinstance(session["variables"][key], str) and session["variables"][key].strip()
-               for key in ("problem_title", "problem_description", "repo_name", "bug_summary"))
+               for key in ("problem_title", "problem_description", "repo_name", "bug_summary", "root_cause"))
 
 
 def test_coding_greeting_has_required_agent_variables(signed_session, monkeypatch):
@@ -36,6 +36,9 @@ def test_repository_greeting_uses_public_bug_report_not_source_files(signed_sess
     assert session["variables"]["repo_name"] == challenge["title"]
     assert session["variables"]["bug_summary"] == challenge["description"]
     assert "File:" not in session["variables"]["bug_summary"]
+    assert session["variables"]["root_cause"] == repo_challenge_service.interviewer_root_cause("shopping-cart-01")
+    assert session["variables"]["root_cause"] not in session["variables"]["bug_summary"]
+    assert session["variables"]["root_cause"] in session["variables"]["problem_description"]
 
 
 def test_design_greeting_does_not_include_private_criteria(signed_session):
@@ -45,3 +48,29 @@ def test_design_greeting_does_not_include_private_criteria(signed_session):
     assert session["variables"]["repo_name"] == f'{scenario["company"]}: {scenario["title"]}'
     assert session["variables"]["bug_summary"] == scenario["prompt"]
     assert "Private evaluation criteria" not in session["variables"]["bug_summary"]
+
+
+@pytest.mark.parametrize("language", ["python", "cpp"])
+def test_every_repository_language_has_private_root_cause_context(language):
+    for identifier in repo_challenge_service.catalog():
+        cause = repo_challenge_service.interviewer_root_cause(identifier, language)
+        assert isinstance(cause, str) and cause.strip()
+        public = repo_challenge_service.detail(identifier, language)
+        assert "root_cause" not in public
+        assert cause not in public["description"]
+        assert cause not in public["expectedBehavior"]
+
+
+def test_selected_repository_language_sets_the_agent_root_cause(signed_session):
+    python = router.get_repo_session("seat-reservations-01", language="python", user={"sub": "owner"})
+    cpp = router.get_repo_session("seat-reservations-01", language="cpp", user={"sub": "owner"})
+    assert_required_variables(python)
+    assert_required_variables(cpp)
+    assert python["variables"]["root_cause"] != cpp["variables"]["root_cause"]
+    assert "autocommit" in python["variables"]["root_cause"]
+    assert "one second early" in cpp["variables"]["root_cause"]
+    assert cpp["variables"]["repo_name"] == "The Oversold Event"
+
+
+def test_legacy_javascript_worker_has_its_own_root_cause():
+    assert "forEach" in repo_challenge_service.interviewer_root_cause("webhook-worker-01", "javascript")

@@ -2,9 +2,29 @@
 
 ## Current interview controls
 
-The duck connects automatically when the workspace opens; microphone permission is still required by the browser. Submit sends the current code snapshot to the live interviewer for a neutral follow-up, without running tests or ending the session. Run Tests alone executes test cases. End Call saves final code, transcript, and measured silence, then opens the automatically generated interview feedback report. Retry connection clears stale handles and restores previous interview context.
+The duck connects automatically when the workspace opens; microphone permission is still required by the browser. Edits automatically share the latest language, active file, and all editable file contents with the live interviewer after a short pause (at most two seconds during continuous typing). Reconnects restore the newest edits. Submit sends the current code snapshot to the live interviewer for a neutral follow-up, without running tests or ending the session. Run Tests alone executes test cases. End Call saves final code, transcript, and measured silence, then opens the automatically generated interview feedback report. Retry connection clears stale handles and restores previous interview context.
 
-## October 27 challenge catalog
+## Current catalog and workspace
+
+There are 20 distinct repo debugging problems. Every problem is available in Python and C++ with matching intentional failures, read-only tests, and trusted repair fixtures. The original JavaScript webhook endpoint remains compatible; the UI offers Python and C++.
+
+The language selector loads the corresponding repository, test runner, voice context, and report contract. Drafts are separate by user, challenge, and language; the URL retains the language on reload. Both workspaces have persistent Light/Dark controls, matching Monaco editor themes, static top-left labels, subtle panel borders, and draggable/keyboard-accessible question dividers. Narrow screens stack the question and editor.
+
+C++ ports use C++17 value types documented in each README. The reservations port uses a supplied transactional in-memory database simulator; the Python version retains SQLite. The C++ revenue helper supports UTC and America/Los_Angeles; Python retains its IANA timezone interface.
+
+Start Piston, then run from the project root:
+
+```powershell
+.venv/Scripts/python.exe backend/scripts/configure_cpp_runtime.py
+```
+
+This installs GCC if needed and enables pthread linking in the persistent local Piston compiler wrapper. `PISTON_CPP_VERSION` defaults to `*`. C++ headers are inlined into a single translation unit because Piston compiles every uploaded file as C++ source; candidate includes never cause API-host file reads.
+
+Regenerate the paired variants with `python backend/scripts/build_repo_language_variants.py`. The generator also builds the 13 additional Python challenges. Repair fixtures remain server-side under `backend/tests/fixtures`.
+
+Verify with `python -m pytest backend/tests/test_repo_languages.py backend/tests/test_repo_challenges.py`; set `PISTON_REPO_TESTS=1` to additionally compile/run all 20 C++ starters and repairs in local Piston. Browser regression coverage is in `frontend/tests/sandbox-workspaces.browser.cjs`.
+
+## October 27 challenge catalog (historical)
 
 The catalog now includes the replacement **The Cart That Charges the Wrong Amount**,
 plus **The Pagination Bug**, **The Oversold Event**, **The Broken TTL + LRU Cache**,
@@ -267,3 +287,30 @@ Additional files changed in this follow-up:
 - `backend/voice/router.py` (repository voice-session endpoint)
 
 The repository page, mode-selection page, tests, and this guide were also updated.
+
+Run Tests executes the current repository files through Piston. Python first
+validates editable-file syntax and executes the entrypoint, then runs the unit
+suite. C++ compiles the combined repository/test runner and runs its unit suite.
+A passing test means one checked behavior works, including in an intentionally
+broken starter; it does not mean the entire repository is correct. Tests that
+never ran after a compile/import error or timeout are counted separately from
+failed tests. Python assertion messages and candidate-code stack locations, plus
+C++ assertion/exception messages and candidate-file compiler locations, are
+shown as diagnostics. Private unit-test source/traceback frames are omitted.
+
+Both coding sandboxes send run-start and result/error updates to the live
+interviewer with the exact source files from that run, a run ID, and language.
+Updates are contextual evidence rather than automatic speaking turns. The last
+10 updates replay after a voice reconnect; up to 40 compact run events are saved
+with interview evidence for feedback. A service outage is an unavailable run,
+not a failing candidate test. The feedback evaluator treats these as reported
+executor observations and does not claim it independently executed the code.
+
+Submit is final for the active interview: it sends the final snapshot, starts
+follow-up questioning with one cue, and disables further submissions, edits,
+resets, language changes, and test runs. It does not execute tests or finish the
+call. A failed delivery leaves submission available for retry. Successful
+submission state is retained in session storage for a page reload; End interview
+still saves evidence and opens the feedback report. This UI lock is not a
+server-enforced submission counter. Voice context replay covers reconnections,
+not a full page reload.

@@ -1,0 +1,38 @@
+.report-solution{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:18px;color:#12314e;align-items:start}
+.solution-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.interview-report .solution-heading h2{font-size:21px;margin:0}.solution-heading>span{font-size:12px;color:#687087}
+.solution-fix{background:#fffdf8;border:1px solid transparent;border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 1px 2px #12314e08}.solution-fix:first-of-type{border-color:#efb900}.solution-fix-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.interview-report .solution-fix-title h3{font-size:14px;margin:0;font-weight:600}.solution-fix-title>span{border-radius:20px;padding:3px 10px;background:#fff0b1;font-size:11px;white-space:nowrap}.interview-report .solution-fix p{display:flex;gap:12px;font-size:14px;line-height:1.65;margin:10px 0 0}.solution-issue>span{color:#c53c27;font-size:20px;line-height:1.2}.solution-action>span{color:#208567}.solution-observations{font-size:14px;padding:8px}.solution-observations summary{cursor:pointer}
+.solution-code-panel{background:#12314e;border-radius:20px;overflow:hidden;color:#fff;min-width:0}.solution-code-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 19px;border-bottom:1px solid #ffffff1a}.interview-report .solution-code-header h3{font-size:14px;color:#fff;margin:0}.solution-tabs{display:flex;gap:6px;flex-shrink:0}.solution-tabs button{border:0;background:transparent;color:#a8d2f5;border-radius:8px;padding:7px 11px;font-size:12px;cursor:pointer}.solution-tabs button[aria-pressed=true]{background:#294d6e;color:#fff}.solution-tabs button:disabled{opacity:.4;cursor:default}.solution-tabs button:focus-visible,.solution-code-scroll:focus-visible{outline:2px solid #f2cf5c;outline-offset:-2px}
+.solution-code-scroll{overflow:auto;max-height:480px;padding:14px 0;min-height:180px}.interview-report .solution-code-scroll pre{margin:0;padding:0;background:transparent;border:0;border-radius:0;color:#f1f5f9;overflow:visible;font-size:12px;line-height:1.85;min-width:max-content}.solution-line{display:flex;padding-right:20px;min-height:22px}.solution-line-number{display:inline-block;width:42px;flex-shrink:0;text-align:center;color:#8ea2b5;user-select:none}.solution-line-add{background:#1b656044}.solution-line-add .solution-line-number{color:#66d5b2}.solution-line-remove{background:#b2585b44}.solution-line-remove .solution-line-number{color:#ffa5a5}.solution-line code{white-space:pre;font-family:Consolas,monospace}.interview-report .solution-code-note{margin:0;border-top:1px solid #ffffff1a;padding:12px 19px;font-size:12px;line-height:1.6;color:#a8d2f5}.solution-code-empty{padding:0 19px;font-size:14px}
+@media(max-width:850px){.report-solution{grid-template-columns:1fr}.solution-code-header{flex-wrap:wrap}.solution-heading{align-items:baseline}}
+
+.report-solution{color:var(--text,#182137)}
+.solution-fix{background:var(--surface-raised,#fffdf8);border-color:var(--border,#e4e2db)}
+.solution-fix-title{cursor:pointer;min-height:36px;list-style:none}.solution-fix-title::-webkit-details-marker{display:none}
+.solution-fix-title>span{background:var(--surface-blue,#e9edff);color:var(--brand-blue,#3054ed)}
+.solution-fix[open]{border-color:var(--brand-blue,#3054ed)}
+.solution-fix[open] .solution-fix-title>span{font-size:0}.solution-fix[open] .solution-fix-title>span::after{content:"Close fix";font-size:11px}
+.solution-code-panel{background:#0f1a2e;color:#f4f7fc;border:1px solid #b8c9e52b;color-scheme:dark}
+.solution-code-header{background:#1a2842;border-color:#b8c9e52b}
+.solution-tabs button{color:#c3cde0}.solution-tabs button:hover{background:#22345a}.solution-tabs button[aria-pressed=true]{background:#ffdf4f;color:#182137}
+.interview-report .solution-code-scroll pre{color:#f4f7fc;font-size:13px}
+.solution-line-number{color:#a3b2cc}
+.solution-code-empty{line-height:1.8;padding-top:12px}
+
+.solution-review-intro{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:22px 24px;border:1px solid var(--border,#e4e2db);border-left:4px solid #d8b347;border-radius:18px;background:var(--surface-raised,#fffdf8)}
+.solution-review-icon{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;background:#ffdf4f33;border-radius:12px;color:#987319;font-size:22px}
+.solution-review-intro h2{font-size:22px}.solution-review-intro p{font-size:14px;line-height:1.7;margin-top:4px;color:var(--text-muted)}
+.interview-report .solution-fix-title h3{display:grid;gap:8px;font-size:15px;line-height:1.6}.solution-fix-number{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.solution-fix[open] .solution-fix-title>span{font-size:11px}.solution-fix[open] .solution-fix-title>span::after{content:none}
+.solution-fix-body{margin-top:16px;border-top:1px solid var(--border);padding-top:8px}
+.solution-fix-body h4{font-size:12px;font-weight:700;margin:16px 0 8px}.solution-fix-body ol{list-style:decimal;padding-left:20px}.solution-fix-body li{font-size:14px;line-height:1.8;margin-top:8px}
+.solution-fix-body small{display:block;font-size:11px;color:var(--text-muted);margin-top:12px}
+.solution-view-change{margin-top:16px;min-height:40px;padding:8px 12px;background:var(--surface-blue);color:var(--brand-blue);border-radius:10px;font-size:13px;cursor:pointer}
+.solution-code-panel{position:sticky;top:24px}.solution-code-header{flex-wrap:wrap}
+.solution-change-key{display:flex;align-items:center;gap:8px;font-size:11px;padding:12px 18px;color:#c3cde0;border-bottom:1px solid #b8c9e52b}.solution-change-key>span{width:8px;height:8px;border-radius:2px;background:#ffdf4f}
+.solution-line-highlight{background:#ffdf4f18;border-left:3px solid #ffdf4f}.solution-line-highlight .solution-line-number{color:#ffdf4f}
+@media(max-width:850px){.solution-code-panel{position:static}}
+
+.solution-line-yours{background:#f58c9820;border-left-color:#f2a0ad}.solution-line-yours .solution-line-number{color:#f2a0ad}
+.solution-line-solution{background:#72d4af1c;border-left-color:#72d4af}.solution-line-solution .solution-line-number{color:#72d4af}
+.solution-change-key-yours>span{background:#f2a0ad}.solution-change-key-solution>span{background:#72d4af}
+.solution-line-related code{text-decoration:underline;text-decoration-color:#ffdf4f;text-underline-offset:4px}

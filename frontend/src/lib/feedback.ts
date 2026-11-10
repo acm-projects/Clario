@@ -27,6 +27,13 @@ function communicationMetrics(value: unknown): CommunicationMetrics | null {
     }) };
 }
 export type FeedbackInterview = {
+  umpire: Record<string, { stars: number | null; summary: string; details: string; evidence_quotes: string[] }>;
+  fixDetails?: { title: string; explanation: string; steps: string[]; verification: string; codeExcerpt: string | null }[];
+  actions: { fix: string[]; keep: string[] };
+  fillerWords: { available: boolean; items: { word: string; count: number }[]; limitation: string | null };
+  fullSummary: string | null; submittedCode: string | null; correctedSolution: string | null;
+  isFallback: boolean;
+  detailed: boolean;
   id: string; topic: string; difficulty: string | null; date: string;
   summary: string | null; status: "Available" | "Pending";
   scores: Record<ScoreKey, number | null>;
@@ -54,6 +61,30 @@ export function parseFeedbackHistory(payload: unknown): FeedbackInterview[] {
     if (typeof session.id !== "string" || !isCompletedSession(session)) throw new Error("Invalid completed interview.");
     return {
       id: session.id,
+      isFallback: report.is_fallback === true,
+      fullSummary: text(report.full_summary), submittedCode: text(report.submitted_code), correctedSolution: text(report.corrected_solution),
+      umpire: Object.fromEntries(["understand", "match", "plan", "implement", "review", "evaluate"].map(key => {
+        const rating = record(record(report.umpire)[key]);
+        const stars = typeof rating.stars === "number" && Number.isInteger(rating.stars) && rating.stars >= 0 && rating.stars <= 5 ? rating.stars : null;
+        const missing = stars === null && report.is_fallback !== true;
+        const prompts: Record<string, string> = {
+          understand: "State inputs, outputs, and constraints.", match: "Explain why your approach fits the task.",
+          plan: "Explain your steps before coding.", implement: "Show how your implementation follows your plan.",
+          review: "Walk through an example and an edge case.", evaluate: "Explain complexity and trade-offs.",
+        };
+        return [key, { stars: missing ? 0 : stars,
+          summary: missing ? `Your saved interview does not show this step yet. ${prompts[key]}` : text(rating.summary) ?? `This step could not be assessed from the saved interview. ${prompts[key]}`,
+          details: missing ? `0/5 for recorded demonstration. This rates the saved evidence, not your ability; the recording may be incomplete. ${prompts[key]}` : text(rating.details) ?? `There is not enough saved evidence to give specific feedback for this step. In your next interview: ${prompts[key]}`, evidence_quotes: strings(rating.evidence_quotes) }];
+      })),
+      fixDetails: (Array.isArray(record(report.actions).fix_details) ? record(report.actions).fix_details as unknown[] : []).map(value => {
+        const detail = record(value);
+        return { title: text(detail.title) ?? "Improve your solution", explanation: text(detail.explanation) ?? "", steps: strings(detail.steps), verification: text(detail.verification) ?? "", codeExcerpt: text(detail.code_excerpt) };
+      }),
+      actions: { fix: Array.isArray(record(report.actions).fix) ? strings(record(report.actions).fix) : strings(feedback.recommendations), keep: Array.isArray(record(report.actions).keep) ? strings(record(report.actions).keep) : strings(feedback.strengths) },
+      fillerWords: { available: record(report.filler_words).available === true,
+        items: (Array.isArray(record(report.filler_words).items) ? record(report.filler_words).items as unknown[] : []).flatMap(value => { const item = record(value); return text(item.word) && typeof item.count === "number" && Number.isInteger(item.count) && item.count > 0 ? [{ word: item.word as string, count: item.count }] : []; }),
+        limitation: text(record(report.filler_words).limitation) },
+      detailed: Object.keys(record(report.umpire)).length === 6 && Array.isArray(record(report.actions).fix),
       topic: text(problem.title) ?? text(session.problem_slug)?.split("-").join(" ") ?? "Practice interview",
       difficulty: text(problem.difficulty), date: session.ended_at as string,
       summary: text(report.summary), status: typeof feedback.id === "string" ? "Available" : "Pending",

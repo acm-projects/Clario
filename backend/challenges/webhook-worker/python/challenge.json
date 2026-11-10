@@ -1,0 +1,36 @@
+{
+  "id": "webhook-worker-01",
+  "title": "The Lossy Job Worker",
+  "difficulty": "Hard",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Webhook jobs disappear after crashes, batches return early, and retry settings leak between deliveries.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Async Python: with_retry(fn, opts=None) retries network errors (no status), 429 and 5xx only, at most retries total attempts (default 3), with exponential delay in milliseconds (default 0). Never mutate options or defaults; exhaustion rethrows. process_batch(jobs, queue, deliver_webhook, concurrency=2) awaits all jobs, caps concurrency, preserves input order, and returns {id,res} or {id,error}. Queue supplies async ack(id) and dead_letter(job,error). Dead-letter delivery failures durably before ack. Dead-letter/ack errors reject the batch.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "processor.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_worker.py"
+  ],
+  "entrypoint": "processor.py",
+  "testFile": "test_worker.py",
+  "testNames": [
+    "test_ack_after_delivery",
+    "test_batch_waits",
+    "test_concurrency_cap",
+    "test_custom_options_unchanged",
+    "test_dead_letter_before_ack",
+    "test_dead_letter_failure_unacked",
+    "test_retry_defaults_immutable",
+    "test_retry_policy"
+  ],
+  "bugs": []
+}

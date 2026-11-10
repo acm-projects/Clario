@@ -1,5 +1,6 @@
+import "./sandbox-skin.css";
 import ProblemLoading from "../ui/ProblemLoading";
-import { useAppearance } from "../../lib/appearance";
+import { useSandboxAppearance } from "../../lib/appearance";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { TopBar } from "./TopBar";
@@ -11,7 +12,7 @@ import { ResizableSplit } from "./ResizableSplit";
 import { session } from "./data";
 import { type Problem, type TestsResponse } from "../../types";
 import { modeLabels, parseInterviewMode, type InterviewMode } from "../../lib/interviewModes";
-import { ApiError, getProblem, runTests, getSession, saveSnapshot, endSession, createModeSession } from "../../lib/api";
+import { ApiError, getProblem, runTests, runCompanyTests, getSession, saveSnapshot, endSession, createModeSession } from "../../lib/api";
 import { request } from "../../lib/api";
 import type { VoiceControls } from "../../lib/interviewVoice";
 
@@ -20,11 +21,14 @@ function InterviewPage() {
   const { problemId } = useParams<{ problemId: string }>();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session");
+  const [clock, setClock] = useState<{ start: number; end?: number }>(() => ({ start: Date.now() }));
   const [ending, setEnding] = useState(false);
   const endingRef = useRef(false);
   const createdSession = useRef<string | null>(null);
   const sessionCreation = useRef<ReturnType<typeof createModeSession> | null>(null);
   const voiceControls = useRef<VoiceControls>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const submittedRef = useRef(false);
   const [reviewing, setReviewing] = useState(false);
   const [reviewStatus, setReviewStatus] = useState("");
   const requestedMode = parseInterviewMode(searchParams.get("mode")) ?? "custom";
@@ -40,12 +44,13 @@ function InterviewPage() {
   const [running, setRunning] = useState(false);
   const [executionTab, setExecutionTab] = useState<ExecutionTab>("testcases");
   const [resultsSplitSize, setResultsSplitSize] = useState<number | undefined>(undefined);
-  const theme = useAppearance();
+  const theme = useSandboxAppearance();
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadProblem() {
+      submittedRef.current = false; setSubmitted(false); setReviewStatus("");
       setProblem(null);
       setLoadState("loading");
       setRunResult(null);
@@ -60,6 +65,9 @@ function InterviewPage() {
         if (sessionId) {
           const saved = await getSession(sessionId, controller.signal);
           if (controller.signal.aborted) return;
+          const start = Date.parse(saved.started_at);
+          const end = saved.ended_at ? Date.parse(saved.ended_at) : NaN;
+          setClock({ start: Number.isFinite(start) ? start : Date.now(), ...(Number.isFinite(end) ? { end } : {}) });
           setActiveMode(parseInterviewMode(saved.mode) ?? requestedMode);
           if (saved.problem_slug !== problemId) throw new Error("Session problem mismatch.");
           const loaded = saved.problem ?? await getProblem(problemId, controller.signal);
@@ -76,6 +84,14 @@ function InterviewPage() {
           setProblem(loaded);
           setCode(loaded.starter_code.python3 ?? "");
         }
+        try {
+          const final = JSON.parse(sessionStorage.getItem("clario:submitted:" + (sessionId ?? createdSession.current)) || "null");
+          if (final && typeof final.code === "string") {
+            setCode(final.code); setLanguage(final.language); submittedRef.current = true; setSubmitted(true);
+            setProblem(previous => previous ? { ...previous, starter_code: { ...previous.starter_code, [final.language]: final.code } } : previous);
+            setReviewStatus("Final code submitted. Follow-up questions are now in progress.");
+          }
+        } catch { /* Storage can be unavailable. */ }
         setLoadState("ready");
       } catch (error) {
         if (controller.signal.aborted) {
@@ -122,19 +138,24 @@ function InterviewPage() {
   };
 
   const reviewCode = async () => {
-    if (reviewing || ending || !voiceControls.current) return;
+    if (submittedRef.current || reviewing || ending || running || !voiceControls.current) return;
+    submittedRef.current = true;
     setReviewing(true); setRunError(null); setReviewStatus("");
     try {
       if (sessionId ?? createdSession.current) await saveSnapshot((sessionId ?? createdSession.current)!, code);
       await voiceControls.current.reviewCode(code);
-      setReviewStatus("Code sent to the duck for review. Your interview is still in progress.");
+      setSubmitted(true);
+      try { sessionStorage.setItem("clario:submitted:" + (sessionId ?? createdSession.current), JSON.stringify({code, language})); } catch { /* Keep the active session locked. */ }
+      setReviewStatus("Final code submitted. Follow-up questions are now in progress.");
     } catch (error) {
+      submittedRef.current = false;
       setRunError(error instanceof Error ? error.message : "Could not send your code to the duck.");
       setExecutionTab("results"); setResultsSplitSize(45);
     } finally { setReviewing(false); }
   };
 
   const runCode = async () => {
+    if (submittedRef.current || running || reviewing || ending) return;
     if (!problem) {
       setRunError("Problem data is not available.");
       return;
@@ -146,13 +167,17 @@ function InterviewPage() {
     setRunError(null);
     setRunResult(null);
 
+    const sourceCode = code;
+    const run_id = crypto.randomUUID();
+    const files = { [language === "python3" ? "main.py" : "Main.java"]: sourceCode };
+    voiceControls.current?.observeRun({ run_id, language, phase: "running", files });
     try {
-      const sourceCode = code;
       if (sessionId ?? createdSession.current) await saveSnapshot((sessionId ?? createdSession.current)!, sourceCode);
-      setRunResult(
-        await runTests({ slug: problem.slug, language, code: sourceCode }),
-      );
+      const result = activeMode === "company" ? await runCompanyTests(problem.slug, language, sourceCode) : await runTests({ slug: problem.slug, language, code: sourceCode });
+      setRunResult(result);
+      voiceControls.current?.observeRun({ run_id, language, phase: "completed", files, result });
     } catch (error) {
+      voiceControls.current?.observeRun({ run_id, language, phase: "unavailable", files, result: { error: error instanceof Error ? error.message : "Execution unavailable" } });
       setRunError(error instanceof Error ? error.message : "Unable to run code.");
     } finally {
       setRunning(false);
@@ -183,14 +208,17 @@ function InterviewPage() {
   }
 
   return (
-    <div data-theme={theme} className={"interview-page [&.interview-page[data-theme=dark]]:[--page-bg:#0a1120] [&.interview-page[data-theme=dark]]:[--panel-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--line:#34445e] [&.interview-page[data-theme=dark]]:[--text-main:#f4f7fc] [&.interview-page[data-theme=dark]]:[--text-body:#c3cde0] [&.interview-page[data-theme=dark]]:[--text-muted:#8a97ad] [&.interview-page[data-theme=dark]]:[--surface:#1a2842] [&.interview-page[data-theme=dark]]:[--surface-hover:#22345a] [&.interview-page[data-theme=dark]]:[--code-surface:#16233b] [&.interview-page[data-theme=dark]]:[--video-self:#0c1626] [&.interview-page[data-theme=dark]]:[--video-interviewer:#2378db] [&.interview-page[data-theme=dark]]:[--avatar-ring:#2378db] [&.interview-page[data-theme=dark]]:[--accent-text:#6fa4ee] [&.interview-page[data-theme=dark]]:[--wave-a:#1c3d73] [&.interview-page[data-theme=dark]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=dark]]:[color-scheme:dark] [&.interview-page[data-theme=dark]]:[--editor-footer-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--editor-footer-text:#a9bce0] [&.interview-page[data-theme=light]]:[--page-bg:#fbf4df] [&.interview-page[data-theme=light]]:[--panel-bg:#fff] [&.interview-page[data-theme=light]]:[--line:#292929] [&.interview-page[data-theme=light]]:[--text-main:#173153] [&.interview-page[data-theme=light]]:[--text-body:#254268] [&.interview-page[data-theme=light]]:[--text-muted:#587096] [&.interview-page[data-theme=light]]:[--surface:#fbf4df] [&.interview-page[data-theme=light]]:[--surface-hover:#f6e9bf] [&.interview-page[data-theme=light]]:[--code-surface:#fbf4df] [&.interview-page[data-theme=light]]:[--video-self:#fbf4df] [&.interview-page[data-theme=light]]:[--video-interviewer:#2378db] [&.interview-page[data-theme=light]]:[--avatar-ring:#2378db] [&.interview-page[data-theme=light]]:[--accent-text:#245d9e] [&.interview-page[data-theme=light]]:[--wave-a:#527db5] [&.interview-page[data-theme=light]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=light]]:[color-scheme:light] [&.interview-page[data-theme=light]]:[--editor-footer-bg:#fff] [&.interview-page[data-theme=light]]:[--editor-footer-text:#587096] [&.interview-page_.theme-panel]:[border-color:var(--line)] [&.interview-page_.theme-panel]:[background-color:var(--panel-bg)] [&.interview-page_.theme-border]:[border-color:var(--line)] [&.interview-page_.theme-main-text]:[color:var(--text-main)] [&.interview-page_.theme-body-text]:[color:var(--text-body)] [&.interview-page_.theme-muted-text]:[color:var(--text-muted)] [&.interview-page_.theme-surface]:[background-color:var(--surface)] [&.interview-page_.theme-surface-hover:hover]:[background-color:var(--surface-hover)] [&.interview-page_.theme-code-surface]:[background-color:var(--code-surface)] [&.interview-page_.theme-video-self]:[border-color:var(--line)] [&.interview-page_.theme-video-self]:[background-color:var(--video-self)] [&.interview-page_.theme-video-interviewer]:[background-color:var(--video-interviewer)] [&.interview-page_.theme-avatar-ring]:[--tw-ring-color:var(--avatar-ring)] [&.interview-page_.problem-title]:[font-size:24px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border:1px_solid_var(--line)] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border-radius:11px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[background:var(--panel-bg)] [&.interview-page_button:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_button:focus-visible]:[outline-offset:3px] [&.interview-page_summary:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_summary:focus-visible]:[outline-offset:3px] [@media_(max-width:_950px)]:[&.interview-page]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page]:[min-height:100vh] [@media_(max-width:_950px)]:[&.interview-page]:[overflow:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[flex-wrap:wrap] [@media_(max-width:_950px)]:[&.interview-page_header]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[min-height:110px] [@media_(max-width:_950px)]:[&.interview-page_header]:[gap:12px] [@media_(max-width:_950px)]:[&.interview-page_header]:[padding:12px_16px] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[position:static] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[transform:none] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[order:3] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[width:100%] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[justify-content:center] [&.interview-page_.sandbox-code_>_div:last-child]:[background:var(--editor-footer-bg)] [&.interview-page_.sandbox-code_>_div:last-child]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-code_>_div:last-child]:[border-color:var(--line)] [&.interview-page_.sandbox-code_>_div:last-child_.theme-muted-text]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-problem_nav]:[border-color:var(--line)] [&.interview-page_.sandbox-problem_pre]:[border-color:var(--line)] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[background:#2378db] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[color:#fff] [&.interview-page[data-theme=dark]_.difficulty-easy]:[background:#173a2c] [&.interview-page[data-theme=dark]_.difficulty-easy]:[color:#79dfac] [&.interview-page[data-theme=dark]_.difficulty-easy]:[border-color:#397653] [&.interview-page[data-theme=dark]_.difficulty-medium]:[background:#3a3217] [&.interview-page[data-theme=dark]_.difficulty-medium]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.difficulty-medium]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.difficulty-hard]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.difficulty-hard]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.difficulty-hard]:[border-color:#8d4550] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[background:#3a3217] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[border-color:#aa5360] [&.interview-page[data-theme=dark]_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed_.sandbox-case-dot]:[background:#ff8796] [&.interview-page[data-theme=dark]_.sandbox-case.passed_.sandbox-case-dot]:[background:#79a9ff] [&.interview-page[data-theme=dark]_button:focus-visible]:[outline-color:#fac52e] [&.interview-page[data-theme=dark]_summary:focus-visible]:[outline-color:#fac52e] [&.interview-page_.sandbox-layout]:[display:flex] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border:0] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border-radius:18px] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[background:var(--surface)] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_.sandbox-case-dot]:[background:#cc3c09] relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] font-sans text-[var(--text-main)]"}>
+    <div data-theme={theme} className={"interview-page [--sandbox-blue:#4c68c4] [--sandbox-blue-hover:#3f59ae] [&.interview-page[data-theme=dark]]:[--page-bg:#0a1120] [&.interview-page[data-theme=dark]]:[--panel-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--line:#34445e] [&.interview-page[data-theme=dark]]:[--text-main:#f4f7fc] [&.interview-page[data-theme=dark]]:[--text-body:#c3cde0] [&.interview-page[data-theme=dark]]:[--text-muted:#8a97ad] [&.interview-page[data-theme=dark]]:[--surface:#1a2842] [&.interview-page[data-theme=dark]]:[--surface-hover:#22345a] [&.interview-page[data-theme=dark]]:[--code-surface:#16233b] [&.interview-page[data-theme=dark]]:[--video-self:#0c1626] [&.interview-page[data-theme=dark]]:[--video-interviewer:var(--sandbox-blue)] [&.interview-page[data-theme=dark]]:[--avatar-ring:#0c1a30] [&.interview-page[data-theme=dark]]:[--accent-text:#6fa4ee] [&.interview-page[data-theme=dark]]:[--wave-a:#1c3d73] [&.interview-page[data-theme=dark]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=dark]]:[color-scheme:dark] [&.interview-page[data-theme=dark]]:[--editor-footer-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--editor-footer-text:#a9bce0] [&.interview-page[data-theme=light]]:[--page-bg:var(--page-background)] [&.interview-page[data-theme=light]]:[--panel-bg:#fff] [&.interview-page[data-theme=light]]:[--line:transparent] [&.interview-page[data-theme=light]]:[--text-main:#292929] [&.interview-page[data-theme=light]]:[--text-body:#454545] [&.interview-page[data-theme=light]]:[--text-muted:#666] [&.interview-page[data-theme=light]]:[--surface:#fbf4df] [&.interview-page[data-theme=light]]:[--surface-hover:#f6e9bf] [&.interview-page[data-theme=light]]:[--code-surface:#fbf4df] [&.interview-page[data-theme=light]]:[--video-self:#fbf4df] [&.interview-page[data-theme=light]]:[--video-interviewer:var(--sandbox-blue)] [&.interview-page[data-theme=light]]:[--avatar-ring:#e8efff] [&.interview-page[data-theme=light]]:[--accent-text:#454545] [&.interview-page[data-theme=light]]:[--wave-a:#527db5] [&.interview-page[data-theme=light]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=light]]:[color-scheme:light] [&.interview-page[data-theme=light]]:[--editor-footer-bg:#fff] [&.interview-page[data-theme=light]]:[--editor-footer-text:#587096] [&.interview-page_.theme-panel]:[border-color:var(--line)] [&.interview-page_.theme-panel]:[background-color:var(--panel-bg)] [&.interview-page_.theme-border]:[border-color:var(--line)] [&.interview-page_.theme-main-text]:[color:var(--text-main)] [&.interview-page_.theme-body-text]:[color:var(--text-body)] [&.interview-page_.theme-muted-text]:[color:var(--text-muted)] [&.interview-page_.theme-surface]:[background-color:var(--surface)] [&.interview-page_.theme-surface-hover:hover]:[background-color:var(--surface-hover)] [&.interview-page_.theme-code-surface]:[background-color:var(--code-surface)] [&.interview-page_.theme-video-self]:[border-color:var(--line)] [&.interview-page_.theme-video-self]:[background-color:var(--video-self)] [&.interview-page_.theme-video-interviewer]:[background-color:var(--video-interviewer)] [&.interview-page_.theme-avatar-ring]:[--tw-ring-color:var(--avatar-ring)] [&.interview-page_.problem-title]:[font-size:24px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border:1px_solid_var(--line)] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border-radius:11px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[background:var(--sandbox-blue)] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[color:#fff] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child:hover]:[background:var(--sandbox-blue-hover)] [&.interview-page_button:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_button:focus-visible]:[outline-offset:3px] [&.interview-page_summary:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_summary:focus-visible]:[outline-offset:3px] [@media_(max-width:_950px)]:[&.interview-page]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page]:[min-height:100vh] [@media_(max-width:_950px)]:[&.interview-page]:[overflow:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[flex-wrap:wrap] [@media_(max-width:_950px)]:[&.interview-page_header]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[min-height:110px] [@media_(max-width:_950px)]:[&.interview-page_header]:[gap:12px] [@media_(max-width:_950px)]:[&.interview-page_header]:[padding:12px_16px] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[position:static] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[transform:none] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[order:3] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[width:100%] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[justify-content:center] [&.interview-page_.sandbox-code_>_div:last-child]:[background:var(--editor-footer-bg)] [&.interview-page_.sandbox-code_>_div:last-child]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-code_>_div:last-child]:[border-color:var(--line)] [&.interview-page_.sandbox-code_>_div:last-child_.theme-muted-text]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-problem_nav]:[border-color:var(--line)] [&.interview-page_.sandbox-problem_pre]:[border-color:var(--line)] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[background:#fac52e] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[color:#122b50] [&.interview-page[data-theme=dark]_.difficulty-easy]:[background:#173a2c] [&.interview-page[data-theme=dark]_.difficulty-easy]:[color:#79dfac] [&.interview-page[data-theme=dark]_.difficulty-easy]:[border-color:#397653] [&.interview-page[data-theme=dark]_.difficulty-medium]:[background:#3a3217] [&.interview-page[data-theme=dark]_.difficulty-medium]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.difficulty-medium]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.difficulty-hard]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.difficulty-hard]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.difficulty-hard]:[border-color:#8d4550] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[background:#3a3217] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[border-color:#aa5360] [&.interview-page[data-theme=dark]_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed_.sandbox-case-dot]:[background:#ff8796] [&.interview-page[data-theme=dark]_.sandbox-case.passed_.sandbox-case-dot]:[background:#79a9ff] [&.interview-page[data-theme=dark]_button:focus-visible]:[outline-color:#fac52e] [&.interview-page[data-theme=dark]_summary:focus-visible]:[outline-color:#fac52e] [&.interview-page_.sandbox-layout]:[display:flex] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border:0] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border-radius:18px] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[background:var(--surface)] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_.sandbox-case-dot]:[background:#cc3c09] relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] font-sans text-[var(--text-main)]"}>
       <TopBar
-        timer={session.timer}
+        timer="00:00"
+        startedAt={clock.start}
+        endedAt={clock.end}
         modeLabel={modeLabels[activeMode]}
         onRun={runCode}
         onSubmit={() => void reviewCode()}
         running={running || ending || reviewing}
         runLabel="Run Tests"
+        submitted={submitted}
       />
       {reviewStatus && <p role="status" className="theme-surface theme-body-text px-5 py-2 text-sm">{reviewStatus}</p>}
 
@@ -204,8 +232,8 @@ function InterviewPage() {
                 <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
                   label="Resize problem and code editor"
                   first={<ProblemPanel problem={problem} solved={runResult?.status === "Accepted"} />}
-                  second={<CodePanel key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId ?? createdSession.current)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
-                    onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
+                  second={<CodePanel readOnly={submitted} key={sessionId ?? problem.slug} lockLanguage={Boolean(sessionId ?? createdSession.current)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
+                    onChange={(nextLanguage, nextCode) => { if (submittedRef.current) return; setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }
               second={<TestResultPanel descriptionHtml={problem.description_html} tab={executionTab} onTabChange={setExecutionTab} running={running} starterCode={problem.starter_code.python3} testcases={problem.example_testcases} result={runResult} error={runError} />}
@@ -236,7 +264,8 @@ function InterviewPage() {
               </div> : <p className="theme-muted-text text-sm">Hints coming soon.</p>}
             </div>}
           </div>
-          <VideoCallPanel controlsRef={voiceControls} ending={ending} round={session.round} interviewer={session.interviewer} problemSlug={problem.slug} onEndInterview={handleEndInterview} />
+          <VideoCallPanel key={sessionId ?? createdSession.current ?? problem.slug} finalSubmission={submitted ? code : undefined} controlsRef={voiceControls} ending={ending} round={session.round} interviewer={session.interviewer} problemSlug={problem.slug}
+            codeSnapshot={{ language, files: { [language === "java" ? "Solution.java" : "solution.py"]: code } }} onEndInterview={handleEndInterview} />
         </div>
           }
         />
@@ -247,5 +276,5 @@ function InterviewPage() {
 
 export default function InterviewRoom() {
   const [searchParams] = useSearchParams();
-  return <InterviewPage key={searchParams.get("session") ?? "no-session"}/>;
+  return <InterviewPage key={searchParams.get("session") ?? window.location.pathname}/>;
 }

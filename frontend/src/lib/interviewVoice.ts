@@ -4,9 +4,11 @@ export type CommunicationCapture = {
   capture_id: string; monitored_seconds: number; silent_seconds: number; longest_pause_seconds: number;
   transcript: string; transcription_available: boolean; silence_intervals: SilenceInterval[];
 };
-export type InterviewEvidence = { transcript: TranscriptTurn[]; communication: CommunicationCapture | null; duration_seconds?: number };
-export type VoiceControls = { reviewCode(code: string): Promise<void>; finish(): Promise<InterviewEvidence> };
-export const CODE_REVIEW_CUE = "The candidate clicked Submit to request a code review. Check the submitted snapshot and continue the interview with one relevant follow-up question. Do not give hints, a solution, or scores.";
+export type InterviewEvidence = { transcript: TranscriptTurn[]; communication: CommunicationCapture | null; duration_seconds?: number; run_events?: RunEvent[] };
+export type RunEvent = { run_id: string; language: string; phase: "running" | "completed" | "unavailable"; result: string };
+export type RunObservation = { run_id: string; language: string; phase: RunEvent["phase"]; files: Record<string, string>; result?: unknown };
+export type VoiceControls = { reviewCode(code: string): Promise<void>; observeRun(run: RunObservation): void; finish(): Promise<InterviewEvidence> };
+export const CODE_REVIEW_CUE = "The candidate has made their final, one-time submission. The coding phase is over. Begin the follow-up questioning now: ask one concise question about their submitted code and observed run results. Wait for their answer before asking another question. Do not give hints, a solution, or scores.";
 
 /** Candidate-channel volume only, excluding interviewer speech and hidden-tab time. */
 export class SilenceTracker {

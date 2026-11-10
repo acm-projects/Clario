@@ -1,9 +1,17 @@
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
 
 import pytest
 from fastapi import HTTPException
 from voice import router
+
+
+@pytest.fixture(autouse=True)
+def no_database_network(monkeypatch):
+    import db
+    store = MagicMock()
+    store.table.return_value.select.return_value.eq.return_value.limit.return_value.execute.return_value = SimpleNamespace(data=[])
+    monkeypatch.setattr(db, "supabase", store)
 
 
 def test_scenario_and_invalid_slug():

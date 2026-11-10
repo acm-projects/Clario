@@ -1,9 +1,19 @@
 """Communication observations from microphone volume and a browser transcript."""
 import re
+from collections import Counter
 from uuid import UUID
 from pydantic import BaseModel, Field, model_validator
 
 FILLERS = re.compile(r"\b(?:um+|uh+|erm+|hmm+|you know|i mean|sort of|kind of)\b", re.I)
+
+
+def transcript_fillers(transcript: str) -> dict:
+    """Literal observations from candidate speech only, never fabricated audio metrics."""
+    words = Counter(match.group().lower() for match in FILLERS.finditer(transcript))
+    return {"available": bool(transcript.strip()),
+            "items": [{"word": word, "count": count} for word, count in sorted(words.items(), key=lambda row: (-row[1], row[0]))],
+            "total": sum(words.values()) if transcript.strip() else None,
+            "limitation": "Transcript matches only. Transcription may omit fillers; phrases such as 'kind of' can also have ordinary meanings."}
 
 class SilenceInterval(BaseModel):
     start_seconds: float = Field(ge=0, le=86400, allow_inf_nan=False)

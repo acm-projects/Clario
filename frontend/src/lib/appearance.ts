@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 export type Appearance = "light" | "dark";
-// Only explicit choices in Settings persist. Ignore the legacy shared interview toggle.
+// Only Settings changes the application-wide appearance.
 const key = "clario-settings-appearance";
 let fallback: Appearance = "light";
 
@@ -27,4 +27,30 @@ export function setAppearance(value: Appearance) {
 
 export function useAppearance() {
   return useSyncExternalStore(subscribe, read, () => "light" as Appearance);
+}
+
+const sandboxKey = "clario-sandbox-appearance";
+let sandboxFallback: Appearance | undefined;
+
+function readSandbox(): Appearance {
+  try {
+    const value = localStorage.getItem(sandboxKey);
+    return value === "light" || value === "dark" ? value : read();
+  } catch { return sandboxFallback ?? read(); }
+}
+
+function subscribeSandbox(callback: () => void) {
+  const unsubscribe = subscribe(callback);
+  window.addEventListener("clario:sandbox-appearance", callback);
+  return () => { unsubscribe(); window.removeEventListener("clario:sandbox-appearance", callback); };
+}
+
+export function setSandboxAppearance(value: Appearance) {
+  sandboxFallback = value;
+  try { localStorage.setItem(sandboxKey, value); } catch { /* Keep sandbox controls usable without storage. */ }
+  window.dispatchEvent(new Event("clario:sandbox-appearance"));
+}
+
+export function useSandboxAppearance() {
+  return useSyncExternalStore(subscribeSandbox, readSandbox, () => "light" as Appearance);
 }

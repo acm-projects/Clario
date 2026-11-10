@@ -1,3 +1,4 @@
+import { listSystemDesignQuestions, type SystemDesignQuestion } from "../lib/api";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
@@ -85,6 +86,29 @@ function DesignCall({ slug }: { slug: string }) {
   </main>;
 }
 
+function DesignQuestionPicker() {
+  const [company, setCompany] = useState("Bumble");
+  const [questions, setQuestions] = useState<SystemDesignQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true); setQuestions([]); setError(null);
+    listSystemDesignQuestions(company, controller.signal).then(value => {
+      if (!controller.signal.aborted) setQuestions(value.questions);
+    }).catch(error => {
+      if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Could not load questions.");
+    }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [company, retry]);
+  return <>
+    <label className="mt-5 grid max-w-md gap-3 text-sm font-medium">Company<select value={company} onChange={event => setCompany(event.target.value)} className="rounded-xl border border-[#c5c8ce] bg-[#fffdf8] p-3">{["Bumble", "Spotify", "DoorDash", "Stripe"].map(name => <option key={name}>{name}</option>)}</select></label>
+    {loading ? <p role="status" className="mt-5 text-sm text-[#687087]">Loading system design questions...</p> : error ? <div role="alert" className="mt-5"><p>{error}</p><button className="mt-3 rounded-xl border border-[#c5c8ce] px-4 py-3" onClick={() => setRetry(value => value + 1)}>Try again</button></div> : questions.length ? <div className="mt-6 grid gap-4 md:grid-cols-2">{questions.map(question => <Link key={question.slug} to={"/interview/system-design/" + encodeURIComponent(question.slug)} className="flex items-center justify-between gap-4 rounded-xl border border-[#b9c9ff] bg-[#e9edff] p-5 text-[#3054ed]"><span><span className="block text-xs uppercase">{question.company} / {question.difficulty}</span><span className="mt-2 block font-medium">{question.title}</span></span><span aria-hidden="true">&#8594;</span></Link>)}</div> : <p className="mt-5 text-sm text-[#687087]">No system design questions are available for {company} yet.</p>}
+    {company === "Bumble" && !loading && !questions.length && <Link to="/interview/system-design/bumble-nearby-matches" className="mt-5 inline-flex items-center gap-4 rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Practice the sample Bumble scenario<span aria-hidden="true">&#8594;</span></Link>}
+  </>;
+}
+
 export default function SystemDesign() {
   const { slug } = useParams<{ slug: string }>();
   if (slug) return <DesignCall key={slug} slug={slug} />;
@@ -95,8 +119,8 @@ export default function SystemDesign() {
       <Link to="/interview" className="mb-6 inline-flex min-h-11 items-center text-sm text-[#3054ed] hover:underline">All interview modes</Link>
       <section className="rounded-[30px] border border-[#c5c8ce] bg-[#fffdf8] p-7 sm:p-9">
         <h2 className="text-2xl font-medium">Choose a company</h2>
-        <p className="mt-4 text-sm leading-7 text-[#687087]">Choose Bumble to open your video interview and company scenario.</p>
-        <Link to="/interview/system-design/bumble-nearby-matches" className="mt-6 inline-flex min-h-11 items-center gap-3 rounded-xl border border-[#b9c9ff] bg-[#e9edff] px-5 py-3 text-sm font-medium text-[#3054ed] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#3054ed]"><span aria-hidden="true" className="text-lg font-bold">B</span>Bumble<span aria-hidden="true">&#8594;</span></Link>
+        <p className="mt-4 text-sm leading-7 text-[#687087]">Choose a company and a system design question to start your interview.</p>
+        <DesignQuestionPicker />
       </section>
     </div>
   </main>;

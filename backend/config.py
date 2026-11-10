@@ -30,7 +30,9 @@ class Settings:
     piston_python_version: str = _optional("PISTON_PYTHON_VERSION", "*")
     piston_javascript_version: str = _optional("PISTON_JAVASCRIPT_VERSION", "*")
     piston_java_version: str = _optional("PISTON_JAVA_VERSION", "*")
+    piston_cpp_version: str = _optional("PISTON_CPP_VERSION", "*")
     elevenlabs_api_key: str = _optional("ELEVENLABS_API_KEY")
+    elevenlabs_system_design_agent_id: str = _optional("ELEVENLABS_SYSTEM_DESIGN_AGENT_ID")
     elevenlabs_agent_id: str = _optional("ELEVENLABS_AGENT_ID")
     elevenlabs_voice_id: str = _optional(
         "ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb"

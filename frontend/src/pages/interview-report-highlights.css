@@ -1,0 +1,45 @@
+.report-stage{padding-bottom:72px;overflow-wrap:anywhere}
+.report-stage-status{display:inline-flex;border-radius:99px;padding:5px 10px;font-size:10px;font-weight:700;margin-bottom:16px}
+.report-stage-status-strong{background:#e3f1e6;color:#28573d}
+.report-stage-status-focus{background:#fff0bb;color:#71510a}
+.report-stage-status-developing{background:#e9edff;color:#3054ed}
+.report-stage-status-unassessed{background:#edf0f3;color:#687087}
+.report-stage-strong{border-top:3px solid #72a880}
+.report-stage-focus{border-top:3px solid #dfbb49}
+.report-stage-developing{border-top:3px solid #9caef7}
+.report-stage .report-stage-takeaway{color:#182137;font-weight:550}
+.report-practice-cue{margin-top:16px;padding:14px;border-radius:12px;background:#f3f4f8}
+.report-practice-cue>span{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3054ed}
+.report-practice-cue p{margin-top:5px;font-size:12px;line-height:1.7}
+.report-stage .report-detail-arrow{display:flex;align-items:center;justify-content:center;gap:14px;width:auto;min-height:40px;padding:8px 14px;font-size:12px;font-weight:600;background:#e9edff;border-color:#d6dfff;border-radius:10px}
+.report-stage .report-detail-arrow:hover{background:#dce3ff}
+#umpire-heading{scroll-margin-top:24px}
+.interview-report .report-fillers li{background:#3054ed;border-color:#3054ed;color:#fff}
+.interview-report .report-fillers li small{color:#e1e7ff}
+.interview-report .report-code-disclosure{padding:0;border-color:#3054ed;overflow:hidden}
+.interview-report .report-code-disclosure summary{padding:18px 20px;background:#3054ed;color:#fff;transition:background-color .15s}
+.interview-report .report-code-disclosure summary:hover{background:#2444cf}
+.interview-report .report-code-disclosure summary:focus-visible{outline:2px solid #fff;outline-offset:-5px}
+.interview-report .report-code-disclosure[open]{padding-bottom:18px}
+.interview-report .report-code-disclosure>pre,.interview-report .report-code-disclosure>p{margin-left:18px;margin-right:18px}
+@media(prefers-reduced-motion:reduce){.interview-report .report-code-disclosure summary{transition:none}}
+
+.interview-report .report-summary-preview{display:block;white-space:pre-line;overflow:visible;font-size:15px;line-height:1.9}
+.report-summary-next{margin-top:20px;padding:18px;border-radius:16px;background:var(--surface-blue,#e9edff)}
+.report-summary-next h3{font-size:13px;font-weight:700;color:var(--brand-blue,#3054ed)}
+.report-summary-next p{margin-top:8px;font-size:14px;line-height:1.8}
+
+.report-stage .report-stage-takeaway{color:var(--text,#182137);font-weight:500}
+.report-stage .report-detail-arrow{background:transparent;border-color:var(--border,#e4e2db);color:var(--text,#182137)}
+.report-stage .report-detail-arrow:hover{background:var(--surface-blue,#e9edff)}
+.interview-report .report-fillers{border-color:var(--border,#e4e2db);background:var(--surface-raised,#fffdf8)}
+.interview-report .report-fillers ul{margin-bottom:12px}
+
+.report-umpire-section{padding:24px;border:1px solid var(--border,#e4e2db);border-radius:24px;background:color-mix(in srgb,var(--landing-yellow,#ffdf4f) 9%,var(--surface-raised,#fffdf8))}
+.interview-report #umpire-heading{display:flex;align-items:center;gap:12px;font-size:23px;letter-spacing:-.025em}
+.report-umpire-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#ffdf4f55;color:#816215;font-size:26px;flex-shrink:0}
+.report-umpire-section .report-stage .report-detail-arrow{background:var(--surface-blue,#e9edff);border-color:color-mix(in srgb,var(--brand-blue,#3054ed) 25%,var(--border,#e4e2db));font-weight:650}
+.report-umpire-section .report-stage:focus-within{box-shadow:0 0 0 2px var(--brand-blue,#3054ed)}
+@media(max-width:540px){.report-umpire-section{padding:18px}.interview-report #umpire-heading{font-size:20px}}
+
+.interview-report .report-fillers .report-filler-note{font-size:14px;line-height:1.6;color:var(--text-muted,#687087);margin:14px 0 0}
