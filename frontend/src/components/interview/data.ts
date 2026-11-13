@@ -45,6 +45,6 @@ export const problem: Problem = {
 export const session = {
   timer: "24:17",
   round: "Technical round",
-  interviewer: "Clario",
+  interviewer: "Cue",
   solved: true,
 };

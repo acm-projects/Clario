@@ -4,7 +4,7 @@ import { TopBar } from "../components/interview/TopBar";
 import { VideoCallPanel } from "../components/interview/VideoCallPanel";
 import { useEffect, useRef, useState } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
-import { Link, useNavigate, useOutletContext, useParams, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useOutletContext, useParams, useSearchParams } from "react-router-dom";
 import { getRepoChallenge, listRepoChallenges, runRepoChallenge, finishRepoChallenge, type RepoChallenge, type RepoChallengeSummary, type RepoEvaluation, type RepoLanguage } from "../api/repoChallenges";
 import type { VoiceControls } from "../lib/interviewVoice";
 import RepositoryExplorer, { RepositoryFileIcon } from "../components/interview/RepositoryExplorer";
@@ -17,15 +17,17 @@ import type { ProfileContext } from "../lib/profile";
 export default function RepoDebugging() {
   const { challengeId: legacyId, slug } = useParams<{ challengeId: string; slug: string }>();
   const challengeId = slug ?? legacyId;
+  const location = useLocation();
+  const attemptId: string = location.state?.repoAttempt ?? location.key;
   const [searchParams, setSearchParams] = useSearchParams();
   const repoLanguage: RepoLanguage = searchParams.get("language") === "cpp" ? "cpp" : "python";
   const setRepoLanguage = (value: RepoLanguage) => setSearchParams(previous => {
     const next = new URLSearchParams(previous); next.set("language", value); return next;
-  }, { replace: true });
+  }, { replace: true, state: { ...location.state, repoAttempt: attemptId } });
   const { user } = useOutletContext<ProfileContext>();
   const theme = useAppearance();
   return <main className={`repo-workspace [--repo-accent:#3054ed] [&_[data-sandbox-run]]:bg-[#3054ed]! [&_[data-sandbox-run]]:text-white! [&_[data-sandbox-run]:hover]:bg-[#2543ca]! [&_.sandbox-theme-toggle_button[aria-pressed=true]]:bg-[#3054ed]! [&_.sandbox-theme-toggle_button[aria-pressed=true]]:text-white! min-h-svh font-sans [&_.theme-panel]:bg-[var(--panel-bg)] [&_.theme-panel]:border-[var(--line)] [&_.theme-border]:border-[var(--line)] [&_.theme-main-text]:text-[var(--text-main)] [&_.theme-body-text]:text-[var(--text-body)] [&_.theme-muted-text]:text-[var(--text-muted)] [&_.theme-surface]:bg-[var(--surface)] [&_.theme-video-self]:bg-[var(--video-self)] [&_.theme-video-self]:border-[var(--line)] [&_.theme-video-interviewer]:bg-[var(--video-interviewer)] [&_.theme-video-interviewer]:border-[var(--repo-line)]! [&_.theme-video-interviewer]:border! [&_.theme-avatar-ring]:ring-[#2378db] ${theme === "dark" ? "bg-[#0a1120] text-[#edf1fb] [--repo-panel:#0f1a2e] [--repo-accent:#96aaff] [--repo-line:#495362] [--repo-muted:#a3b2cc] [--line:#495362] [--panel-bg:#0f1a2e] [--text-main:#f4f7fc] [--text-body:#c3cde0] [--text-muted:#8a97ad] [--surface:#1a2842] [--video-self:#0c1626] [--video-interviewer:#3054ed] [--avatar-ring:#2378db]" : "bg-[#fbf4df] text-[#182137] [--repo-panel:#fffcf4] [--repo-line:#c5c8ce] [--repo-muted:#687087] [--line:#c5c8ce] [--panel-bg:#fff] [--text-main:#173153] [--text-body:#254268] [--text-muted:#587096] [--surface:#fbf4df] [--video-self:#fbf4df] [--video-interviewer:#3054ed] [--avatar-ring:#2378db]"} [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-50 [&_:is(button,a):focus-visible]:outline-2 [&_:is(button,a):focus-visible]:outline-offset-[-2px] [&_:is(button,a):focus-visible]:outline-[#3054ed]`}>
-    {challengeId ? <RepoWorkspace key={`${user.id}:${challengeId}:${repoLanguage}`} id={challengeId} userId={user.id} language={repoLanguage} onLanguageChange={setRepoLanguage} /> : <ChallengePicker />}
+    {challengeId ? <RepoWorkspace key={`${user.id}:${challengeId}:${attemptId}:${repoLanguage}`} id={challengeId} userId={user.id} attemptId={attemptId} language={repoLanguage} onLanguageChange={setRepoLanguage} /> : <ChallengePicker />}
   </main>;
 }
 
@@ -51,7 +53,7 @@ function ChallengePicker() {
   </div>;
 }
 
-function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string; userId: string; language: RepoLanguage; onLanguageChange: (value: RepoLanguage) => void }) {
+function RepoWorkspace({ id, userId, attemptId, language, onLanguageChange }: { id: string; userId: string; attemptId: string; language: RepoLanguage; onLanguageChange: (value: RepoLanguage) => void }) {
   const theme = useSandboxAppearance();
   const navigate = useNavigate();
   const [explorerOpen, setExplorerOpen] = useState(true);
@@ -73,10 +75,15 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
   const [resultsOpen, setResultsOpen] = useState(true);
   const [instructionsOpen, setInstructionsOpen] = useState(true);
   const [draftStatus, setDraftStatus] = useState("Local draft ready");
+  const [submitted, setSubmitted] = useState(false);
+  const submittedRef = useRef(false);
   const resetDialog = useRef<HTMLDialogElement>(null);
   const editorListener = useRef<{ dispose: () => void } | null>(null);
   useEffect(() => () => editorListener.current?.dispose(), []);
-  const draftKey = `clario:repo-draft:v1:${userId}:${id}${language === "python" ? "" : `:${language}`}`;
+  const draftPrefix = `clario:repo-draft:v2:${userId}:${id}:${attemptId}`;
+  const draftKey = `${draftPrefix}:${language}`;
+  const completedRef = useRef(false);
+  const editorPrefix = `clario-repo://${userId}/${id}/${attemptId}/${language}`;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -106,7 +113,10 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
 
   useEffect(() => {
     if (!challenge) return;
-    const persist = () => localStorage.setItem(draftKey, JSON.stringify({ starter: JSON.stringify(challenge.files), files: contents }));
+    const persist = () => {
+      // Effect cleanup also runs when navigating to the report; never recreate a finished draft.
+      if (!completedRef.current) localStorage.setItem(draftKey, JSON.stringify({ starter: JSON.stringify(challenge.files), files: contents }));
+    };
     const timer = window.setTimeout(() => {
       try { persist(); }
       catch { setDraftStatus("Browser storage unavailable. Download your files to keep a copy."); }
@@ -128,7 +138,7 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
       if (busyRef.current || !challenge) return;
       const model = editor.getModel();
       if (!model) return;
-      const file = challenge.files.find(item => model.uri.toString() === monaco.Uri.parse(`clario-repo://${userId}/${id}/${item.path}`).toString());
+      const file = challenge.files.find(item => model.uri.toString() === monaco.Uri.parse(`${editorPrefix}/${item.path}`).toString());
       if (!file || file.readOnly || submittedRef.current) return;
       const content = model.getValue();
       setContents(previous => previous[file.path] === content ? previous : { ...previous, [file.path]: content });
@@ -137,8 +147,6 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
 
   function open(path: string) { setActive(path); setTabs(previous => previous.includes(path) ? previous : [...previous, path]); }
   function closeTab(path: string) { const remaining = tabs.filter(item => item !== path); setTabs(remaining); if (active === path) setActive(remaining.at(-1) ?? null); }
-  const [submitted, setSubmitted] = useState(false);
-  const submittedRef = useRef(false);
   async function execute(submit: boolean) {
     if (!challenge || busyRef.current || submittedRef.current) return;
     busyRef.current = true; setBusy(submit ? "submit" : "run"); setExecutionError(null); if (!submit) setResult(null); setResultsOpen(true);
@@ -175,7 +183,12 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
       const evidence = await voiceControls.current?.finish() ?? { transcript: [], communication: null };
       const files = Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]]));
       const saved = await finishRepoChallenge(id, files, evidence, language);
-      try { sessionStorage.removeItem(draftKey + ":submitted"); } catch { /* Storage unavailable. */ }
+      completedRef.current = true;
+      for (const repoLanguage of ["python", "cpp"]) {
+        const key = `${draftPrefix}:${repoLanguage}`;
+        try { localStorage.removeItem(key); } catch { /* Storage unavailable. */ }
+        try { sessionStorage.removeItem(key + ":submitted"); } catch { /* Storage unavailable. */ }
+      }
       navigate(`/report/${encodeURIComponent(saved.submission_id)}`);
     } catch (error) { setExecutionError(error instanceof Error ? error.message : "Could not finish your interview. Please try again."); setResultsOpen(true); }
     finally { busyRef.current = false; setBusy(null); }
@@ -194,7 +207,7 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
 
   const repositoryEditor = <section aria-label="Repository editor" className="flex min-h-[480px] min-w-0 flex-col bg-[var(--repo-panel)] lg:min-h-0">
             <div className="flex min-h-10 shrink-0 items-center border-b border-[var(--repo-line)]"><div className="flex min-w-0 flex-1 overflow-x-auto" aria-label="Open files">{tabs.map(path => <div key={path} className={`flex shrink-0 items-center border-r border-[var(--repo-line)] ${path === active ? "border-t-2 border-t-[#3054ed] bg-[#3054ed]/10" : ""}`}><button type="button" aria-pressed={path === active} onClick={() => setActive(path)} className="flex min-h-10 items-center gap-2 px-3 text-xs"><RepositoryFileIcon path={path} />{path}{challenge.files.some(file => file.path === path && !file.readOnly && file.content !== contents[path]) && <span aria-label="Modified" className="ml-2 text-[#c99824]">●</span>}</button><button type="button" aria-label={`Close ${path}`} onClick={() => closeTab(path)} className="min-h-10 px-2 text-sm text-[var(--repo-muted)]">×</button></div>)}</div><button type="button" aria-expanded={instructionsOpen} aria-controls="repo-instructions" onClick={() => setInstructionsOpen(value => !value)} className="min-h-10 shrink-0 px-3 text-[10px] text-[var(--repo-accent)]">{instructionsOpen ? "Close brief" : "Open brief"}</button></div>
-            {selected ? <Editor path={`clario-repo://${userId}/${id}/${selected.path}`} language={selected.language} value={contents[selected.path]} beforeMount={defineEditorThemes} theme={`clario-${theme}`} onMount={mountEditor} loading={<p className="p-6 text-xs text-[var(--repo-muted)]">Opening editor…</p>} options={{ readOnly: selected.readOnly || Boolean(busy) || submitted, automaticLayout: true, minimap: { enabled: false }, fontSize: 14, scrollBeyondLastLine: false, padding: { top: 18 }, tabSize: 4 }} /> : <div className="grid flex-1 place-items-center p-8 text-sm text-[var(--repo-muted)]">Open a file from the explorer. Your edits are still here.</div>}
+            {selected ? <Editor path={`${editorPrefix}/${selected.path}`} language={selected.language} value={contents[selected.path]} beforeMount={defineEditorThemes} theme={`clario-${theme}`} onMount={mountEditor} loading={<p className="p-6 text-xs text-[var(--repo-muted)]">Opening editor…</p>} options={{ readOnly: selected.readOnly || Boolean(busy) || submitted, automaticLayout: true, minimap: { enabled: false }, fontSize: 14, scrollBeyondLastLine: false, padding: { top: 18 }, tabSize: 4 }} /> : <div className="grid flex-1 place-items-center p-8 text-sm text-[var(--repo-muted)]">Open a file from the explorer. Your edits are still here.</div>}
             <div className="flex shrink-0 flex-wrap justify-between gap-2 border-t border-[var(--repo-line)] px-3 py-2 text-[10px] text-[var(--repo-muted)]"><span>{selected?.path ?? "No file selected"}{selected?.readOnly ? " · Read only" : ""}</span><span>{modified} modified · {draftStatus}</span></div>
           </section>;
 
@@ -225,7 +238,7 @@ function RepoWorkspace({ id, userId, language, onLanguageChange }: { id: string;
         </section>
       </div>
     </div>
-    <aside aria-label="Interview call" className="sandbox-call theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel finalSubmission={submitted ? Object.entries(contents).map(([path, content]) => `File: ${path}\n${content}`).join("\n\n") : undefined} controlsRef={voiceControls} ending={busy === "end"} round="Repository debugging" interviewer="Clario" problemSlug={id} repoChallengeId={id} repoLanguage={language} codeSnapshot={{ language, activeFile: active ?? undefined, files: Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]])) }} speaking={false} onEndInterview={() => void finishInterview()} /></aside>
+    <aside aria-label="Interview call" className="sandbox-call theme-panel flex min-h-[500px] min-w-0 flex-col rounded-[18px] border p-4 lg:min-h-0"><VideoCallPanel finalSubmission={submitted ? Object.entries(contents).map(([path, content]) => `File: ${path}\n${content}`).join("\n\n") : undefined} controlsRef={voiceControls} ending={busy === "end"} round="Repository debugging" interviewer="Cue" problemSlug={id} repoChallengeId={id} repoLanguage={language} codeSnapshot={{ language, activeFile: active ?? undefined, files: Object.fromEntries(challenge.files.filter(file => !file.readOnly).map(file => [file.path, contents[file.path]])) }} speaking={false} onEndInterview={() => void finishInterview()} /></aside>
     </div>
     <dialog ref={resetDialog} className={`fixed inset-0 m-auto w-[calc(100%-32px)] max-w-[420px] rounded-2xl border border-[var(--repo-line)] bg-[var(--repo-panel)] p-6 text-inherit shadow-2xl backdrop:bg-[#0a1120]/65 ${theme === "dark" ? "[color-scheme:dark]" : ""}`} aria-labelledby="repo-reset-title"><h2 id="repo-reset-title" className="text-xl font-semibold">Reset this repository?</h2><p className="mt-3 text-sm leading-7 text-[var(--repo-muted)]">This replaces all edits with the original starter files. Download a draft first if you want to keep your changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => resetDialog.current?.close()} className="min-h-11 px-4 text-sm">Keep editing</button><button type="button" disabled={Boolean(busy) || submitted} onClick={reset} className="min-h-11 rounded-xl bg-[#3054ed] px-4 text-sm text-white">Reset files</button></div></dialog>
   </div>;

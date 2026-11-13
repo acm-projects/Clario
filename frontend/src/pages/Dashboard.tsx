@@ -64,7 +64,9 @@ export default function Dashboard() {
     setTourInvited(false);
     try { localStorage.setItem(tourKey, "done"); } catch { /* The tour still works without storage. */ }
     const opener = tourOpenerRef.current;
-    (opener?.isConnected ? opener : duckRef.current)?.focus({ preventScroll: true });
+    requestAnimationFrame(() => {
+      (opener?.isConnected ? opener : duckRef.current)?.focus({ preventScroll: true });
+    });
   }
 
   const [problem, setProblem] = useState<LoadState<DashboardProblem>>(initialLoad);

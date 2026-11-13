@@ -30,10 +30,10 @@ const solutions = require('../../backend/tests/fixtures/repo_solutions.json')['s
   await page.goto(`${base}/interview`);
   const modes = page.getByRole('region', { name: 'Interview mode selector' });
   await modes.waitFor();
-  assert.equal(await modes.getByRole('button').count(), 6);
-  const colors = await modes.getByRole('button').evaluateAll(buttons => buttons.map(button => getComputedStyle(button).backgroundColor));
-  assert.deepEqual(colors, ['rgb(48, 84, 237)', 'rgb(255, 253, 248)', 'rgb(255, 253, 248)', 'rgb(255, 223, 79)', 'rgb(48, 84, 237)', 'rgb(255, 253, 248)']);
-  await modes.getByRole('button').filter({ hasText: 'Repo Debugging' }).click();
+  assert.equal(await modes.getByRole('button').count(), 3);
+  const colors = await modes.locator('article').evaluateAll(cards => cards.map(card => getComputedStyle(card).backgroundColor));
+  assert.deepEqual(colors, ['rgb(48, 84, 237)', 'rgb(255, 253, 248)', 'rgb(255, 223, 79)']);
+  await modes.getByRole('button', { name: /Choose a repository/ }).click();
   await page.getByRole('link').filter({ hasText: 'The Cart That Charges the Wrong Amount' }).click();
   await page.getByRole('heading', { name: 'The Cart That Charges the Wrong Amount', exact: true }).waitFor();
   await page.waitForFunction(() => window.monaco?.editor?.getModels().some(model => model.uri.path.endsWith('/main.py')), { timeout: 45000 });
