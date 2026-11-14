@@ -3,9 +3,13 @@ from __future__ import annotations
 import secrets
 from typing import Optional
 
+import secrets
+from typing import Optional
+
 from company_scenario_service import build_company_scenario
 from fastapi import APIRouter, Header, HTTPException
 
+from company_scenario_service import build_company_scenario
 from db import supabase
 from config import settings
 

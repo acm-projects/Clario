@@ -1,0 +1,36 @@
+{
+  "id": "ttl-lru-cache-01",
+  "title": "The Broken TTL + LRU Cache",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Feature flags go stale, hot entries disappear, and false-valued flags are repeatedly fetched.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "TTLCache has positive integer capacity and positive TTL, with an injectable clock. Entries expire at expires_at <= now. Reads refresh recency, not TTL. Writes refresh TTL and recency. Updating a key must not evict another key. len counts only live entries; eviction removes the least recently used live key. None denotes a miss; stored flag values are non-None and may include False, 0, or an empty string.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "ttl_lru.py",
+    "client.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_ttl_cache.py"
+  ],
+  "entrypoint": "ttl_lru.py",
+  "testFile": "test_ttl_cache.py",
+  "testNames": [
+    "test_expiry_boundary",
+    "test_falsy_values",
+    "test_invalid_config",
+    "test_len_purges",
+    "test_lru",
+    "test_refresh_and_capacity",
+    "test_update_at_capacity"
+  ],
+  "bugs": []
+}

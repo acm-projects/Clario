@@ -44,13 +44,31 @@ async def execute_on_piston(
     piston_url: str,
     versions: dict[str, str],
 ) -> tuple[str, str, int]:
+    return await execute_files_on_piston(
+        language, [{"name": FILE_NAMES[language], "content": source}],
+        piston_url=piston_url, versions=versions,
+    )
+
+
+async def execute_files_on_piston(
+    language: str,
+    files: list[dict[str, str]],
+    *,
+    piston_url: str,
+    versions: dict[str, str],
+    bounded: bool = False,
+) -> tuple[str, str, int]:
+    """First file is the entry point. Callers must validate names and contents."""
     payload = {
         "language": language,
         "version": versions[language],
-        "files": [{"name": FILE_NAMES[language], "content": source}],
+        "files": files,
         "run_timeout": 3000,
         "compile_timeout": 10000,
     }
+    if bounded:
+        payload.update(run_memory_limit=128 * 1024 * 1024, compile_memory_limit=256 * 1024 * 1024,
+                       run_cpu_time=3000, compile_cpu_time=10000)
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             response = await client.post(piston_url, json=payload)
@@ -138,6 +156,15 @@ async def run_problem_tests(
             limit_output(stderr) or "Your code crashed.",
             limit_output(stderr), exit_code,
         )
+
+    if not isinstance(results, list) or len(results) != total or any(
+        not isinstance(row, dict) or type(row.get("ok")) is not bool
+        or (row["ok"] and "output" not in row)
+        or (not row["ok"] and not isinstance(row.get("error"), str))
+        for row in results
+    ):
+        return TestRunResult("Runtime Error", 0, total, [], user_stdout, "The test runner returned incomplete or invalid results.",
+                             limit_output(stderr), exit_code)
 
     case_rows: list[dict[str, Any]] = []
     passed = 0

@@ -1,0 +1,109 @@
+:is(.interview-page, .repo-sandbox) {
+  --sandbox-blue: var(--brand-blue, #3054ed) !important;
+  --skin-ink: #182137;
+  --skin-yellow: #ffdf4f;
+}
+:is(.interview-page, .repo-sandbox)[data-theme="light"] {
+  --page-bg: #fbf4df !important;
+  --panel-bg: #fffdf7 !important;
+  --line: #18213720 !important;
+  --text-main: #182137 !important;
+  --text-body: #182137 !important;
+  --text-muted: #626c86 !important;
+  --surface: #fbf4df !important;
+  --surface-hover: #f3e9c9 !important;
+}
+:is(.interview-page, .repo-sandbox) > header { height: 70px; min-height: 70px; padding: 12px 28px; background: var(--sandbox-blue); border: 2px solid transparent; border-radius: 24px; color: #fffdf7; }
+:is(.interview-page, .repo-sandbox) > header > div:first-child > span,
+:is(.interview-page, .repo-sandbox) > header > div:first-child > button { color: #fffdf7 !important; }
+:is(.interview-page, .repo-sandbox) > header > div:nth-child(2) > button,
+:is(.interview-page, .repo-sandbox) .sandbox-button,
+:is(.interview-page, .repo-sandbox) .sandbox-timer { border: 2px solid transparent !important; border-radius: 999px !important; background: #fffdf7 !important; color: var(--skin-ink) !important; font-weight: 600; }
+:is(.interview-page, .repo-sandbox) > header > div:nth-child(2) > button { height: 36px; }
+:is(.interview-page, .repo-sandbox) > header > div:nth-child(2) > button:last-child,
+:is(.interview-page, .repo-sandbox) .sandbox-button.is-active { background: var(--skin-yellow) !important; }
+:is(.interview-page, .repo-sandbox) .sandbox-problem,
+:is(.interview-page, .repo-sandbox) .sandbox-code,
+:is(.interview-page, .repo-sandbox) .sandbox-results,
+:is(.interview-page, .repo-sandbox) .sandbox-call { border: 1px solid var(--line) !important; border-radius: 26px !important; box-shadow: none !important; }
+:is(.interview-page, .repo-sandbox) .sandbox-code > div:first-child { background: var(--surface) !important; border-bottom: 2px solid var(--line) !important; }
+:is(.interview-page, .repo-sandbox) .sandbox-code > div:first-child .sandbox-button { padding: 5px 12px; font-size: 13px; line-height: 18px; }
+:is(.interview-page, .repo-sandbox) .sandbox-results [role="tablist"] { flex-wrap: wrap; gap: 8px; padding: 2px 4px 4px; }
+:is(.interview-page, .repo-sandbox) .sandbox-results [role="tab"] { border: 0; border-radius: 999px; padding: 6px 14px; font-size: 14px; line-height: 20px; background: var(--surface); }
+:is(.interview-page, .repo-sandbox) .sandbox-results [role="tab"][aria-selected="true"] { background: var(--skin-yellow); color: var(--skin-ink); }
+:is(.interview-page, .repo-sandbox) .sandbox-results [role="tabpanel"] button { padding: 5px 12px; font-size: 13px; line-height: 20px; border: 2px solid var(--line); border-radius: 999px; background: var(--panel-bg); color: var(--text-main); box-shadow: 0 1px 2px #1821370d; }
+:is(.interview-page, .repo-sandbox) .sandbox-results [role="tabpanel"] button[aria-pressed="true"] { background: var(--sandbox-blue); color: #fff; }
+:is(.interview-page, .repo-sandbox) .sandbox-video .theme-video-interviewer { background: var(--sandbox-blue) !important; border-color: transparent !important; border-radius: 22px; }
+:is(.interview-page, .repo-sandbox) .sandbox-video .theme-avatar-ring { background: #fffdf7 !important; border: 2px solid transparent; }
+:is(.interview-page, .repo-sandbox) .theme-video-interviewer > .absolute.inset-0 { position: relative; inset: auto; margin-top: 20px; padding-inline: 0; background: transparent; }
+:is(.interview-page, .repo-sandbox) .theme-video-interviewer button { background: var(--skin-yellow) !important; color: var(--skin-ink) !important; margin-top: 0 !important; }
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] { --line: #b8c9e52b !important; }
+@media (max-width: 1250px) { :is(.interview-page, .repo-sandbox) > header { height: auto; } }
+
+/* Repository tools share the custom interview palette and rounded surfaces. */
+.repo-sandbox {
+  --repo-panel: var(--panel-bg);
+  --repo-line: var(--line);
+  --repo-muted: var(--text-muted);
+  --repo-accent: var(--sandbox-blue);
+  background: var(--page-bg);
+  color: var(--text-main);
+}
+.repo-sandbox[data-theme="dark"] { --page-bg: #0a1120; }
+.repo-sandbox > header > div:nth-child(2) > [data-sandbox-run] {
+  background: #fffdf7 !important;
+  color: var(--skin-ink) !important;
+}
+.repo-sandbox > header > div:nth-child(2) > [data-sandbox-run]:hover { background: var(--skin-yellow) !important; }
+.repo-sandbox .repo-editor-shell { background: var(--repo-panel); border: 1px solid var(--line); }
+.repo-sandbox .repo-challenge-toolbar { border: 0; padding: 0 8px; }
+.repo-sandbox .repo-challenge-toolbar button,
+.repo-sandbox #repo-instructions button { border-radius: 999px; background: var(--panel-bg); color: var(--text-main); }
+.repo-sandbox [aria-label="Repository editor"] > div:first-child { background: var(--surface); padding: 6px; gap: 6px; }
+.repo-sandbox [aria-label="Open files"] > div { border: 0; border-radius: 999px; }
+.repo-sandbox [aria-label="Open files"] > div:has([aria-pressed="true"]) { background: var(--skin-yellow); color: var(--skin-ink); }
+.repo-sandbox [data-repository-file][aria-current="true"] { background: var(--skin-yellow); color: var(--skin-ink); box-shadow: none; border-radius: 999px; }
+.repo-sandbox [aria-label="Test results"] { border-radius: 24px; background: var(--surface); margin: 8px; }
+.repo-sandbox .sandbox-call { background: var(--panel-bg); }
+@media (max-width: 1250px) {
+  .repo-sandbox > header { flex-wrap: wrap; gap: 12px; }
+  .repo-sandbox > header > div:nth-child(2) { position: static; transform: none; }
+}
+@media (max-width: 600px) {
+  .repo-sandbox > header { padding: 12px 16px; }
+  .repo-sandbox > header > div { flex-wrap: wrap; gap: 12px; }
+  .repo-sandbox > header > div:last-child { width: 100%; justify-content: space-between; }
+}
+
+:is(.interview-page, .repo-sandbox) > header .sandbox-list-label { color: #fffdf7; }
+:is(.interview-page, .repo-sandbox) .sandbox-appearance { padding: 3px; border: 1px solid #fff5; border-radius: 999px; }
+:is(.interview-page, .repo-sandbox) .sandbox-appearance button { color: #fffdf7; background: transparent; }
+:is(.interview-page, .repo-sandbox) .sandbox-appearance button[aria-pressed="true"] { background: var(--skin-yellow); color: var(--skin-ink); }
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] {
+  --panel-bg: #0f1a2e !important;
+  --surface: #1a2842 !important;
+  --surface-hover: #22345a !important;
+  --text-main: #f4f7fc !important;
+  --text-body: #c3cde0 !important;
+  --text-muted: #a3b2cc !important;
+  color-scheme: dark;
+}
+:is(.interview-page, .repo-sandbox) .sandbox-code > div:last-child { background: var(--panel-bg) !important; color: var(--text-muted) !important; }
+:is(.interview-page, .repo-sandbox) .sandbox-code > div:last-child .theme-muted-text { color: var(--text-muted) !important; }
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] .sandbox-button,
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] .sandbox-timer { background: var(--surface) !important; color: var(--text-main) !important; }
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] .sandbox-button.is-active { background: var(--skin-yellow) !important; color: var(--skin-ink) !important; }
+.repo-question-layout > section { height: 100%; }
+.repo-sandbox #repo-instructions { border: 1px solid var(--line); border-radius: 24px; }
+.repo-sandbox [role="separator"] > span { background: var(--line); }
+@media (max-width: 1250px) {
+  :is(.interview-page, .repo-sandbox) > header > div:nth-child(2) { position: static; transform: none; }
+}
+@media (max-width: 1023px) {
+  .repo-question-layout > .resizable-split-horizontal { height: auto; grid-template-columns: minmax(0, 1fr) !important; gap: 12px; }
+  .repo-question-layout > .resizable-split-horizontal > [role="separator"] { display: none; }
+  .repo-question-layout > .resizable-split-horizontal > div { overflow: visible; }
+}
+
+:is(.interview-page, .repo-sandbox)[data-theme="light"] { --video-self: #fbf4df; }
+:is(.interview-page, .repo-sandbox)[data-theme="dark"] { --video-self: #0c1626; }

@@ -34,9 +34,12 @@ def parse_signature(starter_code: str) -> tuple[str, list[str]]:
     # Adding "pass" makes it valid Python that we can read.
     # (ast.parse never runs the code or checks that `List` exists.)
     try:
-        tree = ast.parse(starter_code.rstrip() + " pass")
+        tree = ast.parse(starter_code)
     except SyntaxError:
-        raise UnsupportedProblem("Test cases not supported for this problem yet")
+        try:
+            tree = ast.parse(starter_code.rstrip() + " pass")
+        except SyntaxError as exc:
+            raise UnsupportedProblem("Test cases not supported for this problem yet") from exc
 
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef) and node.name != "__init__":
@@ -46,6 +49,8 @@ def parse_signature(starter_code: str) -> tuple[str, list[str]]:
 
 #turning leetcodes raw inputs into test cases based on number of params
 def parse_inputs(example_testcases: str, n_params: int) -> list[list[Any]]:
+    if n_params < 1:
+        raise UnsupportedProblem("Zero-argument design problems are not supported yet")
     lines = [ln for ln in example_testcases.split("\n") if ln.strip()]
     cases = []
     for i in range(0, len(lines) - n_params + 1, n_params):
@@ -58,6 +63,8 @@ def parse_expected(description_html: str) -> list[Any]:
     Finds each 'Output: ...' line in the problem description (Example 1, 2, 3...)
     and turns it into a Python value. Unparseable ones become a sentinel None-marker.
     """
+    description_html = re.sub(r"<(?:br\s*/?|/p|/pre)>", "\n", description_html, flags=re.IGNORECASE)
+    description_html = re.sub(r"(<strong>\s*Output:)", r"\n\1", description_html, flags=re.IGNORECASE)
     text = re.sub(r"<[^>]+>", "", description_html)   # remove HTML tags
     text = html.unescape(text)                         # &lt; -> <  etc.
     found = []
@@ -94,5 +101,4 @@ def build_test_cases(problem: dict) -> list[dict]:
 
     if not cases:
         raise UnsupportedProblem("Test cases not supported for this problem yet")
-    
     return cases

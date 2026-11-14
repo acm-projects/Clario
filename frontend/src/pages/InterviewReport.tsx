@@ -1,24 +1,59 @@
 import ReportDetails, { type RichReport } from "../components/interview/ReportDetails";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { loadSessionReport, REPORT_DEADLINE_MS } from "../lib/reportLoader";
 import { Link, useParams } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
 import PageHeading from "../components/ui/PageHeading";
+import ReportSolution from "../components/progress/ReportSolution";
 import { generateSessionFeedback, getSessionFeedback, previewGeminiFeedback, type FeedbackPreview } from "../lib/api";
 import { parseFeedbackHistory, scoreColumns, type FeedbackInterview } from "../lib/feedback";
+import "./interview-report-highlights.css";
 
-import { loadSessionReport, REPORT_DEADLINE_MS } from "../lib/reportLoader";
+type Report = FeedbackInterview;
+const stages = [["understand", "U", "Understand"], ["match", "M", "Match"], ["plan", "P", "Plan"], ["implement", "I", "Implement"], ["review", "R", "Review"], ["evaluate", "E", "Evaluate"]] as const;
 
-type Report = Pick<FeedbackInterview, "topic" | "date" | "summary" | "scores" | "strengths" | "weaknesses" | "recommendations" | "limitations" | "coachQuote" | "coachNote" | "communicationMetrics">;
 const surface = "rounded-3xl border border-[#e4e2db] bg-[#fffdf8] p-6 sm:p-8";
+const practiceCues: Record<string, string> = {
+  understand: "Restate the goal, then clarify one constraint before solving.",
+  match: "Name your approach and explain why it fits this problem.",
+  plan: "Outline your steps and the invariant you want to maintain.",
+  implement: "Connect each important implementation choice to your plan.",
+  review: "Trace one normal example and one edge case out loud.",
+  evaluate: "State time and space complexity, then discuss a trade-off.",
+};
+
+const stageGuidance: Record<string, string> = {
+  understand: "Before writing code, restate the expected input and output and ask about constraints. For example: can the input be empty, and how should duplicates behave? Use the answer to choose your edge cases.",
+  match: "After clarifying the task, name the pattern or data structure you want to use. Explain which repeated work it avoids and why it fits the constraints before moving to your plan.",
+  plan: "Just before coding, describe the steps in order and what stays true at each step. Connect each step to the expected output so the interviewer can follow your solution.",
+  implement: "While coding, briefly connect the key condition, loop, or data structure to your plan. Explain why a choice is correct, especially where you handle boundaries or update state.",
+  review: "After your first implementation, trace a normal input through the actual code. Then try an empty input, a boundary, or duplicates where relevant; explain the expected result and correct any mismatch.",
+  evaluate: "Before wrapping up, state time and space complexity in terms of the input size. Identify which operation dominates and describe one trade-off or alternative when constraints change.",
+};
 
 export default function InterviewReport({ preview = false }: { preview?: boolean }) {
   const { sessionId } = useParams();
-  const [richReport, setRichReport] = useState<RichReport | null>(null);
   const [report, setReport] = useState<Report | null>(null);
   const [sample, setSample] = useState<FeedbackPreview | null>(null);
+  const [richReport, setRichReport] = useState<RichReport | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [phase, setPhase] = useState("Loading your interview...");
   const [retry, setRetry] = useState(0);
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
+  const [upgradeError, setUpgradeError] = useState<string | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => { if (selectedStage) dialog.current?.showModal(); }, [selectedStage]);
+  async function upgrade() {
+    if (!sessionId || !report) return;
+    setUpgrading(true); setUpgradeError(null);
+    try {
+      const feedback = await generateSessionFeedback(sessionId, true);
+      const row = await getSessionFeedback(sessionId) as Record<string, unknown>;
+      setReport(parseFeedbackHistory([{ ...row, feedback }])[0]);
+    } catch (error) { setUpgradeError(error instanceof Error ? error.message : "Could not generate the detailed breakdown."); }
+    finally { setUpgrading(false); }
+  }
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
@@ -35,24 +70,28 @@ export default function InterviewReport({ preview = false }: { preview?: boolean
           const result = await previewGeminiFeedback();
           if (!active) return;
           setSample(result);
-          setReport({ topic: "Two Sum sample", date: "", summary: result.report.summary,
-            scores: { technical_score: result.report.technical_score, reasoning_score: result.report.reasoning_score, communication_score: result.report.communication_score, overall_score: result.report.overall_score },
-            strengths: result.report.strengths, weaknesses: result.report.weaknesses, recommendations: result.report.recommendations, limitations: result.report.evidence_limitations,
-            coachQuote: null, coachNote: null, communicationMetrics: null });
+          setReport(parseFeedbackHistory([{ session: { id: "sample", status: "completed", ended_at: new Date().toISOString() }, problem: { title: "Two Sum sample" }, feedback: { id: "sample", ...result.report, report: result.report } }])[0]);
           return;
         }
         if (!sessionId) throw new Error("No interview was selected.");
+        // Polls through post-call processing (202) and generates the report when needed.
         const row = await loadSessionReport({
           read: () => getSessionFeedback(sessionId, controller.signal),
           generate: () => generateSessionFeedback(sessionId, controller.signal),
           signal: controller.signal, retry: retry > 0,
           onPhase: (message) => { if (active) setPhase(message); },
         });
-        if (active) {
-          setReport(parseFeedbackHistory([row])[0]);
-          const payload = (row.feedback as { report?: RichReport } | null)?.report;
-          if (payload?.details && payload?.session_evidence) setRichReport(payload);
+        if (!active) return;
+        let interview = parseFeedbackHistory([row])[0];
+        const payload = ((row as { feedback?: { report?: RichReport } | null }).feedback)?.report;
+        if (payload?.details && payload?.session_evidence) setRichReport(payload);
+        if (!interview.isFallback && (!interview.detailed || !interview.fullSummary)) {
+          setPhase("Gemini is reviewing the saved interview for your detailed breakdown...");
+          const feedback = await generateSessionFeedback(sessionId, true);
+          if (!active) return;
+          interview = parseFeedbackHistory([{ ...(row as Record<string, unknown>), feedback }])[0];
         }
+        if (active) setReport(interview);
       } catch (error) {
         if (active) setError(error instanceof Error ? error.message : "Could not load this report.");
       } finally {
@@ -63,39 +102,30 @@ export default function InterviewReport({ preview = false }: { preview?: boolean
     return () => { active = false; window.clearTimeout(timeout); controller.abort(); };
   }, [sessionId, preview, retry]);
 
-  return <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-[#fbf4df] px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]"}>
+  return <main className={"app-sidebar-layout [&.app-sidebar-layout:has(.sidebar-collapsed)]:[--sidebar-width:var(--sidebar-compact)] min-h-svh bg-cream-gradient px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]"}>
     <NavbarDashboard />
     <div className="mx-auto max-w-[1184px] pt-9 max-[700px]:pt-7">
-      <Link to="/report" className="mb-6 inline-flex min-h-10 items-center text-sm text-[#3054ed] hover:underline">&#8592; All feedback reports</Link>
+      <Link to="/progress" className="mb-6 inline-flex min-h-10 items-center text-sm text-[#3054ed] hover:underline">&#8592; Your progress and previous sessions</Link>
       <PageHeading eyebrow={preview ? "SAMPLE REPORT / NOT SAVED" : "YOUR INTERVIEW FEEDBACK"} title={report ? report.topic + " report" : "Interview report"} subtitle={preview ? "An unfinished solution and a sample transcript expressing uncertainty. This preview does not affect your interview history or scores." : report?.date ? new Date(report.date).toLocaleString("en-US", { timeZone: "America/Chicago", dateStyle: "medium", timeStyle: "short" }) : "Your feedback is saved with this interview so you can return to it anytime."} />
       {!report && !error && <section className={surface} role="status" aria-live="polite"><p className="text-lg font-medium">{phase}</p><p className="mt-3 text-sm text-[#687087]">This may take a moment.</p></section>}
-      {error && <section className={surface} role="alert"><h2 className="text-xl font-semibold">Your report is not ready</h2><p className="mt-3 text-sm leading-7 text-[#687087]">{error}</p><button type="button" onClick={() => setRetry(value => value + 1)} className="mt-5 min-h-11 rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Try again</button><Link to="/report" className="ml-5 text-sm text-[#3054ed] underline">Back to previous interviews</Link></section>}
-      {report && <article className="space-y-6">
-        <section className={surface}><h2 className="text-xl font-semibold">Your interview at a glance</h2><p className="mt-4 font-medium">{richReport?.details.verdict ?? report.summary}</p>{richReport && <p className="mt-3 text-sm leading-7 text-[#687087]">{report.summary}</p>}<dl className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-4">{scoreColumns.map(column => <div key={column.key} className="rounded-2xl bg-[#f3f1eb] p-5"><dt className="text-xs text-[#687087]">{column.label}</dt><dd className="mt-2 text-2xl font-semibold">{report.scores[column.key] === null ? "Not scored" : report.scores[column.key] + "/100"}</dd><dd>{richReport && <details className="mt-3 text-sm"><summary className="cursor-pointer">{richReport.details.sectors[column.key === "technical_score" ? "coding" : column.key.replace("_score", "")].summary}</summary><ul className="mt-3 space-y-3">{richReport.details.sectors[column.key === "technical_score" ? "coding" : column.key.replace("_score", "")].evidence.map((item, index) => <li key={index}><strong>{item.effect === "raised" ? "Helped: " : item.effect === "lowered" ? "Held back: " : "Observed: "}</strong>{item.observation}{item.transcript_id && <a className="ml-1 text-blue-700 underline" href={`#transcript-${item.transcript_id}`}>View moment</a>}</li>)}</ul></details>}</dd></div>)}</dl></section>
+      {error && <section className={surface} role="alert"><h2 className="text-xl font-semibold">Your report is not ready</h2><p className="mt-3 text-sm leading-7 text-[#687087]">{error}</p><button type="button" onClick={() => setRetry(value => value + 1)} className="mt-5 min-h-11 rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Try again</button><Link to="/progress" className="ml-5 text-sm text-[#3054ed] underline">Back to previous interviews</Link></section>}
+      {report && <article className="interview-report space-y-6">
+        {report.isFallback && <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[#687087]" role="status"><span>AI review pending. Displayed scores are temporary and excluded from progress.</span><button type="button" disabled={upgrading} onClick={() => void upgrade()} className="min-h-11 text-[#3054ed] underline">{upgrading ? "Reviewing..." : "Refresh review"}</button>{upgradeError && <p role="alert">{upgradeError}</p>}</div>}
+        <section className="report-scores" aria-label="This interview's scores">{[[scoreColumns[0]], [scoreColumns[2]], [scoreColumns[1], scoreColumns[3]]].map((columns, index) => <div className="report-score report-chart-card" key={index}>{columns.map(({ label, key }) => { const score = report.scores[key]; return <div className={`report-chart report-chart-${key === "communication_score" || key === "overall_score" ? "yellow" : "blue"}`} key={key}><h2>{label}</h2><div className="report-pie" role="img" aria-label={`${label}: ${score === null ? "not assessed" : `${score}%`}`} style={{ background: score === null ? "#ffffff33" : `conic-gradient(var(--chart-color) ${score}%, var(--chart-track) 0)` }}><span>{score === null ? "?" : `${score}%`}</span></div><small>{score === null ? "Not assessed" : report.isFallback ? "AI review pending" : "From this interview"}</small></div>; })}</div>)}</section>
+        <section className={`${surface} report-ai-summary`} aria-labelledby="ai-summary-heading"><h2 id="ai-summary-heading"><span className="report-sparkle" aria-hidden="true">&#10022;</span> AI Summary</h2>{!report.fullSummary && !preview && <button type="button" disabled={upgrading} className="mt-3 text-sm underline" onClick={() => void upgrade()}>{upgrading ? "Reviewing interview..." : "Generate full summary and coding feedback"}</button>}{upgradeError && <p role="alert">{upgradeError}</p>}<p className="report-summary-preview">{report.summary ?? report.fullSummary?.split("\n\n")[0] ?? "A detailed summary was not saved. Start with the fixes below, then use the UMPIRE details to practice explaining your approach."}</p><div className="report-summary-next"><h3>Focus for your next solution</h3><p>{report.actions.fix[0] ?? report.recommendations[0] ?? "Explain your plan before coding, trace one example and one edge case, and finish with time and space complexity."}</p></div>{report.fullSummary && report.fullSummary !== report.summary && <button type="button" className="report-detail-arrow report-read-more" aria-label="Read full explanation of your interview" onClick={() => setSelectedStage("summary")}>Read full explanation <span aria-hidden="true">&#8599;</span></button>}</section>
+
+        <section className={`${surface} report-fillers`}><h2>Your main filler words</h2>{report.fillerWords.available ? report.fillerWords.items.length ? <ul>{report.fillerWords.items.map(item => <li key={item.word}><span>&ldquo;{item.word}&rdquo;</span><small>{item.count} {item.count === 1 ? "match" : "matches"}</small></li>)}</ul> : <p>No filler matches found in your saved transcript.</p> : <p>Filler words were not recorded in this report.</p>}<p className="report-filler-note">From your saved transcript.</p></section>
+        <section className="report-umpire-section" aria-labelledby="umpire-heading"><div className="report-section-title"><div><h2 id="umpire-heading"><span className="report-umpire-icon" aria-hidden="true">&#10023;</span> Your UMPIRE breakdown</h2></div>{!report.detailed && !preview && <button type="button" disabled={upgrading} onClick={() => void upgrade()}>{upgrading ? "Preparing breakdown..." : "Generate detailed breakdown"}</button>}</div>{upgradeError && <p role="alert">{upgradeError}</p>}
+          <div className="report-umpire">{stages.map(([key, letter, label]) => { const rating = report.umpire[key]; const tone = report.isFallback || rating.stars === null ? "unassessed" : rating.stars >= 4 ? "strong" : rating.stars <= 2 ? "focus" : "developing"; return <section className={`report-stage report-stage-${tone}`} key={key}><span className={`report-stage-status report-stage-status-${tone}`}>{tone === "strong" ? "Strength" : tone === "focus" ? "Focus area" : tone === "developing" ? "Building consistency" : "Review pending"}</span><div className="report-stage-title"><span className="report-letter">{letter}</span><h3>{label}</h3></div><div className="report-stars" aria-label={rating.stars === null ? "Not assessed" : `${rating.stars} out of 5 stars`}><span aria-hidden="true">{Array.from({length:5}, (_, i) => <span className={rating.stars !== null && i < rating.stars ? "filled" : ""} key={i}>&#9733;</span>)}</span><small>{rating.stars === null ? "Not assessed" : `${rating.stars}/5`}</small></div><p className="report-stage-takeaway">{rating.summary}</p><button type="button" className="report-detail-arrow" aria-label={`View ${label} details`} onClick={() => setSelectedStage(key)}>Explain it <span aria-hidden="true">&#8599;</span></button></section>; })}</div>
+        </section>
+
         {richReport && <ReportDetails report={richReport} />}
-        {!richReport && report.communicationMetrics && <section className={surface}>
-          <h2 className="text-xl font-semibold">Speech observations</h2>
-          {report.communicationMetrics.kind === "final" ? <>
-            <p className="mt-2 text-sm text-[#687087]">Calculated from your final interview transcript.</p>
-            <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">{[
-              ["Filler matches", report.communicationMetrics.filler_word_count ?? "Unavailable"],
-              ["Questions asked", report.communicationMetrics.questions_asked ?? "Unavailable"],
-              ["Average response time", report.communicationMetrics.average_response_time_seconds === null ? "Unavailable" : report.communicationMetrics.average_response_time_seconds + "s"],
-              ["Speaking pace", report.communicationMetrics.words_per_minute === null ? "Unavailable" : report.communicationMetrics.words_per_minute + " wpm"],
-            ].map(([label, value]) => <div key={label}><dt className="text-xs text-[#687087]">{label}</dt><dd className="mt-2 text-lg font-semibold">{value}</dd></div>)}</dl>
-          </> : <>
-          <p className="mt-2 text-sm text-[#687087]">Estimates from {Math.round(report.communicationMetrics.monitored_seconds)} seconds of enabled microphone monitoring.</p>
-          <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">{[
-            ["Filler matches", report.communicationMetrics.filler_count ?? "Unavailable"],
-            ["Speaking pace (estimated)", report.communicationMetrics.words_per_speaking_minute === null ? "Unavailable" : report.communicationMetrics.words_per_speaking_minute + " wpm"],
-          ].map(([label, value]) => <div key={label}><dt className="text-xs text-[#687087]">{label}</dt><dd className="mt-2 text-lg font-semibold">{value}</dd></div>)}</dl>
-          </>}
-          <ul className="mt-5 list-disc space-y-2 pl-5 text-xs leading-6 text-[#687087]">{report.communicationMetrics.limitations.map(item => <li key={item}>{item}</li>)}</ul>
-        </section>}
-        {!richReport && <section className={surface}><div className={"feedback-insights [&.feedback-insights]:[display:grid] [&.feedback-insights]:[grid-template-columns:repeat(3,minmax(0,1fr))] [&.feedback-insights]:[gap:24px] [&.feedback-insights]:[margin-top:26px] [&.feedback-insights_h3]:[font-size:13px] [&.feedback-insights_h3]:[font-weight:600] [&.feedback-insights_h3]:[margin-bottom:12px] [&.feedback-insights_:is(li,p)]:[font-size:12px] [&.feedback-insights_:is(li,p)]:[line-height:1.9] [&.feedback-insights_:is(li,p)]:[color:#687087] [&.feedback-insights_ul]:[padding-left:16px] [&.feedback-insights_ul]:[list-style:disc] [&.feedback-insights_li_+_li]:[margin-top:8px] [@media_(max-width:760px)]:[&.feedback-insights]:[grid-template-columns:1fr] !mt-0"}>{[{title: "What worked", items: report.strengths}, {title: "Where to focus", items: report.weaknesses}, {title: "Try next", items: report.recommendations}].map(group => <div key={group.title}><h2 className="mb-4 text-lg font-semibold">{group.title}</h2>{group.items.length ? <ul>{group.items.map((item, index) => <li key={index}>{item}</li>)}</ul> : <p>No observations recorded.</p>}</div>)}</div></section>}
-        {!richReport && (report.coachQuote || report.coachNote) && <aside className={"feedback-coach-note [&.feedback-coach-note]:[padding:28px] [&.feedback-coach-note]:[background:#ffdf4f] [&.feedback-coach-note]:[border-radius:24px] [&.feedback-coach-note]:[color:#182137] [&.feedback-coach-note_svg]:[width:26px] [&.feedback-coach-note_svg]:[height:26px] [&.feedback-coach-note_svg]:[margin:30px_0_16px] [&.feedback-coach-note_blockquote]:[font-size:24px] [&.feedback-coach-note_blockquote]:[line-height:1.15] [&.feedback-coach-note_blockquote]:[letter-spacing:-.04em] [&.feedback-coach-note_blockquote]:[font-weight:500] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[font-size:12px] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[line-height:1.8] [&.feedback-coach-note_>_p:not(.reference-eyebrow)]:[margin-top:18px] [@media_(max-width:1100px)]:[&.feedback-coach-note]:[max-width:100%]"}><p className={"reference-eyebrow [&.reference-eyebrow]:[font-family:monospace] [&.reference-eyebrow]:[font-size:10px] [&.reference-eyebrow]:[font-weight:600] [&.reference-eyebrow]:[letter-spacing:.13em]"}>COACH'S NOTE</p>{report.coachQuote && <blockquote className="mt-5">{report.coachQuote}</blockquote>}{report.coachNote && <p>{report.coachNote}</p>}</aside>}
-        {report.limitations.length > 0 && <section className={surface}><h2 className="text-lg font-semibold">What this report could assess</h2><ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-[#687087]">{report.limitations.map((item, index) => <li key={index}>{item}</li>)}</ul></section>}
-        {sample && <details className={surface}><summary className="cursor-pointer font-semibold">View sample evidence</summary><pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-xl bg-[#f3f1eb] p-4 text-sm">{sample.evidence.code}</pre><p className="mt-4 text-sm leading-7">{sample.evidence.candidate_transcript}</p><p className="mt-4 text-xs text-[#687087]">Model: {sample.report.model}</p></details>}
+        <ReportSolution report={report} />
+        <dialog ref={dialog} className="report-dialog" aria-labelledby="stage-dialog-title" onClose={() => setSelectedStage(null)} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
+          {selectedStage && selectedStage !== "summary" && <><div className="report-section-title"><h2 id="stage-dialog-title">{stages.find(([key]) => key === selectedStage)?.[2]}</h2><button type="button" autoFocus onClick={() => dialog.current?.close()} aria-label="Close details">&#10005;</button></div><p>{report.umpire[selectedStage].details}</p><h3>Practice cue</h3><p>{practiceCues[selectedStage]}</p><h3>Where to add this</h3><p>{stageGuidance[selectedStage]}</p>{report.umpire[selectedStage].evidence_quotes.length > 0 && <><h3>From your interview</h3>{report.umpire[selectedStage].evidence_quotes.map((quote, index) => <blockquote key={index}>{quote}</blockquote>)}</>}</>}
+          {selectedStage === "summary" && <><div className="report-section-title"><h2 id="stage-dialog-title">AI Summary</h2><button type="button" autoFocus onClick={() => dialog.current?.close()} aria-label="Close summary">&#10005;</button></div><p>{report.fullSummary ?? report.summary ?? "No summary was saved."}</p>{!report.fullSummary && <>{[{ title: "What you did well", items: report.strengths }, { title: "Where to improve", items: report.weaknesses }, { title: "Next steps", items: report.recommendations }].map(group => <section key={group.title}><h3>{group.title}</h3>{group.items.map((item, i) => <p key={i}>{item}</p>)}</section>)}{report.coachNote && <p>{report.coachNote}</p>}</>}</>}
+        </dialog>
+        {sample && <details className={surface}><summary className="cursor-pointer font-semibold">View sample evidence</summary><pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-xl bg-cream-gradient p-4 text-sm">{sample.evidence.code}</pre><p className="mt-4 text-xs text-[#687087]">Model: {sample.report.model}</p></details>}
       </article>}
     </div>
   </main>;

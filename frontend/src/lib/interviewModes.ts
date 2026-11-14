@@ -18,21 +18,22 @@ export function interviewRoomUrl(slug: string, sessionId: string, mode: Intervie
 }
 export function sessionRequestFor(selection: InterviewLaunch): {
   problem_slug: string;
-  mode: "recommended" | "custom" | "surprise" | "company";
+  mode: "practice" | "full_mock" | "custom" | "company";
   language: Language;
 } {
   if (!["python3", "java"].includes(selection.language)) {
     throw new Error("Choose Python or Java before starting.");
   }
   if (selection.mode === "company") {
-    throw new Error("Company scenarios are available to preview, but company interview sessions are not supported yet. Choose Recommended, Custom, or Surprise me to start a coding interview.");
+    if (!selection.scenarioSlug?.trim()) throw new Error("Choose a company scenario before starting.");
+    return { problem_slug: selection.scenarioSlug, mode: "company", language: selection.language };
   }
   if (!selection.problemSlug?.trim()) {
     throw new Error("Choose a question before starting.");
   }
   return {
     problem_slug: selection.problemSlug,
-    mode: selection.mode === "surprise_me" ? "surprise" : selection.mode,
+    mode: selection.mode === "surprise_me" ? "full_mock" : selection.mode === "custom" ? "custom" : "practice",
     language: selection.language,
   };
 }

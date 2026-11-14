@@ -1,0 +1,32 @@
+{
+  "id": "inventory-allocation-01",
+  "title": "The Warehouse That Loses Stock",
+  "difficulty": "Easy",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "A failed multi-item order consumes inventory, and successful orders unexpectedly modify the warehouse snapshot.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "allocate(stock, requests) returns a new stock mapping only if all requested SKUs exist and have sufficient quantity. Quantities must be positive integers and inventory nonnegative. Missing SKUs or insufficient stock throw. Validate everything before applying changes; never mutate inputs. C++ uses map<string,int>.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_exact_stock",
+    "test_failure_atomicity",
+    "test_invalid_quantities",
+    "test_no_input_mutation"
+  ],
+  "bugs": []
+}

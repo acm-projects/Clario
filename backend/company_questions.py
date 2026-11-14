@@ -1,3 +1,5 @@
+from response_cache import cache_for
+
 import csv
 import io
 import re
@@ -29,7 +31,7 @@ def get_company_problem_slugs(company: str) -> list[str]:
     slugs = set()
     successful_files = 0
 
-    with httpx.Client(timeout=15, follow_redirects=True) as client:
+    with httpx.Client(timeout=3, follow_redirects=True) as client:
         for period in PERIODS:
             url = f"{BASE_URL}/{company_folder}/{period}"
 
@@ -70,6 +72,7 @@ def get_company_problem_slugs(company: str) -> list[str]:
     return sorted(slugs)
 
 
+@cache_for(3600, maxsize=1)
 def get_available_companies() -> list[str]:
     """
     Retrieve company folder names from the GitHub repository.
@@ -83,7 +86,7 @@ def get_available_companies() -> list[str]:
         "contents"
     )
 
-    with httpx.Client(timeout=15, follow_redirects=True) as client:
+    with httpx.Client(timeout=3, follow_redirects=True) as client:
         response = client.get(api_url)
         response.raise_for_status()
         items = response.json()

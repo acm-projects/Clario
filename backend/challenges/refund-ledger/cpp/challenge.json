@@ -1,0 +1,32 @@
+{
+  "id": "refund-ledger-01",
+  "title": "The Refund Service That Pays Too Much",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Partial refunds can exceed the original charge, and a rejected request consumes its retry key.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "RefundLedger(charged_cents) requires nonnegative integer cents. refund(key,cents) requires a nonempty key and positive cents, returns cumulative refunded cents, and must never exceed charged cents. Identical retry keys return the current cumulative total without paying again; conflicting amounts throw. A failed refund leaves totals and keys unchanged. C++ uses long long cents.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_cumulative_limit",
+    "test_failed_key_and_validation",
+    "test_partial_and_exact",
+    "test_retry_and_conflict"
+  ],
+  "bugs": []
+}

@@ -1,0 +1,36 @@
+{
+  "id": "webhook-worker-01",
+  "title": "The Lossy Job Worker",
+  "difficulty": "Hard",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Webhook jobs disappear after crashes, batches return early, and retry settings leak between deliveries.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "withRetry uses DeliveryError.status (0 = network error) and immutable RetryOptions. Retry only 0, 429, and 5xx; retries is total attempts, delay is milliseconds with exponential backoff. processBatch uses futures/threads, waits for all workers, caps concurrency and preserves input order. Queue callbacks must be thread-safe. Dead-letter failed deliveries durably before ack; dead-letter/ack failure rejects the batch. Return JobResult with res or error. Do not mutate job/options inputs.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_ack_after_delivery",
+    "test_batch_waits",
+    "test_concurrency_cap",
+    "test_custom_options_unchanged",
+    "test_dead_letter_before_ack",
+    "test_dead_letter_failure_unacked",
+    "test_retry_defaults_immutable",
+    "test_retry_policy"
+  ],
+  "bugs": []
+}

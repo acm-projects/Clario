@@ -1,0 +1,72 @@
+INFO:     Will watch for changes in these directories: ['C:\\Projects\\Clario']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [30372] using StatReload
+INFO:     Started server process [11380]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'backend\piston\service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [11380]
+INFO:     Started server process [24040]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Repository submission storage unavailable
+WARNING:  StatReload detected changes in 'backend\routers\repo_challenges.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24040]
+INFO:     Started server process [28632]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'backend\tests\test_repo_challenges.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [28632]
+INFO:     Started server process [824]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'backend\voice\router.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [824]
+INFO:     Started server process [10744]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'backend\tests\test_repo_challenges.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for connections to close. (CTRL+C to force quit)
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10744]
+INFO:     Started server process [22244]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback
+Live problem list failed (Client error '429 Too Many Requests' for url 'https://alfa-leetcode-api.onrender.com/problems?limit=200'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429); trying Supabase fallback

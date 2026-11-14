@@ -1,0 +1,33 @@
+{
+  "id": "permission-roles-01",
+  "title": "The Role Resolver That Grants Too Much",
+  "difficulty": "Hard",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Inherited denies are ignored and circular role inheritance causes inconsistent authorization decisions.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "can_access(roles,assigned,permission) traverses assigned roles and all parents. Any explicit deny wins over any allow; no matching allow means false. Unknown roles and reachable inheritance cycles throw. Duplicate roles are harmless; evaluate the whole reachable graph even when an allow is found. Python Role dicts contain parents/allow/deny lists; C++ Role has vector<string> parents,allow,deny. Never mutate inputs.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_cycle_and_unknown",
+    "test_default_deny_and_duplicates",
+    "test_deny_overrides",
+    "test_inherited_allow"
+  ],
+  "bugs": []
+}

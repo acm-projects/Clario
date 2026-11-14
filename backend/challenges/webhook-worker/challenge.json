@@ -1,0 +1,36 @@
+{
+  "id": "webhook-worker-01",
+  "title": "The Lossy Job Worker",
+  "difficulty": "Hard",
+  "language": "javascript",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Webhook jobs disappear after crashes, batches return early, and retry settings leak between deliveries.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Node/CommonJS. withRetry(fn, opts) makes at most opts.retries total attempts (default 3), with exponential backoff from opts.delay milliseconds (default 0 for this exercise). Never mutate options. Retry network errors (no status), 429 and 5xx; immediately rethrow other HTTP errors. Exhaustion rethrows the last error. processBatch(jobs, queue, deliverWebhook, concurrency=2) awaits every job with a concurrency cap and preserves input order. Success yields {id,res}; exhausted/permanent delivery failure must be durably dead-lettered before acknowledgment and yields {id,error:message}. A failed dead-letter write or acknowledgment rejects the batch without treating the job as delivered. queue supplies async ack(id) and deadLetter(job,error). Delivery must be idempotent in a real at-least-once system.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "processor.js"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_worker.js"
+  ],
+  "entrypoint": "processor.js",
+  "testFile": "test_worker.js",
+  "testNames": [
+    "test_ack_after_delivery",
+    "test_batch_waits",
+    "test_concurrency_cap",
+    "test_custom_options_unchanged",
+    "test_dead_letter_before_ack",
+    "test_dead_letter_failure_unacked",
+    "test_retry_defaults_immutable",
+    "test_retry_policy"
+  ],
+  "bugs": []
+}

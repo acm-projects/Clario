@@ -1,0 +1,18 @@
+{
+  "slug": "bumble-nearby-matches",
+  "company": "Bumble",
+  "title": "Nearby Matches in Real Time",
+  "difficulty": "medium",
+  "prompt": "Bumble wants to add a feature where users see potential matches nearby in real time as they move around a city. Design the backend for this.",
+  "key_points": [
+    "Asks clarifying questions first (number of users, how fresh locations must be, privacy)",
+    "Efficient location storage and search (geohashing or a geospatial index)",
+    "Handles constant location updates without overloading the database (caching, batching)",
+    "Filters out users already swiped on or blocked",
+    "Discusses tradeoffs: freshness vs battery life and cost"
+  ],
+  "follow_ups": [
+    "What happens at a concert with 50,000 users in one spot?",
+    "How would you keep this working if one region's servers go down?"
+  ]
+}

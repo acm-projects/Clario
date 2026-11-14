@@ -1,0 +1,34 @@
+{
+  "id": "transaction-pagination-01",
+  "title": "The Pagination Bug",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Transaction pages omit records from bulk imports and return unstable ordering.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Transaction.created_at is UTC microseconds since epoch (normalize timezone offsets before constructing records). Sort timestamp DESC then id DESC; cursor must preserve both keys at full microsecond precision. Limit 1..100; malformed cursors throw. Pages never cross account boundaries.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_invalid_inputs",
+    "test_isolation_and_empty",
+    "test_microsecond_precision",
+    "test_stable_order",
+    "test_tied_timestamps",
+    "test_utc_and_offset"
+  ],
+  "bugs": []
+}

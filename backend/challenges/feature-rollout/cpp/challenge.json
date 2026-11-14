@@ -1,0 +1,32 @@
+{
+  "id": "feature-rollout-01",
+  "title": "The Feature Flag That Ignores Opt-Outs",
+  "difficulty": "Easy",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Customers who explicitly opted out still receive a new feature, while allowlisted customers are blocked by rollout percentages.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "enabled(user,bucket,percent,allow,deny) validates percent in 0..100 and bucket in 0..99. Deny overrides allow; allow overrides percentage. Other users are enabled exactly when bucket < percent. Inputs are immutable. C++ uses vector<string> allow/deny and integer bucket/percent.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_allow_overrides_zero",
+    "test_deny_wins",
+    "test_invalid_and_no_mutation",
+    "test_rollout_boundary"
+  ],
+  "bugs": []
+}

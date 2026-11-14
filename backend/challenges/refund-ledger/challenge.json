@@ -1,0 +1,33 @@
+{
+  "id": "refund-ledger-01",
+  "title": "The Refund Service That Pays Too Much",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Partial refunds can exceed the original charge, and a rejected request consumes its retry key.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "RefundLedger(charged_cents) requires nonnegative integer cents. refund(key,cents) requires a nonempty key and positive cents, returns cumulative refunded cents, and must never exceed charged cents. Identical retry keys return the current cumulative total without paying again; conflicting amounts throw. A failed refund leaves totals and keys unchanged. C++ uses long long cents.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_cumulative_limit",
+    "test_failed_key_and_validation",
+    "test_partial_and_exact",
+    "test_retry_and_conflict"
+  ],
+  "bugs": []
+}

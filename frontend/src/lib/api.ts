@@ -87,7 +87,7 @@ export interface InterviewSession {
   ended_at: string | null;
 }
 
-export function createSession(problem_slug: string, mode: "recommended" | "custom" | "surprise" | "company", language: Language) {
+export function createSession(problem_slug: string, mode: "practice" | "full_mock" | "recommended" | "surprise" | "custom" | "company", language: Language) {
   return request<InterviewSession>("/api/sessions", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ problem_slug, mode, language }),
@@ -113,7 +113,7 @@ export function endSession(id: string) {
   return request<InterviewSession>("/api/sessions/" + encodeURIComponent(id) + "/end", { method: "PATCH" }, true);
 }
 
-// Adapt selection modes to the existing practice/full_mock session contract.
+// Preserve Custom in saved history; map other coding modes to their API values.
 export async function createModeSession(selection: InterviewLaunch): Promise<InterviewSession> {
   const body = sessionRequestFor(selection);
   return createSession(body.problem_slug, body.mode, body.language);
@@ -138,8 +138,10 @@ export function getScenario(slug: string, signal?: AbortSignal): Promise<Scenari
 export function getFeedbackHistory(signal?: AbortSignal): Promise<unknown[]> {
   return request<unknown[]>("/api/feedback", { signal }, true);
 }
-export function generateSessionFeedback(sessionId: string, signal?: AbortSignal): Promise<unknown> {
-  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), { method: "POST", signal }, true);
+export function generateSessionFeedback(sessionId: string, refreshOrSignal?: boolean | AbortSignal): Promise<unknown> {
+  const refreshDetails = refreshOrSignal === true;
+  const signal = typeof refreshOrSignal === "object" ? refreshOrSignal : undefined;
+  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId) + (refreshDetails ? "?refresh_details=true" : ""), { method: "POST", signal }, true);
 }
 
 export type FeedbackPreview = {
@@ -156,6 +158,7 @@ export type FeedbackPreview = {
     weaknesses: string[];
     recommendations: string[];
     evidence_limitations: string[];
+    technique_gaps?: { technique: string; evidence: string; practice: string }[];
     model: string;
   };
 };
@@ -165,4 +168,27 @@ export function previewGeminiFeedback(): Promise<FeedbackPreview> {
 
 export function getSessionFeedback(sessionId: string, signal?: AbortSignal): Promise<import("./reportLoader").SessionFeedbackState> {
   return request<import("./reportLoader").SessionFeedbackState>("/api/feedback/" + encodeURIComponent(sessionId), { signal }, true);
+}
+
+export function listCompanies(signal?: AbortSignal): Promise<string[]> {
+  return request<string[]>("/api/companies", { signal });
+}
+export function generateCompanyScenario(company: string, signal?: AbortSignal): Promise<Scenario> {
+  return request<Scenario>("/api/scenarios/generate?" + new URLSearchParams({ company }), { signal });
+}
+export interface SystemDesignQuestion {
+  slug: string; company: string; title: string; difficulty: string; prompt: string;
+}
+export function listSystemDesignQuestions(company: string, signal?: AbortSignal) {
+  return request<{ questions: SystemDesignQuestion[] }>("/api/system-design?" + new URLSearchParams({ company }), { signal });
+}
+export async function runCompanyTests(slug: string, language: Language, code: string): Promise<TestsResponse> {
+  if (language !== "python3") throw new Error("Company test execution currently supports Python only. You can still submit your Java solution for review.");
+  const result = await request<{ all_passed: boolean; passed: number; total: number; results: { test_number: number; passed: boolean; status: string }[] }>("/api/run/candidate/tests", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scenario_slug: slug, solution_code: code }),
+  }, true);
+  const failure = result.results.find(item => !item.passed);
+  const status: TestsResponse["status"] = result.all_passed ? "Accepted" : failure?.status === "Time Limit Exceeded" ? "Time Limit Exceeded" : failure?.status === "Compile Error" ? "Compile Error" : failure?.status === "Runtime Error" || failure?.status === "Invalid Output" ? "Runtime Error" : "Wrong Answer";
+  return { status, passed: result.passed, total: result.total,
+    cases: result.results.map(item => ({ case: item.test_number, passed: item.passed, input: "Hidden", expected: "Hidden", output: null })), stdout: "", error: null };
 }

@@ -1,0 +1,22 @@
+{
+  "login-debug-01": ["Authentication", "Input Validation", "Boolean Logic"],
+  "shopping-cart-01": ["Money", "State Isolation", "Input Validation"],
+  "daily-revenue-01": ["Aggregation", "Money", "Time Zones"],
+  "transaction-pagination-01": ["Pagination", "Sorting", "Time Zones"],
+  "seat-reservations-01": ["Concurrency", "Transactions", "Idempotency"],
+  "ttl-lru-cache-01": ["Caching", "LRU", "Expiration"],
+  "webhook-worker-01": ["Concurrency", "Retries", "Queue Processing"],
+  "rate-limiter-01": ["Rate Limiting", "Sliding Window", "State Isolation"],
+  "inventory-allocation-01": ["Inventory", "Input Validation", "Atomicity"],
+  "job-scheduler-01": ["Graphs", "Topological Sort", "Cycle Detection"],
+  "booking-intervals-01": ["Intervals", "Sorting", "Boundary Conditions"],
+  "account-ledger-01": ["Transactions", "Idempotency", "Money"],
+  "csv-import-01": ["Parsing", "Strings", "State Machines"],
+  "feature-rollout-01": ["Feature Flags", "Boolean Logic", "Boundary Conditions"],
+  "route-matcher-01": ["Routing", "Strings", "Prefix Matching"],
+  "event-dedup-01": ["Deduplication", "Versioning", "Sorting"],
+  "sensor-window-01": ["Aggregation", "Time Windows", "Data Filtering"],
+  "refund-ledger-01": ["Money", "Idempotency", "Input Validation"],
+  "permission-roles-01": ["Authorization", "Graphs", "Cycle Detection"],
+  "search-ranking-01": ["Search", "Tokenization", "Sorting"]
+}

@@ -1,15 +1,35 @@
 from __future__ import annotations
 
 import logging
+from time import monotonic
+from response_cache import cache_for
 
 import httpx
 
 from config import settings
+from problem_fallbacks import bundled_problem
 
 logger = logging.getLogger(__name__)
 
 BASE_URL = settings.leetcode_api_url
-TIMEOUT = 5.0  # seconds, so a slow API can't hang our server
+TIMEOUT = 2.5  # seconds, so a slow API can't hang our server
+
+_live_retry_at = 0.0
+
+
+def _live_get(path, **kwargs):
+    global _live_retry_at
+    if monotonic() < _live_retry_at:
+        raise httpx.HTTPError("Problem API cooling down; using saved questions")
+    try:
+        response = httpx.get(f"{BASE_URL}/{path}", timeout=TIMEOUT, **kwargs)
+        response.raise_for_status()
+        return response
+    except httpx.HTTPError:
+        # A rate-limited or unavailable provider should not delay every page.
+        _live_retry_at = monotonic() + 60
+        raise
+
 
 KEEP_LANGS = {"python3", "java"}
 
@@ -75,7 +95,7 @@ def fetch_live_problem_list(difficulty: str | None = None, topic: str | None = N
     if topic:
         params["tags"] = topic.lower()
 
-    response = httpx.get(f"{BASE_URL}/problems", params=params, timeout=TIMEOUT)
+    response = _live_get("problems", params=params)
     response.raise_for_status()
     data = response.json()
 
@@ -106,7 +126,7 @@ def fetch_live_problem_list(difficulty: str | None = None, topic: str | None = N
 
 
 def fetch_live_problem(slug: str) -> dict | None:
-    response = httpx.get(f"{BASE_URL}/select", params={"titleSlug": slug}, timeout=TIMEOUT)
+    response = _live_get("select", params={"titleSlug": slug})
     response.raise_for_status()
     item = response.json()
 
@@ -227,6 +247,37 @@ def _db_problem(slug: str):
     }
 
 
+def _save_problem(problem: dict) -> bool:
+    """Cache full live details; a cache failure must not interrupt browsing."""
+    try:
+        from db import supabase
+        if not all(problem.get(key) for key in ("slug", "title", "difficulty", "description_html")):
+            logger.warning("Skipping incomplete live problem cache entry")
+            return False
+        # A failed optional GraphQL lookup must not erase saved starter code.
+        starter = problem.get("starter_code") or {}
+        previous = _db_problem(problem["slug"]) if not all(starter.get(lang) for lang in KEEP_LANGS) or not problem.get("example_testcases") else None
+        starter = {**((previous or {}).get("starter_code") or {}), **{lang: code for lang, code in starter.items() if code}}
+        row = {
+            "slug": problem["slug"],
+            "leetcode_id": problem.get("leetcode_id") or (previous or {}).get("leetcode_id") or "",
+            "title": problem["title"],
+            "difficulty": problem["difficulty"],
+            "topics": problem.get("topics") or (previous or {}).get("topics") or [],
+            "description_html": problem["description_html"],
+            "description": problem["description_html"],
+            "example_testcases": problem.get("example_testcases") or (previous or {}).get("example_testcases") or "",
+            "starter_code": starter,
+        }
+        supabase.table("problems").upsert(row, on_conflict="slug").execute()
+        logger.info("Saved live problem %s to Supabase", problem["slug"])
+        return True
+    except Exception:
+        logger.warning("Could not cache live problem %s; returning live data", problem.get("slug"), exc_info=True)
+        return False
+
+
+@cache_for(60)
 def get_problem_list(difficulty=None, topic=None, search=None) -> list[dict]:
     try:
         result = fetch_live_problem_list(difficulty, topic, search)
@@ -244,14 +295,19 @@ def get_problem_list(difficulty=None, topic=None, search=None) -> list[dict]:
         return rows
 
 
+@cache_for(300)
 def get_problem(slug: str) -> dict | None:
     try:
         problem = fetch_live_problem(slug)
+        if problem is None and slug == "two-sum":
+            return bundled_problem(slug)
+        if problem is not None:
+            _save_problem(problem)
         logger.info("problem %s served from live API", slug)
         return problem
     except (httpx.HTTPError, ValueError) as e:
         logger.warning("Live problem %s failed (%s); trying Supabase fallback", slug, e)
-        row = _db_problem(slug)
+        row = _db_problem(slug) or bundled_problem(slug)
         if row is None:
             raise httpx.HTTPError("Live API failed and no Supabase fallback is available") from e
         logger.info("problem %s served from Supabase fallback", slug)

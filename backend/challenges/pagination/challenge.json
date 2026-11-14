@@ -1,0 +1,35 @@
+{
+  "id": "transaction-pagination-01",
+  "title": "The Pagination Bug",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Transaction pages omit records from bulk imports and return unstable ordering.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "list_transactions takes a list of dicts with integer id, account_id, and aware created_at. Return data, has_more, next_cursor. Sort created_at DESC then id DESC, preserving microseconds and UTC instants. Cursors must preserve both keys. Never skip or duplicate account records. Limits are integers 1\u2013100; malformed cursors raise ValueError. Cursor helpers may change to support composite keys.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use only the language standard library; no network access or external packages.",
+    "The provided tests are read-only; additional private tests verify edge cases."
+  ],
+  "editableFiles": [
+    "transactions.py",
+    "cursors.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_pagination.py"
+  ],
+  "entrypoint": "transactions.py",
+  "testFile": "test_pagination.py",
+  "testNames": [
+    "test_invalid_inputs",
+    "test_isolation_and_empty",
+    "test_microsecond_precision",
+    "test_stable_order",
+    "test_tied_timestamps",
+    "test_utc_and_offset"
+  ],
+  "bugs": []
+}

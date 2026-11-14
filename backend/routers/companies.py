@@ -1,5 +1,6 @@
 
 import logging
+from response_cache import cache_for
 
 from fastapi import APIRouter
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("")
+@cache_for(300, maxsize=1)
 def list_companies():
     # Step 1: Retrieve companies with existing scenarios.
     rows = (

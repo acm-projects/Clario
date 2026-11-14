@@ -1,5 +1,5 @@
 ﻿import json
-import os
+import asyncio
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -35,14 +35,14 @@ class SandboxCasesTests(unittest.TestCase):
             parse_signature("class Solution:\n    def solve(self, node: TreeNode): pass")
 
     def test_loader_uses_library_not_bundled_fixtures(self):
-        with patch("leetcode.get_problem", return_value=PROBLEM) as get_problem:
+        with patch.object(runner, "get_problem", return_value=PROBLEM) as get_problem:
             self.assertEqual(runner.load_problem(PROBLEM["slug"]), PROBLEM)
             get_problem.assert_called_once_with(PROBLEM["slug"])
 
     def test_loader_maps_service_failure(self):
-        with patch("leetcode.get_problem", side_effect=httpx.ConnectError("offline")):
+        with patch.object(runner, "get_problem", side_effect=httpx.ConnectError("offline")):
             with self.assertRaises(HTTPException) as context:
-                runner.load_problem("anything")
+                asyncio.run(runner.run_tests(runner.TestsRequest(slug="anything", language="python", code="pass")))
             self.assertEqual(context.exception.status_code, 503)
 
     def test_all_routes_survive_initialization(self):
@@ -51,14 +51,16 @@ class SandboxCasesTests(unittest.TestCase):
             self.assertIn(endpoint, paths)
 
     def test_voice_without_credentials_does_not_break_startup(self):
-        with patch.dict(os.environ, {"ELEVENLABS_API_KEY": "", "GEMINI_API_KEY": ""}):
+        from voice import router as voice
+        from types import SimpleNamespace
+        with patch.object(voice, "settings", SimpleNamespace(elevenlabs_api_key="", gemini_api_key="")):
             response=TestClient(app).post("/voice/turn", files={"audio": ("test.webm", b"sample", "audio/webm")})
         self.assertEqual(response.status_code, 503)
 
 class SandboxRunnerTests(unittest.IsolatedAsyncioTestCase):
     async def run_result(self, rows, exit_code=0):
         stdout = "candidate output\n" + MARKER + json.dumps(rows) if rows is not None else ""
-        with patch.object(runner, "load_problem", return_value=PROBLEM), patch.object(runner, "execute_on_piston", new=AsyncMock(return_value=(stdout, "", exit_code))):
+        with patch.object(runner, "load_problem", return_value=PROBLEM), patch("piston.service.execute_on_piston", new=AsyncMock(return_value=(stdout, "", exit_code))):
             return await runner.run_tests(runner.TestsRequest(slug=PROBLEM["slug"], language="python", code="class Solution: pass"))
 
     async def test_accepts_complete_correct_results(self):
@@ -85,5 +87,6 @@ class SandboxRunnerTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(context.exception.status_code,404)
 
     async def test_java_harness_explicitly_unsupported(self):
-        result=await runner.run_tests(runner.TestsRequest(slug="any",language="java",code="class Solution {}"))
+        with patch.object(runner, "load_problem", return_value=PROBLEM):
+            result=await runner.run_tests(runner.TestsRequest(slug="any",language="java",code="class Solution {}"))
         self.assertEqual(result.status,"Unsupported")

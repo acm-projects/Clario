@@ -1,0 +1,33 @@
+{
+  "id": "booking-intervals-01",
+  "title": "The Calendar That Merges Separate Meetings",
+  "difficulty": "Easy",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "Adjacent meetings disappear into one booking and unsorted imports produce overlapping blocks.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "merge_bookings(intervals) sorts and merges overlapping half-open [start,end) intervals, keeping touching intervals separate. Require start < end. Preserve caller input; empty input returns empty. C++ uses vector<pair<int,int>>.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_invalid_empty_and_immutable",
+    "test_nested",
+    "test_overlapping_unsorted",
+    "test_touching_separate"
+  ],
+  "bugs": []
+}

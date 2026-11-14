@@ -1,3 +1,4 @@
+import { getRecommendations } from "./assessmentApi";
 import { listSessions } from "./api";
 import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
@@ -42,10 +43,18 @@ export function getGreetingCopy(profile: UserProfile) {
 }
 
 export async function loadRecommendedProblem(difficulty: string | null): Promise<DashboardProblem | null> {
-  if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return null;
-  const problems = await loadProblems();
-  const problem = problems.find((item) => item.difficulty.toLowerCase() === difficulty.toLowerCase());
-  return problem ? { slug: problem.slug, title: problem.title, difficulty: problem.difficulty, topic: problem.topics.join(" / ") || null } : null;
+  const fallback = { slug: "two-sum", title: "Two Sum", difficulty: "Easy", topic: "Array / Hash Table" };
+  if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return fallback;
+  try {
+    try {
+      const recommendations = await getRecommendations();
+      const ranked = recommendations.problems[0];
+      if (ranked) return { slug: ranked.slug, title: ranked.title, difficulty: ranked.difficulty, topic: ranked.topics.join(" / ") || null };
+    } catch { /* Existing recommendations still work if assessment data is unavailable. */ }
+    const problems = await loadProblems();
+    const problem = problems.find((item) => item.difficulty.toLowerCase() === difficulty.toLowerCase());
+    return problem ? { slug: problem.slug, title: problem.title, difficulty: problem.difficulty, topic: problem.topics.join(" / ") || null } : fallback;
+  } catch { return fallback; }
 }
 
 // Inspect returned session fields before using them. Unknown completion schemas fail
@@ -82,9 +91,11 @@ export async function loadSessionSummary(): Promise<SessionSummary> {
   return summarizeSessions(await listSessions());
 }
 
-export interface SkillScore { label: string; score: number | null }
+export type { SkillScore } from "./skillScores";
+import { skillScoresFromSummary, type SkillScore } from "./skillScores";
+import type { ProgressSummary } from "../types/progress";
 
-// Feedback storage is not integrated yet; the existing UI shows its empty state.
 export async function loadSkillScores(): Promise<SkillScore[]> {
-  return [];
+  const { request } = await import("./api");
+  return skillScoresFromSummary(await request<ProgressSummary>("/api/progress/summary", {}, true));
 }

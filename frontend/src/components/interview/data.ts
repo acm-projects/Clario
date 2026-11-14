@@ -44,6 +44,6 @@ export const problem: Problem = {
 // Session state, not part of the Problem type.
 export const session = {
   round: "Technical round",
-  interviewer: "Clario",
+  interviewer: "Cue",
   solved: true,
 };

@@ -18,6 +18,8 @@ from routers import feedback
 SESSION_ID = "11111111-1111-4111-8111-111111111111"
 USER = {"sub": "test-user"}
 CONTENT = {"summary": "The approach handles the example; review empty inputs.", "technical_score": 80, "reasoning_score": 75, "communication_score": 70, "strengths": ["Clear variable names"], "weaknesses": ["Missing empty-input handling"], "recommendations": ["Check input constraints before coding"], "coach_quote": "Start with your plan.", "coach_note": "State the invariant before the loop.", "evidence_limitations": []}
+CONTENT["umpire"] = {key: {"stars": None, "summary": "Not enough evidence.", "details": "No recorded explanation for this stage.", "evidence_quotes": []} for key in ("understand", "match", "plan", "implement", "review", "evaluate")}
+CONTENT["actions"] = {"fix": ["Check empty inputs.", "Explain the invariant.", "Walk through one example.", "Review duplicate values.", "State complexity."], "keep": ["Clear variable names"]}
 SESSION = {"id": SESSION_ID, "user_id": USER["sub"], "status": "completed", "ended_at": "2026-10-19T12:00:00Z", "language": "python3", "problem_slug": "two-sum"}
 SAVED = {"id": "saved-report", "session_id": SESSION_ID, "report": CONTENT}
 
@@ -54,9 +56,10 @@ class ProviderTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(body["generationConfig"]["responseMimeType"], "application/json")
             # Gemini rejects maxItems; validation still enforces list limits afterwards.
             self.assertNotIn("maxItems", json.dumps(body["generationConfig"]["responseJsonSchema"]))
+            self.assertEqual(body["generationConfig"]["thinkingConfig"], {"thinkingLevel": "low"})
             return httpx.Response(200, json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(CONTENT)}]}}]})
         client = httpx.AsyncClient(transport=httpx.MockTransport(respond))
-        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret", "GEMINI_MODEL": "gemini-test"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret", "GEMINI_MODEL": "gemini-3.6-flash"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
             report = await generate_feedback({"code": "return 1", "problem": {"title": "Example"}, "candidate_transcript": ""})
         self.assertEqual(report["provider"], "gemini")
         self.assertIsNone(report["communication_score"])
@@ -158,10 +161,11 @@ class RouteTests(unittest.TestCase):
         generate.assert_not_called()
 
     def test_individual_report_returns_owned_saved_report(self):
-        with patch.object(feedback, "get_owned_session", return_value=SESSION) as owned, patch.object(feedback, "get_saved_report", return_value=SAVED), patch.object(feedback, "get_stored_problem", return_value={"title": "Two Sum"}):
+        with patch.object(feedback, "get_owned_session", return_value=SESSION) as owned, patch.object(feedback, "get_saved_report", return_value=SAVED), patch.object(feedback, "get_stored_problem", return_value={"title": "Two Sum"}), patch.object(feedback, "supabase") as database:
+            database.table.return_value.select.return_value.eq.return_value.order.return_value.limit.return_value.execute.return_value.data = [{"code": "return 1"}]
             response = self.client.get("/api/feedback/" + SESSION_ID)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["feedback"], SAVED)
+        self.assertEqual(response.json()["feedback"], {**SAVED, "report": {**SAVED.get("report", {}), "submitted_code": "return 1"}})
         owned.assert_called_once_with(SESSION_ID, USER["sub"])
 
     def test_individual_report_denies_other_users_session(self):
@@ -197,6 +201,22 @@ class RouteTests(unittest.TestCase):
             response = self.client.post("/api/feedback/" + SESSION_ID)
         self.assertEqual(response.status_code, 422)
         generate.assert_not_called()
+
+    def test_provider_outage_returns_temporary_report_without_saving(self):
+        tables = {}
+        for name, rows in {"code_snapshots": [{"code": "return 1"}], "transcript_events": [], "session_events": []}.items():
+            query = MagicMock()
+            for method in ["select", "eq", "order", "limit"]:
+                getattr(query, method).return_value = query
+            query.execute.return_value = SimpleNamespace(data=rows)
+            tables[name] = query
+        with patch.object(feedback, "get_owned_session", return_value=SESSION), patch.object(feedback, "get_saved_report", return_value=None), patch.object(feedback, "get_stored_problem", return_value={"title": "Two Sum"}), patch.object(feedback.supabase, "table", side_effect=lambda name: tables[name]) as table, patch.object(feedback, "generate_feedback", new_callable=AsyncMock, side_effect=HTTPException(503, "Provider unavailable")):
+            response = self.client.post("/api/feedback/" + SESSION_ID)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["report"]["is_fallback"])
+        self.assertEqual(response.json()["overall_score"], 25)
+        self.assertEqual(response.json()["report"]["submitted_code"], "return 1")
+        self.assertNotIn("feedback_reports", [call.args[0] for call in table.call_args_list])
 
     def test_history_is_scoped_to_user(self):
         query = MagicMock()
@@ -244,3 +264,27 @@ class GeminiSchemaTests(unittest.TestCase):
     def test_stored_reports_without_details_still_validate(self):
         result = validate_feedback(json.dumps(CONTENT), has_code=True, has_problem=True, has_speech=True)
         self.assertIsNone(result["details"])
+
+
+class DetailEvidenceTests(unittest.TestCase):
+    def test_unverifiable_quotes_and_whitespace_cannot_support_stars(self):
+        raw = json.loads(json.dumps(CONTENT))
+        raw['umpire']['plan'].update(stars=5, evidence_quotes=['invented plan', '   '])
+        result = validate_feedback(json.dumps(raw), has_code=True, has_problem=True, has_speech=True, source_code='return 1', candidate_transcript='um I will use a map, um')
+        self.assertEqual(result['umpire']['plan']['stars'], 0)
+        self.assertEqual(result['filler_words']['items'], [{'word': 'um', 'count': 2}])
+
+    def test_verified_candidate_quote_keeps_rating_but_code_cannot_prove_plan(self):
+        raw = json.loads(json.dumps(CONTENT))
+        raw['umpire']['plan'].update(stars=4, evidence_quotes=['I will use a map'])
+        result = validate_feedback(json.dumps(raw), has_code=True, has_problem=True, has_speech=True, candidate_transcript='I will use a map')
+        self.assertEqual(result['umpire']['plan']['stars'], 4)
+        result = validate_feedback(json.dumps(raw), has_code=True, has_problem=True, has_speech=False, source_code='# I will use a map')
+        self.assertEqual(result['umpire']['plan']['stars'], 0)
+        self.assertFalse(result['filler_words']['available'])
+
+    def test_five_fix_actions_and_integer_stars_are_required(self):
+        raw = json.loads(json.dumps(CONTENT))
+        raw['actions']['fix'] = ['One action']
+        with self.assertRaises(ValidationError):
+            validate_feedback(json.dumps(raw), has_code=True, has_problem=True, has_speech=True)

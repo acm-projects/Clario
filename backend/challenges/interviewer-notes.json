@@ -1,0 +1,83 @@
+{
+  "login-debug-01": {
+    "python": "Login strips and lowercases passwords, raw username lookup omits required normalization and input validation, and authentication uses OR instead of requiring both an active account and an exact password match.",
+    "cpp": "Authentication looks up raw usernames rather than normalized usernames and accepts an active account OR a matching password, allowing invalid credentials and inactive accounts."
+  },
+  "shopping-cart-01": {
+    "python": "Cart construction aliases mutable input; repeated add_item overwrites quantities; removals lack validation; coupons are unvalidated, duplicated and applied in insertion order; floating-point final-only rounding misses half-up cent rules; shipping uses the original subtotal and an exclusive threshold; empty carts incur shipping; checkout shares a global default cart instead of storing independent carts per session.",
+    "cpp": "Repeated item additions overwrite quantities, coupons are appended without deduplication, shipping eligibility uses the original rather than discounted subtotal, and integer tax calculation truncates instead of rounding half-up."
+  },
+  "daily-revenue-01": {
+    "python": "Revenue groups the original timestamp date without converting to the requested timezone, accumulates binary floats and rounds only the final total, counts cancelled orders, and ignores partial refund amounts.",
+    "cpp": "Revenue grouping ignores the requested timezone and forces UTC, fully refunded orders contribute positive gross, and partial refund amounts are incorrectly multiplied by quantity."
+  },
+  "transaction-pagination-01": {
+    "python": "Pagination sorts and filters by timestamps alone, drops microseconds from cursors, discards timezone awareness and omits a stable ID tie-breaker. Equal timestamps are skipped between pages and invalid limits/cursors are not correctly validated.",
+    "cpp": "Cursor encoding truncates timestamps to whole seconds, sorting omits the ID tie-breaker, and page filtering compares only timestamps instead of the composite timestamp-and-ID cursor."
+  },
+  "seat-reservations-01": {
+    "python": "Capacity checks, inventory changes and reservation inserts are separate autocommit operations, creating races and partial writes. Idempotency keys are discarded, requests are not properly validated, and concurrent expiry workers can release the same inventory more than once.",
+    "cpp": "Reservations decrement inventory by one instead of the requested quantity, holds expire one second early, reused idempotency keys are not checked against the original request, and expiry releases already expired reservations repeatedly."
+  },
+  "ttl-lru-cache-01": {
+    "python": "Expired entries remain stored and the expiry boundary is exclusive; reads do not refresh LRU order; writes evict even when updating an existing key; length includes expired entries; configuration is not validated; false, zero and empty-string cached values are treated as misses.",
+    "cpp": "The expiry comparison excludes the exact boundary, reads do not refresh recency, updates at capacity can evict a different key, and valid false-valued flags are treated as cache misses."
+  },
+  "webhook-worker-01": {
+    "python": "Retries mutate shared/default options, retry permanent errors, and swallow the final failure. Batch processing acknowledges jobs before delivery, does not durably dead-letter failures, and starts every job without honoring the concurrency limit.",
+    "javascript": "withRetry mutates caller/default options, retries permanent failures and swallows exhaustion. Async forEach returns before jobs finish, acknowledges before delivery, omits durable dead-letter handling and ignores the concurrency limit.",
+    "cpp": "Retry policy accepts permanent HTTP failures, retries stop after the first attempt, successful or dead-lettered jobs are never acknowledged, and one worker is started per job instead of respecting the requested concurrency cap."
+  },
+  "rate-limiter-01": {
+    "python": "All keys use a shared global request bucket, so one account blocks others; events at the exact expiry boundary are retained instead of removed.",
+    "cpp": "All keys use the same global event bucket and events at the exact rolling-window boundary are incorrectly retained."
+  },
+  "inventory-allocation-01": {
+    "python": "Allocation modifies the caller-owned stock mapping directly, allowing partial mutation on failure, and rejects quantities exactly equal to available stock.",
+    "cpp": "Allocation rejects exact-stock requests and subtracts one unit instead of the requested quantity."
+  },
+  "job-scheduler-01": {
+    "python": "The ready-job condition is inverted, selecting jobs that still have prerequisites, and cycles return a partial result instead of raising an error.",
+    "cpp": "The ready-job predicate selects jobs with unmet dependencies, and cycles return a partial schedule instead of failing."
+  },
+  "booking-intervals-01": {
+    "python": "Touching half-open intervals are incorrectly merged, and merging a nested interval replaces the larger end instead of preserving the maximum end.",
+    "cpp": "The overlap condition incorrectly merges touching intervals, and a nested interval can shorten an existing merged booking."
+  },
+  "account-ledger-01": {
+    "python": "Replayed transfer keys do not validate conflicting requests, and transfers credit only one cent while debiting the full requested amount.",
+    "cpp": "Conflicting reuse of a transfer key is accepted, and the destination is credited one cent rather than the full transfer amount."
+  },
+  "csv-import-01": {
+    "python": "The parser does not clear the field buffer at separators and drops escaped double quotes from quoted fields.",
+    "cpp": "Field contents leak across comma separators because the buffer is not cleared, and doubled quotes inside quoted fields are discarded."
+  },
+  "feature-rollout-01": {
+    "python": "Explicitly denied users are enabled, and percentage rollout uses an inclusive bucket boundary instead of bucket < percent.",
+    "cpp": "Deny-list membership returns true and the rollout comparison incorrectly includes the percentage boundary."
+  },
+  "route-matcher-01": {
+    "python": "Prefix matching ignores path-segment boundaries, and route selection chooses the shortest matching prefix instead of the longest.",
+    "cpp": "Prefix matching captures unrelated path segments and prefers the shortest matching route."
+  },
+  "event-dedup-01": {
+    "python": "Equal-version events replace the first event, and output follows insertion order instead of being sorted by event ID.",
+    "cpp": "Equal versions overwrite the first event, and prepending sorted map entries reverses the required event-ID output order."
+  },
+  "sensor-window-01": {
+    "python": "The average omits the device filter, includes the expired lower boundary, and lacks the upper bound needed to exclude future readings.",
+    "cpp": "Readings from other devices are included, the lower window boundary is inclusive, and future readings are not excluded."
+  },
+  "refund-ledger-01": {
+    "python": "Each refund is checked against the original charge without accounting for previous refunds, and conflicting amounts for a reused key are not rejected.",
+    "cpp": "The refund limit ignores the already-refunded total, and conflicting replay-key amounts are accepted."
+  },
+  "permission-roles-01": {
+    "python": "The final permission decision ignores explicit denies and silently returns when encountering a reachable inheritance cycle.",
+    "cpp": "Explicit denies do not affect the final allow decision, and inheritance cycles are silently skipped rather than rejected."
+  },
+  "search-ranking-01": {
+    "python": "Search accepts any query term rather than requiring every distinct term, and results are not sorted by relevance and ID.",
+    "cpp": "The matching flag is not cleared when required query terms are absent, admitting nonmatching documents, and the result ordering omits the relevance-and-ID sort."
+  }
+}

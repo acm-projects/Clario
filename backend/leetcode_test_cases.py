@@ -194,7 +194,7 @@ def extract_test_cases(problem: dict) -> list[dict]:
             section,
             flags=re.IGNORECASE | re.DOTALL,
         )
-
+        
         if not match:
             continue
 

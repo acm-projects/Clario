@@ -43,9 +43,9 @@ test("missing or invalid weekly goals stay unset", () => {
   assert.ok(!getGreetingCopy(profile).includes("undefined"));
 });
 
-test("recommendation ignores missing or unsupported difficulty without loading problems", async () => {
+test("recommendation falls back to Two Sum for missing or unsupported difficulty", async () => {
   for (const difficulty of [null, "", "Expert"]) {
-    assert.equal(await loadRecommendedProblem(difficulty), null);
+    assert.equal((await loadRecommendedProblem(difficulty)).slug, "two-sum");
   }
 });
 

@@ -1,0 +1,35 @@
+{
+  "id": "ttl-lru-cache-01",
+  "title": "The Broken TTL + LRU Cache",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Feature flags go stale, hot entries disappear, and false-valued flags are repeatedly fetched.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Flag is variant<bool,int,string>; optional<Flag> nullopt is a cache miss. get refreshes recency only, put refreshes TTL and recency. Expire at expires <= clock(). size counts live entries. Updating a key must not evict a different key. Fetch only on misses, including when stored value is false, zero or empty string.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_expiry_boundary",
+    "test_falsy_values",
+    "test_invalid_config",
+    "test_len_purges",
+    "test_lru",
+    "test_refresh_and_capacity",
+    "test_update_at_capacity"
+  ],
+  "bugs": []
+}

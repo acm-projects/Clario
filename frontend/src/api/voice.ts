@@ -1,13 +1,14 @@
 import { ApiError, request } from "../lib/api";
 
-export interface VoiceSession {
+/** Session-linked live interview: ownership-checked, with the interviewer prompt override. */
+export interface LiveVoiceSession {
   signed_url: string;
   instructions: string;
   variables: Record<string, string>;
 }
 
-export function getVoiceSession(sessionId: string): Promise<VoiceSession> {
-  return request<VoiceSession>(`/voice/session?session_id=${encodeURIComponent(sessionId)}`, {}, true);
+export function getLiveVoiceSession(sessionId: string): Promise<LiveVoiceSession> {
+  return request<LiveVoiceSession>(`/voice/session?session_id=${encodeURIComponent(sessionId)}`, {}, true);
 }
 
 export function linkConversation(sessionId: string, conversationId: string) {
@@ -32,4 +33,25 @@ export async function saveTranscript(sessionId: string, turn: {
       await new Promise(resolve => setTimeout(resolve, attempt === 0 ? 400 : 1000));
     }
   }
+}
+
+/** Practice, repository-debugging and system-design voice sessions. */
+export interface VoiceSession {
+  signed_url: string;
+  voice_id?: string;
+  variables: {
+    problem_title: string;
+    problem_description: string;
+    repo_name: string;
+    bug_summary: string;
+    root_cause: string;
+  };
+}
+
+export function getVoiceSession(problemSlug: string, repoChallengeId?: string, systemDesignSlug?: string, repoLanguage?: string): Promise<VoiceSession> {
+  return request<VoiceSession>(
+    systemDesignSlug ? `/voice/system-design-session?scenario_slug=${encodeURIComponent(systemDesignSlug)}` : repoChallengeId ? `/voice/repo-session?challenge_id=${encodeURIComponent(repoChallengeId)}${repoLanguage ? `&language=${encodeURIComponent(repoLanguage)}` : ""}` : `/voice/session?problem_slug=${encodeURIComponent(problemSlug)}`,
+    {},
+    true,
+  );
 }

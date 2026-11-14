@@ -1,0 +1,33 @@
+{
+  "id": "inventory-allocation-01",
+  "title": "The Warehouse That Loses Stock",
+  "difficulty": "Easy",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "A failed multi-item order consumes inventory, and successful orders unexpectedly modify the warehouse snapshot.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "allocate(stock, requests) returns a new stock mapping only if all requested SKUs exist and have sufficient quantity. Quantities must be positive integers and inventory nonnegative. Missing SKUs or insufficient stock throw. Validate everything before applying changes; never mutate inputs. C++ uses map<string,int>.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_exact_stock",
+    "test_failure_atomicity",
+    "test_invalid_quantities",
+    "test_no_input_mutation"
+  ],
+  "bugs": []
+}

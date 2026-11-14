@@ -167,7 +167,7 @@ export default function Login() {
               <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-neutral-200" />
 
-                <span className="text-[11px] text-neutral-400">
+                <span className="text-[14px] text-neutral-400">
                   or continue with
                 </span>
 

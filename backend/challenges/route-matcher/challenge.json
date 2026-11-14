@@ -1,0 +1,33 @@
+{
+  "id": "route-matcher-01",
+  "title": "The Router That Sends Users to the Wrong Service",
+  "difficulty": "Medium",
+  "language": "python",
+  "category": "Debugging",
+  "estimatedMinutes": 30,
+  "description": "The /api route captures /apiculture, and a generic route steals traffic from a more specific service.",
+  "objective": "Trace the reported failures, repair the implementation, and verify edge cases without changing the public API.",
+  "expectedBehavior": "match_route(path,routes) returns the handler of the longest matching prefix at a path-segment boundary, or None/nullopt. / matches all absolute paths. Strip query strings from the request; ignore trailing slashes on prefixes except root. Require absolute request/prefix paths. C++ routes is map<string,string>. Inputs stay unchanged.",
+  "constraints": [
+    "Preserve the documented interfaces.",
+    "Use the language standard library only; no network calls or external packages.",
+    "Do not modify read-only tests or caller-owned data."
+  ],
+  "editableFiles": [
+    "service.py",
+    "policy.py"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_service.py"
+  ],
+  "entrypoint": "service.py",
+  "testFile": "test_service.py",
+  "testNames": [
+    "test_invalid_and_empty",
+    "test_longest_prefix",
+    "test_query_and_trailing",
+    "test_segment_boundary"
+  ],
+  "bugs": []
+}

@@ -5,7 +5,11 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-load_dotenv()
+from pathlib import Path
+
+BACKEND_DIR = Path(__file__).resolve().parent
+load_dotenv(BACKEND_DIR / ".env.local")
+load_dotenv(BACKEND_DIR / ".env")
 
 
 def _optional(name: str, default: str = "") -> str:
@@ -24,8 +28,11 @@ class Settings:
         "LEETCODE_API_URL", "https://alfa-leetcode-api.onrender.com"
     )
     piston_python_version: str = _optional("PISTON_PYTHON_VERSION", "*")
+    piston_javascript_version: str = _optional("PISTON_JAVASCRIPT_VERSION", "*")
     piston_java_version: str = _optional("PISTON_JAVA_VERSION", "*")
+    piston_cpp_version: str = _optional("PISTON_CPP_VERSION", "*")
     elevenlabs_api_key: str = _optional("ELEVENLABS_API_KEY")
+    elevenlabs_system_design_agent_id: str = _optional("ELEVENLABS_SYSTEM_DESIGN_AGENT_ID")
     elevenlabs_agent_id: str = _optional("ELEVENLABS_AGENT_ID")
     elevenlabs_webhook_secret: str = _optional("ELEVENLABS_WEBHOOK_SECRET")
     elevenlabs_tool_secret: str = _optional("ELEVENLABS_TOOL_SECRET")

@@ -1,0 +1,38 @@
+{
+  "id": "shopping-cart-01",
+  "title": "The Cart That Charges the Wrong Amount",
+  "difficulty": "Medium",
+  "language": "cpp",
+  "category": "Debugging",
+  "estimatedMinutes": 45,
+  "description": "Customers report duplicate promos, cent-level tax errors, lost quantities, inconsistent shipping, and carts leaking between sessions.",
+  "objective": "Reproduce the reported failures and repair the implementation without changing its public interfaces.",
+  "expectedBehavior": "Cart owns its items by value; Session owns its cart. Prices/results are dollar doubles; compute half-up rounding at cent boundaries. Item quantities are integers; reject nonpositive quantities and negative prices. Coupons SAVE10/SAVE20/FIVE are validated, deduplicated, percentages first. Empty carts cost zero, shipping is $5.99 below discounted $50, tax is 8.25%. Preserve the supplied API.",
+  "constraints": [
+    "Preserve the documented C++ interfaces.",
+    "Use the C++17 standard library and supplied read-only helpers only.",
+    "Do not change read-only files or tests."
+  ],
+  "editableFiles": [
+    "solution.hpp"
+  ],
+  "readOnlyFiles": [
+    "README.md",
+    "test_contract.hpp"
+  ],
+  "entrypoint": "solution.hpp",
+  "testFile": "test_contract.hpp",
+  "testNames": [
+    "test_constructor_isolation",
+    "test_coupon_deduplication",
+    "test_coupon_order",
+    "test_coupon_validation",
+    "test_empty_and_floor",
+    "test_money_rounding",
+    "test_quantity_accumulates",
+    "test_removal_contract",
+    "test_session_isolation",
+    "test_shipping_boundary"
+  ],
+  "bugs": []
+}

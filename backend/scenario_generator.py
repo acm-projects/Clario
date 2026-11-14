@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel, Field
 
-load_dotenv(override=True)
+from config import settings
 
 
 class GeneratedScenario(BaseModel):
@@ -21,7 +21,7 @@ def generate_scenario_framing(
     Does not change its solution, function signature, or test cases.
     """
 
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    client = genai.Client(api_key=settings.gemini_api_key)
 
     instructions = f"""
     You are creating a realistic technical interview scenario.
@@ -52,7 +52,7 @@ def generate_scenario_framing(
     for attempt in range(2):
         try:
             response = client.models.generate_content(
-                model="gemini-3.8-flash",
+                model=os.getenv("GEMINI_SCENARIO_MODEL", "gemini-2.5-flash"),
                 contents=instructions,
                 config={
                     "response_mime_type": "application/json",

@@ -10,10 +10,11 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from pydantic import BaseModel, Field, model_validator
 from postgrest.exceptions import APIError
 
+from communication import CommunicationCapture
+from interview_evidence import InterviewEvidence, persist_evidence
 from auth import get_current_user
 from db import supabase
 from leetcode import get_problem
-from communication import CommunicationCapture
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ router = APIRouter(prefix="/api/sessions")
 
 class SessionCreate(BaseModel):
     problem_slug: str
-    mode: Literal["recommended", "custom", "surprise", "company"]
+    mode: Literal["recommended", "custom", "surprise", "company", "practice", "full_mock"]
     language: Literal["python3", "java"]
 
 
@@ -79,12 +80,7 @@ def get_owned_session(session_id: str, user_id: str) -> dict:
         raise HTTPException(status_code=404, detail="Session not found")
     return rows[0]
 
-ALLOWED_MODES = {
-    "recommended",
-    "custom",
-    "surprise",
-    "company"
-}
+ALLOWED_MODES = {"recommended", "custom", "surprise", "company", "practice", "full_mock"}
 
 
 async def validate_session_mode(request: Request):
@@ -287,7 +283,7 @@ def end_session(session_id: str, background_tasks: BackgroundTasks, user: dict =
     session = get_owned_session(session_id, user["sub"])
 
     if session["status"] == "completed":
-        raise HTTPException(status_code=400, detail="Session already completed")
+        return session
 
     row = (
         supabase.table("interview_sessions")
@@ -411,4 +407,22 @@ def save_communication(session_id: UUID, body: CommunicationCapture, user: dict 
         'session_id': session_id, 'event_type': 'communication_summary',
         'metadata': body.model_dump(mode='json'),
     }).execute()
-    return {'saved': True}
+    return {"saved": True}
+
+
+@router.post("/{session_id}/evidence")
+def save_interview_evidence(session_id: str, body: InterviewEvidence, user: dict = Depends(get_current_user)):
+    session = get_owned_session(session_id, user["sub"])
+    if session["status"] == "completed":
+        raise HTTPException(409, "Session already completed")
+    persist_evidence(supabase, session_id, body)
+    return {"saved": True}
+
+
+@router.get("/{session_id}/transcript")
+def read_transcript(session_id: str, user: dict = Depends(get_current_user)):
+    get_owned_session(session_id, user["sub"])
+    rows = supabase.table("transcript_events").select("speaker,text,sequence_number").eq("session_id", session_id).order("sequence_number").limit(400).execute().data
+    events = supabase.table("session_events").select("metadata").eq("session_id", session_id).eq("event_type", "transcript_timing").limit(400).execute().data
+    timing = {event["metadata"]["sequence_number"]: event["metadata"] for event in events}
+    return [{**row, **timing.get(row["sequence_number"], {})} for row in rows]

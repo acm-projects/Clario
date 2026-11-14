@@ -28,3 +28,16 @@ def test_get_problem_returns_live_problem_without_fallback(monkeypatch):
     monkeypatch.setattr(leetcode, "_db_problem", fallback)
     assert leetcode.get_problem("two-sum") == live
     assert not fallback_called
+
+
+import pytest
+
+@pytest.fixture(autouse=True)
+def clear_public_problem_cache():
+    leetcode.get_problem.cache_clear()
+    leetcode.get_problem_list.cache_clear()
+    leetcode._live_retry_at = 0
+    yield
+    leetcode.get_problem.cache_clear()
+    leetcode.get_problem_list.cache_clear()
+    leetcode._live_retry_at = 0
