@@ -1,5 +1,3 @@
-import { getRecommendations } from "./assessmentApi";
-import { listSessions } from "./api";
 import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
 
@@ -47,6 +45,7 @@ export async function loadRecommendedProblem(difficulty: string | null): Promise
   if (!difficulty || !["easy", "medium", "hard"].includes(difficulty.toLowerCase())) return fallback;
   try {
     try {
+      const { getRecommendations } = await import("./assessmentApi.ts");
       const recommendations = await getRecommendations();
       const ranked = recommendations.problems[0];
       if (ranked) return { slug: ranked.slug, title: ranked.title, difficulty: ranked.difficulty, topic: ranked.topics.join(" / ") || null };
@@ -87,12 +86,14 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
   return { completedThisWeek, completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
 }
 
-export async function loadSessionSummary(): Promise<SessionSummary> {
-  return summarizeSessions(await listSessions());
+export async function loadSessionSummary(
+  fetchSessions: () => Promise<Record<string, unknown>[]> = async () => (await import("./api")).listSessions(),
+): Promise<SessionSummary> {
+  return summarizeSessions(await fetchSessions());
 }
 
-export type { SkillScore } from "./skillScores";
-import { skillScoresFromSummary, type SkillScore } from "./skillScores";
+export type { SkillScore } from "./skillScores.ts";
+import { skillScoresFromSummary, type SkillScore } from "./skillScores.ts";
 import type { ProgressSummary } from "../types/progress";
 
 export async function loadSkillScores(): Promise<SkillScore[]> {

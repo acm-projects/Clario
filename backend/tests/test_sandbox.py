@@ -1,5 +1,6 @@
 ﻿import json
 import asyncio
+from dataclasses import replace
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -8,6 +9,8 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from main import app
+from auth import get_current_user
+from voice import router as voice
 from piston import router as runner
 from piston.harness import MARKER
 from piston.testcases import UnsupportedProblem, build_test_cases, parse_signature
@@ -40,8 +43,9 @@ class SandboxCasesTests(unittest.TestCase):
             get_problem.assert_called_once_with(PROBLEM["slug"])
 
     def test_loader_maps_service_failure(self):
-        with patch.object(runner, "get_problem", side_effect=httpx.ConnectError("offline")):
+        with patch.object(runner, "load_problem", side_effect=httpx.ConnectError("offline")):
             with self.assertRaises(HTTPException) as context:
+                import asyncio
                 asyncio.run(runner.run_tests(runner.TestsRequest(slug="anything", language="python", code="pass")))
             self.assertEqual(context.exception.status_code, 503)
 
@@ -51,10 +55,14 @@ class SandboxCasesTests(unittest.TestCase):
             self.assertIn(endpoint, paths)
 
     def test_voice_without_credentials_does_not_break_startup(self):
-        from voice import router as voice
-        from types import SimpleNamespace
-        with patch.object(voice, "settings", SimpleNamespace(elevenlabs_api_key="", gemini_api_key="")):
-            response=TestClient(app).post("/voice/turn", files={"audio": ("test.webm", b"sample", "audio/webm")})
+        previous = app.dependency_overrides.copy()
+        app.dependency_overrides[get_current_user] = lambda: {"sub": "isolated-voice-test"}
+        try:
+            with patch.object(voice, "settings", replace(voice.settings, elevenlabs_api_key="", gemini_api_key="")):
+                response=TestClient(app).post("/voice/turn", files={"audio": ("test.webm", b"sample", "audio/webm")})
+        finally:
+            app.dependency_overrides.clear()
+            app.dependency_overrides.update(previous)
         self.assertEqual(response.status_code, 503)
 
 class SandboxRunnerTests(unittest.IsolatedAsyncioTestCase):

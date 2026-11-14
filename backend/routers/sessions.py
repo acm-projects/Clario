@@ -96,7 +96,7 @@ async def validate_session_mode(request: Request):
             status_code=400,
             detail=(
                 "Invalid or missing mode. Allowed values: "
-                "practice, company, full_mock, custom"
+                "recommended, practice, company, full_mock, custom"
             ),
         )
 

@@ -5,6 +5,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
 import InterviewEntry from "./components/interview/InterviewEntry";
 import ProfileGate from "./components/auth/ProfileGate";
+import Recommended from "./pages/Recommended";
+import AssessmentGate from "./components/auth/AssessmentGate";
 
 const RepoDebugging = lazy(() => import("./pages/RepoDebugging"));
 const Progress = lazy(() => import("./pages/Progress"));
@@ -35,8 +37,11 @@ function App() {
       <Route element={<ProfileGate />}>
         <Route path="/progress" element={<Progress />} />
         <Route path="/assessment" element={<Assessment />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/interview" element={<InterviewSelection />} />
+        <Route path="/recommended" element={<Recommended />} />
+        <Route element={<AssessmentGate />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/interview" element={<InterviewSelection />} />
+        </Route>
         <Route path="/interview/:problemId" element={<InterviewEntry key={pathname}><InterviewRoom /></InterviewEntry>} />
         <Route path="/repo-debugging" element={<RepoDebugging />} />
         <Route path="/interview/repo" element={<RepoDebugging />} />

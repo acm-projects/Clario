@@ -113,7 +113,7 @@ export function endSession(id: string) {
   return request<InterviewSession>("/api/sessions/" + encodeURIComponent(id) + "/end", { method: "PATCH" }, true);
 }
 
-// Preserve Custom in saved history; map other coding modes to their API values.
+  // Preserve Recommended and Custom as their own storage modes; Surprise me is stored as full_mock.
 export async function createModeSession(selection: InterviewLaunch): Promise<InterviewSession> {
   const body = sessionRequestFor(selection);
   return createSession(body.problem_slug, body.mode, body.language);

@@ -51,7 +51,7 @@ test('recommendations retain server titles, badges, topics, reasons, and all emp
 
 test('saved language and recommended mode survive session creation and navigation', () => {
   const saved = parseSavedAssessment({ user_id: 'test-user', updated_at: '2026-10-30', answers: buildAssessmentPayload(answers, extra) });
-  assert.deepEqual(sessionRequestFor({ mode: 'recommended', problemSlug: 'two-sum', language: saved.answers.language }), { problem_slug: 'two-sum', mode: 'practice', language: 'java' });
+  assert.deepEqual(sessionRequestFor({ mode: 'recommended', problemSlug: 'two-sum', language: saved.answers.language }), { problem_slug: 'two-sum', mode: 'recommended', language: 'java' });
   assert.equal(interviewRoomUrl('two-sum', 'test-session', 'recommended'), '/interview/two-sum?session=test-session&mode=recommended');
 });
 
