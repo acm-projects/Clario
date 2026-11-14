@@ -43,7 +43,6 @@ export const problem: Problem = {
 
 // Session state, not part of the Problem type.
 export const session = {
-  timer: "24:17",
   round: "Technical round",
   interviewer: "Clario",
   solved: true,

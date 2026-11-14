@@ -10,6 +10,7 @@ interface TopBarProps {
   onRun: () => void;
   onSubmit: () => void;
   running?: boolean;
+  ending?: boolean;
 }
 
 export function TopBar({
@@ -20,6 +21,7 @@ export function TopBar({
   onRun,
   onSubmit,
   running = false,
+  ending = false,
 }: TopBarProps) {
   const navigate = useNavigate();
   return (
@@ -59,18 +61,18 @@ export function TopBar({
       <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2.5">
         <button
           onClick={onRun}
-          disabled={running}
+          disabled={running || ending}
           className="theme-surface theme-body-text theme-surface-hover flex h-[42px] items-center gap-2 rounded-lg px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor"><path d="M0 0l8 4.5L0 9z" /></svg>
           {running ? "Running..." : "Run"}
         </button>
         <button
-          disabled={running}
+          disabled={ending}
           onClick={onSubmit}
           className="h-[42px] rounded-lg border border-[var(--line)] bg-[#fac52e] px-6 text-sm font-semibold text-[#122b50] disabled:opacity-50"
         >
-          Submit
+          {ending ? "Ending…" : "End Interview"}
         </button>
       </div>
 

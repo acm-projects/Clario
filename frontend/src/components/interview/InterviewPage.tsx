@@ -12,8 +12,10 @@ import { modeLabels, parseInterviewMode, type InterviewMode } from "../../lib/in
 import { ApiError, getProblem, runTests, getSession, endSession, createSession } from "../../lib/api";
 
 import { useCodeSnapshots } from "../../lib/useCodeSnapshots";
-import { summarizeRun, summarizeRunError } from "../../lib/runContext";
-import { CODE_ACTIVITY_UPDATE } from "../../lib/codeActivity";
+import { RUN_STARTED_UPDATE, runResultsUpdate, summarizeRunError } from "../../lib/runContext";
+import { codeActivityUpdate } from "../../lib/codeActivity";
+import { completeInterview } from "../../lib/interviewLifecycle";
+import { useInterviewTimer } from "../../lib/useInterviewTimer";
 import { isCompletedSessionError } from "../../lib/snapshotWriter";
 
 function InterviewPage() {
@@ -22,8 +24,12 @@ function InterviewPage() {
   const [searchParams] = useSearchParams();
   const routeSessionId = searchParams.get("session");
   const [sessionId, setSessionId] = useState(routeSessionId);
+  const sessionIdRef = useRef(routeSessionId);
+  const sessionCreation = useRef<ReturnType<typeof createSession> | null>(null);
   const [ending, setEnding] = useState(false);
   const endStarted = useRef(false);
+  const [startedAt, setStartedAt] = useState<string | null>(null);
+  const activeRun = useRef<Promise<void> | null>(null);
   const requestedMode = parseInterviewMode(searchParams.get("mode")) ?? "custom";
   const [activeMode, setActiveMode] = useState<InterviewMode>(requestedMode);
   const isMock = activeMode === "surprise_me" || activeMode === "company";
@@ -32,9 +38,11 @@ function InterviewPage() {
   const [openInfo, setOpenInfo] = useState<"topics" | "hint" | null>(null);
   const [language, setLanguage] = useState<"python3" | "java">("python3");
   const [code, setCode] = useState("");
+  const latestCode = useRef(code);
+  useEffect(() => { latestCode.current = code; }, [code]);
   const voiceCall = useRef<VoiceCallHandle>(null);
   const snapshots = useCodeSnapshots(sessionId, code, loadState === "ready" && !ending,
-    () => voiceCall.current?.sendContextualUpdate(CODE_ACTIVITY_UPDATE) ?? false);
+    (_id, saved, previous) => voiceCall.current?.sendContextualUpdate(codeActivityUpdate(saved, language, previous)) ?? false);
   const [runResult, setRunResult] = useState<TestsResponse | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
@@ -74,6 +82,7 @@ function InterviewPage() {
           if (saved.problem_slug !== problemId) throw new Error("Session problem mismatch.");
           const loaded = saved.problem ?? await getProblem(problemId, controller.signal);
           setProblem({ ...loaded, starter_code: { python3: loaded.starter_code.python3 ?? "", java: loaded.starter_code.java ?? "", ...(saved.latest_code !== null ? { [saved.language]: saved.latest_code } : {}) } });
+          setStartedAt(saved.started_at);
           setLanguage(saved.language);
           setCode(saved.latest_code ?? loaded.starter_code[saved.language] ?? "");
         } else {
@@ -98,15 +107,27 @@ function InterviewPage() {
     return () => controller.abort();
   }, [problemId, routeSessionId, requestedMode, navigate]);
 
-  const ensureSession = async () => {
-    if (sessionId) {
-      await snapshots.save(sessionId, code, false);
-      return sessionId;
+  const ensureSession = async (saveInitialCode = true) => {
+    const existingId = sessionIdRef.current;
+    if (existingId) {
+      if (saveInitialCode) await snapshots.save(existingId, latestCode.current, false);
+      return existingId;
     }
     if (!problem) throw new Error("Problem is not loaded.");
-    const created = await createSession(problem.slug, activeMode === "surprise_me" ? "surprise" : activeMode, language);
+    if (!sessionCreation.current) {
+      sessionCreation.current = createSession(problem.slug, activeMode === "surprise_me" ? "surprise" : activeMode, language);
+    }
+    let created;
+    try {
+      created = await sessionCreation.current;
+    } catch (error) {
+      sessionCreation.current = null;
+      throw error;
+    }
+    sessionIdRef.current = created.id;
     setSessionId(created.id);
-    await snapshots.save(created.id, code);
+    setStartedAt(created.started_at);
+    if (saveInitialCode) await snapshots.save(created.id, latestCode.current);
     return created.id;
   };
 
@@ -117,48 +138,61 @@ function InterviewPage() {
     setEnding(true);
     setRunError(null);
     try {
-      if (sessionId) {
-        await snapshots.save(sessionId, code);
-        await endSession(sessionId);
-      }
-      navigate(sessionId ? "/report/" + encodeURIComponent(sessionId) : "/dashboard");
+      // Even a room opened directly, without starting voice, gets a saved session.
+      const id = sessionIdRef.current ?? await ensureSession(false);
+      await completeInterview({
+        stopVoice: async () => { await voiceCall.current?.stop(); },
+        waitForRun: async () => { await activeRun.current; },
+        saveFinal: () => snapshots.save(id, latestCode.current),
+        endSession: () => endSession(id),
+        isAlreadyCompleted: isCompletedSessionError,
+        showReport: () => navigate("/report/" + encodeURIComponent(id)),
+      });
     } catch (error) {
-      if (sessionId && isCompletedSessionError(error)) {
-        navigate("/report/" + encodeURIComponent(sessionId));
-        return;
-      }
       endStarted.current = false;
       setEnding(false);
       setRunError(error instanceof Error ? error.message : "Could not save your interview. Please try again.");
     }
   };
 
+  const timer = useInterviewTimer(startedAt, loadState === "ready" && !ending, handleEndInterview);
+
   const runCode = async () => {
+    if (endStarted.current || activeRun.current) return;
     if (!problem) {
       setRunError("Problem data is not available.");
       return;
     }
 
+    let finishRun!: () => void;
+    activeRun.current = new Promise<void>((resolve) => { finishRun = resolve; });
     setRunning(true);
     setExecutionTab("results");
     setResultsSplitSize(45);
     setRunError(null);
     setRunResult(null);
+    voiceCall.current?.sendContextualUpdate(RUN_STARTED_UPDATE);
 
     try {
       const sourceCode = code;
-      if (sessionId) await snapshots.save(sessionId, sourceCode);
-      try {
-        const result = await runTests({ slug: problem.slug, language, code: sourceCode });
-        setRunResult(result);
-        voiceCall.current?.sendContextualUpdate(summarizeRun(result));
-      } catch (error) {
-        voiceCall.current?.sendContextualUpdate(summarizeRunError(error));
-        throw error;
-      }
+      const id = await ensureSession(false);
+      // The snapshot (for get_current_code) and the test run are independent; run them
+      // in parallel instead of waiting for the save. The backend logs the run's code itself.
+      // A failed snapshot is retried by autosave and the final save on End.
+      const saving = snapshots.save(id, sourceCode).catch(() => {});
+      const result = await runTests({ slug: problem.slug, language, code: sourceCode, session_id: id });
+      setRunResult(result);
+      // The save (~0.2s) normally finished during the run; wait so the update carries its version.
+      await saving;
+      const saved = snapshots.latestSaved(id);
+      voiceCall.current?.sendContextualUpdate(runResultsUpdate(result,
+        saved?.code === sourceCode ? saved : { code: sourceCode, version: null }, language));
     } catch (error) {
+      voiceCall.current?.sendContextualUpdate(summarizeRunError(error));
       setRunError(error instanceof Error ? error.message : "Unable to run code.");
     } finally {
+      finishRun();
+      activeRun.current = null;
       setRunning(false);
     }
   };
@@ -185,13 +219,14 @@ function InterviewPage() {
   return (
     <div data-theme={theme} className={"interview-page [&.interview-page[data-theme=dark]]:[--page-bg:#0a1120] [&.interview-page[data-theme=dark]]:[--panel-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--line:#34445e] [&.interview-page[data-theme=dark]]:[--text-main:#f4f7fc] [&.interview-page[data-theme=dark]]:[--text-body:#c3cde0] [&.interview-page[data-theme=dark]]:[--text-muted:#8a97ad] [&.interview-page[data-theme=dark]]:[--surface:#1a2842] [&.interview-page[data-theme=dark]]:[--surface-hover:#22345a] [&.interview-page[data-theme=dark]]:[--code-surface:#16233b] [&.interview-page[data-theme=dark]]:[--video-self:#0c1626] [&.interview-page[data-theme=dark]]:[--video-interviewer:#2378db] [&.interview-page[data-theme=dark]]:[--avatar-ring:#2378db] [&.interview-page[data-theme=dark]]:[--accent-text:#6fa4ee] [&.interview-page[data-theme=dark]]:[--wave-a:#1c3d73] [&.interview-page[data-theme=dark]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=dark]]:[color-scheme:dark] [&.interview-page[data-theme=dark]]:[--editor-footer-bg:#0f1a2e] [&.interview-page[data-theme=dark]]:[--editor-footer-text:#a9bce0] [&.interview-page[data-theme=light]]:[--page-bg:#fbf4df] [&.interview-page[data-theme=light]]:[--panel-bg:#fff] [&.interview-page[data-theme=light]]:[--line:#292929] [&.interview-page[data-theme=light]]:[--text-main:#173153] [&.interview-page[data-theme=light]]:[--text-body:#254268] [&.interview-page[data-theme=light]]:[--text-muted:#587096] [&.interview-page[data-theme=light]]:[--surface:#fbf4df] [&.interview-page[data-theme=light]]:[--surface-hover:#f6e9bf] [&.interview-page[data-theme=light]]:[--code-surface:#fbf4df] [&.interview-page[data-theme=light]]:[--video-self:#fbf4df] [&.interview-page[data-theme=light]]:[--video-interviewer:#2378db] [&.interview-page[data-theme=light]]:[--avatar-ring:#2378db] [&.interview-page[data-theme=light]]:[--accent-text:#245d9e] [&.interview-page[data-theme=light]]:[--wave-a:#527db5] [&.interview-page[data-theme=light]]:[--wave-b:#2c5ba8] [&.interview-page[data-theme=light]]:[color-scheme:light] [&.interview-page[data-theme=light]]:[--editor-footer-bg:#fff] [&.interview-page[data-theme=light]]:[--editor-footer-text:#587096] [&.interview-page_.theme-panel]:[border-color:var(--line)] [&.interview-page_.theme-panel]:[background-color:var(--panel-bg)] [&.interview-page_.theme-border]:[border-color:var(--line)] [&.interview-page_.theme-main-text]:[color:var(--text-main)] [&.interview-page_.theme-body-text]:[color:var(--text-body)] [&.interview-page_.theme-muted-text]:[color:var(--text-muted)] [&.interview-page_.theme-surface]:[background-color:var(--surface)] [&.interview-page_.theme-surface-hover:hover]:[background-color:var(--surface-hover)] [&.interview-page_.theme-code-surface]:[background-color:var(--code-surface)] [&.interview-page_.theme-video-self]:[border-color:var(--line)] [&.interview-page_.theme-video-self]:[background-color:var(--video-self)] [&.interview-page_.theme-video-interviewer]:[background-color:var(--video-interviewer)] [&.interview-page_.theme-avatar-ring]:[--tw-ring-color:var(--avatar-ring)] [&.interview-page_.problem-title]:[font-size:24px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border:1px_solid_var(--line)] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[border-radius:11px] [&.interview-page_header_>_div:nth-child(2)_>_button:first-child]:[background:var(--panel-bg)] [&.interview-page_button:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_button:focus-visible]:[outline-offset:3px] [&.interview-page_summary:focus-visible]:[outline:2px_solid_#305ed1] [&.interview-page_summary:focus-visible]:[outline-offset:3px] [@media_(max-width:_950px)]:[&.interview-page]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page]:[min-height:100vh] [@media_(max-width:_950px)]:[&.interview-page]:[overflow:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[flex-wrap:wrap] [@media_(max-width:_950px)]:[&.interview-page_header]:[height:auto] [@media_(max-width:_950px)]:[&.interview-page_header]:[min-height:110px] [@media_(max-width:_950px)]:[&.interview-page_header]:[gap:12px] [@media_(max-width:_950px)]:[&.interview-page_header]:[padding:12px_16px] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[position:static] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[transform:none] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[order:3] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[width:100%] [@media_(max-width:_950px)]:[&.interview-page_header_>_div:nth-child(2)]:[justify-content:center] [&.interview-page_.sandbox-code_>_div:last-child]:[background:var(--editor-footer-bg)] [&.interview-page_.sandbox-code_>_div:last-child]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-code_>_div:last-child]:[border-color:var(--line)] [&.interview-page_.sandbox-code_>_div:last-child_.theme-muted-text]:[color:var(--editor-footer-text)] [&.interview-page_.sandbox-problem_nav]:[border-color:var(--line)] [&.interview-page_.sandbox-problem_pre]:[border-color:var(--line)] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[background:#2378db] [&.interview-page_.sandbox-theme-toggle_button[aria-pressed=true]]:[color:#fff] [&.interview-page[data-theme=dark]_.difficulty-easy]:[background:#173a2c] [&.interview-page[data-theme=dark]_.difficulty-easy]:[color:#79dfac] [&.interview-page[data-theme=dark]_.difficulty-easy]:[border-color:#397653] [&.interview-page[data-theme=dark]_.difficulty-medium]:[background:#3a3217] [&.interview-page[data-theme=dark]_.difficulty-medium]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.difficulty-medium]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.difficulty-hard]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.difficulty-hard]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.difficulty-hard]:[border-color:#8d4550] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[background:#3a3217] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[color:#f0cf76] [&.interview-page[data-theme=dark]_.sandbox-result-count]:[border-color:#806a2b] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[background:#3a1c20] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed]:[border-color:#aa5360] [&.interview-page[data-theme=dark]_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#ffa2ac] [&.interview-page[data-theme=dark]_.sandbox-case.failed_.sandbox-case-dot]:[background:#ff8796] [&.interview-page[data-theme=dark]_.sandbox-case.passed_.sandbox-case-dot]:[background:#79a9ff] [&.interview-page[data-theme=dark]_button:focus-visible]:[outline-color:#fac52e] [&.interview-page[data-theme=dark]_summary:focus-visible]:[outline-color:#fac52e] [&.interview-page_.sandbox-layout]:[display:flex] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border:0] [&.interview-page_.sandbox-input-cases_.sandbox-case]:[border-radius:18px] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[background:var(--surface)] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_>_span:nth-of-type(2)]:[color:#cc3c09] [&.interview-page[data-theme=light]_.sandbox-input-cases_.sandbox-case.failed_.sandbox-case-dot]:[background:#cc3c09] relative flex h-screen flex-col overflow-hidden bg-[var(--page-bg)] font-sans text-[var(--text-main)]"}>
       <TopBar
-        timer={session.timer}
+        timer={timer}
         theme={theme}
         modeLabel={modeLabels[activeMode]}
         onThemeChange={setTheme}
         onRun={runCode}
         onSubmit={() => void handleEndInterview()}
-        running={running || ending}
+        running={running}
+        ending={ending}
       />
 
       {snapshots.error && <p role="alert" className="px-5 py-2 text-sm text-red-500">{snapshots.error}</p>}
@@ -205,8 +240,8 @@ function InterviewPage() {
                 <ResizableSplit direction="horizontal" storageKey="clario-sandbox-problem-width" initialSize={36}
                   label="Resize problem and code editor"
                   first={<ProblemPanel problem={problem} solved={runResult?.status === "Accepted"} />}
-                  second={<CodePanel key={problem.slug} lockLanguage={Boolean(sessionId)} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
-                    onChange={(nextLanguage, nextCode) => { setLanguage(nextLanguage); setCode(nextCode); }} />}
+                  second={<CodePanel key={problem.slug} lockLanguage={Boolean(sessionId) || running || ending} starterCode={problem.starter_code} theme={theme} initialLanguage={language}
+                    onChange={(nextLanguage, nextCode) => { latestCode.current = nextCode; setLanguage(nextLanguage); setCode(nextCode); }} />}
                 />
               }
               second={<TestResultPanel descriptionHtml={problem.description_html} tab={executionTab} onTabChange={setExecutionTab} running={running} starterCode={problem.starter_code.python3} testcases={problem.example_testcases} result={runResult} error={runError} />}
@@ -237,7 +272,7 @@ function InterviewPage() {
               </div> : <p className="theme-muted-text text-sm">Hints coming soon.</p>}
             </div>}
           </div>
-          <VideoCallPanel ref={voiceCall} round={session.round} interviewer={session.interviewer} ensureSession={ensureSession} onEndInterview={handleEndInterview} />
+          <VideoCallPanel ref={voiceCall} ending={ending} round={session.round} interviewer={session.interviewer} ensureSession={ensureSession} onEndInterview={handleEndInterview} />
         </div>
           }
         />

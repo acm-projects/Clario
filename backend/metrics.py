@@ -6,7 +6,21 @@ speech end/duration fields. Start offsets and service latency are not speaking t
 import re
 from collections.abc import Mapping, Sequence
 
-FILLERS = re.compile(r'\b(?:um|uh|erm|you\s+know|kind\s+of|sort\s+of)\b', re.IGNORECASE)
+# The single filler definition shared by final metrics, browser captures and report
+# evidence. Phrase fillers skip common literal uses in technical speech:
+# "what kind of tree", "a sort of list", "do you know the size", "if you know n".
+_NOT_AFTER_DETERMINER = ''.join(rf'(?<!\b{word}\s)' for word in ('a', 'an', 'the', 'what', 'which', 'this', 'that', 'any', 'same', 'one', 'some', 'every'))
+_NOT_AFTER_QUESTION = ''.join(rf'(?<!\b{word}\s)' for word in ('do', 'did', 'if', 'as', 'what', 'whether', 'when'))
+FILLERS = re.compile(
+    r'\b(?:um+|uh+|erm+|hmm+|i\s+mean'
+    rf'|{_NOT_AFTER_QUESTION}you\s+know'
+    rf'|{_NOT_AFTER_DETERMINER}(?:kind|sort)\s+of)\b',
+    re.IGNORECASE,
+)
+
+
+def filler_key(match: re.Match) -> str:
+    return ' '.join(match.group().lower().split())
 QUESTION_START = re.compile(r'^(?:what|how|can|should|is|does|are|do|would|will)\b', re.IGNORECASE)
 
 

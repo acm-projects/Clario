@@ -11,6 +11,21 @@ from db import supabase
 router = APIRouter(prefix="/api/voice-tools", tags=["voice tools"])
 
 
+def snapshot_version(session_id: str, created_at: str) -> int | None:
+    """1-based position of a snapshot within its session.
+
+    Computed from storage, so the save response the browser labels its contextual
+    updates with and this tool's response always agree on which version is newest.
+    """
+    try:
+        count = (supabase.table("code_snapshots").select("id", count="exact")
+                 .eq("session_id", session_id).lte("created_at", created_at)
+                 .execute().count)
+    except Exception:
+        return None
+    return count if isinstance(count, int) and count > 0 else None
+
+
 @router.get("/sessions/{session_id}/code")
 def get_current_code(
     session_id: UUID,
@@ -55,5 +70,6 @@ def get_current_code(
         "code": snapshot["code"] if snapshot else None,
         "language": snapshot["language"] if snapshot else sessions[0]["language"],
         "snapshot_id": snapshot["id"] if snapshot else None,
+        "version": snapshot_version(session_id, snapshot["created_at"]) if snapshot else None,
         "saved_at": snapshot["created_at"] if snapshot else None,
     }, headers={"Cache-Control": "no-store"})

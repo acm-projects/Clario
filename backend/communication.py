@@ -1,11 +1,17 @@
 """Communication observations from microphone volume and a browser transcript."""
 import re
 from uuid import UUID
+from datetime import datetime
 from pydantic import BaseModel, Field, model_validator
 
-FILLERS = re.compile(r"\b(?:um+|uh+|erm+|hmm+|you know|i mean|sort of|kind of)\b", re.I)
+from metrics import FILLERS, filler_key
+
+class SilenceInterval(BaseModel):
+    started_at: datetime
+    duration_seconds: float = Field(ge=0, le=86400, allow_inf_nan=False)
 
 class CommunicationCapture(BaseModel):
+    silence_intervals: list[SilenceInterval] | None = Field(default=None, max_length=2000)
     capture_id: UUID
     monitored_seconds: float = Field(ge=0, le=86400, allow_inf_nan=False)
     silent_seconds: float = Field(ge=0, le=86400, allow_inf_nan=False)
@@ -17,6 +23,11 @@ class CommunicationCapture(BaseModel):
     def check_durations(self):
         if self.silent_seconds > self.monitored_seconds or self.longest_pause_seconds > self.silent_seconds:
             raise ValueError("Silence durations exceed monitored time")
+        if self.silence_intervals:
+            if sum(interval.duration_seconds for interval in self.silence_intervals) > self.silent_seconds + 0.1:
+                raise ValueError("Silence intervals exceed observed silence")
+            if any(interval.started_at.tzinfo is None for interval in self.silence_intervals):
+                raise ValueError("Silence timestamps require a timezone")
         return self
 
 
@@ -40,7 +51,7 @@ def summarize_captures(events):
     words = len(re.findall(r"\b[\w']+\b", transcript))
     fillers = {}
     for match in FILLERS.finditer(transcript):
-        word = match.group().lower()
+        word = filler_key(match)
         fillers[word] = fillers.get(word, 0) + 1
     speech_seconds = monitored - silent
     return {

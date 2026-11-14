@@ -56,11 +56,12 @@ export type RunTestsInput = {
   slug: string;
   language: Language;
   code: string;
+  session_id?: string;
 };
 
 /** POST /run/tests — runs `code` against the problem's test cases. */
 export function runTests(
-  { slug, language, code }: RunTestsInput,
+  { slug, language, code, session_id }: RunTestsInput,
   signal?: AbortSignal,
 ): Promise<TestsResponse> {
   return request<TestsResponse>("/run/tests", {
@@ -70,9 +71,10 @@ export function runTests(
       slug,
       language: BACKEND_LANGUAGE[language],
       code,
+      session_id,
     }),
     signal,
-  });
+  }, Boolean(session_id));
 }
 
 export interface InterviewSession {
@@ -102,7 +104,7 @@ export function getSession(id: string, signal?: AbortSignal) {
 }
 
 export function saveSnapshot(id: string, code: string) {
-  return request<{ created_at: string }>("/api/sessions/" + encodeURIComponent(id) + "/snapshots", {
+  return request<{ created_at: string; version: number | null }>("/api/sessions/" + encodeURIComponent(id) + "/snapshots", {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }),
   }, true);
 }
@@ -136,8 +138,8 @@ export function getScenario(slug: string, signal?: AbortSignal): Promise<Scenari
 export function getFeedbackHistory(signal?: AbortSignal): Promise<unknown[]> {
   return request<unknown[]>("/api/feedback", { signal }, true);
 }
-export function generateSessionFeedback(sessionId: string): Promise<unknown> {
-  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), { method: "POST" }, true);
+export function generateSessionFeedback(sessionId: string, signal?: AbortSignal): Promise<unknown> {
+  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), { method: "POST", signal }, true);
 }
 
 export type FeedbackPreview = {
@@ -161,6 +163,6 @@ export function previewGeminiFeedback(): Promise<FeedbackPreview> {
   return request<FeedbackPreview>("/api/feedback/preview/two-sum", { method: "POST" }, true);
 }
 
-export function getSessionFeedback(sessionId: string): Promise<unknown> {
-  return request<unknown>("/api/feedback/" + encodeURIComponent(sessionId), {}, true);
+export function getSessionFeedback(sessionId: string, signal?: AbortSignal): Promise<import("./reportLoader").SessionFeedbackState> {
+  return request<import("./reportLoader").SessionFeedbackState>("/api/feedback/" + encodeURIComponent(sessionId), { signal }, true);
 }

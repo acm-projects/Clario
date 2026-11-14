@@ -10,8 +10,8 @@ type Recognition = {
  start(): void; stop(): void; abort(): void;
 };
 type SpeechWindow = Window & { SpeechRecognition?: new () => Recognition; webkitSpeechRecognition?: new () => Recognition };
-type Capture = { capture_id: string; monitored_seconds: number; silent_seconds: number; longest_pause_seconds: number; transcript: string; transcription_available: boolean };
-const blank = (): Capture => ({ capture_id: crypto.randomUUID(), monitored_seconds: 0, silent_seconds: 0, longest_pause_seconds: 0, transcript: "", transcription_available: false });
+type Capture = { silence_intervals: { started_at: string; duration_seconds: number }[]; capture_id: string; monitored_seconds: number; silent_seconds: number; longest_pause_seconds: number; transcript: string; transcription_available: boolean };
+const blank = (): Capture => ({ silence_intervals: [], capture_id: crypto.randomUUID(), monitored_seconds: 0, silent_seconds: 0, longest_pause_seconds: 0, transcript: "", transcription_available: false });
 export function fillerCount(text: string) { return (text.match(/\b(?:um+|uh+|erm+|hmm+|you know|i mean|sort of|kind of)\b/gi) ?? []).length; }
 
 export function useSpeechCoach(sessionId: string | null) {
@@ -72,6 +72,7 @@ export function useSpeechCoach(sessionId: string | null) {
    const source = audio.createMediaStreamSource(stream); source.connect(analyser);
    const samples = new Float32Array(analyser.fftSize);
    let stopped = false, currentPause = 0, last = performance.now(), lastVoice = last;
+   let interval: { started_at: string; duration_seconds: number } | null = null;
    let recognition: Recognition | undefined;
    let restartTimer: ReturnType<typeof setTimeout> | undefined;
    const Constructor = (window as SpeechWindow).SpeechRecognition ?? (window as SpeechWindow).webkitSpeechRecognition;
@@ -98,15 +99,21 @@ export function useSpeechCoach(sessionId: string | null) {
    } else setTranscriptionStatus("Transcription unsupported; silence tracking only");
    const timer = setInterval(() => {
     const now = performance.now(), dt = (now - last) / 1000; last = now;
-    if (document.hidden || audio?.state !== "running" || dt > 1) { currentPause = 0; lastVoice = now; setPause(0); return; }
+    if (document.hidden || audio?.state !== "running" || dt > 1 || stream?.getAudioTracks().some(t => t.muted || !t.enabled)) { currentPause = 0; interval = null; lastVoice = now; setPause(0); return; }
     analyser.getFloatTimeDomainData(samples);
     const rms = Math.sqrt(samples.reduce((sum, value) => sum + value * value, 0) / samples.length);
     if (rms >= 0.018) lastVoice = now;
     const quiet = now - lastVoice > 300;
     const value = capture.current!;
     value.monitored_seconds += dt;
-    if (quiet) { value.silent_seconds += dt; currentPause += dt; }
-    else currentPause = 0;
+    if (quiet && !stream?.getAudioTracks().some(t => t.muted || !t.enabled)) {
+     value.silent_seconds += dt; currentPause += dt;
+     if (!interval && value.silence_intervals.length < 2000) {
+      interval = { started_at: new Date(Date.now() - dt * 1000).toISOString(), duration_seconds: 0 };
+      value.silence_intervals.push(interval);
+     }
+     if (interval) interval.duration_seconds += dt;
+    } else { currentPause = 0; interval = null; }
     value.longest_pause_seconds = Math.max(value.longest_pause_seconds, currentPause);
     setPause(currentPause); publish();
    }, 200);

@@ -149,6 +149,19 @@ def _sort_key(row: dict) -> int:
     return int(lid) if lid.isdigit() else 10**9
 
 
+def _merge_saved(live: list[dict], saved: list[dict]) -> list[dict]:
+    """Live rows plus saved rows not already present, ordered by problem number."""
+    seen = {row["slug"] for row in live}
+    merged = live + [row for row in saved if row["slug"] not in seen]
+
+    def number(row):
+        try:
+            return (0, int(row.get("leetcode_id") or ""))
+        except ValueError:
+            return (1, 0)  # unnumbered rows keep their relative order at the end
+    return sorted(merged, key=number)
+
+
 def _db_problem_list(difficulty, topic, search):
     """Saved problems, filtered like the live list. None means no usable fallback data."""
     try:
@@ -218,7 +231,10 @@ def get_problem_list(difficulty=None, topic=None, search=None) -> list[dict]:
     try:
         result = fetch_live_problem_list(difficulty, topic, search)
         logger.info("problem list served from live API")
-        return result
+        # The live API only returns its first batch by problem number, so saved library
+        # problems past it (e.g. #217 Contains Duplicate) would never appear or be
+        # searchable. Always merge in our saved problems that match the same filters.
+        return _merge_saved(result, _db_problem_list(difficulty, topic, search) or [])
     except (httpx.HTTPError, ValueError) as e:
         logger.warning("Live problem list failed (%s); trying Supabase fallback", e)
         rows = _db_problem_list(difficulty, topic, search)

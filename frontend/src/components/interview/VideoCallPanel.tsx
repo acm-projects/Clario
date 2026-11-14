@@ -6,6 +6,7 @@ import { Panel, Pill } from "./Panel";
 
 export interface VoiceCallHandle {
   sendContextualUpdate: (summary: string) => boolean;
+  stop: () => Promise<void>;
 }
 
 interface VideoCallPanelProps {
@@ -14,6 +15,7 @@ interface VideoCallPanelProps {
   interviewer: string;
   ensureSession: () => Promise<string>;
   speaking?: boolean;
+  ending?: boolean;
   onEndInterview: () => void;
 }
 
@@ -69,7 +71,7 @@ function voiceStartupError(error: unknown): string {
   return error instanceof Error ? error.message : "Could not start the interview.";
 }
 
-export function VideoCallPanel({ ref, round, interviewer, ensureSession, speaking = true, onEndInterview }: VideoCallPanelProps) {
+export function VideoCallPanel({ ref, round, interviewer, ensureSession, speaking = true, ending = false, onEndInterview }: VideoCallPanelProps) {
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
@@ -81,9 +83,19 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
   const conversationRef = useRef<Awaited<ReturnType<typeof Conversation.startSession>> | null>(null);
 
   const startingRef = useRef(false);
+  const startupGeneration = useRef(0);
   const transcriptQueue = useRef<Promise<void>>(Promise.resolve());
 
   useImperativeHandle(ref, () => ({
+    async stop() {
+      startupGeneration.current++;
+      const conversation = conversationRef.current;
+      conversationRef.current = null;
+      if (conversation) await conversation.endSession();
+      await transcriptQueue.current;
+      setVoiceStatus("idle");
+      setIsSpeaking(false);
+    },
     sendContextualUpdate(summary: string) {
       const conversation = conversationRef.current;
       if (!conversation?.isOpen()) return false;
@@ -98,8 +110,9 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
   }), []);
 
   const startInterview = useCallback(async () => {
-    if (startingRef.current || voiceStatus === "active") return;
+    if (ending || startingRef.current || voiceStatus === "active") return;
     startingRef.current = true;
+    const generation = ++startupGeneration.current;
 
     setVoiceStatus("starting");
     setVoiceError(null);
@@ -113,6 +126,7 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
 
       const sessionId = await ensureSession();
       const session = await getVoiceSession(sessionId);
+      if (generation !== startupGeneration.current) return;
       let markLinked!: (success: boolean) => void;
       const linked = new Promise<boolean>((resolve) => { markLinked = resolve; });
       let sequence = 0;
@@ -126,8 +140,9 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
           const turn = { speaker: role, text: message, received_at: new Date().toISOString(), sequence_number: sequence++ };
           transcriptQueue.current = transcriptQueue.current.then(async () => {
             if (await linked) await saveTranscript(sessionId, turn);
-          }).catch(() => {
-            setVoiceError("A transcript message could not be saved. Please end the interview and check your connection.");
+          }).catch((error: unknown) => {
+            const detail = error instanceof Error ? error.message : "Connection error";
+            setVoiceError(`A live transcript turn could not be saved after retries (${detail}). The final transcript will be reconciled after the call.`);
           });
         },
         onModeChange: ({ mode }) => setIsSpeaking(mode === "speaking"),
@@ -141,6 +156,9 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
           setVoiceStatus("error");
         },
       });
+      if (generation !== startupGeneration.current) {
+        throw new Error("Interview ended while the voice call was starting.");
+      }
       await linkConversation(sessionId, conversationRef.current.getId());
       markLinked(true);
       } catch (error) {
@@ -156,15 +174,7 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
     } finally {
       startingRef.current = false;
     }
-  }, [ensureSession, voiceStatus]);
-
-  const endVoiceSession = useCallback(() => {
-    const conversation = conversationRef.current;
-    conversationRef.current = null;
-    if (conversation) void conversation.endSession();
-    setVoiceStatus("idle");
-    setIsSpeaking(false);
-  }, []);
+  }, [ensureSession, voiceStatus, ending]);
 
   const turnCameraOn = useCallback(async () => {
     const requestId = ++cameraRequestRef.current;
@@ -196,6 +206,7 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
   };
 
   useEffect(() => {
+    const startup = startupGeneration;
     const requestId = ++cameraRequestRef.current;
     let disposed = false;
 
@@ -220,6 +231,7 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
 
     return () => {
       disposed = true;
+      startup.current++;
       cameraRequestRef.current += 1;
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
@@ -274,7 +286,7 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
               <button
                 type="button"
                 onClick={() => void startInterview()}
-                disabled={voiceStatus === "starting"}
+                disabled={ending || voiceStatus === "starting"}
                 className="rounded-full bg-[#fac52e] px-5 py-3 text-sm font-semibold text-[#122b50] shadow-lg transition hover:bg-[#ffd75d] disabled:cursor-wait disabled:opacity-70"
               >
                 {voiceStatus === "starting" ? "Starting interview…" : voiceStatus === "error" ? "Try again" : "Start interview"}
@@ -333,9 +345,9 @@ export function VideoCallPanel({ ref, round, interviewer, ensureSession, speakin
         <button
           type="button"
           aria-label="End interview"
+          disabled={ending}
           onClick={() => {
             if (window.confirm("End interview?")) {
-              endVoiceSession();
               onEndInterview();
             }
           }}

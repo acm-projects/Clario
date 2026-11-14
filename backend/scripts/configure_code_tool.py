@@ -31,14 +31,18 @@ def main():
     agent = client.conversational_ai.agents.get(agent_id=agent_id)
     prompt = agent.conversation_config.agent.prompt
     tool_ids = list(prompt.tool_ids or [])
-    # Do not silently replace legacy inline tool configurations.
-    if prompt.tools:
-        parser.error('Agent uses inline tools; migrate/review them before attaching a tool by ID')
     matches = []
+    attached_names = set()
     for tool_id in tool_ids:
         tool = client.conversational_ai.tools.get(tool_id=tool_id)
+        attached_names.add(tool.tool_config.name)
         if tool.tool_config.name == 'get_current_code':
             matches.append(tool_id)
+    # The API also lists attached tools, expanded, under prompt.tools. Only refuse when
+    # there is a genuinely inline (legacy) tool, so we never silently replace one.
+    legacy = [tool for tool in (prompt.tools or []) if getattr(tool, 'name', None) not in attached_names]
+    if legacy:
+        parser.error('Agent uses inline tools; migrate/review them before attaching a tool by ID')
     if len(matches) > 1:
         parser.error('More than one attached get_current_code tool; review before updating')
 

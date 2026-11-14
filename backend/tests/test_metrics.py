@@ -19,6 +19,10 @@ class MetricsTests(unittest.TestCase):
     def test_all_requested_fillers_and_phrase_whitespace(self):
         self.assertEqual(count_filler_words(['UM uh Erm you know kind of sort of', 'YOU  KNOW']),7)
 
+    def test_literal_technical_phrases_are_not_fillers(self):
+        self.assertEqual(count_filler_words(['What kind of tree is it?', 'a sort of list', 'Do you know the size?', 'if you know n', 'the same kind of loop']),0)
+        self.assertEqual(count_filler_words(["It's kind of slow, you know, and umm I mean hmm"]),5)
+
     def test_one_question_per_turn_and_question_word_boundaries(self):
         self.assertEqual(count_questions(['How should I do this?', 'Two questions? Really?', 'island is a word', 'Whatsoever']),2)
         for word in ('what','how','can','should','is','does','are','do','would','will'):

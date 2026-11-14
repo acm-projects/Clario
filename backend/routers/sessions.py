@@ -13,6 +13,7 @@ from postgrest.exceptions import APIError
 from auth import get_current_user
 from db import supabase
 from leetcode import get_problem
+from communication import CommunicationCapture
 
 logger = logging.getLogger(__name__)
 
@@ -277,7 +278,8 @@ def create_snapshot(session_id: str, body: SnapshotCreate, user: dict = Depends(
         .execute()
         .data
     )
-    return {"created_at": row[0]["created_at"]}
+    from voice.tools import snapshot_version
+    return {"created_at": row[0]["created_at"], "version": snapshot_version(session_id, row[0]["created_at"])}
 
 
 @router.patch("/{session_id}/end")
@@ -397,3 +399,16 @@ def save_transcript(session_id: UUID, body: TranscriptCreate, user: dict = Depen
         # Keep existing live interviews usable while the additive post-call migration
         # is being applied. Once installed, the RPC serializes late/final turns.
         return supabase.table("transcript_events").upsert(row, on_conflict="id").execute().data[0]
+
+
+@router.post('/{session_id}/communication')
+def save_communication(session_id: UUID, body: CommunicationCapture, user: dict = Depends(get_current_user)):
+    session_id = str(session_id)
+    session = get_owned_session(session_id, user['sub'])
+    if session['status'] != 'in_progress':
+        raise HTTPException(409, 'This interview has already ended.')
+    supabase.table('session_events').insert({
+        'session_id': session_id, 'event_type': 'communication_summary',
+        'metadata': body.model_dump(mode='json'),
+    }).execute()
+    return {'saved': True}

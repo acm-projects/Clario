@@ -49,6 +49,7 @@ class Query:
     def limit(self,*args): return self
     def eq(self,key,value): self.filters.append(lambda row:row.get(key)==value);return self
     def in_(self,key,values): self.filters.append(lambda row:row.get(key) in values);return self
+    def lt(self,key,value): self.filters.append(lambda row:row.get(key) is not None and row.get(key)<value);return self
     def update(self,data): self.action='update';self.data=data;return self
     def upsert(self,data,on_conflict,ignore_duplicates=False):
         self.action='upsert';self.data=data;self.conflict=on_conflict;self.ignore=ignore_duplicates;return self
@@ -170,6 +171,19 @@ class PostCallTests(unittest.TestCase):
         self.deliver()
         self.generate.assert_awaited_once()
         self.assertEqual(self.db.rows['post_call_jobs'][0]['status'],'completed')
+
+    def test_job_orphaned_in_processing_is_reclaimed_but_a_live_one_is_not(self):
+        from datetime import datetime, timedelta, timezone
+        import asyncio
+        self.deliver()
+        job=self.db.rows['post_call_jobs'][0]
+        job.update(status='processing',updated_at=datetime.now(timezone.utc).isoformat())
+        asyncio.run(webhooks.process_post_call('conv_test'))
+        self.assertEqual(self.generate.await_count,1)  # fresh claim: another worker owns it
+        job.update(status='processing',updated_at=(datetime.now(timezone.utc)-timedelta(minutes=10)).isoformat())
+        asyncio.run(webhooks.process_post_call('conv_test'))
+        self.assertEqual(self.generate.await_count,2)
+        self.assertEqual(job['status'],'completed')
 
     def test_required_feedback_alias_is_registered(self):
         from main import app

@@ -25,9 +25,9 @@ class VoiceToolTests(unittest.TestCase):
 
     def query(self, rows):
         query = MagicMock()
-        for name in ('select', 'eq', 'order', 'limit'):
+        for name in ('select', 'eq', 'order', 'limit', 'lte'):
             getattr(query, name).return_value = query
-        query.execute.return_value = SimpleNamespace(data=rows)
+        query.execute.return_value = SimpleNamespace(data=rows, count=4)
         return query
 
     def get(self, headers=None, sid=SID):
@@ -54,13 +54,25 @@ class VoiceToolTests(unittest.TestCase):
         self.session.eq.assert_any_call('conversation_id', 'conv_1')
         self.snapshot.execute.assert_not_called()
 
+    def test_snapshot_version_counts_stored_snapshots_up_to_this_one(self):
+        response = self.get()
+        self.assertEqual(response.json()['version'], 4)
+        self.snapshot.lte.assert_called_with('created_at', '2026-11-02T12:00:00Z')
+        self.snapshot.eq.assert_any_call('session_id', SID)
+
+    def test_version_lookup_failure_still_returns_code(self):
+        self.snapshot.execute.return_value = SimpleNamespace(data=self.snapshot.execute.return_value.data, count=None)
+        response = self.get()
+        self.assertEqual((response.json()['code'], response.json()['version']), ('latest code', None))
+
     def test_returns_newest_scoped_snapshot_without_caching(self):
         response = self.get()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['code'], 'latest code')
         self.assertTrue(response.json()['available'])
         self.assertEqual(response.headers['cache-control'], 'no-store')
-        self.snapshot.eq.assert_called_once_with('session_id', SID)
+        # Both the code read and its version count are scoped to this session only.
+        self.assertEqual({call.args for call in self.snapshot.eq.call_args_list}, {('session_id', SID)})
         self.snapshot.order.assert_any_call('created_at', desc=True)
         self.snapshot.limit.assert_called_once_with(1)
 

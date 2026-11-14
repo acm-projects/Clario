@@ -3,7 +3,7 @@ import asyncio
 import logging
 import math
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from uuid import NAMESPACE_URL, uuid5
 
 from elevenlabs import ElevenLabs
@@ -13,7 +13,8 @@ from starlette.concurrency import run_in_threadpool
 from config import settings
 from db import supabase
 from metrics import calculate_communication_metrics
-from routers.feedback import generate_feedback_for_session
+from gemini_feedback import TOTAL_BUDGET_SECONDS
+from routers.feedback import STALE_PROCESSING_SECONDS, generate_feedback_for_session
 
 router = APIRouter(prefix='/api/webhooks', tags=['webhooks'])
 logger = logging.getLogger(__name__)
@@ -66,8 +67,19 @@ def store_final_evidence(session: dict, data: dict) -> dict:
 
 def claim_job(conversation_id: str) -> dict | None:
     # Atomic status transition prevents simultaneous deliveries from processing twice.
-    rows = (supabase.table('post_call_jobs').update({'status': 'processing', 'updated_at': datetime.now(timezone.utc).isoformat()})
+    now = datetime.now(timezone.utc)
+    claim = {'status': 'processing', 'updated_at': now.isoformat()}
+    rows = (supabase.table('post_call_jobs').update(claim)
             .eq('conversation_id', conversation_id).in_('status', RETRY_STATUSES).execute().data)
+    if rows:
+        return rows[0]
+    # A claim older than any healthy run belongs to a worker that died mid-job (server
+    # restart, uvicorn --reload). Re-claiming refreshes updated_at, so only one caller wins.
+    cutoff = (now - timedelta(seconds=STALE_PROCESSING_SECONDS)).isoformat()
+    rows = (supabase.table('post_call_jobs').update(claim)
+            .eq('conversation_id', conversation_id).eq('status', 'processing').lt('updated_at', cutoff).execute().data)
+    if rows:
+        logger.warning('Reclaimed stale post-call job %s', conversation_id)
     return rows[0] if rows else None
 
 
@@ -109,13 +121,17 @@ async def process_post_call(conversation_id: str):
             return
         # Same service as POST /api/sessions/{id}/feedback, without forging a user JWT
         # or making an HTTP request back into this server.
-        await generate_feedback_for_session(session, refresh=True, final_metrics=metrics, final_transcript=True)
+        try:
+            await asyncio.wait_for(generate_feedback_for_session(session, refresh=True, final_metrics=metrics, final_transcript=True),
+                                   timeout=TOTAL_BUDGET_SECONDS + 15)
+        except asyncio.TimeoutError:
+            raise HTTPException(504, 'Feedback took too long. Your interview is saved; please retry.') from None
         await run_in_threadpool(update_job, conversation_id, status='metrics_failed' if metrics_failed else 'completed',
                                 metrics_failed=metrics_failed, last_error='Metrics unavailable' if metrics_failed else None)
-    except Exception:
+    except Exception as error:
         logger.exception('Post-call processing failed; durable job retained for retry')
         try:
-            await run_in_threadpool(update_job, conversation_id, status='failed', last_error='Post-call processing failed; inspect server logs')
+            await run_in_threadpool(update_job, conversation_id, status='failed', last_error=error.detail if isinstance(error, HTTPException) and isinstance(error.detail, str) else 'Post-call processing failed; please retry or inspect server logs')
         except Exception:
             logger.exception('Could not update post-call job status')
 

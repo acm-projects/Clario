@@ -163,7 +163,7 @@ nonexistent session/conversation should return 404.
 
 After a changed autosave succeeds, the room sends a brief code-activity contextual
 update to the current open voice call. Successful notifications are limited to one
-per 30 seconds per session; saving still checks every 10 seconds. Unchanged code,
+per 10 seconds per session; saving still checks every 10 seconds. Unchanged code,
 failed saves, inactive calls, and forced Run/End snapshots do not produce these
 notifications. The notification contains no code; the agent uses get_current_code
 to retrieve the latest saved snapshot on its next natural turn.
@@ -177,5 +177,25 @@ No additional backend polling or background code evaluation was added.
 For a manual check, start a new interview, edit code, and let autosave finish.
 Continue explaining your approach rather than asking for review. Check the
 ElevenLabs conversation/tool logs for get_current_code on a subsequent agent turn.
-Keep editing to check notifications are at least 30 seconds apart, then stop editing
+Keep editing to check notifications are at least 10 seconds apart, then stop editing
 and confirm no new code-activity notifications appear.
+
+
+### Faster code and Run awareness
+
+The editor additionally saves changed code after a 2-second typing pause. The
+10-second interval remains as a fallback while typing continuously. Both use the
+same ordered writer and skip unchanged code. Stopping autosave cancels both timers.
+Code-activity notifications are now throttled to 10 seconds rather than 30 seconds.
+
+Clicking Run immediately sends a small contextual update saying testing is being
+prepared, with no verdict yet. The result summary still follows the actual response.
+Run preparation now saves just one explicit pre-Run snapshot rather than redundantly
+saving through ensureSession as well. Preparation failures also send a factual
+failure update. The interviewer prompt prioritizes acknowledging the supplied verdict
+and pass counts on its next natural response without fetching code first just to
+acknowledge those results. Reviewing implementation still requires get_current_code.
+
+These changes reduce application-side waiting; they do not force an immediate spoken
+turn, remove provider latency, or bypass backend execution logging. Start a new
+conversation to receive the updated prompt. Live perceived latency remains to be checked.

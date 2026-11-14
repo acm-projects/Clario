@@ -78,6 +78,6 @@ class FeedbackCommunicationTests(unittest.TestCase):
             self.assertEqual(evidence["communication_metrics"]["filler_count"], 2)
             self.assertEqual(evidence["session_events"], [])
             saved = tables["feedback_reports"].upsert.call_args.args[0]
-            self.assertEqual(saved["report"]["communication_metrics"]["silent_seconds"], 5)
+            self.assertNotIn("silent_seconds", saved["report"]["communication_metrics"])
         finally:
             app.dependency_overrides.clear()

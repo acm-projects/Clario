@@ -1,22 +1,34 @@
 
 export const scoreColumns = [
-  { label: "Technical", key: "technical_score", color: "#4c83a3" },
+  { label: "Coding", key: "technical_score", color: "#4c83a3" },
   { label: "Reasoning", key: "reasoning_score", color: "#9b8ca9" },
   { label: "Communication", key: "communication_score", color: "#78aaa2" },
   { label: "Overall", key: "overall_score", color: "#d3a34f" },
 ] as const;
 export type ScoreKey = typeof scoreColumns[number]["key"];
-export type CommunicationMetrics = {
+export type MicrophoneMetrics = {
+  kind: "microphone";
   monitored_seconds: number; silent_seconds: number; silence_percent: number;
   longest_pause_seconds: number; filler_count: number | null;
   words_per_speaking_minute: number | null; limitations: string[];
 };
+export type FinalTranscriptMetrics = {
+  kind: "final"; filler_word_count: number | null; questions_asked: number | null;
+  average_response_time_seconds: number | null; words_per_minute: number | null;
+  limitations: string[];
+};
+export type CommunicationMetrics = MicrophoneMetrics | FinalTranscriptMetrics;
 function communicationMetrics(value: unknown): CommunicationMetrics | null {
   const row = record(value);
+  const optional = (v: unknown) => typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : null;
+  if ("filler_word_count" in row || "questions_asked" in row) {
+    return { kind: "final", filler_word_count: optional(row.filler_word_count), questions_asked: optional(row.questions_asked),
+      average_response_time_seconds: optional(row.average_response_time_seconds), words_per_minute: optional(row.words_per_minute),
+      limitations: ["Counts use the final user transcript; speech recognition can omit fillers.", "Timing metrics are unavailable without reliable speech durations and turn end times."] };
+  }
   const keys = ["monitored_seconds", "silent_seconds", "silence_percent", "longest_pause_seconds"] as const;
   if (!keys.every(key => typeof row[key] === "number" && Number.isFinite(row[key]) && row[key] >= 0)) return null;
-  const optional = (v: unknown) => typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : null;
-  return { monitored_seconds: row.monitored_seconds as number, silent_seconds: row.silent_seconds as number,
+  return { kind: "microphone", monitored_seconds: row.monitored_seconds as number, silent_seconds: row.silent_seconds as number,
     silence_percent: row.silence_percent as number, longest_pause_seconds: row.longest_pause_seconds as number,
     filler_count: optional(row.filler_count), words_per_speaking_minute: optional(row.words_per_speaking_minute), limitations: strings(row.limitations) };
 }

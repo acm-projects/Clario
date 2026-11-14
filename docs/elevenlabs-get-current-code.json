@@ -1,7 +1,7 @@
 {
   "type": "webhook",
   "name": "get_current_code",
-  "description": "Fetch the candidate's latest saved code before discussing their implementation. The session and conversation are supplied automatically. If available is false, ask the candidate to explain; do not invent code.",
+  "description": "Returns the candidate's latest saved code with a version number. Code updates already include the code, so call this only when you have no code yet, an update says the code was truncated, or the candidate mentions a change you haven't seen. Only the highest version number is current. If available is false, ask the candidate to explain; do not invent code.",
   "response_timeout_secs": 10,
   "api_schema": {
     "url": "https://YOUR-PUBLIC-HOST/api/voice-tools/sessions/{session_id}/code",

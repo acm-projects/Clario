@@ -51,7 +51,9 @@ class ProviderTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(request.headers["x-goog-api-key"], "test-secret")
             self.assertNotIn("test-secret", str(request.url))
             body = json.loads(request.content)
-            self.assertEqual(body["generationConfig"]["responseFormat"]["text"]["mimeType"], "APPLICATION_JSON")
+            self.assertEqual(body["generationConfig"]["responseMimeType"], "application/json")
+            # Gemini rejects maxItems; validation still enforces list limits afterwards.
+            self.assertNotIn("maxItems", json.dumps(body["generationConfig"]["responseJsonSchema"]))
             return httpx.Response(200, json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(CONTENT)}]}}]})
         client = httpx.AsyncClient(transport=httpx.MockTransport(respond))
         with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret", "GEMINI_MODEL": "gemini-test"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
@@ -81,6 +83,45 @@ class ProviderTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(HTTPException) as error:
                 await generate_feedback({})
         self.assertEqual(error.exception.status_code, 502)
+
+    async def test_incomplete_report_is_retried_once_then_succeeds(self):
+        replies = [{"candidates": [{"finishReason": "MAX_TOKENS", "content": {"parts": [{"text": "{"}]}}]},
+                   {"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(CONTENT)}]}}]}]
+        client = httpx.AsyncClient(transport=httpx.MockTransport(lambda request: httpx.Response(200, json=replies.pop(0))))
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client), patch("gemini_feedback.RETRY_DELAY_SECONDS", 0):
+            report = await generate_feedback({"code": "return 1", "problem": {"title": "Example"}, "candidate_transcript": "I use a map"})
+        self.assertEqual(report["technical_score"], 80)
+        self.assertEqual(replies, [])
+
+    async def test_overload_is_retried_but_quota_and_timeouts_are_not(self):
+        for status, expected_calls in ((503, 2), (429, 1)):
+            calls = []
+            client = httpx.AsyncClient(transport=httpx.MockTransport(lambda request: calls.append(1) or httpx.Response(status)))
+            with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client), patch("gemini_feedback.RETRY_DELAY_SECONDS", 0):
+                with self.assertRaises(HTTPException):
+                    await generate_feedback({})
+            self.assertEqual(len(calls), expected_calls, status)
+        calls = []
+        def slow(request):
+            calls.append(1)
+            raise httpx.ReadTimeout("slow", request=request)
+        client = httpx.AsyncClient(transport=httpx.MockTransport(slow))
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
+            with self.assertRaises(HTTPException) as error:
+                await generate_feedback({})
+        self.assertEqual((error.exception.status_code, len(calls)), (504, 1))
+
+    async def test_transcript_is_sent_once_when_session_evidence_holds_it(self):
+        def respond(request):
+            sent = json.loads(json.loads(request.content)["contents"][0]["parts"][0]["text"])
+            self.assertNotIn("candidate_transcript", sent)
+            self.assertNotIn("speech_in_session_evidence", sent)
+            return httpx.Response(200, json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": json.dumps(CONTENT)}]}}]})
+        client = httpx.AsyncClient(transport=httpx.MockTransport(respond))
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "test-secret"}), patch("gemini_feedback.httpx.AsyncClient", return_value=client):
+            report = await generate_feedback({"code": "x", "problem": {"title": "E"}, "candidate_transcript": "I use a map", "speech_in_session_evidence": True})
+        # Scoring still knows the candidate spoke.
+        self.assertEqual(report["communication_score"], 70)
 
     async def test_missing_key_fails_before_network_request(self):
         with patch.dict("os.environ", {"GEMINI_API_KEY": ""}), patch("gemini_feedback.httpx.AsyncClient") as client:
@@ -188,3 +229,18 @@ class RouteTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GeminiSchemaTests(unittest.TestCase):
+    def test_schema_sent_to_gemini_is_accepted_shape(self):
+        from gemini_feedback import gemini_response_schema
+        schema = gemini_response_schema()
+        # Gemini rejects maxItems with "Request contains an invalid argument".
+        self.assertNotIn("maxItems", json.dumps(schema))
+        # Optional details let Gemini skip the coaching sections, failing every report.
+        self.assertIn("details", schema["required"])
+        self.assertEqual(schema["properties"]["details"], {"$ref": "#/$defs/ReportDetails"})
+
+    def test_stored_reports_without_details_still_validate(self):
+        result = validate_feedback(json.dumps(CONTENT), has_code=True, has_problem=True, has_speech=True)
+        self.assertIsNone(result["details"])

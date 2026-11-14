@@ -27,6 +27,8 @@ class TestRunResult:
     cases: list[dict[str, Any]]
     stdout: str
     error: str | None
+    stderr: str = ""
+    exit_code: int | None = None
 
 
 def limit_output(value: str) -> str:
@@ -125,6 +127,7 @@ async def run_problem_tests(
                 [],
                 user_stdout,
                 "Your code took too long to run.",
+                limit_output(stderr), exit_code,
             )
         return TestRunResult(
             "Runtime Error",
@@ -133,6 +136,7 @@ async def run_problem_tests(
             [],
             user_stdout,
             limit_output(stderr) or "Your code crashed.",
+            limit_output(stderr), exit_code,
         )
 
     case_rows: list[dict[str, Any]] = []
@@ -175,7 +179,8 @@ async def run_problem_tests(
         else "Wrong Answer"
     )
     return TestRunResult(
-        status, passed, total, case_rows, user_stdout, first_error
+        status, passed, total, case_rows, user_stdout, first_error,
+        limit_output(stderr), exit_code,
     )
 
 
