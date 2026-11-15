@@ -83,7 +83,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, ensureSession,
   const [cameraStatus, setCameraStatus] = useState<"loading" | "on" | "off" | "blocked">("loading");
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(speaking);
-  const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>("starting");
+  const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -157,8 +157,10 @@ export function VideoCallPanel({ round, interviewer, problemSlug, ensureSession,
       const conversation = await Conversation.startSession({
         signedUrl: session.signed_url,
         dynamicVariables: session.variables,
-        ...(live ? { overrides: { agent: { prompt: { prompt: live.instructions } } } }
-          : "voice_id" in session && session.voice_id ? { overrides: { tts: { voiceId: session.voice_id } } } : {}),
+        // Only the session-linked coding interview overrides the prompt (its agent allows it).
+        // Other agents keep their dashboard voice: overriding a field the agent doesn't
+        // allow ("Override for field 'voice_id' is not allowed by config") rejects the call.
+        ...(live ? { overrides: { agent: { prompt: { prompt: live.instructions } } } } : {}),
         onMessage: ({ source, message }) => {
           if (!alive.current || generation !== connectionGeneration.current) return;
           if (message === CODE_REVIEW_CUE || message.startsWith(NUDGE_PREFIX)) return;
@@ -254,14 +256,13 @@ export function VideoCallPanel({ round, interviewer, problemSlug, ensureSession,
     await connectionPromise.current;
   }, [startInterview]);
 
-  useEffect(() => {
-    // Defer by one task so StrictMode's probe mount cannot open a second call.
-    const timer = setTimeout(() => {
-      if (automaticStarted.current || ending) return;
-      automaticStarted.current = true;
-      void ensureConnection();
-    }, 0);
-    return () => clearTimeout(timer);
+  // The call starts only when the candidate clicks Start call (also satisfies browser audio autoplay rules).
+  const [callRequested, setCallRequested] = useState(false);
+  const startCall = useCallback(() => {
+    if (automaticStarted.current || ending) return;
+    automaticStarted.current = true;
+    setCallRequested(true);
+    void ensureConnection();
   }, [ensureConnection, ending]);
 
   useEffect(() => {
@@ -436,10 +437,21 @@ export function VideoCallPanel({ round, interviewer, problemSlug, ensureSession,
           <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
             <DuckHead className="size-[100px]" />
           </div>
-          {voiceStatus === "idle" || voiceStatus === "starting" || voiceStatus === "error" ? (
+          {!callRequested && !ending ? (
+            <div className="absolute inset-x-0 inset-y-0 z-10 flex flex-col items-center justify-center gap-3 rounded-[inherit] bg-[#182137]/45 px-5 text-center backdrop-blur-[3px]">
+              <button type="button" onClick={startCall}
+                className="inline-flex items-center gap-2.5 rounded-full px-6 py-3.5 text-base font-semibold shadow-[0_12px_30px_-12px_#000a] transition hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1Z" /></svg>
+                Start call
+              </button>
+              <p className="max-w-[230px] text-xs text-white/85">{interviewer} joins as soon as you start. Your microphone will be used.</p>
+            </div>
+          ) : voiceStatus === "idle" || voiceStatus === "starting" || voiceStatus === "error" ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-gray-300/30 px-5 text-center">
-              <p role="status" className="rounded-xl bg-[#fac52e] px-5 py-3 text-sm font-semibold text-[#122b50]">{ending || voiceStatus === "idle" ? "Saving interview..." : voiceStatus === "starting" ? "Connecting interviewer..." : "Voice unavailable"}</p>
+              <p role="status" className="rounded-xl bg-[#fac52e] px-5 py-3 text-sm font-semibold text-[#122b50]">{ending ? "Saving interview..." : voiceStatus === "error" ? "Voice unavailable" : "Connecting interviewer..."}</p>
               {voiceError && <p className="mt-3 max-w-[250px] text-xs text-white/90">{voiceError}</p>}
+              {voiceStatus === "error" && !ending && <button type="button" onClick={() => { recoveryAttempts.current = 0; void ensureConnection(); }}
+                className="mt-3 rounded-full px-4 py-2 text-xs font-semibold">Try again</button>}
             </div>
           ) : (
             <div className="mt-2 flex items-center gap-2 text-[11px] font-medium text-[#dbeafe]" aria-live="polite">
@@ -447,7 +459,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, ensureSession,
                 <>
                   <span className="flex items-center gap-[3px]" aria-hidden>
                     {[10, 16, 10, 14, 8].map((h, i) => (
-                      <span key={i} className="w-[3px] animate-pulse rounded-full bg-[#4a8cf0]" style={{ height: h, animationDelay: `${i * 120}ms` }} />
+                      <span key={i} className="w-[3px] animate-pulse rounded-full bg-white/80" style={{ height: h, animationDelay: `${i * 120}ms` }} />
                     ))}
                   </span>
                   Speaking…

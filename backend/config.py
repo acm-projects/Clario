@@ -33,6 +33,8 @@ class Settings:
     piston_cpp_version: str = _optional("PISTON_CPP_VERSION", "*")
     elevenlabs_api_key: str = _optional("ELEVENLABS_API_KEY")
     elevenlabs_system_design_agent_id: str = _optional("ELEVENLABS_SYSTEM_DESIGN_AGENT_ID")
+    # Optional dedicated repo-debugging agent; falls back to ELEVENLABS_AGENT_ID.
+    elevenlabs_repo_agent_id: str = _optional("ELEVENLABS_REPO_AGENT_ID")
     elevenlabs_agent_id: str = _optional("ELEVENLABS_AGENT_ID")
     elevenlabs_webhook_secret: str = _optional("ELEVENLABS_WEBHOOK_SECRET")
     elevenlabs_tool_secret: str = _optional("ELEVENLABS_TOOL_SECRET")

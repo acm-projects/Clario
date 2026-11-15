@@ -1,4 +1,5 @@
 import { loadProblems } from "./problems.ts";
+import { curateRecommendations } from "./featuredRecommendations.ts";
 import type { UserProfile } from "./profile.ts";
 
 export interface DashboardProblem { slug: string; title: string; difficulty: string; topic: string | null }
@@ -47,7 +48,7 @@ export async function loadRecommendedProblem(difficulty: string | null): Promise
     try {
       const { getRecommendations } = await import("./assessmentApi.ts");
       const recommendations = await getRecommendations();
-      const ranked = recommendations.problems[0];
+      const ranked = curateRecommendations(recommendations).problems[0];
       if (ranked) return { slug: ranked.slug, title: ranked.title, difficulty: ranked.difficulty, topic: ranked.topics.join(" / ") || null };
     } catch { /* Existing recommendations still work if assessment data is unavailable. */ }
     const problems = await loadProblems();

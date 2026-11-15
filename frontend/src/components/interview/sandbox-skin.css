@@ -1,5 +1,6 @@
 :is(.interview-page, .repo-sandbox) {
-  --sandbox-blue: var(--brand-blue, #3054ed) !important;
+  /* Same blue as the rest of the site (links, buttons, banners), not the lighter --brand-blue. */
+  --sandbox-blue: #3054ed !important;
   --skin-ink: #182137;
   --skin-yellow: #ffdf4f;
 }
@@ -14,6 +15,8 @@
   --surface-hover: #f3e9c9 !important;
 }
 :is(.interview-page, .repo-sandbox) > header { height: 70px; min-height: 70px; padding: 12px 28px; background: var(--sandbox-blue); border: 2px solid transparent; border-radius: 24px; color: #fffdf7; }
+/* Coding sandbox: a flat, edge-to-edge bar instead of a rounded pill. */
+.interview-page > header { border: 0; border-radius: 0; }
 :is(.interview-page, .repo-sandbox) > header > div:first-child > span,
 :is(.interview-page, .repo-sandbox) > header > div:first-child > button { color: #fffdf7 !important; }
 :is(.interview-page, .repo-sandbox) > header > div:nth-child(2) > button,

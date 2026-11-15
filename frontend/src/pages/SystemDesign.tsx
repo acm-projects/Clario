@@ -6,6 +6,8 @@ import PageHeading from "../components/ui/PageHeading";
 import { VideoCallPanel } from "../components/interview/VideoCallPanel";
 import { request } from "../lib/api";
 import type { VoiceControls } from "../lib/interviewVoice";
+import { DESIGN_COMPANIES, type DesignCompany } from "../lib/systemDesignCompanies";
+import CompanyLogo from "../components/ui/CompanyLogo";
 
 type DesignScenario = { slug: string; company: string; title: string; difficulty: string; prompt: string };
 
@@ -86,26 +88,91 @@ function DesignCall({ slug }: { slug: string }) {
   </main>;
 }
 
-function DesignQuestionPicker() {
-  const [company, setCompany] = useState("Bumble");
+const LEVELS: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+const COVERAGE = ["Requirements", "Architecture", "Scale", "Trade-offs"];
+
+/** Three-bar difficulty meter in brand blue. */
+function DifficultyMeter({ difficulty }: { difficulty: string }) {
+  const level = LEVELS[difficulty.toLowerCase()] ?? 2;
+  return <span className="inline-flex items-center gap-2 text-xs capitalize text-[#687087]">
+    <span aria-hidden="true" className="flex items-end gap-0.5">{[1, 2, 3].map(bar => <span key={bar} className={`w-1 rounded-full ${bar <= level ? "bg-[#3054ed]" : "bg-[#d9dcea]"}`} style={{ height: 4 + bar * 3 }} />)}</span>
+    {difficulty}
+  </span>;
+}
+
+function PromptRow({ index, title, difficulty, to }: { index: number; title: string; difficulty: string; to?: string }) {
+  const body = <>
+    <span className="font-mono text-2xl font-medium text-[#c3c8d8] transition group-hover:text-[#3054ed]">{String(index + 1).padStart(2, "0")}</span>
+    <span className="min-w-0">
+      <span className="block text-lg font-medium leading-snug text-[#182137]">{title}</span>
+      <span className="mt-1.5 block"><DifficultyMeter difficulty={difficulty} /></span>
+    </span>
+    <span className="inline-flex items-center gap-2 rounded-full border border-[#182137] px-4 py-2 text-sm font-medium transition group-hover:bg-[#182137] group-hover:text-white">Design<span aria-hidden="true">&#8594;</span></span>
+  </>;
+  const row = "group grid grid-cols-[48px_minmax(0,1fr)] items-center gap-x-4 gap-y-3 px-6 py-5 sm:grid-cols-[56px_minmax(0,1fr)_auto] sm:px-8 [&>span:last-child]:col-start-2 sm:[&>span:last-child]:col-start-auto [&>span:last-child]:justify-self-start sm:[&>span:last-child]:justify-self-end";
+  return to
+    ? <Link to={to} className={`${row} transition hover:bg-[#f6f4ee] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#3054ed]`}>{body}</Link>
+    : <div className={`${row} cursor-default`}>{body}</div>;
+}
+
+function DesignBrief({ company }: { company: DesignCompany }) {
+  const display = company.displayQuestions;
   const [questions, setQuestions] = useState<SystemDesignQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!display);
   const [error, setError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
+    if (display) return;
+    // Remounted per company (keyed); retry resets loading/error before re-running this.
     const controller = new AbortController();
-    setLoading(true); setQuestions([]); setError(null);
-    listSystemDesignQuestions(company, controller.signal).then(value => {
+    listSystemDesignQuestions(company.name, controller.signal).then(value => {
       if (!controller.signal.aborted) setQuestions(value.questions);
     }).catch(error => {
       if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "Could not load questions.");
     }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [company, retry]);
+  }, [company.name, display, retry]);
+
+  return <section aria-labelledby="design-brief-heading" className="overflow-hidden rounded-[32px] border border-[#e4e2db] bg-[#fffdf8] shadow-[0_30px_60px_-50px_#182137]">
+    <div className="relative border-b border-[#e4e2db] px-6 py-8 sm:px-8" style={{ backgroundImage: "radial-gradient(#3054ed2e 1px, transparent 1px)", backgroundSize: "18px 18px" }}>
+      <div className="flex flex-wrap items-center gap-5">
+        <CompanyLogo company={company} size="lg" />
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-xs font-semibold tracking-[.18em] text-[#3054ed]">DESIGN BRIEF</p>
+          <h2 id="design-brief-heading" className="mt-1 text-3xl font-semibold tracking-[-.03em]">{company.name}</h2>
+          <p className="mt-1 text-sm text-[#687087]">{company.tagline}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">{COVERAGE.map(item => <span key={item} className="rounded-full border border-[#182137]/15 bg-white/80 px-3 py-1 text-xs text-[#4b505c]">{item}</span>)}</div>
+      </div>
+    </div>
+    <div aria-busy={loading}>
+      {display ? <ol className="divide-y divide-[#ece9e1]">{display.map((question, index) => <li key={question.title}><PromptRow index={index} title={question.title} difficulty={question.difficulty} /></li>)}</ol>
+        : loading ? <ol aria-label="Loading prompts" className="divide-y divide-[#ece9e1]">{[0, 1].map(key => <li key={key} className="px-8 py-6"><div className="h-6 w-2/3 animate-pulse rounded bg-[#f0eee8]" /></li>)}</ol>
+        : error ? <div role="alert" className="m-6 rounded-2xl bg-[#fff0d7] p-5 text-sm text-[#76501e]"><p>{error}</p><button type="button" className="mt-3 rounded-xl border border-[#ead4ad] bg-white px-4 py-2 font-medium" onClick={() => { setLoading(true); setError(null); setRetry(value => value + 1); }}>Try again</button></div>
+        : questions.length ? <ol className="divide-y divide-[#ece9e1]">{questions.map((question, index) => <li key={question.slug}><PromptRow index={index} title={question.title} difficulty={question.difficulty} to={"/interview/system-design/" + encodeURIComponent(question.slug)} /></li>)}</ol>
+        : company.name === "Bumble" ? <ol className="divide-y divide-[#ece9e1]"><li><PromptRow index={0} title="Nearby matches for a dating app" difficulty="medium" to="/interview/system-design/bumble-nearby-matches" /></li></ol>
+        : <p className="px-8 py-6 text-sm text-[#687087]">No prompts are available for {company.name} yet.</p>}
+    </div>
+  </section>;
+}
+
+function DesignQuestionPicker() {
+  const [selected, setSelected] = useState(DESIGN_COMPANIES[0].name);
+  const company = DESIGN_COMPANIES.find(item => item.name === selected) ?? DESIGN_COMPANIES[0];
   return <>
-    <label className="mt-5 grid max-w-md gap-3 text-sm font-medium">Company<select value={company} onChange={event => setCompany(event.target.value)} className="rounded-xl border border-[#c5c8ce] bg-[#fffdf8] p-3">{["Bumble", "Spotify", "DoorDash", "Stripe"].map(name => <option key={name}>{name}</option>)}</select></label>
-    {loading ? <p role="status" className="mt-5 text-sm text-[#687087]">Loading system design questions...</p> : error ? <div role="alert" className="mt-5"><p>{error}</p><button className="mt-3 rounded-xl border border-[#c5c8ce] px-4 py-3" onClick={() => setRetry(value => value + 1)}>Try again</button></div> : questions.length ? <div className="mt-6 grid gap-4 md:grid-cols-2">{questions.map(question => <Link key={question.slug} to={"/interview/system-design/" + encodeURIComponent(question.slug)} className="flex items-center justify-between gap-4 rounded-xl border border-[#b9c9ff] bg-[#e9edff] p-5 text-[#3054ed]"><span><span className="block text-xs uppercase">{question.company} / {question.difficulty}</span><span className="mt-2 block font-medium">{question.title}</span></span><span aria-hidden="true">&#8594;</span></Link>)}</div> : <p className="mt-5 text-sm text-[#687087]">No system design questions are available for {company} yet.</p>}
-    {company === "Bumble" && !loading && !questions.length && <Link to="/interview/system-design/bumble-nearby-matches" className="mt-5 inline-flex items-center gap-4 rounded-xl bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Practice the sample Bumble scenario<span aria-hidden="true">&#8594;</span></Link>}
+    <section aria-labelledby="companies-heading">
+      <h2 id="companies-heading" className="font-mono text-xs font-semibold tracking-[.18em] text-[#687087]">PICK A COMPANY</h2>
+      <div role="group" aria-label="Choose a company" className="mt-3 flex flex-wrap gap-2.5">
+        {DESIGN_COMPANIES.map(item => {
+          const active = item.name === company.name;
+          return <button key={item.name} type="button" aria-pressed={active} onClick={() => setSelected(item.name)}
+            className={`inline-flex items-center gap-2.5 rounded-full border py-1.5 pl-1.5 pr-4 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3054ed] ${active ? "border-[#182137] bg-[#182137] text-white" : "border-[#e4e2db] bg-white/70 text-[#182137] hover:border-[#182137]"}`}>
+            <CompanyLogo company={item} size="xs" />{item.name}
+          </button>;
+        })}
+      </div>
+    </section>
+    <div className="mt-8"><DesignBrief key={company.name} company={company} /></div>
   </>;
 }
 
@@ -115,13 +182,9 @@ export default function SystemDesign() {
   return <main className="app-sidebar-layout min-h-svh bg-cream-gradient px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]">
     <NavbarDashboard />
     <div className="mx-auto max-w-[1184px] pt-9">
-      <PageHeading eyebrow="SYSTEM DESIGN / NO CODE" title="Choose a company" subtitle="Talk through how you'd architect a system. No code, just your reasoning." />
-      <Link to="/interview" className="mb-6 inline-flex min-h-11 items-center text-sm text-[#3054ed] hover:underline">All interview modes</Link>
-      <section className="rounded-[30px] border border-[#c5c8ce] bg-[#fffdf8] p-7 sm:p-9">
-        <h2 className="text-2xl font-medium">Choose a company</h2>
-        <p className="mt-4 text-sm leading-7 text-[#687087]">Choose a company and a system design question to start your interview.</p>
-        <DesignQuestionPicker />
-      </section>
+      <Link to="/interview" className="mb-2 inline-flex min-h-11 items-center gap-2 text-sm text-[#3054ed] hover:underline"><span aria-hidden="true">&#8592;</span>All interview modes</Link>
+      <PageHeading eyebrow="SYSTEM DESIGN / NO CODE" title="Design it like you work there" subtitle="Choose a company, pick a real-world scenario, and talk through requirements, architecture, scale and trade-offs. No code, just your reasoning." />
+      <div className="mt-6"><DesignQuestionPicker /></div>
     </div>
   </main>;
 }

@@ -155,7 +155,7 @@ def get_repo_session(challenge_id: str, language: str | None = None, user: dict 
     ])
     try:
         signed = get_elevenlabs().conversational_ai.conversations.get_signed_url(
-            agent_id=require_setting("ELEVENLABS_AGENT_ID", settings.elevenlabs_agent_id)
+            agent_id=require_setting("ELEVENLABS_REPO_AGENT_ID or ELEVENLABS_AGENT_ID", getattr(settings, "elevenlabs_repo_agent_id", "") or settings.elevenlabs_agent_id)
         )
     except HTTPException:
         raise

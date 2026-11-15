@@ -5,11 +5,11 @@ import { VideoCallPanel } from "../components/interview/VideoCallPanel";
 import { useEffect, useRef, useState } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
 import { Link, useLocation, useNavigate, useOutletContext, useParams, useSearchParams } from "react-router-dom";
-import { getRepoChallenge, listRepoChallenges, runRepoChallenge, finishRepoChallenge, type RepoChallenge, type RepoChallengeSummary, type RepoEvaluation, type RepoLanguage } from "../api/repoChallenges";
+import { getRepoChallenge, runRepoChallenge, finishRepoChallenge, type RepoChallenge, type RepoEvaluation, type RepoLanguage } from "../api/repoChallenges";
 import type { VoiceControls } from "../lib/interviewVoice";
 import RepositoryExplorer, { RepositoryFileIcon } from "../components/interview/RepositoryExplorer";
 import ProblemLoading from "../components/ui/ProblemLoading";
-import DuckHead from "../components/layout/DuckHead";
+import RepoChallengePicker from "../components/interview/RepoChallengePicker";
 import { useAppearance, useSandboxAppearance } from "../lib/appearance";
 import { defineEditorThemes } from "../lib/editorThemes";
 import type { ProfileContext } from "../lib/profile";
@@ -27,30 +27,8 @@ export default function RepoDebugging() {
   const { user } = useOutletContext<ProfileContext>();
   const theme = useAppearance();
   return <main className={`repo-workspace [--repo-accent:#3054ed] [&_[data-sandbox-run]]:bg-[#3054ed]! [&_[data-sandbox-run]]:text-white! [&_[data-sandbox-run]:hover]:bg-[#2543ca]! [&_.sandbox-theme-toggle_button[aria-pressed=true]]:bg-[#3054ed]! [&_.sandbox-theme-toggle_button[aria-pressed=true]]:text-white! min-h-svh font-sans [&_.theme-panel]:bg-[var(--panel-bg)] [&_.theme-panel]:border-[var(--line)] [&_.theme-border]:border-[var(--line)] [&_.theme-main-text]:text-[var(--text-main)] [&_.theme-body-text]:text-[var(--text-body)] [&_.theme-muted-text]:text-[var(--text-muted)] [&_.theme-surface]:bg-[var(--surface)] [&_.theme-video-self]:bg-[var(--video-self)] [&_.theme-video-self]:border-[var(--line)] [&_.theme-video-interviewer]:bg-[var(--video-interviewer)] [&_.theme-video-interviewer]:border-[var(--repo-line)]! [&_.theme-video-interviewer]:border! [&_.theme-avatar-ring]:ring-[#2378db] ${theme === "dark" ? "bg-[#0a1120] text-[#edf1fb] [--repo-panel:#0f1a2e] [--repo-accent:#96aaff] [--repo-line:#495362] [--repo-muted:#a3b2cc] [--line:#495362] [--panel-bg:#0f1a2e] [--text-main:#f4f7fc] [--text-body:#c3cde0] [--text-muted:#8a97ad] [--surface:#1a2842] [--video-self:#0c1626] [--video-interviewer:#3054ed] [--avatar-ring:#2378db]" : "bg-[#fbf4df] text-[#182137] [--repo-panel:#fffcf4] [--repo-line:#c5c8ce] [--repo-muted:#687087] [--line:#c5c8ce] [--panel-bg:#fff] [--text-main:#173153] [--text-body:#254268] [--text-muted:#587096] [--surface:#fbf4df] [--video-self:#fbf4df] [--video-interviewer:#3054ed] [--avatar-ring:#2378db]"} [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed [&_button:disabled]:opacity-50 [&_:is(button,a):focus-visible]:outline-2 [&_:is(button,a):focus-visible]:outline-offset-[-2px] [&_:is(button,a):focus-visible]:outline-[#3054ed]`}>
-    {challengeId ? <RepoWorkspace key={`${user.id}:${challengeId}:${attemptId}:${repoLanguage}`} id={challengeId} userId={user.id} attemptId={attemptId} language={repoLanguage} onLanguageChange={setRepoLanguage} /> : <ChallengePicker />}
+    {challengeId ? <RepoWorkspace key={`${user.id}:${challengeId}:${attemptId}:${repoLanguage}`} id={challengeId} userId={user.id} attemptId={attemptId} language={repoLanguage} onLanguageChange={setRepoLanguage} /> : <RepoChallengePicker />}
   </main>;
-}
-
-function ChallengePicker() {
-  const [challenges, setChallenges] = useState<RepoChallengeSummary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [retry, setRetry] = useState(0);
-  const theme = useAppearance();
-  useEffect(() => {
-    const controller = new AbortController();
-    listRepoChallenges(controller.signal).then(data => { if (!controller.signal.aborted) { setChallenges(data); setLoading(false); setError(null); } }).catch(error => { if (!controller.signal.aborted) { setError(error instanceof Error ? error.message : "Could not load challenges."); setLoading(false); } });
-    return () => controller.abort();
-  }, [retry]);
-  return <div className="mx-auto max-w-[1080px] px-6 py-8 sm:py-14">
-    <Link to="/interview" className="inline-flex min-h-11 items-center text-sm text-[var(--repo-muted)]">← All interview modes</Link>
-    <div className="mb-10 mt-8 flex items-center gap-5"><span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-[#3054ed]"><DuckHead className="size-12" /></span><div><p className="text-[10px] font-semibold tracking-[.18em] text-[var(--repo-accent)]">READ. REASON. REPAIR.</p><h1 className="mt-2 text-3xl font-semibold tracking-tight">Repo Debugging</h1></div></div>
-    <p className="mb-8 max-w-[620px] text-sm leading-7 text-[var(--repo-muted)]">Debug a real-world codebase, fix bugs, and test your solution in a repository-based coding interview. Small repositories. Real behavior. No setup needed.</p>
-    {!loading && !error && <p className="mb-5 text-xs text-[var(--repo-muted)]">{challenges.length} repositories &middot; Python and C++</p>}
-    {loading ? <ProblemLoading dark={theme === "dark"} /> : error ? <div role="alert"><p>{error}</p><button type="button" onClick={() => { setLoading(true); setRetry(value => value + 1); }} className="mt-4 rounded-xl bg-[#3054ed] px-5 py-3 text-sm text-white">Try again</button></div> : <div className="grid gap-5 sm:grid-cols-2">{challenges.map((challenge, index) => <Link key={challenge.id} to={`/interview/repo/${encodeURIComponent(challenge.id)}`} className="group flex flex-col rounded-[24px] border border-[var(--repo-line)] bg-[var(--repo-panel)] p-7 transition-colors hover:border-[#3054ed]">
-      <div className="flex justify-between font-mono text-xs text-[var(--repo-muted)]"><span>REPOSITORY / 0{index + 1}</span><span>{challenge.difficulty}</span></div><h2 className="mt-7 text-xl font-semibold tracking-tight">{challenge.title}</h2><p className="mb-7 mt-3 text-sm leading-7 text-[var(--repo-muted)]">{challenge.description}</p><div className="mt-auto flex items-center justify-between border-t border-[var(--repo-line)] pt-5 text-xs"><span>Python &middot; C++ · ~{challenge.estimatedMinutes} minutes</span><span className="font-semibold text-[var(--repo-accent)]">Open repository ↗</span></div>
-    </Link>)}</div>}
-  </div>;
 }
 
 function RepoWorkspace({ id, userId, attemptId, language, onLanguageChange }: { id: string; userId: string; attemptId: string; language: RepoLanguage; onLanguageChange: (value: RepoLanguage) => void }) {

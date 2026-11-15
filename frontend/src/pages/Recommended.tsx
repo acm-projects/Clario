@@ -5,6 +5,7 @@ import PageClouds from "../components/effects/PageClouds";
 import PageHeading from "../components/ui/PageHeading";
 import ProblemLoading from "../components/ui/ProblemLoading";
 import { getPersonalizedRecommendations } from "../lib/personalizedRecommendations";
+import { RECOMMENDED_LIMIT } from "../lib/featuredRecommendations";
 import type { Recommendations } from "../lib/assessmentContract";
 import { createModeSession } from "../lib/api";
 import { interviewRoomUrl } from "../lib/interviewModes";
@@ -50,7 +51,7 @@ export default function Recommended() {
 
   const loading = loaded?.key !== key;
   const data = loading ? undefined : loaded.data;
-  const shortfallMessage = data && data.problems.length < 20
+  const shortfallMessage = data && data.problems.length < RECOMMENDED_LIMIT
     ? data.shortfall_message || `Only ${data.problems.length} suitable, uncompleted problems are available right now. Completed problems and unsuitable difficulty levels are excluded.`
     : null;
   return <main className="app-sidebar-layout relative isolate min-h-svh bg-[var(--page-background)] px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]">
@@ -60,7 +61,7 @@ export default function Recommended() {
       <Link to="/interview" className="mt-5 inline-block text-sm text-[#3054ed] underline">Back to interview selection</Link>
       <div className="mt-8" aria-busy={loading}>
         {loading ? <ProblemLoading /> : loaded.error ? <div role="alert" className="rounded-2xl bg-[#fffdf8] p-8"><p>{loaded.error}</p><button className="mt-4 text-[#3054ed] underline" onClick={() => setRetry(value => value + 1)}>Try again</button></div> : !data?.has_assessment ? <div className="rounded-2xl bg-[#fffdf8] p-8"><h2 className="text-xl font-semibold">Take the assessment for better picks.</h2><Link to="/assessment" className="mt-5 inline-block rounded-lg bg-[#3054ed] px-5 py-3 text-sm font-semibold text-white">Take the Assessment</Link></div> : data.problems.length === 0 ? <div role="status" className="rounded-2xl bg-[#fffdf8] p-8"><h2 className="text-xl font-semibold">You’re all caught up.</h2><p className="mt-3">{shortfallMessage || "No recommended problems are available right now. Explore the library for your next challenge."}</p><Link to="/problems" className="mt-5 inline-block text-[#3054ed] underline">Browse problems</Link></div> : <>
-          <p className="mb-4 text-sm text-[#687087]">{data.problems.length} recommended problems</p>
+          <p className="mb-4 text-sm text-[#687087]">{data.problems.length} recommended {data.problems.length === 1 ? "problem" : "problems"}</p>
           {shortfallMessage && <p role="status" className="mb-4 rounded-xl border border-[#e7e5e0] bg-[#fffdf8] p-4 text-sm leading-6 text-[#687087]">{shortfallMessage}</p>}
           {startError && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-4 text-red-700">{startError}</p>}
           <ul className="grid list-none gap-4 p-0">{data.problems.map(problem => <li key={problem.slug} className="rounded-2xl border border-[#e7e5e0] bg-[#fffdf8] p-5 sm:p-6">

@@ -269,7 +269,7 @@ function InterviewPage() {
             <h2>Interview call</h2>
             <div className="flex gap-2">
               {!isMock && (["topics", "hint"] as const).map((item) => (
-                <button key={item} className={`rounded-lg border border-[var(--line)] px-3 py-2 text-[13px] transition-colors ${openInfo === item ? "bg-[#2378db] text-white" : "bg-[var(--panel-bg)] hover:bg-[var(--surface-hover)]"}`} aria-expanded={openInfo === item}
+                <button key={item} className={`rounded-lg border border-[var(--line)] px-3 py-2 text-[13px] transition-colors ${openInfo === item ? "bg-[#3054ed] text-white" : "bg-[var(--panel-bg)] hover:bg-[var(--surface-hover)]"}`} aria-expanded={openInfo === item}
                   aria-controls="sandbox-info" onClick={() => setOpenInfo(openInfo === item ? null : item)}
                   onKeyDown={(event) => { if (event.key === "Escape") setOpenInfo(null); }}>
                   {item === "topics" ? "Topics" : "Hint"}

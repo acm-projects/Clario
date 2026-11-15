@@ -2,6 +2,7 @@ import { request } from "./api";
 import { getMyAssessment, getRecommendations } from "./assessmentApi";
 import { isMissingAssessment, type Recommendations, type SavedAssessment } from "./assessmentContract";
 import { chicagoDate } from "./interviewCalendar";
+import { curateRecommendations } from "./featuredRecommendations";
 
 type PersonalizedRecommendations = { assessment: SavedAssessment | null; recommendations: Recommendations };
 let snapshot: { key: string; expires: number; value: PersonalizedRecommendations } | null = null;
@@ -22,7 +23,7 @@ export async function getPersonalizedRecommendations(signal?: AbortSignal): Prom
   const key = JSON.stringify([assessment.user_id, assessment.updated_at, assessment.answers, chicagoDate(), completed]);
   signal?.throwIfAborted();
   if (snapshot?.key === key && snapshot.expires > Date.now()) return snapshot.value;
-  const recommendations = await getRecommendations(signal);
+  const recommendations = curateRecommendations(await getRecommendations(signal));
   signal?.throwIfAborted();
   const value = { assessment: recommendations.has_assessment ? assessment : null, recommendations };
   snapshot = { key, expires: Date.now() + 60_000, value };
