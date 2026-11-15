@@ -15,6 +15,7 @@ from routers.repo_challenges import router as repo_challenges_router
 from routers.scenarios import router as scenarios_router
 from routers.sessions import router as sessions_router
 from routers.system_design import router as system_design_router
+from routers.system_design_voice import router as system_design_voice_router
 from voice.router import router as voice_router
 from voice.tools import router as voice_tools_router
 from voice.webhooks import router as webhooks_router
@@ -47,6 +48,7 @@ app.include_router(sessions_feedback_router)
 app.include_router(progress_router)
 app.include_router(repo_challenges_router)
 app.include_router(webhooks_router)
+app.include_router(system_design_voice_router)
 
 
 @app.get("/")

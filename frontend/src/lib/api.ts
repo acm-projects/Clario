@@ -192,3 +192,31 @@ export async function runCompanyTests(slug: string, language: Language, code: st
   return { status, passed: result.passed, total: result.total,
     cases: result.results.map(item => ({ case: item.test_number, passed: item.passed, input: "Hidden", expected: "Hidden", output: null })), stdout: "", error: null };
 }
+
+export interface SystemDesignQuestionDetail {
+  id: string;
+  company: string;
+  title: string;
+  slug: string;
+  prompt: string;
+  difficulty: "easy" | "medium" | "hard";
+  key_points: string[];
+  follow_ups: string[];
+  created_at: string;
+}
+
+export interface SystemDesignResponse {
+  company: string;
+  count: number;
+  questions: SystemDesignQuestionDetail[];
+}
+
+export function getSystemDesignQuestions(
+  company: string,
+  signal?: AbortSignal
+): Promise<SystemDesignResponse> {
+  return request<SystemDesignResponse>(
+    `/api/system-design?company=${encodeURIComponent(company)}`,
+    { signal }
+  );
+}

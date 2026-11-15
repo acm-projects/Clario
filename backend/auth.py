@@ -1,7 +1,10 @@
 import jwt
+import time
 from fastapi import Depends, HTTPException, status
+from fastapi import Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
+import os
 
 from config import settings, require_setting
 
@@ -14,9 +17,8 @@ ALGORITHMS = ["ES256"]
 bearer_scheme = HTTPBearer(auto_error=False)
 jwk_client = PyJWKClient(JWKS_URL)
 
-
-
 async def get_current_user(
+    request: Request,
     creds: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> dict:
     """
@@ -28,13 +30,38 @@ async def get_current_user(
         return {"sub": settings.dev_user_id, "email": settings.dev_user_email}
 
     if creds is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Missing token",
-        )
+        raise HTTPException(status_code=401, detail="Missing token")
 
     token = creds.credentials
 
+    # Local development session: short-lived and signed.
+    if (
+        os.getenv("APP_ENV") == "development"
+        and request.client is not None
+        and request.client.host in ("127.0.0.1", "::1")
+    ):
+        secret = os.getenv("DEV_SESSION_SECRET")
+        if secret:
+            try:
+                payload = jwt.decode(
+                    token,
+                    secret,
+                    algorithms=["HS256"],
+                    audience="clario-dev",
+                    issuer="clario-local-vite",
+                    options={"require": ["sub", "exp", "iat", "aud", "iss"]},
+                    leeway=5,
+                )
+                if (
+                    payload.get("sub") == os.getenv("DEV_USER_ID")
+                    and payload.get("iat", 0) <= time.time()
+                    and payload.get("exp", 0) - payload.get("iat", 0) <= 60
+                ):
+                    return payload
+            except jwt.PyJWTError:
+                pass
+
+    # Standard Supabase authentication.
     try:
         signing_key = jwk_client.get_signing_key_from_jwt(token)
         payload = jwt.decode(
@@ -43,10 +70,10 @@ async def get_current_user(
             algorithms=ALGORITHMS,
             audience="authenticated",
         )
-    except jwt.PyJWTError as e:
+    except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid token: {e}",
+            detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

@@ -20,11 +20,12 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Settings = lazy(() => import("./pages/Settings"));
 const ProblemLibrary = lazy(() => import("./pages/ProblemLibrary"));
 const InterviewReport = lazy(() => import("./pages/InterviewReport"));
+import SystemDesignRoom from "./pages/SystemDesignRoom";
 
 function App() {
   const appearance = useAppearance();
   const { pathname } = useLocation();
-  const sandbox = pathname.startsWith("/repo-debugging") || pathname.startsWith("/interview/repo") || /^\/interview\/[^/]+\/?$/.test(pathname);
+  const sandbox = pathname.startsWith("/repo-debugging") || pathname.startsWith("/interview/repo") || /^\/interview\/[^/]+\/?$/.test(pathname) || /^\/system-design\/[^/]+\/?$/.test(pathname);
   const routes = (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -51,6 +52,7 @@ function App() {
         <Route path="/repo-debugging/:challengeId" element={<InterviewEntry key={pathname}><RepoDebugging /></InterviewEntry>} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Settings />} />
+        <Route path="/system-design/:slug" element={<SystemDesignRoom />} />
       </Route>
     </Routes>
   );
