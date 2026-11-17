@@ -1,0 +1,33 @@
+.ducky-feet {
+  width: 28px;
+  height: 16px;
+  transform: translateX(-50%) rotate(var(--ducky-pair-tilt, 0deg));
+}
+.ducky-feet--legend { width: 28px; height: 20px; transform: none; }
+.ducky-foot { fill: #ff9a25; stroke: #d96a0a; stroke-width: .85; stroke-linejoin: round; stroke-linecap: round; transform-box: fill-box; transform-origin: 50% 85%; }
+.ducky-hover-pair { transform-box: fill-box; transform-origin: center; }
+.ducky-foot--left { transform: rotate(-4deg); }
+.ducky-foot--right { transform: rotate(4deg); }
+.ducky-feet--stepping .ducky-foot--left { animation: ducky-step-left 380ms cubic-bezier(.2,.7,.2,1) var(--ducky-step-delay, 0ms) 1 backwards; }
+.ducky-feet--stepping .ducky-foot--right { animation: ducky-step-right 380ms cubic-bezier(.2,.7,.2,1) calc(var(--ducky-step-delay, 0ms) + 130ms) 1 backwards; }
+@keyframes ducky-step-left {
+  0% { opacity: 0; transform: translate(-1px, -3px) rotate(-14deg); }
+  65% { opacity: 1; transform: translateY(.7px) rotate(-1deg); }
+  100% { opacity: 1; transform: rotate(-4deg); }
+}
+@keyframes ducky-step-right {
+  0% { opacity: 0; transform: translate(1px, -3px) rotate(14deg); }
+  65% { opacity: 1; transform: translateY(.7px) rotate(1deg); }
+  100% { opacity: 1; transform: rotate(4deg); }
+}
+.calendar-completed-day:is(:hover, :focus-visible) .ducky-hover-pair { animation: ducky-wiggle 400ms ease-out 1; }
+@keyframes ducky-wiggle {
+  30% { transform: translateY(-.8px) rotate(-4deg); }
+  65% { transform: translateY(-.4px) rotate(3deg); }
+  100% { transform: none; }
+}
+.calendar-completed-day > .calendar-day-number { position: relative; z-index: 1; line-height: 1; transform: translateY(-8px); }
+@media (prefers-reduced-motion: reduce) {
+  .ducky-feet--stepping .ducky-foot,
+  .calendar-completed-day:is(:hover, :focus-visible) .ducky-hover-pair { animation: none; opacity: 1; }
+}

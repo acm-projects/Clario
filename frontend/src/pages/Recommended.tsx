@@ -1,7 +1,7 @@
+import InterviewScenery from "../components/effects/InterviewScenery";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
-import PageClouds from "../components/effects/PageClouds";
 import PageHeading from "../components/ui/PageHeading";
 import ProblemLoading from "../components/ui/ProblemLoading";
 import { getPersonalizedRecommendations } from "../lib/personalizedRecommendations";
@@ -54,7 +54,7 @@ export default function Recommended() {
     ? data.shortfall_message || `Only ${data.problems.length} suitable, uncompleted problems are available right now. Completed problems and unsuitable difficulty levels are excluded.`
     : null;
   return <main className="app-sidebar-layout relative isolate min-h-svh bg-[var(--page-background)] px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]">
-    <PageClouds /><NavbarDashboard />
+    <InterviewScenery /><NavbarDashboard />
     <section className="relative mx-auto max-w-[1440px] py-10">
       <PageHeading eyebrow="YOUR NEXT CHALLENGE" title="Recommended for you" subtitle="Practice problems picked from your assessment and completed interviews." />
       <Link to="/interview" className="mt-5 inline-block text-sm text-[#3054ed] underline">Back to interview selection</Link>
@@ -65,7 +65,7 @@ export default function Recommended() {
           {startError && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-4 text-red-700">{startError}</p>}
           <ul className="grid list-none gap-4 p-0">{data.problems.map(problem => <li key={problem.slug} className="rounded-2xl border border-[#e7e5e0] bg-[#fffdf8] p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-medium"><button className="text-left hover:text-[#3054ed] disabled:opacity-60" disabled={starting !== null} onClick={() => void start(problem.slug)}>{problem.title}</button></h2><span className={`library-difficulty-${problem.difficulty.toLowerCase()} rounded-full px-3 py-1.5 text-[14px] ${difficultyColors[problem.difficulty]}`}>{problem.difficulty}</span></div>
-            <div className="mt-4 flex flex-wrap gap-2">{problem.topics.map(topic => <span key={topic} className="library-topic-tag rounded-md bg-cream-gradient px-2 py-1 text-[14px] text-[#68778e]">{topic}</span>)}</div>
+            <div className="mt-4 flex flex-wrap gap-2">{problem.topics.map(topic => <span key={topic} className="library-topic-tag rounded-md bg-[#ffdf4f] px-2 py-1 text-[14px] text-[#182137]">{topic}</span>)}</div>
             <p className="mt-4 text-sm leading-6 text-[#687087]">{problem.reason}</p>
             <button className="mt-5 min-h-10 rounded-lg bg-[#3054ed] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60" disabled={starting !== null} onClick={() => void start(problem.slug)}>{starting === problem.slug ? "Starting..." : "Start interview"}</button>
           </li>)}</ul>

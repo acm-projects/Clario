@@ -82,7 +82,7 @@ export default function DashboardTour({ step, onStep, onClose }: { step: number;
           else if (!event.shiftKey && (document.activeElement === final || document.activeElement === dialog.current)) { event.preventDefault(); first?.focus(); }
         }
       }}>
-      <div className="flex items-center gap-3 rounded-t-[28px] bg-[#4566ed] px-6 py-4 text-white">
+      <div className="blue-clouds flex items-center gap-3 rounded-t-[28px] bg-[#4566ed] px-6 py-4 text-white">
         <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#ffdf4f]"><DuckHead className="size-10" /></span>
         <div className="flex-1"><p className="text-sm font-semibold">Quick tour</p><p className="mt-0.5 text-xs text-white/75">Your dashboard at a glance</p></div>
         <button type="button" aria-label="Close dashboard tour" onClick={onClose} className="grid size-10 cursor-pointer place-items-center rounded-full bg-white/10 text-2xl hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-white">×</button>

@@ -1,0 +1,11 @@
+@keyframes calendar-milestone-pop {
+  0% { transform: scale(.98); opacity: .7; }
+  50% { transform: scale(1.015); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.calendar-milestone-celebration { animation: calendar-milestone-pop 700ms ease-out 1; transform-origin: center; }
+@media (prefers-reduced-motion: reduce) {
+  .calendar-milestone-celebration { animation: none; transform: none; }
+}
+
+.brand-ui[data-appearance="dark"] .calendar-day-details :is(a, button) { color: #9cb4ff; }

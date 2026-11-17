@@ -1,0 +1,38 @@
+--- a/frontend/src/components/dashboard/InterviewCalendar.tsx
++++ b/frontend/src/components/dashboard/InterviewCalendar.tsx
+@@ -4,6 +4,8 @@
+ import { calendarRewards, interviewsOnDay, type CalendarInterview } from "../../lib/calendarRewards";
+ import InterviewDayDetails from "./InterviewDayDetails";
+ import StreakCelebration from "./StreakCelebration";
++import DuckyFootsteps, { DuckyFeetIcon } from "./DuckyFootsteps";
++import { duckFootstepTrail } from "../../lib/duckFootsteps";
+ 
+ export default function InterviewCalendar({ completionDates, interviews = [], userId, loading = false, unavailable = false, now = new Date() }: { completionDates: string[]; interviews?: CalendarInterview[]; userId: string; loading?: boolean; unavailable?: boolean; now?: Date }) {
+   const today = chicagoDate(now);
+@@ -16,6 +18,7 @@
+   const leading = (first.getUTCDay() + 6) % 7;
+   const activity = interviewDays(completionDates, now);
+   const counts = new Map(activity.map((day) => [day.date, day.count]));
++  const footstepTrail = duckFootstepTrail(activity, month);
+   const streak = calendarRewards(completionDates, now);
+   const ready = !loading && !unavailable;
+   const selectedInterviews = selected ? interviewsOnDay(interviews, selected, now) : [];
+@@ -58,14 +61,15 @@
+         const date = `${month}-${String(day).padStart(2, "0")}`;
+         const count = counts.get(date) ?? 0;
+         const isToday = date === today;
++        const step = footstepTrail.get(date);
+         return <button key={date} type="button" disabled={!ready} onClick={() => setSelected(date)} aria-controls="calendar-day-details" aria-expanded={selected === date} aria-pressed={selected === date} aria-current={isToday ? "date" : undefined}
+           aria-label={`${monthLabel} ${day}: ${unavailable ? "activity unavailable" : loading ? "loading activity" : `${count} completed ${count === 1 ? "interview" : "interviews"}`}${isToday ? ", today" : ""}`}
+-          className={`relative flex aspect-square min-h-8 items-center justify-center rounded-lg text-xs transition motion-reduce:transition-none ${count ? "bg-[#2378db] font-semibold text-white" : date > today ? "text-[#b8b9b5] hover:bg-cream-gradient" : "text-[#55595c] hover:bg-[#e7f0fc]"} ${isToday ? "ring-1 ring-[#2378db] ring-offset-1 ring-offset-[#fffdf8]" : ""} ${selected === date ? "outline-2 outline-offset-2 outline-[var(--text)]" : ""}`}>
+-          {day}{count > 0 && <svg viewBox="0 0 12 12" className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 text-[#ffdf4f]" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m2 6 2.5 2.5L10 3" /></svg>}
++          className={`relative flex aspect-square min-h-8 items-center justify-center rounded-lg text-xs transition motion-reduce:transition-none ${count ? "calendar-completed-day bg-transparent font-semibold text-[var(--text)] hover:bg-[#fff1cb]/40" : date > today ? "text-[#b8b9b5] hover:bg-cream-gradient" : "text-[#55595c] hover:bg-[#e7f0fc]"} ${isToday ? "ring-1 ring-[#2378db] ring-offset-1 ring-offset-[#fffdf8]" : ""} ${selected === date ? "outline-2 outline-offset-2 outline-[var(--text)]" : ""}`}>
++          <span className="calendar-day-number">{day}</span>{ready && count > 0 && step && <DuckyFootsteps key={`${userId}:${date}`} userId={userId} date={date} delay={step.delay} tilt={step.tilt} />}
+         </button>;
+       })}
+     </div>
+-    <div className="mt-4 flex items-center justify-between gap-2 text-[14px] text-[#777a7c]"><span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#2378db]" aria-hidden="true" />Interview day</span><button type="button" disabled={!ready} onClick={() => { setMonth(today.slice(0, 7)); setSelected(today); }} className="min-h-8 text-[#2378db] hover:underline">Today</button></div>
++    <div className="mt-4 flex items-center justify-between gap-2 text-[14px] text-[#777a7c]"><span className="flex items-center gap-2"><DuckyFeetIcon legend />Interview day</span><button type="button" disabled={!ready} onClick={() => { setMonth(today.slice(0, 7)); setSelected(today); }} className="min-h-8 text-[#2378db] hover:underline">Today</button></div>
+     <p className="mt-3 rounded-xl bg-cream-gradient px-3 py-3 text-xs leading-5 text-[#55595c]" role="status">
+       {unavailable ? "Interview activity is unavailable. Retry below to load your calendar." : loading ? "Loading interview activity..." : selected ? `${new Date(`${selected}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}: ${selectedCount} completed ${selectedCount === 1 ? "interview" : "interviews"}.` : monthCount ? `${monthCount} interview ${monthCount === 1 ? "day" : "days"} this month. Keep it going!` : "No interviews this month yet. Your completed interviews will light up here."}
+     </p>

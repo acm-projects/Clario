@@ -1,9 +1,9 @@
 import { interviewModes, modeLabels, type InterviewMode } from "../../lib/interviewModes";
 // Share the same palettes and interaction styles across all six rounds.
 const palettes = [
-  { card: "border-[#c5c8ce] bg-[#3054ed] text-white", badge: "bg-white/15 text-white", copy: "text-[#dce3ff]" },
+  { card: "blue-clouds border-[#c5c8ce] bg-[#3054ed] text-white", badge: "bg-white/15 text-white", copy: "text-[#dce3ff]" },
   { card: "border-[#c5c8ce] bg-[#fffdf8] text-[#182137]", badge: "bg-[#e9edff] text-[#3054ed]", copy: "text-[#687087]" },
-  { card: "border-[#c5c8ce] bg-[#fffdf8] text-[#182137]", badge: "bg-[#e9edff] text-[#3054ed]", copy: "text-[#687087]" },
+  { card: "border-[#c5c8ce] bg-[#ffdf4f] text-[#182137]", badge: "bg-[#e9edff] text-[#3054ed]", copy: "text-[#687087]" },
   { card: "border-[#c5c8ce] bg-[#ffdf4f] text-[#182137]", badge: "bg-[#182137] text-[#ffdf4f]", copy: "text-[#746329]" },
 ];
 

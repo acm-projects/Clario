@@ -55,6 +55,7 @@ test("an empty sessions API response produces empty history", async () => {
     recent: [],
     completedSessionIds: [],
     completionDates: [],
+    completedInterviews: [],
   });
 });
 

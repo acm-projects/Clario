@@ -218,7 +218,7 @@ export function VideoCallPanel({ round, interviewer, problemSlug, repoChallengeI
           )}
         </div>
 
-        <div className="theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
+        <div className="blue-clouds theme-video-interviewer relative flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#2f6fd0] p-3">
           <NameTag>{interviewer}</NameTag>
           <div className="theme-avatar-ring flex h-[112px] w-[112px] items-center justify-center rounded-full bg-[#e8f1fb] text-5xl ring-[7px]">
             <DuckHead className="size-[100px]" />

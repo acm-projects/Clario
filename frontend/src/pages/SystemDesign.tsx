@@ -1,3 +1,4 @@
+import InterviewScenery from "../components/effects/InterviewScenery";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import NavbarDashboard from "../components/layout/NavbarDashboard";
@@ -71,6 +72,7 @@ export default function SystemDesign() {
   const { slug } = useParams<{ slug: string }>();
   if (slug) return <DesignCall key={slug} slug={slug} />;
   return <main className="app-sidebar-layout min-h-svh bg-cream-gradient px-4 pb-12 pt-2 font-sans text-[#182137] sm:px-6 lg:pl-[calc(var(--sidebar-width)+48px)] lg:pr-8 lg:pt-6 [--sidebar-width:224px] has-[.sidebar-collapsed]:[--sidebar-width:80px]">
+    <InterviewScenery />
     <NavbarDashboard />
     <div className="mx-auto max-w-[1184px] pt-9">
       <PageHeading eyebrow="SYSTEM DESIGN / NO CODE" title="Choose a company" subtitle="Talk through how you'd architect a system. No code, just your reasoning." />

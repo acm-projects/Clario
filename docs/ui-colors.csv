@@ -1,0 +1,1508 @@
+﻿color,kind,role,scope,file,line,original
+#3054ED,hex,background,import-reachable,frontend/src/components/auth/AssessmentGate.tsx,23,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/components/auth/AssessmentGate.tsx,23,text-white
+#182137,hex,text / foreground,import-reachable,frontend/src/components/auth/AuthLayout.tsx,15,#182137
+#182137,hex,outline,import-reachable,frontend/src/components/auth/AuthLayout.tsx,15,#182137
+#4B505C,hex,border,import-reachable,frontend/src/components/auth/AuthLayout.tsx,16,#4b505c
+#4566ED,hex,background,import-reachable,frontend/src/components/auth/AuthLayout.tsx,16,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/components/auth/AuthLayout.tsx,17,#4b505c
+#4566ED,hex,text / foreground,import-reachable,frontend/src/components/auth/AuthLayout.tsx,17,#4566ed
+#4B505C,hex,stroke,import-reachable,frontend/src/components/auth/AuthLayout.tsx,18,#4b505c
+#4566ED,hex,background,import-reachable,frontend/src/components/auth/AuthLayout.tsx,20,#4566ed
+"color-mix(in oklab, #fff 35%, transparent)",Tailwind white,border,import-reachable,frontend/src/components/auth/AuthLayout.tsx,20,border-white/35
+#fff,Tailwind white,text,import-reachable,frontend/src/components/auth/AuthLayout.tsx,20,text-white
+#FFDF4F,hex,text / foreground,import-reachable,frontend/src/components/auth/AuthLayout.tsx,21,#ffdf4f
+#fff,Tailwind white,text,import-reachable,frontend/src/components/auth/AuthLayout.tsx,21,text-white
+#EDF1FF,hex,text / foreground,import-reachable,frontend/src/components/auth/AuthLayout.tsx,22,#edf1ff
+#3054ED,hex,literal / token,import-reachable,frontend/src/components/auth/AuthLayout.tsx,29,#3054ed
+#E8F1FF,hex,literal / token,import-reachable,frontend/src/components/auth/AuthLayout.tsx,29,#e8f1ff
+#809CF7,hex,literal / token,import-reachable,frontend/src/components/auth/AuthLayout.tsx,29,#809cf7
+#5576EF,hex,literal / token,import-reachable,frontend/src/components/auth/AuthLayout.tsx,29,#5576ef
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/auth/ProfileGate.tsx,68,#55595c
+#191D20,hex,text / foreground,import-reachable,frontend/src/components/auth/ProfileGate.tsx,69,#191d20
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/auth/ProfileGate.tsx,69,#55595c
+#3B8FE8,hex,background,import-reachable,frontend/src/components/auth/ProfileGate.tsx,69,#3b8fe8
+"color-mix(in oklab, #fff 90%, transparent)",Tailwind white,border,import-reachable,frontend/src/components/auth/ProfileGate.tsx,69,border-white/90
+"color-mix(in oklab, #fff 55%, transparent)",Tailwind white,background,import-reachable,frontend/src/components/auth/ProfileGate.tsx,69,bg-white/55
+#182137,hex,text / foreground,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,66,#182137
+#101A35,hex,fill,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,69,#101a35
+#FFDF4F,hex,stroke,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,70,#ffdf4f
+#FFFDF8,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,73,#fffdf8
+#08112B66,hex,shadow,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,73,#08112b66
+"color-mix(in oklab, #fff 70%, transparent)",Tailwind white,border,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,73,border-white/70
+#4566ED,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,85,#4566ed
+#fff,Tailwind white,text,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,85,text-white
+#FFDF4F,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,86,#ffdf4f
+"color-mix(in oklab, #fff 75%, transparent)",Tailwind white,text,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,87,text-white/75
+"color-mix(in oklab, #fff 10%, transparent)",Tailwind white,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,88,bg-white/10
+"color-mix(in oklab, #fff 20%, transparent)",Tailwind white,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,88,bg-white/20
+#fff,Tailwind white,outline,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,88,outline-white
+#4566ED,hex,text / foreground,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,91,#4566ed
+#626B80,hex,text / foreground,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,93,#626b80
+#4566ED,hex,outline,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,97,#4566ed
+#4566ED,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,97,#4566ed
+#A6B5FF,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,97,#a6b5ff
+#E5E7EF,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,97,#e5e7ef
+#C4CEFA,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,97,#c4cefa
+#687087,hex,text / foreground,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,100,#687087
+#E9EDFF,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,#e9edff
+#4566ED,hex,outline,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,#4566ed
+#4566ED,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,#4566ed
+#3054D6,hex,background,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,#3054d6
+#4566ED,hex,outline,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,#4566ed
+#fff,Tailwind white,text,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,101,text-white
+#8990A0,hex,text / foreground,import-reachable,frontend/src/components/dashboard/DashboardTour.tsx,103,#8990a0
+#FFFDF8,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,25,#fffdf8
+#E7F0FC,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,28,#e7f0fc
+#2378DB,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,28,#2378db
+#777A7C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,32,#777a7c
+#E7F0FC,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,34,#e7f0fc
+#2378DB,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,34,#2378db
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,34,#55595c
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,35,#55595c
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#55595c
+#E7F0FC,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#e7f0fc
+#88224499,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#8249
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#55595c
+#E7F0FC,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#e7f0fc
+#88225500,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,39,#8250
+#777A7C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,41,#777a7c
+#2378DB,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#2378db
+#B8B9B5,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#b8b9b5
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#55595c
+#E7F0FC,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#e7f0fc
+#2378DB,hex,ring,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#2378db
+#FFFDF8,hex,ring,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#fffdf8
+#191D20,hex,outline,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,#191d20
+#fff,Tailwind white,text,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,51,text-white
+"color-mix(in oklab, #fff 80%, transparent)",Tailwind white,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,52,bg-white/80
+#777A7C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,56,#777a7c
+#2378DB,hex,background,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,56,#2378db
+#2378DB,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,56,#2378db
+#55595C,hex,text / foreground,import-reachable,frontend/src/components/dashboard/InterviewCalendar.tsx,57,#55595c
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,40,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,41,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,42,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,43,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,44,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,45,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,50,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,51,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,52,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,72,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,73,"rgba(17, 17, 26, 0.05)"
+"rgba(17, 17, 26, 0.05)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,74,"rgba(17, 17, 26, 0.05)"
+hsl(0 0% 100% / 0.85),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,85,hsl(0 0% 100% / 0.85)
+hsl(0 0% 100% / 0.3),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,85,hsl(0 0% 100% / 0.3)
+hsl(0 0% 100% / 0.35),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,86,hsl(0 0% 100% / 0.35)
+hsl(0 0% 100% / 0.08),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,86,hsl(0 0% 100% / 0.08)
+"rgba(17, 17, 26, 0.06)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,91,"rgba(17, 17, 26, 0.06)"
+"rgba(17, 17, 26, 0.06)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,92,"rgba(17, 17, 26, 0.06)"
+"rgba(17, 17, 26, 0.06)",CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,93,"rgba(17, 17, 26, 0.06)"
+hsl(0 0% 100% / 0.42),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,107,hsl(0 0% 100% / 0.42)
+hsl(0 0% 100% / 0.14),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,107,hsl(0 0% 100% / 0.14)
+hsl(0 0% 100% / 0.18),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,110,hsl(0 0% 100% / 0.18)
+hsl(0 0% 100% / 0.05),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,110,hsl(0 0% 100% / 0.05)
+hsl(0 0% 100% / 0.7),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,118,hsl(0 0% 100% / 0.7)
+hsl(0 0% 100% / 0.34),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,118,hsl(0 0% 100% / 0.34)
+hsl(0 0% 100% / 0.1),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,119,hsl(0 0% 100% / 0.1)
+hsl(0 0% 100% / 0.03),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,119,hsl(0 0% 100% / 0.03)
+hsl(0 0% 100% / 0.08),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,120,hsl(0 0% 100% / 0.08)
+hsl(0 0% 100% / 0.02),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,120,hsl(0 0% 100% / 0.02)
+hsl(0 0% 100% / 0.42),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,121,hsl(0 0% 100% / 0.42)
+hsl(0 0% 100% / 0.18),CSS function,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,121,hsl(0 0% 100% / 0.18)
+#000000,hex,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,124,#000
+#000000,hex,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,125,#000
+#000000,hex,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,128,#000
+#000000,hex,literal / token,not reached by static imports,frontend/src/components/effects/GlassSurface.css,129,#000
+hsl(0 0% 100% / 0.72),CSS function,background,not reached by static imports,frontend/src/components/effects/GlassSurface.css,161,hsl(0 0% 100% / 0.72)
+hsl(0 0% 12% / 0.72),CSS function,background,not reached by static imports,frontend/src/components/effects/GlassSurface.css,161,hsl(0 0% 12% / 0.72)
+#007AFF,hex,outline,not reached by static imports,frontend/src/components/effects/GlassSurface.css,166,#007aff
+#0A84FF,hex,outline,not reached by static imports,frontend/src/components/effects/GlassSurface.css,166,#0a84ff
+#4B505C,hex,outline,not reached by static imports,frontend/src/components/effects/page-clouds.css,6,#4b505c
+#FFFDF7,hex,text / foreground,not reached by static imports,frontend/src/components/effects/page-clouds.css,13,#fffdf7
+#344565,hex,text / foreground,not reached by static imports,frontend/src/components/effects/page-clouds.css,25,#344565
+#7183A5,hex,outline,not reached by static imports,frontend/src/components/effects/page-clouds.css,26,#7183a5
+#FFFDF8,hex,text / foreground,import-reachable,frontend/src/components/effects/PageClouds.tsx,3,#fffdf8
+#E0F5FF88,hex,border,not reached by static imports,frontend/src/components/effects/pond-life.css,5,#e0f5ff88
+#FFFFFF12,hex,background,not reached by static imports,frontend/src/components/effects/pond-life.css,5,#ffffff12
+#FFFDF9,hex,background,not reached by static imports,frontend/src/components/effects/pond-life.css,8,#fffdf9
+#EDF6FF,hex,fill,not reached by static imports,frontend/src/components/effects/PondLife.tsx,6,#edf6ff
+#315B7C,hex,stroke,not reached by static imports,frontend/src/components/effects/PondLife.tsx,6,#315b7c
+#ADCCE9,hex,fill,not reached by static imports,frontend/src/components/effects/PondLife.tsx,6,#adcce9
+#315B7C,hex,stroke,not reached by static imports,frontend/src/components/effects/PondLife.tsx,6,#315b7c
+#3683BE,hex,stroke,not reached by static imports,frontend/src/components/effects/PondLife.tsx,6,#3683be
+#E0F5FF88,hex,border,not reached by static imports,frontend/src/components/effects/PondLife.tsx,7,#e0f5ff88
+#FFFFFF12,hex,background,not reached by static imports,frontend/src/components/effects/PondLife.tsx,7,#ffffff12
+#F7CF85,hex,fill,not reached by static imports,frontend/src/components/effects/PondLife.tsx,8,#f7cf85
+#DCEAFF,hex,fill,not reached by static imports,frontend/src/components/effects/PondLife.tsx,8,#dceaff
+#315B7C,hex,fill,not reached by static imports,frontend/src/components/effects/PondLife.tsx,8,#315b7c
+#2378DB,hex,text / foreground,import-reachable,frontend/src/components/effects/TextType.tsx,125,#2378db
+#2378DB,hex,text / foreground,import-reachable,frontend/src/components/effects/TextType.tsx,128,#2378db
+#E3EEFF,hex,text / foreground,import-reachable,frontend/src/components/effects/WaterWaves.tsx,9,#E3EEFF
+#BDD7FA,hex,text / foreground,import-reachable,frontend/src/components/effects/WaterWaves.tsx,10,#BDD7FA
+#8FB8F2,hex,text / foreground,import-reachable,frontend/src/components/effects/WaterWaves.tsx,11,#8FB8F2
+#4E90EE,hex,literal / token,import-reachable,frontend/src/components/effects/WaterWaves.tsx,15,#4E90EE
+#4E90EE,hex,literal / token,import-reachable,frontend/src/components/effects/WaterWaves.tsx,15,#4E90EE
+#0F1A2E,hex,background,import-reachable,frontend/src/components/interview/CodePanel.tsx,49,#0f1a2e
+#A9BCE0,hex,text / foreground,import-reachable,frontend/src/components/interview/CodePanel.tsx,49,#a9bce0
+#202B42,hex,border,import-reachable,frontend/src/components/interview/CodePanel.tsx,49,#202b42
+#A9BCE0,hex,text / foreground,import-reachable,frontend/src/components/interview/CodePanel.tsx,49,#a9bce0
+#2378DB,hex,background,import-reachable,frontend/src/components/interview/CodePanel.tsx,53,#2378db
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/CodePanel.tsx,53,#fff
+#2378DB,hex,background,import-reachable,frontend/src/components/interview/CodePanel.tsx,56,#2378db
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/CodePanel.tsx,56,#fff
+#91A6C9,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,23,91A6C9
+#FAC52E,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,24,FAC52E
+#9ABEFF,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,25,9ABEFF
+#9ABEFF,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,26,9ABEFF
+#9ABEFF,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,27,9ABEFF
+#B9D9AC,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,28,B9D9AC
+#FFCF8A,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,29,FFCF8A
+#FFCF8A,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,30,FFCF8A
+#E2EBFA,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,31,E2EBFA
+#B8C9E5,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,32,B8C9E5
+#9ABEFF,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,33,9ABEFF
+#0F1A2E,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,36,#0f1a2e
+#E2EBFA,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,37,#E2EBFA
+#192840,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,38,#192840
+#00000000,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,39,#00000000
+#8297BA,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,40,#8297BA
+#FAC52E,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,41,#FAC52E
+#FAC52E,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,42,#FAC52E
+#305ED166,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,43,#305ED166
+#305ED133,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,44,#305ED133
+#9ABEFF22,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,45,#9ABEFF22
+#253550,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,46,#253550
+#647DA6,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,47,#647DA6
+#FAC52E22,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,48,#FAC52E22
+#FAC52E,hex,border,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,49,#FAC52E
+#65748C,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,56,65748C
+#896000,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,57,896000
+#3056A4,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,58,3056A4
+#3056A4,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,59,3056A4
+#3056A4,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,60,3056A4
+#426B39,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,61,426B39
+#9B4D17,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,62,9B4D17
+#9B4D17,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,63,9B4D17
+#173153,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,64,173153
+#4C6080,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,65,4C6080
+#3056A4,Monaco syntax,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,66,3056A4
+#FFFCF4,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,69,#FFFCF4
+#173153,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,70,#173153
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,71,#FBF4DF
+#00000000,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,72,#00000000
+#738098,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,73,#738098
+#896000,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,74,#896000
+#3056A4,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,75,#3056A4
+#BFDBFE,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,76,#BFDBFE
+#DFEAF8,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,77,#DFEAF8
+#BFDBFE66,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,78,#BFDBFE66
+#E5DECB,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,79,#E5DECB
+#9A8960,hex,literal / token,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,80,#9A8960
+#FAC52E33,hex,background,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,81,#FAC52E33
+#896000,hex,border,not reached by static imports,frontend/src/components/interview/components/CodePanel.tsx,82,#896000
+#FAC52E,hex,fill,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#fac52e
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#183153
+#FFDB61,hex,fill,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#ffdb61
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#183153
+#FAC52E,hex,fill,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#fac52e
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#183153
+#EE9135,hex,fill,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#ee9135
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#183153
+#183153,hex,fill,not reached by static imports,frontend/src/components/interview/components/DuckIcon.tsx,2,#183153
+#2F6FD0,hex,ring,not reached by static imports,frontend/src/components/interview/components/ResizableSplit.tsx,56,#2f6fd0
+#2F6FD0,hex,background,not reached by static imports,frontend/src/components/interview/components/ResizableSplit.tsx,94,#2f6fd0
+#2F6FD0,hex,background,not reached by static imports,frontend/src/components/interview/components/ResizableSplit.tsx,94,#2f6fd0
+#FAC52E,hex,border,not reached by static imports,frontend/src/components/interview/components/TestResultPanel.tsx,49,#fac52e
+oklch(57.7% 0.245 27.325),Tailwind red-600,text,not reached by static imports,frontend/src/components/interview/components/TestResultPanel.tsx,76,text-red-600
+oklch(57.7% 0.245 27.325),Tailwind red-600,text,not reached by static imports,frontend/src/components/interview/components/TestResultPanel.tsx,86,text-red-600
+#4A8CF0,hex,background,not reached by static imports,frontend/src/components/interview/components/TopBar.tsx,50,#4a8cf0
+#2F6FD0,hex,background,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,20,#2f6fd0
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,20,text-white
+#BFDBFE,hex,background,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,21,#bfdbfe
+#1E3A8A,hex,text / foreground,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,21,#1e3a8a
+#60A5FA,hex,ring,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,21,#60a5fa
+oklch(55.1% 0.027 264.364),Tailwind gray-500,background,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,22,bg-gray-500
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/components/UmpireTracker.tsx,22,text-white
+#4ADE80,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,15,#4ade80
+#5B6B87,hex,stroke,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,139,#5b6b87
+#2F6FD0,hex,border,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,150,#2f6fd0
+#E8F1FB,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,152,#e8f1fb
+#4A8CF0,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,166,#4a8cf0
+#E2493B,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,182,#e2493b
+#EE5B4D,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,182,#ee5b4d
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,182,text-white
+#E2493B,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,198,#e2493b
+#EE5B4D,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,198,#ee5b4d
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,198,text-white
+#E2493B,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,214,#e2493b
+#EE5B4D,hex,background,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,214,#ee5b4d
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/components/VideoCallPanel.tsx,214,text-white
+#FAC52E,hex,fill,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#fac52e
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#183153
+#FFDB61,hex,fill,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#ffdb61
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#183153
+#FAC52E,hex,fill,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#fac52e
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#183153
+#EE9135,hex,fill,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#ee9135
+#183153,hex,stroke,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#183153
+#183153,hex,fill,not reached by static imports,frontend/src/components/interview/DuckIcon.tsx,2,#183153
+#0A1120,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,2,#0a1120
+#0F1A2E,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,3,#0f1a2e
+#17243B,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,4,#17243b
+#F4F7FC,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,5,#f4f7fc
+#C3CDE0,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,6,#c3cde0
+#8A97AD,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,7,#8a97ad
+#1A2842,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,8,#1a2842
+#22345A,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,9,#22345a
+#16233B,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,10,#16233b
+#0C1626,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,11,#0c1626
+#12233F,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,12,#12233f
+#0C1A30,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,13,#0c1a30
+#5FD39A,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,14,#5fd39a
+#6FA4EE,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,15,#6fa4ee
+#1C3D73,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,16,#1c3d73
+#2C5BA8,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,17,#2c5ba8
+#EDF2F7,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,21,#edf2f7
+#FFFFFF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,22,#ffffff
+#D5DEE9,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,23,#d5dee9
+#172333,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,24,#172333
+#34445A,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,25,#34445a
+#65758B,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,26,#65758b
+#E8EEF5,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,27,#e8eef5
+#D9E3EF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,28,#d9e3ef
+#F2F5F9,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,29,#f2f5f9
+#F4F7FA,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,30,#f4f7fa
+#E7EFF8,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,31,#e7eff8
+#D2DEEB,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,32,#d2deeb
+#187344,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,33,#187344
+#245D9E,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,34,#245d9e
+#D8E5F4,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,35,#d8e5f4
+#C2D6EF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,36,#c2d6ef
+#FFFFFF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,69,#fff
+#587096,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,70,#587096
+#34445E,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,75,#34445e
+#0F1A2E,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,76,#0f1a2e
+#A9BCE0,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,77,#a9bce0
+#BFDBFE,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,78,#bfdbfe
+#FAC52E,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,97,#fac52e
+#122B50,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,98,#122b50
+#397653,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,102,#397653
+#173A2C,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,103,#173a2c
+#79DFAC,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,104,#79dfac
+#806A2B,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,108,#806a2b
+#3A3217,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,109,#3a3217
+#F0CF76,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,110,#f0cf76
+#8D4550,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,114,#8d4550
+#3A1C20,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,115,#3a1c20
+#FFA2AC,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,116,#ffa2ac
+#806A2B,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,120,#806a2b
+#3A3217,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,121,#3a3217
+#F0CF76,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,122,#f0cf76
+#AA5360,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,126,#aa5360
+#3A1C20,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,127,#3a1c20
+#FFA2AC,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,128,#ffa2ac
+#FFA2AC,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,132,#ffa2ac
+#FFA2AC,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,136,#ffa2ac
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,141,#fbf4df
+#FFFFFF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,142,#fff
+#292929,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,143,#292929
+#173153,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,144,#173153
+#254268,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,145,#254268
+#587096,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,146,#587096
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,147,#fbf4df
+#F6E9BF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,148,#f6e9bf
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,149,#fbf4df
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,150,#fbf4df
+#BFDBFE,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,151,#bfdbfe
+#E8EFFF,hex,literal / token,not reached by static imports,frontend/src/components/interview/interview.css,152,#e8efff
+#00000022,hex,shadow,not reached by static imports,frontend/src/components/interview/interview.css,197,#0002
+#FAC52E,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,215,#fac52e
+#122B50,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,216,#122b50
+#FAC52E,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,238,#fac52e
+#173153,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,239,#173153
+#EEEEEE,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,264,#eee
+#FAC52E,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,278,#fac52e
+#817D71,hex,border,not reached by static imports,frontend/src/components/interview/interview.css,293,#817d71
+#8C9A8C,hex,border,not reached by static imports,frontend/src/components/interview/interview.css,297,#8c9a8c
+#E1F3E7,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,304,#e1f3e7
+#08734D,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,305,#08734d
+#FFF0BF,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,309,#fff0bf
+#865B05,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,310,#865b05
+#FFE6E8,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,314,#ffe6e8
+#B43A48,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,315,#b43a48
+#202B42,hex,border,not reached by static imports,frontend/src/components/interview/interview.css,324,#202b42
+#0F1A2E,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,325,#0f1a2e
+#A9BCE0,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,326,#a9bce0
+#A9BCE0,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,330,#a9bce0
+#FAC52E,hex,border,not reached by static imports,frontend/src/components/interview/interview.css,357,#fac52e
+#968B65,hex,border,not reached by static imports,frontend/src/components/interview/interview.css,386,#968b65
+#FFF0BF,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,388,#fff0bf
+#173153,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,390,#173153
+#305ED1,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,418,#305ed1
+#CD2929,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,422,#cd2929
+#FCECEB,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,423,#fceceb
+#BA2424,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,424,#ba2424
+#BA2424,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,428,#ba2424
+#305ED1,hex,outline,not reached by static imports,frontend/src/components/interview/interview.css,433,#305ed1
+#CC3C09,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,614,#cc3c09
+#CC3C09,hex,text / foreground,not reached by static imports,frontend/src/components/interview/interview.css,618,#cc3c09
+#CC3C09,hex,background,not reached by static imports,frontend/src/components/interview/interview.css,622,#cc3c09
+#C5C8CE,hex,border,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,#c5c8ce
+#3054ED,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,#3054ed
+#DCE3FF,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,#dce3ff
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,text-white
+"color-mix(in oklab, #fff 15%, transparent)",Tailwind white,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,bg-white/15
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,4,text-white
+#C5C8CE,hex,border,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#182137
+#E9EDFF,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#e9edff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,5,#687087
+#C5C8CE,hex,border,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#182137
+#E9EDFF,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#e9edff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,6,#687087
+#C5C8CE,hex,border,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#c5c8ce
+#FFDF4F,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#182137
+#182137,hex,background,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#182137
+#FFDF4F,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#ffdf4f
+#746329,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,7,#746329
+#18213730,hex,shadow,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,35,#18213730
+#18213735,hex,shadow,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,35,#18213735
+#88559944,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewModeGrid.tsx,43,#8594
+#0A1120,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,144,#0a1120
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/InterviewPage.tsx,144,text-white
+#4C68C4,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#4c68c4
+#3F59AE,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#3f59ae
+#0A1120,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#0a1120
+#0F1A2E,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#0f1a2e
+#34445E,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#34445e
+#F4F7FC,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#f4f7fc
+#C3CDE0,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#c3cde0
+#8A97AD,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#8a97ad
+#1A2842,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#1a2842
+#22345A,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#22345a
+#16233B,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#16233b
+#0C1626,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#0c1626
+#0C1A30,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#0c1a30
+#6FA4EE,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#6fa4ee
+#1C3D73,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#1c3d73
+#2C5BA8,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#2c5ba8
+#0F1A2E,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#0f1a2e
+#A9BCE0,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#a9bce0
+#FFFFFF,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fff
+#292929,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#292929
+#454545,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#454545
+#666666,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#666
+#FBF4DF,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fbf4df
+#F6E9BF,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#f6e9bf
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fbf4df
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fbf4df
+#E8EFFF,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#e8efff
+#454545,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#454545
+#527DB5,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#527db5
+#2C5BA8,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#2c5ba8
+#FFFFFF,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fff
+#587096,hex,literal / token,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#587096
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fff
+#305ED1,hex,outline,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#305ed1
+#305ED1,hex,outline,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#305ed1
+#FAC52E,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fac52e
+#122B50,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#122b50
+#173A2C,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#173a2c
+#79DFAC,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#79dfac
+#397653,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#397653
+#3A3217,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#3a3217
+#F0CF76,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#f0cf76
+#806A2B,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#806a2b
+#3A1C20,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#3a1c20
+#FFA2AC,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#ffa2ac
+#8D4550,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#8d4550
+#3A3217,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#3a3217
+#F0CF76,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#f0cf76
+#806A2B,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#806a2b
+#3A1C20,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#3a1c20
+#FFA2AC,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#ffa2ac
+#AA5360,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#aa5360
+#FFA2AC,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#ffa2ac
+#FF8796,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#ff8796
+#79A9FF,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#79a9ff
+#FAC52E,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fac52e
+#FAC52E,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#fac52e
+#CC3C09,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#cc3c09
+#CC3C09,hex,text / foreground,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#cc3c09
+#CC3C09,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,154,#cc3c09
+#2378DB,hex,background,import-reachable,frontend/src/components/interview/InterviewPage.tsx,188,#2378db
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/InterviewPage.tsx,188,text-white
+transparent,named CSS,background,import-reachable,frontend/src/components/interview/problem-description.css,38,transparent
+#8C9A8C,hex,border,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#8c9a8c
+#E1F3E7,hex,background,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#e1f3e7
+#08734D,hex,text / foreground,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#08734d
+#FFF0BF,hex,background,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#fff0bf
+#865B05,hex,text / foreground,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#865b05
+#FFE6E8,hex,background,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#ffe6e8
+#B43A48,hex,text / foreground,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,25,#b43a48
+oklch(69.6% 0.17 162.48),Tailwind emerald-500,text,import-reachable,frontend/src/components/interview/ProblemPanel.tsx,26,text-emerald-500
+#3054ED,hex,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,39,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,40,#3054ed
+#3054ED,hex,shadow,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,40,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,40,#3054ed
+#E5BA43,hex,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,42,#e5ba43
+#3054ED,hex,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,47,#3054ed
+#2F6FD0,hex,ring,import-reachable,frontend/src/components/interview/ResizableSplit.tsx,63,#2f6fd0
+#2F6FD0,hex,background,import-reachable,frontend/src/components/interview/ResizableSplit.tsx,101,#2f6fd0
+#2F6FD0,hex,background,import-reachable,frontend/src/components/interview/ResizableSplit.tsx,101,#2f6fd0
+#627BE8,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,2,#627be8
+#182137,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,3,#182137
+#FFDF4F,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,4,#ffdf4f
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,7,#fbf4df
+#FFFDF7,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,8,#fffdf7
+#182137,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,10,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,11,#182137
+#626C86,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,12,#626c86
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,13,#fbf4df
+#F3E9C9,hex,literal / token,import-reachable,frontend/src/components/interview/sandbox-skin.css,14,#f3e9c9
+#FFFDF7,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,16,#fffdf7
+#FFFDF7,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,18,#fffdf7
+#FFFDF7,hex,background,import-reachable,frontend/src/components/interview/sandbox-skin.css,21,#fffdf7
+#1821370D,hex,shadow,import-reachable,frontend/src/components/interview/sandbox-skin.css,34,#1821370d
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/sandbox-skin.css,35,#fff
+#FFFDF7,hex,background,import-reachable,frontend/src/components/interview/sandbox-skin.css,37,#fffdf7
+transparent,named CSS,background,import-reachable,frontend/src/components/interview/sandbox-skin.css,38,transparent
+"color-mix(in oklab, oklch(82.8% 0.189 84.429) 20%, transparent)",Tailwind amber-400,background,not reached by static imports,frontend/src/components/interview/SpeechCoach.tsx,6,bg-amber-400/20
+"color-mix(in oklab, oklch(62.3% 0.214 259.815) 10%, transparent)",Tailwind blue-500,background,not reached by static imports,frontend/src/components/interview/SpeechCoach.tsx,10,bg-blue-500/10
+oklch(63.7% 0.237 25.331),Tailwind red-500,text,not reached by static imports,frontend/src/components/interview/SpeechCoach.tsx,11,text-red-500
+#2378DB,hex,border,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,64,#2378db
+oklch(63.7% 0.237 25.331),Tailwind red-500,text,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,82,text-red-500
+oklch(69.6% 0.17 162.48),Tailwind emerald-500,text,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,85,text-emerald-500
+oklch(63.7% 0.237 25.331),Tailwind red-500,text,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,85,text-red-500
+oklch(69.6% 0.17 162.48),Tailwind emerald-500,text,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,93,text-emerald-500
+oklch(63.7% 0.237 25.331),Tailwind red-500,text,import-reachable,frontend/src/components/interview/TestResultPanel.tsx,93,text-red-500
+#FAC52E,hex,background,import-reachable,frontend/src/components/interview/TopBar.tsx,54,#fac52e
+#122B50,hex,text / foreground,import-reachable,frontend/src/components/interview/TopBar.tsx,54,#122b50
+#4A8CF0,hex,background,import-reachable,frontend/src/components/interview/TopBar.tsx,62,#4a8cf0
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/TopBar.tsx,65,#fff
+#2F6FD0,hex,background,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,20,#2f6fd0
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,20,text-white
+#BFDBFE,hex,background,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,21,#bfdbfe
+#1E3A8A,hex,text / foreground,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,21,#1e3a8a
+#60A5FA,hex,ring,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,21,#60a5fa
+oklch(55.1% 0.027 264.364),Tailwind gray-500,background,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,22,bg-gray-500
+#fff,Tailwind white,text,not reached by static imports,frontend/src/components/interview/UmpireTracker.tsx,22,text-white
+#4ADE80,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,22,#4ade80
+#305ED1,hex,stroke,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,194,#305ed1
+#FAC52E,hex,border,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,194,#fac52e
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,194,#fff
+#FFFFFF,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,194,#fff
+#5B6B87,hex,stroke,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,210,#5b6b87
+#2F6FD0,hex,border,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,221,#2f6fd0
+#E8F1FB,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,223,#e8f1fb
+"color-mix(in oklab, oklch(87.2% 0.01 258.338) 30%, transparent)",Tailwind gray-300,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,227,bg-gray-300/30
+#FAC52E,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,232,#fac52e
+#122B50,hex,text / foreground,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,232,#122b50
+#FFD75D,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,232,#ffd75d
+"color-mix(in oklab, #fff 90%, transparent)",Tailwind white,text,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,236,text-white/90
+#DBEAFE,hex,text / foreground,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,239,#dbeafe
+#4A8CF0,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,244,#4a8cf0
+#E2493B,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,277,#e2493b
+#EE5B4D,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,277,#ee5b4d
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,277,text-white
+#E2493B,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,296,#e2493b
+#EE5B4D,hex,background,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,296,#ee5b4d
+#fff,Tailwind white,text,import-reachable,frontend/src/components/interview/VideoCallPanel.tsx,296,text-white
+transparent,named CSS,background,not reached by static imports,frontend/src/components/ui/index.tsx,9,transparent
+transparent,named CSS,background,not reached by static imports,frontend/src/components/ui/index.tsx,9,transparent
+transparent,named CSS,background,not reached by static imports,frontend/src/components/ui/index.tsx,10,transparent
+transparent,named CSS,background,not reached by static imports,frontend/src/components/ui/index.tsx,10,transparent
+#182137,hex,text / foreground,import-reachable,frontend/src/components/ui/PageHeading.tsx,9,#182137
+#68778E,hex,text / foreground,import-reachable,frontend/src/components/ui/PageHeading.tsx,9,#68778e
+#687087,hex,text / foreground,import-reachable,frontend/src/components/ui/PageHeading.tsx,9,#687087
+#0A1120,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,4,#0a1120
+#F4F7FC,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,4,#f4f7fc
+#8B9FF0,hex,border,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,8,#8b9ff0
+#FFDF4F,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,9,#ffdf4f
+#FFDF4F66,hex,shadow,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,9,#ffdf4f66
+#4566ED,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,10,#4566ed
+#4566ED40,hex,shadow,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,10,#4566ed40
+#8B9FF0,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,12,#8b9ff0
+#A9B8D0,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,14,#a9b8d0
+#8195C9,hex,border,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,15,#8195c9
+#101A30,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,15,#101a30
+#FF8C91,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,16,#ff8c91
+#FFDF4F,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,16,#ffdf4f
+#76D8B0,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,16,#76d8b0
+#B6C7FF,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,17,#b6c7ff
+#D5A8F4,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,17,#d5a8f4
+#8293B5,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,18,#8293b5
+#76D8B0,hex,text / foreground,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,19,#76d8b0
+#FFDF4F,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,19,#ffdf4f
+#8195ED,hex,background,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,21,#8195ed
+#12354C38,hex,shadow,import-reachable,frontend/src/components/ui/Sidebar.tsx,32,#12354c38
+#12354C0D,hex,shadow,import-reachable,frontend/src/components/ui/Sidebar.tsx,32,#12354c0d
+transparent,named CSS,background,import-reachable,frontend/src/components/ui/Sidebar.tsx,35,transparent
+#10192C,hex,literal / token,import-reachable,frontend/src/index.css,7,#10192c
+#10192C,hex,literal / token,import-reachable,frontend/src/index.css,8,#10192c
+#151E33,hex,literal / token,import-reachable,frontend/src/index.css,8,#151e33
+#1C2540,hex,literal / token,import-reachable,frontend/src/index.css,8,#1c2540
+#10192C,hex,literal / token,import-reachable,frontend/src/index.css,9,#10192c
+#1B263C,hex,literal / token,import-reachable,frontend/src/index.css,10,#1b263c
+#121D31,hex,literal / token,import-reachable,frontend/src/index.css,11,#121d31
+#26365B,hex,literal / token,import-reachable,frontend/src/index.css,12,#26365b
+#EDF1FB,hex,literal / token,import-reachable,frontend/src/index.css,13,#edf1fb
+#EDF1FB,hex,literal / token,import-reachable,frontend/src/index.css,14,#edf1fb
+#AAB7D0,hex,text / foreground,import-reachable,frontend/src/index.css,15,#aab7d0
+#35415A,hex,border,import-reachable,frontend/src/index.css,16,#35415a
+#647493,hex,border,import-reachable,frontend/src/index.css,17,#647493
+#84DFAE,hex,literal / token,import-reachable,frontend/src/index.css,18,#84dfae
+#FFFDF8,hex,background,import-reachable,frontend/src/index.css,26,#fffdf8
+#fff,Tailwind white,background,import-reachable,frontend/src/index.css,26,bg-white
+#182137,hex,text / foreground,import-reachable,frontend/src/index.css,30,#182137
+#12354C,hex,text / foreground,import-reachable,frontend/src/index.css,30,#12354c
+#687087,hex,text / foreground,import-reachable,frontend/src/index.css,31,#687087
+#58627B,hex,text / foreground,import-reachable,frontend/src/index.css,31,#58627b
+#7585A4,hex,stroke,import-reachable,frontend/src/index.css,34,#7585a4
+#24324B,hex,background,import-reachable,frontend/src/index.css,35,#24324b
+#FFDF4F,hex,background,import-reachable,frontend/src/index.css,39,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/index.css,39,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/index.css,40,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/index.css,41,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/index.css,48,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/index.css,48,#182137
+#55595C,hex,text / foreground,import-reachable,frontend/src/index.css,50,#55595c
+#777A7C,hex,text / foreground,import-reachable,frontend/src/index.css,50,#777a7c
+#626B80,hex,text / foreground,import-reachable,frontend/src/index.css,50,#626b80
+#2378DB,hex,text / foreground,import-reachable,frontend/src/index.css,51,#2378db
+#91B8FF,hex,text / foreground,import-reachable,frontend/src/index.css,51,#91b8ff
+#fff,Tailwind white,text,import-reachable,frontend/src/index.css,52,text-white
+transparent,named CSS,background,import-reachable,frontend/src/index.css,60,transparent
+#3054ED,hex,background,import-reachable,frontend/src/index.css,65,#3054ed
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/index.css,65,#fff
+#C8D4EF,hex,text / foreground,import-reachable,frontend/src/index.css,67,#c8d4ef
+#3054ED,hex,background,import-reachable,frontend/src/index.css,68,#3054ed
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/index.css,68,#fff
+#9CB4FF,hex,text / foreground,import-reachable,frontend/src/index.css,69,#9cb4ff
+#D3DEFF,hex,text / foreground,import-reachable,frontend/src/index.css,70,#d3deff
+#9CB4FF,hex,text / foreground,import-reachable,frontend/src/index.css,71,#9cb4ff
+#173A2C,hex,background,import-reachable,frontend/src/index.css,72,#173a2c
+#92E7B6,hex,text / foreground,import-reachable,frontend/src/index.css,72,#92e7b6
+#3A3217,hex,background,import-reachable,frontend/src/index.css,73,#3a3217
+#F0CF76,hex,text / foreground,import-reachable,frontend/src/index.css,73,#f0cf76
+#3A1C20,hex,background,import-reachable,frontend/src/index.css,74,#3a1c20
+#FFA2AC,hex,text / foreground,import-reachable,frontend/src/index.css,74,#ffa2ac
+#FBF4DF,hex,background,import-reachable,frontend/src/index.css,77,#fbf4df
+#2378DB,hex,background,import-reachable,frontend/src/index.css,78,#2378DB
+#12354C,hex,background,import-reachable,frontend/src/index.css,78,#12354C
+#F5CB68,hex,background,import-reachable,frontend/src/index.css,78,#F5CB68
+#147A72,hex,background,import-reachable,frontend/src/index.css,78,#147A72
+#FFFDF7,hex,literal / token,import-reachable,frontend/src/index.css,79,#fffdf7
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/index.css,79,#fbf4df
+#F2E5C4,hex,literal / token,import-reachable,frontend/src/index.css,79,#f2e5c4
+#1C63B5,hex,literal / token,import-reachable,frontend/src/index.css,80,#1C63B5
+#154E91,hex,literal / token,import-reachable,frontend/src/index.css,80,#154E91
+#FFFDF8,hex,literal / token,import-reachable,frontend/src/index.css,81,#FFFDF8
+#EEE8DA,hex,literal / token,import-reachable,frontend/src/index.css,81,#EEE8DA
+#E7F0FC,hex,literal / token,import-reachable,frontend/src/index.css,81,#E7F0FC
+#1D2D3C,hex,literal / token,import-reachable,frontend/src/index.css,82,#1D2D3C
+#53616C,hex,text / foreground,import-reachable,frontend/src/index.css,82,#53616C
+#CDC9BF,hex,border,import-reachable,frontend/src/index.css,82,#CDC9BF
+#7C898F,hex,border,import-reachable,frontend/src/index.css,82,#7C898F
+#24623F,hex,literal / token,import-reachable,frontend/src/index.css,83,#24623F
+#E3F0E6,hex,literal / token,import-reachable,frontend/src/index.css,83,#E3F0E6
+#A72D39,hex,literal / token,import-reachable,frontend/src/index.css,83,#A72D39
+#FBE9EB,hex,literal / token,import-reachable,frontend/src/index.css,83,#FBE9EB
+#78540C,hex,literal / token,import-reachable,frontend/src/index.css,83,#78540C
+#FFF1CB,hex,literal / token,import-reachable,frontend/src/index.css,83,#FFF1CB
+#191D20,hex,literal / token,import-reachable,frontend/src/index.css,84,#191D20
+#242C32,hex,literal / token,import-reachable,frontend/src/index.css,84,#242C32
+#EDF3F7,hex,literal / token,import-reachable,frontend/src/index.css,84,#EDF3F7
+#ADBBC5,hex,literal / token,import-reachable,frontend/src/index.css,84,#ADBBC5
+#46535D,hex,border,import-reachable,frontend/src/index.css,84,#46535D
+#F3A7CC,hex,literal / token,import-reachable,frontend/src/index.css,85,#F3A7CC
+#F2C078,hex,literal / token,import-reachable,frontend/src/index.css,85,#F2C078
+#A5DBD4,hex,literal / token,import-reachable,frontend/src/index.css,85,#A5DBD4
+#4E90EE,hex,literal / token,import-reachable,frontend/src/index.css,87,#4E90EE
+#397AD5,hex,literal / token,import-reachable,frontend/src/index.css,87,#397AD5
+#E3EEFF,hex,literal / token,import-reachable,frontend/src/index.css,87,#E3EEFF
+#BDD7FA,hex,literal / token,import-reachable,frontend/src/index.css,87,#BDD7FA
+#8FB8F2,hex,literal / token,import-reachable,frontend/src/index.css,87,#8FB8F2
+#FFFFFF,hex,literal / token,import-reachable,frontend/src/index.css,88,#FFFFFF
+#12354C26,hex,shadow,import-reachable,frontend/src/index.css,94,#12354C26
+#12354C40,hex,shadow,import-reachable,frontend/src/index.css,94,#12354C40
+#FFFDF8,hex,background,import-reachable,frontend/src/index.css,358,#fffdf8
+#FFFDF8,hex,background,import-reachable,frontend/src/index.css,361,#fffdf8
+#292929,hex,text / foreground,import-reachable,frontend/src/index.css,362,#292929
+#18213726,hex,shadow,import-reachable,frontend/src/index.css,367,#18213726
+#91A6C9,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,8,91A6C9
+#FAC52E,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,9,FAC52E
+#9ABEFF,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,10,9ABEFF
+#9ABEFF,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,11,9ABEFF
+#9ABEFF,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,12,9ABEFF
+#B9D9AC,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,13,B9D9AC
+#FFCF8A,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,14,FFCF8A
+#FFCF8A,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,15,FFCF8A
+#E2EBFA,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,16,E2EBFA
+#B8C9E5,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,17,B8C9E5
+#9ABEFF,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,18,9ABEFF
+#0F1A2E,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,21,#0f1a2e
+#E2EBFA,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,22,#E2EBFA
+#192840,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,23,#192840
+#00000000,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,24,#00000000
+#8297BA,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,25,#8297BA
+#FAC52E,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,26,#FAC52E
+#FAC52E,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,27,#FAC52E
+#305ED166,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,28,#305ED166
+#305ED133,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,29,#305ED133
+#9ABEFF22,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,30,#9ABEFF22
+#253550,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,31,#253550
+#647DA6,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,32,#647DA6
+#FAC52E22,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,33,#FAC52E22
+#FAC52E,hex,border,import-reachable,frontend/src/lib/editorThemes.ts,34,#FAC52E
+#65748C,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,41,65748C
+#896000,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,42,896000
+#3056A4,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,43,3056A4
+#3056A4,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,44,3056A4
+#3056A4,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,45,3056A4
+#426B39,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,46,426B39
+#9B4D17,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,47,9B4D17
+#9B4D17,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,48,9B4D17
+#173153,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,49,173153
+#4C6080,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,50,4C6080
+#3056A4,Monaco syntax,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,51,3056A4
+#FFFCF4,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,54,#FFFCF4
+#173153,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,55,#173153
+#FBF4DF,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,56,#FBF4DF
+#00000000,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,57,#00000000
+#738098,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,58,#738098
+#896000,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,59,#896000
+#3056A4,hex,text / foreground,import-reachable,frontend/src/lib/editorThemes.ts,60,#3056A4
+#BFDBFE,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,61,#BFDBFE
+#DFEAF8,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,62,#DFEAF8
+#BFDBFE66,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,63,#BFDBFE66
+#E5DECB,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,64,#E5DECB
+#9A8960,hex,literal / token,import-reachable,frontend/src/lib/editorThemes.ts,65,#9A8960
+#FAC52E33,hex,background,import-reachable,frontend/src/lib/editorThemes.ts,66,#FAC52E33
+#896000,hex,border,import-reachable,frontend/src/lib/editorThemes.ts,67,#896000
+#4C83A3,hex,text / foreground,import-reachable,frontend/src/lib/feedback.ts,3,#4c83a3
+#9B8CA9,hex,text / foreground,import-reachable,frontend/src/lib/feedback.ts,4,#9b8ca9
+#78AAA2,hex,text / foreground,import-reachable,frontend/src/lib/feedback.ts,5,#78aaa2
+#D3A34F,hex,text / foreground,import-reachable,frontend/src/lib/feedback.ts,6,#d3a34f
+#3054ED,hex,background,import-reachable,frontend/src/lib/theme.ts,3,#3054ed
+#182137,hex,background,import-reachable,frontend/src/lib/theme.ts,3,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/lib/theme.ts,3,#ffdf4f
+#3054ED,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,4,#3054ed
+#2543CA,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,4,#2543ca
+#FFFDF8,hex,background,import-reachable,frontend/src/lib/theme.ts,4,#fffdf8
+#EEECE5,hex,background,import-reachable,frontend/src/lib/theme.ts,4,#eeece5
+#E9EDFF,hex,background,import-reachable,frontend/src/lib/theme.ts,4,#e9edff
+#182137,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,5,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/lib/theme.ts,5,#687087
+#E4E2DB,hex,border,import-reachable,frontend/src/lib/theme.ts,5,#e4e2db
+#A9AFBF,hex,border,import-reachable,frontend/src/lib/theme.ts,5,#a9afbf
+#3054ED,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,6,#3054ed
+#293FB7,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,6,#293fb7
+#E8F1FF,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,6,#e8f1ff
+#809CF7,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,6,#809cf7
+#5576EF,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,6,#5576ef
+#18213720,hex,shadow,import-reachable,frontend/src/lib/theme.ts,7,#18213720
+#18213730,hex,shadow,import-reachable,frontend/src/lib/theme.ts,7,#18213730
+#182137,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,8,#182137
+#27324E,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,8,#27324e
+#FFFDF8,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,8,#fffdf8
+#FFFDF8,hex,literal / token,import-reachable,frontend/src/lib/theme.ts,8,#fffdf8
+#AEB8D2,hex,text / foreground,import-reachable,frontend/src/lib/theme.ts,8,#aeb8d2
+#2D3650,hex,border,import-reachable,frontend/src/lib/theme.ts,8,#2d3650
+#56617A,hex,border,import-reachable,frontend/src/lib/theme.ts,8,#56617a
+#3B8FE840,hex,shadow,import-reachable,frontend/src/pages/Assessment.tsx,14,#3b8fe840
+#182137,hex,outline,import-reachable,frontend/src/pages/Assessment.tsx,14,#182137
+#3054ED,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,15,#3054ed
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,15,#e9edff
+#3B8FE830,hex,shadow,import-reachable,frontend/src/pages/Assessment.tsx,15,#3b8fe830
+#182137,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,16,#182137
+#3054ED,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,16,#3054ed
+"color-mix(in oklab, #fff 75%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Assessment.tsx,16,bg-white/75
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Assessment.tsx,16,bg-white
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#182137
+#3054ED,hex,outline,import-reachable,frontend/src/pages/Assessment.tsx,87,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,87,#3054ed
+#263DAE,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,87,#263dae
+#DCE3FF,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#dce3ff
+#FFFFFF25,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,87,#ffffff25
+#C0CEFF,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#c0ceff
+#FFFFFF15,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,87,#ffffff15
+#C0CEFF,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#c0ceff
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,87,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#182137
+#18213730,hex,shadow,import-reachable,frontend/src/pages/Assessment.tsx,87,#18213730
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,#182137
+#3054ED,hex,outline,import-reachable,frontend/src/pages/Assessment.tsx,87,#3054ed
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,white
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,87,white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#687087
+#3054ED,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,91,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#687087
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#3054ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#182137
+#DFEAF5,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,91,#dfeaf5
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#3054ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,91,#182137
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,92,#e4e2db
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,92,#fffdf8
+#12354C40,hex,shadow,import-reachable,frontend/src/pages/Assessment.tsx,92,#12354c40
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,93,#687087
+#182137,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,94,#182137
+#3054ED,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,94,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,95,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,95,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,100,#687087
+#3054ED,hex,literal / token,import-reachable,frontend/src/pages/Assessment.tsx,104,#3054ed
+#3054ED,hex,literal / token,import-reachable,frontend/src/pages/Assessment.tsx,105,#3054ed
+#182137,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,106,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Assessment.tsx,106,bg-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,107,#687087
+#182137,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,107,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Assessment.tsx,107,bg-white
+#3054ED,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,109,#3054ed
+#2543CA,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,109,#2543ca
+#88559944,hex,literal / token,import-reachable,frontend/src/pages/Assessment.tsx,109,#8594
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,109,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,109,#182137
+oklch(97.1% 0.013 17.38),Tailwind red-50,background,import-reachable,frontend/src/pages/Assessment.tsx,109,bg-red-50
+oklch(50.5% 0.213 27.518),Tailwind red-700,text,import-reachable,frontend/src/pages/Assessment.tsx,109,text-red-700
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Assessment.tsx,109,text-white
+#DFEAF5,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,117,#dfeaf5
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,117,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,117,#687087
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,117,#3054ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,121,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,121,#687087
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Assessment.tsx,121,#e9edff
+#2946C5,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,121,#2946c5
+#3054ED,hex,literal / token,import-reachable,frontend/src/pages/Assessment.tsx,121,#3054ed
+#182137,hex,outline,import-reachable,frontend/src/pages/Assessment.tsx,121,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Assessment.tsx,121,#687087
+#182137,hex,border,import-reachable,frontend/src/pages/Assessment.tsx,125,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Assessment.tsx,125,bg-white
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,18,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,20,#687087
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/Dashboard.tsx,23,#e4e2db
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,23,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,23,#182137
+#18213725,hex,shadow,import-reachable,frontend/src/pages/Dashboard.tsx,23,#18213725
+#4566ED,hex,border,import-reachable,frontend/src/pages/Dashboard.tsx,23,#4566ed
+#4566ED40,hex,shadow,import-reachable,frontend/src/pages/Dashboard.tsx,23,#4566ed40
+#4566ED,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,24,#4566ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Dashboard.tsx,24,text-white
+#DCE3FF,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,25,#dce3ff
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,26,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,26,#182137
+#F4CF37,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,26,#f4cf37
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,27,#ffdf4f
+#58627B,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,28,#58627b
+#58627B,hex,fill,import-reachable,frontend/src/pages/Dashboard.tsx,30,#58627b
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,border,import-reachable,frontend/src/pages/Dashboard.tsx,30,border-white/38
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,30,bg-white/38
+#58627B,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,31,#58627b
+#58627B,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,32,#58627b
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,32,#182137
+"color-mix(in oklab, #fff 45%, transparent)",Tailwind white,border,import-reachable,frontend/src/pages/Dashboard.tsx,32,border-white/45
+"color-mix(in oklab, #fff 45%, transparent)",Tailwind white,border,import-reachable,frontend/src/pages/Dashboard.tsx,32,border-white/45
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,border,import-reachable,frontend/src/pages/Dashboard.tsx,33,border-white/38
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,33,bg-white/38
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,border,import-reachable,frontend/src/pages/Dashboard.tsx,33,border-white/38
+"color-mix(in oklab, #fff 38%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,33,bg-white/38
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,150,#687087
+#3054ED,hex,outline,import-reachable,frontend/src/pages/Dashboard.tsx,151,#3054ed
+#FFF0A3,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,156,#fff0a3
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,156,#182137
+#3054ED,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,156,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Dashboard.tsx,156,text-white
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,163,#e9edff
+#4566ED,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,163,#4566ed
+#2CBE94,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,163,#2cbe94
+#2CBE9422,hex,shadow,import-reachable,frontend/src/pages/Dashboard.tsx,163,#2cbe9422
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Dashboard.tsx,163,text-white
+#fff,Tailwind white,outline,import-reachable,frontend/src/pages/Dashboard.tsx,164,outline-white
+#88222266,hex,literal / token,import-reachable,frontend/src/pages/Dashboard.tsx,170,#8226
+#182137,hex,border,import-reachable,frontend/src/pages/Dashboard.tsx,174,#182137
+#88559944,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,174,#8594
+"color-mix(in oklab, #fff 15%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,174,bg-white/15
+"color-mix(in oklab, #fff 30%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,174,bg-white/30
+#182137,hex,border,import-reachable,frontend/src/pages/Dashboard.tsx,175,#182137
+#88559944,hex,background,import-reachable,frontend/src/pages/Dashboard.tsx,175,#8594
+"color-mix(in oklab, #fff 15%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,175,bg-white/15
+"color-mix(in oklab, #fff 30%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Dashboard.tsx,175,bg-white/30
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,178,#182137
+#182137,hex,stroke,import-reachable,frontend/src/pages/Dashboard.tsx,212,#182137
+#182137,hex,stroke,import-reachable,frontend/src/pages/Dashboard.tsx,213,#182137
+#9FAEBD,hex,stroke,import-reachable,frontend/src/pages/Dashboard.tsx,214,#9faebd
+#8BBEF2,hex,fill,import-reachable,frontend/src/pages/Dashboard.tsx,215,#8bbef2
+#687087,hex,fill,import-reachable,frontend/src/pages/Dashboard.tsx,216,#687087
+#687087,hex,fill,import-reachable,frontend/src/pages/Dashboard.tsx,217,#687087
+#687087,hex,fill,import-reachable,frontend/src/pages/Dashboard.tsx,218,#687087
+#58627B,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,222,#58627b
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,223,#777a7c
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,224,#777a7c
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Dashboard.tsx,230,#687087
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,10,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Feedback.tsx,10,bg-white
+#29251D,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,51,#29251d
+#3054ED,hex,outline,import-reachable,frontend/src/pages/Feedback.tsx,51,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,56,#687087
+#3054ED,hex,background,import-reachable,frontend/src/pages/Feedback.tsx,56,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Feedback.tsx,56,text-white
+#3054ED,hex,background,import-reachable,frontend/src/pages/Feedback.tsx,57,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Feedback.tsx,57,text-white
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,59,#777a7c
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,60,#777a7c
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,67,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Feedback.tsx,67,bg-white
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,68,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,73,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Feedback.tsx,73,bg-white
+#2946C5,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,74,#2946c5
+#89836D,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,80,#89836d
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,80,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Feedback.tsx,81,#182137
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,82,#777a7c
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,83,#3054ed
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Feedback.tsx,86,#e9edff
+#2946C5,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,86,#2946c5
+#DEEEDF,hex,background,import-reachable,frontend/src/pages/Feedback.tsx,88,#deeedf
+#477052,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,88,#477052
+#F5DFBB,hex,background,import-reachable,frontend/src/pages/Feedback.tsx,88,#f5dfbb
+#8A6115,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,88,#8a6115
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,88,#3054ed
+#2946C5,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,89,#2946c5
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,89,#687087
+#777A7C,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,89,#777a7c
+#89836D,hex,text / foreground,import-reachable,frontend/src/pages/Feedback.tsx,92,#89836d
+#DEDBD2,hex,stroke,import-reachable,frontend/src/pages/Feedback.tsx,111,#dedbd2
+#777A7C,hex,fill,import-reachable,frontend/src/pages/Feedback.tsx,111,#777a7c
+#687087,hex,fill,import-reachable,frontend/src/pages/Feedback.tsx,119,#687087
+#687087,hex,fill,import-reachable,frontend/src/pages/Feedback.tsx,120,#687087
+#777A7C,hex,fill,import-reachable,frontend/src/pages/Feedback.tsx,121,#777a7c
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/InterviewReport.tsx,10,#e4e2db
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/InterviewReport.tsx,10,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,57,#182137
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,61,#3054ed
+#88559922,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,61,#8592
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,63,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,64,#687087
+#3054ED,hex,background,import-reachable,frontend/src/pages/InterviewReport.tsx,64,#3054ed
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,64,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/InterviewReport.tsx,64,text-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,66,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,66,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,69,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,75,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,76,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,78,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,79,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewReport.tsx,80,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,99,#182137
+#3054ED,hex,outline,import-reachable,frontend/src/pages/InterviewSelection.tsx,99,#3054ed
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,105,#3054ed
+#88559922,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,105,#8592
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,106,#fffdf8
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,106,#e4e2db
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,106,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,106,#687087
+#DFE5FA,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#dfe5fa
+#F0F3FF,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#f0f3ff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#687087
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#3054ed
+#88559999,hex,literal / token,import-reachable,frontend/src/pages/InterviewSelection.tsx,107,#8599
+#FFF3BA,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,108,#fff3ba
+#9B7920,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,108,#9b7920
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#687087
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#e4e2db
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#3054ed
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#e9edff
+#B9C9FF,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#b9c9ff
+#DEDFDC,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#dedfdc
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#182137
+#88222266,hex,literal / token,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#8226
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#687087
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#3054ed
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,109,#e4e2db
+#68778E,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#68778e
+#DEDFDC,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#dedfdc
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#687087
+#3054ED,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#3054ed
+#88559944,hex,literal / token,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,#8594
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,110,white
+#FFF0D7,hex,background,import-reachable,frontend/src/pages/InterviewSelection.tsx,111,#fff0d7
+#EAD4AD,hex,border,import-reachable,frontend/src/pages/InterviewSelection.tsx,111,#ead4ad
+#76501E,hex,text / foreground,import-reachable,frontend/src/pages/InterviewSelection.tsx,111,#76501e
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,49,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,49,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,49,#182137
+#18213740,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,49,#18213740
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,50,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,50,bg-white
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,51,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,52,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,52,#ffdf4f
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,55,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,55,bg-white
+#4566ED,hex,border,import-reachable,frontend/src/pages/Landing.tsx,56,#4566ed
+#E3EBFF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,56,#e3ebff
+#2946B6,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,56,#2946b6
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,61,#182137
+#111727,hex,background,import-reachable,frontend/src/pages/Landing.tsx,61,#111727
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,62,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,62,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,62,bg-white
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,62,bg-white
+#68758F,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,64,#68758f
+#8C95A9,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,64,#8c95a9
+#F3D365,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,64,#f3d365
+#DCE3F3,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,64,#dce3f3
+#A9BEFF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,64,#a9beff
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,66,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,66,bg-white
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,67,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,69,#182137
+#E9993E,hex,fill,import-reachable,frontend/src/pages/Landing.tsx,69,#e9993e
+#182137,hex,stroke,import-reachable,frontend/src/pages/Landing.tsx,69,#182137
+#4566ED,hex,fill,import-reachable,frontend/src/pages/Landing.tsx,69,#4566ed
+#182137,hex,stroke,import-reachable,frontend/src/pages/Landing.tsx,69,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,69,#687087
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,69,bg-white
+#E8C842,hex,border,import-reachable,frontend/src/pages/Landing.tsx,70,#e8c842
+#4566ED,hex,background,import-reachable,frontend/src/pages/Landing.tsx,70,#4566ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,70,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,70,#182137
+#E3EBFF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,70,#e3ebff
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,70,#ffdf4f
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,70,bg-white
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Landing.tsx,70,text-white
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,72,#182137
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,72,#182137
+#CE5353,hex,background,import-reachable,frontend/src/pages/Landing.tsx,72,#ce5353
+#221155,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,72,#215
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,72,bg-white
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Landing.tsx,72,text-white
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,74,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,74,#ffdf4f
+#AF4D25,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,74,#af4d25
+#4566ED,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,74,#4566ed
+#99667799,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,74,#9679
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,74,#687087
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,74,bg-white
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,76,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,76,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,76,#182137
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,76,bg-white
+#2378DB60,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,91,#2378db60
+#FFFDF8,hex,fill,import-reachable,frontend/src/pages/Landing.tsx,100,#fffdf8
+#4B505C,hex,stroke,import-reachable,frontend/src/pages/Landing.tsx,100,#4b505c
+#4B505C,hex,stroke,import-reachable,frontend/src/pages/Landing.tsx,100,#4b505c
+#4B505C,hex,border,import-reachable,frontend/src/pages/Landing.tsx,102,#4b505c
+#D9DCDE,hex,background,import-reachable,frontend/src/pages/Landing.tsx,102,#d9dcde
+#333D4F65,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,102,#333d4f65
+#FFFFFF,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,102,#fff
+#414A52,hex,background,import-reachable,frontend/src/pages/Landing.tsx,103,#414a52
+#4B505C,hex,border,import-reachable,frontend/src/pages/Landing.tsx,104,#4b505c
+#81898F,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,105,#81898f
+#B9BEC2,hex,background,import-reachable,frontend/src/pages/Landing.tsx,107,#b9bec2
+#C4C9CC,hex,background,import-reachable,frontend/src/pages/Landing.tsx,107,#c4c9cc
+#C4C9CC,hex,background,import-reachable,frontend/src/pages/Landing.tsx,108,#c4c9cc
+#55595C20,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,108,#55595c20
+#9679241C,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,112,#9679241c
+#4566ED,hex,background,import-reachable,frontend/src/pages/Landing.tsx,186,#4566ed
+#3655D8,hex,background,import-reachable,frontend/src/pages/Landing.tsx,186,#3655d8
+#000,Tailwind black,border,import-reachable,frontend/src/pages/Landing.tsx,186,border-black
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Landing.tsx,186,text-white
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,189,#182137
+#182137,hex,outline,import-reachable,frontend/src/pages/Landing.tsx,189,#182137
+#4566ED,hex,background,import-reachable,frontend/src/pages/Landing.tsx,190,#4566ed
+#000,Tailwind black,border,import-reachable,frontend/src/pages/Landing.tsx,190,border-black
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,191,#182137
+#000,Tailwind black,border,import-reachable,frontend/src/pages/Landing.tsx,191,border-black
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,192,#3054ed
+#2543CA,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,192,#2543ca
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,192,#e9edff
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,192,bg-white
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,193,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,193,#182137
+#F4CF37,hex,background,import-reachable,frontend/src/pages/Landing.tsx,193,#f4cf37
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,193,#182137
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,193,#e9edff
+#88559999,hex,background,import-reachable,frontend/src/pages/Landing.tsx,193,#8599
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Landing.tsx,193,bg-white
+#3054ED,hex,background,import-reachable,frontend/src/pages/Landing.tsx,200,#3054ed
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,201,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,202,#687087
+#88559999,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,203,#8599
+#182137,hex,border,import-reachable,frontend/src/pages/Landing.tsx,204,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,204,#687087
+#E8EFFF40,hex,border,import-reachable,frontend/src/pages/Landing.tsx,209,#e8efff40
+#FFFFFF12,hex,shadow,import-reachable,frontend/src/pages/Landing.tsx,209,#ffffff12
+#FFFFFF,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,210,#fff
+#DCE7FF,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,211,#dce7ff
+#88221177,hex,literal / token,import-reachable,frontend/src/pages/Landing.tsx,213,#8217
+#88221122,hex,literal / token,import-reachable,frontend/src/pages/Landing.tsx,214,#8212
+#626B7A,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,217,#626b7a
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Landing.tsx,217,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,217,#182137
+#746630,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,217,#746630
+#000000,hex,background,import-reachable,frontend/src/pages/Landing.tsx,218,#000000
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,218,white
+#FFF0AE,hex,background,import-reachable,frontend/src/pages/Landing.tsx,220,#fff0ae
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,220,#3054ed
+#8A7753,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,220,#8a7753
+#88221177,hex,literal / token,import-reachable,frontend/src/pages/Landing.tsx,220,#8217
+#626B7A,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,222,#626b7a
+#2644BF,hex,background,import-reachable,frontend/src/pages/Landing.tsx,222,#2644bf
+#D2DDFF,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,222,#d2ddff
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,222,white
+#000000,hex,background,import-reachable,frontend/src/pages/Landing.tsx,223,#000000
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,223,white
+#6C87EC,hex,background,import-reachable,frontend/src/pages/Landing.tsx,225,#6c87ec
+#626B7A,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,227,#626b7a
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Landing.tsx,227,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,227,#182137
+#000000,hex,background,import-reachable,frontend/src/pages/Landing.tsx,228,#000000
+#FFFFFF,named CSS,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,228,white
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Landing.tsx,230,#fffdf8
+#8B8C91,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,230,#8b8c91
+#FFFFFF26,hex,border,import-reachable,frontend/src/pages/Landing.tsx,234,#ffffff26
+#C5DEF6,hex,text / foreground,import-reachable,frontend/src/pages/Landing.tsx,234,#c5def6
+#88559999,hex,literal / token,import-reachable,frontend/src/pages/Landing.tsx,234,#8599
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Landing.tsx,234,text-white
+#4B505C,hex,border,import-reachable,frontend/src/pages/Login.tsx,88,#4b505c
+#18213725,hex,shadow,import-reachable,frontend/src/pages/Login.tsx,88,#18213725
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Login.tsx,88,bg-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Login.tsx,94,#687087
+oklch(97.1% 0.013 17.38),Tailwind red-50,background,import-reachable,frontend/src/pages/Login.tsx,101,bg-red-50
+oklch(57.7% 0.245 27.325),Tailwind red-600,text,import-reachable,frontend/src/pages/Login.tsx,101,text-red-600
+#4B505C,hex,border,import-reachable,frontend/src/pages/Login.tsx,124,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Login.tsx,124,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Login.tsx,124,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Login.tsx,124,#4566ed
+#4566ED,hex,text / foreground,import-reachable,frontend/src/pages/Login.tsx,139,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/pages/Login.tsx,153,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Login.tsx,153,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Login.tsx,153,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Login.tsx,153,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/pages/Login.tsx,160,#4b505c
+#4566ED,hex,background,import-reachable,frontend/src/pages/Login.tsx,160,#4566ed
+#3655D8,hex,background,import-reachable,frontend/src/pages/Login.tsx,160,#3655d8
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Login.tsx,160,text-white
+oklch(92.2% 0 none),Tailwind neutral-200,background,import-reachable,frontend/src/pages/Login.tsx,168,bg-neutral-200
+oklch(70.8% 0 none),Tailwind neutral-400,text,import-reachable,frontend/src/pages/Login.tsx,170,text-neutral-400
+oklch(92.2% 0 none),Tailwind neutral-200,background,import-reachable,frontend/src/pages/Login.tsx,174,bg-neutral-200
+#4B505C,hex,border,import-reachable,frontend/src/pages/Login.tsx,182,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Login.tsx,182,#fffdf8
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Login.tsx,182,bg-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Login.tsx,192,#687087
+#4566ED,hex,text / foreground,import-reachable,frontend/src/pages/Login.tsx,196,#4566ed
+#4285F4,hex,fill,import-reachable,frontend/src/pages/Login.tsx,213,#4285F4
+#34A853,hex,fill,import-reachable,frontend/src/pages/Login.tsx,218,#34A853
+#FBBC05,hex,fill,import-reachable,frontend/src/pages/Login.tsx,223,#FBBC05
+#EA4335,hex,fill,import-reachable,frontend/src/pages/Login.tsx,228,#EA4335
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,14,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,14,#182137
+#FFE879,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,14,#ffe879
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,21,#e9edff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,21,#3054ed
+#FFF3BA,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,22,#fff3ba
+#8A6B18,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,22,#8a6b18
+#EEE7FF,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,23,#eee7ff
+#7952B3,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,23,#7952b3
+#E3F0E6,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,26,#e3f0e6
+#24623F,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,26,#24623f
+#FFF1CB,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,27,#fff1cb
+#78540C,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,27,#78540c
+#FBE9EB,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,28,#fbe9eb
+#A72D39,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,28,#a72d39
+#3054ED,hex,outline,import-reachable,frontend/src/pages/ProblemLibrary.tsx,90,#3054ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,90,#182137
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,95,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,95,#3054ed
+#88559999,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,95,#8599
+#3054ED,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,96,#3054ed
+#263DAE,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,96,#263dae
+#304B9140,hex,shadow,import-reachable,frontend/src/pages/ProblemLibrary.tsx,96,#304b9140
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/ProblemLibrary.tsx,96,text-white
+#BDCCFF,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#bdccff
+#DCE3FF,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#dce3ff
+#88221177,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#8217
+#88559944,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#8594
+#88559944,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#8594
+#88559944,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,97,#8594
+#FFF0D7,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,100,#fff0d7
+#EAD4AD,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,100,#ead4ad
+#76501E,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,100,#76501e
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,101,#687087
+#E4E2DE,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,101,#e4e2de
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,101,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,101,#182137
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,103,#fffdf8
+#E4E2DE,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,103,#e4e2de
+#8792A5,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,103,#8792a5
+#3054ED,hex,outline,import-reachable,frontend/src/pages/ProblemLibrary.tsx,103,#3054ed
+#E7E5DF,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,104,#e7e5df
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,104,#687087
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,104,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,104,#182137
+#18213710,hex,shadow,import-reachable,frontend/src/pages/ProblemLibrary.tsx,104,#18213710
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,105,#fffdf8
+#E4E2DE,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,105,#e4e2de
+#99777766,hex,literal / token,import-reachable,frontend/src/pages/ProblemLibrary.tsx,105,#9776
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,107,#fffdf8
+#E4E2DE,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,107,#e4e2de
+#E4E2DE,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,107,#e4e2de
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,107,#3054ed
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,108,#687087
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,108,#3054ed
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,109,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,109,#3054ed
+#E7E5E0,hex,border,import-reachable,frontend/src/pages/ProblemLibrary.tsx,109,#e7e5e0
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,109,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,111,#3054ed
+#68778E,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,112,#68778e
+#DFE6FF,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,112,#dfe6ff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,112,#3054ed
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,113,#e9edff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,113,#3054ed
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,114,#3054ed
+#88559944,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,114,#8594
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/ProblemLibrary.tsx,115,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/ProblemLibrary.tsx,115,#3054ed
+#E3F0E6,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,15,#e3f0e6
+#24623F,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,15,#24623f
+#FFF1CB,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,15,#fff1cb
+#78540C,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,15,#78540c
+#FBE9EB,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,15,#fbe9eb
+#A72D39,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,15,#a72d39
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,56,#182137
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,60,#3054ed
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,62,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,62,#3054ed
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,62,#fffdf8
+#3054ED,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,62,#3054ed
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,62,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,62,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Recommended.tsx,62,text-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,63,#687087
+#E7E5E0,hex,border,import-reachable,frontend/src/pages/Recommended.tsx,64,#e7e5e0
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,64,#fffdf8
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,64,#687087
+oklch(97.1% 0.013 17.38),Tailwind red-50,background,import-reachable,frontend/src/pages/Recommended.tsx,65,bg-red-50
+oklch(50.5% 0.213 27.518),Tailwind red-700,text,import-reachable,frontend/src/pages/Recommended.tsx,65,text-red-700
+#E7E5E0,hex,border,import-reachable,frontend/src/pages/Recommended.tsx,66,#e7e5e0
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,66,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,67,#3054ed
+#68778E,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,68,#68778e
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Recommended.tsx,69,#687087
+#3054ED,hex,background,import-reachable,frontend/src/pages/Recommended.tsx,70,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Recommended.tsx,70,text-white
+#3054ED,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#2543CA,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#2543ca
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#2378DB,hex,ring,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#2378db
+#0A1120,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#0a1120
+#EDF1FB,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#edf1fb
+#0F1A2E,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#0f1a2e
+#96AAFF,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#96aaff
+#495362,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#495362
+#A3B2CC,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#a3b2cc
+#495362,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#495362
+#0F1A2E,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#0f1a2e
+#F4F7FC,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#f4f7fc
+#C3CDE0,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#c3cde0
+#8A97AD,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#8a97ad
+#1A2842,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#1a2842
+#0C1626,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#0c1626
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#2378DB,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#2378db
+#FBF4DF,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#fbf4df
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#182137
+#FFFCF4,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#fffcf4
+#C5C8CE,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#c5c8ce
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#687087
+#C5C8CE,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#c5c8ce
+#FFFFFF,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#fff
+#173153,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#173153
+#254268,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#254268
+#587096,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#587096
+#FBF4DF,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#fbf4df
+#FBF4DF,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#fbf4df
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#2378DB,hex,literal / token,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#2378db
+#3054ED,hex,outline,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,text-white
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/RepoDebugging.tsx,19,text-white
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,37,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,39,#3054ed
+#3054ED,hex,border,import-reachable,frontend/src/pages/RepoDebugging.tsx,39,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/RepoDebugging.tsx,39,text-white
+#3054ED,hex,border,import-reachable,frontend/src/pages/RepoDebugging.tsx,157,#3054ed
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,157,#3054ed
+#C99824,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,157,#c99824
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,161,#3054ed
+#221155,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,161,#215
+#3054ED,hex,border,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#3054ed
+#3054ED,hex,border,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#3054ed
+#DD697C,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#dd697c
+#4BAF83,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#4baf83
+#D6963B,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#d6963b
+#DD697C,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#dd697c
+#4BAF83,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#4baf83
+#DD697C,hex,text / foreground,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,#dd697c
+#0A1120,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,173,#0a1120
+#3054ED,hex,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,173,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/RepoDebugging.tsx,173,text-white
+#18213735,hex,shadow,import-reachable,frontend/src/pages/Settings.tsx,57,#18213735
+#3054ED,hex,outline,import-reachable,frontend/src/pages/Settings.tsx,58,#3054ed
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Settings.tsx,58,#182137
+#8195ED,hex,border,import-reachable,frontend/src/pages/Settings.tsx,70,#8195ed
+#4566ED,hex,background,import-reachable,frontend/src/pages/Settings.tsx,75,#4566ed
+#3655D8,hex,background,import-reachable,frontend/src/pages/Settings.tsx,75,#3655d8
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Settings.tsx,75,text-white
+#DE6675,hex,text / foreground,import-reachable,frontend/src/pages/Settings.tsx,76,#de6675
+#8195ED,hex,border,import-reachable,frontend/src/pages/Settings.tsx,80,#8195ed
+#4566ED,hex,background,import-reachable,frontend/src/pages/Settings.tsx,80,#4566ed
+#8195ED,hex,border,import-reachable,frontend/src/pages/Settings.tsx,80,#8195ed
+#10192C,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#10192c
+#FBF4DF,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#fbf4df
+#182137,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#182137
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#ffdf4f
+#182137,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#182137
+#4566ED,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#4566ed
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#ffdf4f
+#25334D,hex,background,import-reachable,frontend/src/pages/Settings.tsx,82,#25334d
+"color-mix(in oklab, #000 10%, transparent)",Tailwind black,border,import-reachable,frontend/src/pages/Settings.tsx,82,border-black/10
+"color-mix(in oklab, #fff 40%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Settings.tsx,82,bg-white/40
+"color-mix(in oklab, #fff 20%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Settings.tsx,82,bg-white/20
+"color-mix(in oklab, #fff 50%, transparent)",Tailwind white,background,import-reachable,frontend/src/pages/Settings.tsx,82,bg-white/50
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Settings.tsx,82,bg-white
+#8195ED,hex,outline,import-reachable,frontend/src/pages/Settings.tsx,83,#8195ed
+#4566ED,hex,border,import-reachable,frontend/src/pages/Settings.tsx,83,#4566ed
+#4566ED,hex,background,import-reachable,frontend/src/pages/Settings.tsx,83,#4566ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Settings.tsx,83,text-white
+#FFDF4F,hex,background,import-reachable,frontend/src/pages/Settings.tsx,86,#ffdf4f
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/Settings.tsx,86,#182137
+#8195ED,hex,border,import-reachable,frontend/src/pages/Settings.tsx,89,#8195ed
+#8195ED,hex,text / foreground,import-reachable,frontend/src/pages/Settings.tsx,90,#8195ed
+#101A35,hex,background,import-reachable,frontend/src/pages/Settings.tsx,95,#101a35
+#4566ED,hex,background,import-reachable,frontend/src/pages/Settings.tsx,95,#4566ed
+#3655D8,hex,background,import-reachable,frontend/src/pages/Settings.tsx,95,#3655d8
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Settings.tsx,95,text-white
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,115,#4b505c
+#18213725,hex,shadow,import-reachable,frontend/src/pages/Signup.tsx,115,#18213725
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Signup.tsx,115,bg-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Signup.tsx,120,#687087
+oklch(97.1% 0.013 17.38),Tailwind red-50,background,import-reachable,frontend/src/pages/Signup.tsx,128,bg-red-50
+oklch(57.7% 0.245 27.325),Tailwind red-600,text,import-reachable,frontend/src/pages/Signup.tsx,128,text-red-600
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,154,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,154,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Signup.tsx,154,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Signup.tsx,154,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,179,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,179,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Signup.tsx,179,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Signup.tsx,179,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,199,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,199,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Signup.tsx,199,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Signup.tsx,199,#4566ed
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,221,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,221,#fffdf8
+#4566ED,hex,border,import-reachable,frontend/src/pages/Signup.tsx,221,#4566ed
+#4566ED,hex,ring,import-reachable,frontend/src/pages/Signup.tsx,221,#4566ed
+oklch(43.9% 0 none),Tailwind neutral-600,text,import-reachable,frontend/src/pages/Signup.tsx,221,text-neutral-600
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,231,#4b505c
+#4566ED,hex,background,import-reachable,frontend/src/pages/Signup.tsx,231,#4566ed
+#3655D8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,231,#3655d8
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/Signup.tsx,231,text-white
+oklch(92.2% 0 none),Tailwind neutral-200,background,import-reachable,frontend/src/pages/Signup.tsx,241,bg-neutral-200
+oklch(70.8% 0 none),Tailwind neutral-400,text,import-reachable,frontend/src/pages/Signup.tsx,243,text-neutral-400
+oklch(92.2% 0 none),Tailwind neutral-200,background,import-reachable,frontend/src/pages/Signup.tsx,247,bg-neutral-200
+#4B505C,hex,border,import-reachable,frontend/src/pages/Signup.tsx,255,#4b505c
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/Signup.tsx,255,#fffdf8
+#fff,Tailwind white,background,import-reachable,frontend/src/pages/Signup.tsx,255,bg-white
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/Signup.tsx,264,#687087
+#4566ED,hex,text / foreground,import-reachable,frontend/src/pages/Signup.tsx,268,#4566ed
+#4285F4,hex,fill,import-reachable,frontend/src/pages/Signup.tsx,285,#4285F4
+#34A853,hex,fill,import-reachable,frontend/src/pages/Signup.tsx,290,#34A853
+#FBBC05,hex,fill,import-reachable,frontend/src/pages/Signup.tsx,295,#FBBC05
+#EA4335,hex,fill,import-reachable,frontend/src/pages/Signup.tsx,300,#EA4335
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,38,#182137
+#3054ED,hex,outline,import-reachable,frontend/src/pages/SystemDesign.tsx,38,#3054ed
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,40,#c5c8ce
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,41,#3054ed
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,42,#c5c8ce
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,45,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,45,#fffdf8
+#3054ED,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,45,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/SystemDesign.tsx,45,text-white
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#fffdf8
+#C5C8CE,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#182137
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#182137
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#e9edff
+#F5F0E3,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#f5f0e3
+#3054ED,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#3054ed
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#fffdf8
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,46,#182137
+#3054ED,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,47,#3054ed
+#fff,Tailwind white,text,import-reachable,frontend/src/pages/SystemDesign.tsx,47,text-white
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,49,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,49,#fffdf8
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,50,#3054ed
+#FFF1CB,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,52,#fff1cb
+#78540C,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,52,#78540c
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,53,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,55,#687087
+#E4E2DB,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,56,#e4e2db
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,56,#687087
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,58,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,58,#fffdf8
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,59,#687087
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,60,#c5c8ce
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,61,#687087
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,63,#687087
+#182137,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,73,#182137
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,77,#3054ed
+#C5C8CE,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,78,#c5c8ce
+#FFFDF8,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,78,#fffdf8
+#687087,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,80,#687087
+#B9C9FF,hex,border,import-reachable,frontend/src/pages/SystemDesign.tsx,81,#b9c9ff
+#E9EDFF,hex,background,import-reachable,frontend/src/pages/SystemDesign.tsx,81,#e9edff
+#3054ED,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,81,#3054ed
+#3054ED,hex,outline,import-reachable,frontend/src/pages/SystemDesign.tsx,81,#3054ed
+#88559944,hex,text / foreground,import-reachable,frontend/src/pages/SystemDesign.tsx,81,#8594
+#FBF4DF,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,3,#FBF4DF
+#2378DB,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,3,#2378DB
+#12354C,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,3,#12354C
+#F5CB68,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,3,#F5CB68
+#147A72,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,3,#147A72
+#1C63B5,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,4,#1C63B5
+#154E91,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,4,#154E91
+#FFFDF8,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,5,#FFFDF8
+#EEE8DA,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,5,#EEE8DA
+#E7F0FC,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,5,#E7F0FC
+#1D2D3C,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,6,#1D2D3C
+#53616C,hex,text / foreground,not reached by static imports,frontend/src/styles/tokens.css,6,#53616C
+#CDC9BF,hex,border,not reached by static imports,frontend/src/styles/tokens.css,6,#CDC9BF
+#7C898F,hex,border,not reached by static imports,frontend/src/styles/tokens.css,6,#7C898F
+#24623F,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#24623F
+#E3F0E6,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#E3F0E6
+#A72D39,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#A72D39
+#FBE9EB,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#FBE9EB
+#78540C,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#78540C
+#FFF1CB,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,7,#FFF1CB
+#191D20,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,8,#191D20
+#242C32,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,8,#242C32
+#EDF3F7,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,8,#EDF3F7
+#ADBBC5,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,8,#ADBBC5
+#46535D,hex,border,not reached by static imports,frontend/src/styles/tokens.css,8,#46535D
+#F3A7CC,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,9,#F3A7CC
+#F2C078,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,9,#F2C078
+#A5DBD4,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,9,#A5DBD4
+#4E90EE,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,11,#4E90EE
+#397AD5,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,11,#397AD5
+#E3EEFF,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,11,#E3EEFF
+#BDD7FA,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,11,#BDD7FA
+#8FB8F2,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,11,#8FB8F2
+#FFFFFF,hex,literal / token,not reached by static imports,frontend/src/styles/tokens.css,12,#FFFFFF
+#12354C26,hex,shadow,not reached by static imports,frontend/src/styles/tokens.css,18,#12354C26
+#12354C40,hex,shadow,not reached by static imports,frontend/src/styles/tokens.css,18,#12354C40
+transparent,named CSS,background,not reached by static imports,frontend/src/styles/ui.css,25,transparent
+transparent,named CSS,background,not reached by static imports,frontend/src/styles/ui.css,46,transparent
+#F6EFD9,hex,background,import-reachable,frontend/index.html,2,#f6efd9
+#121826,hex,text / foreground,import-reachable,frontend/index.html,2,#121826
+#F6EFD9,hex,background,import-reachable,frontend/index.html,12,#f6efd9
+#121826,hex,text / foreground,import-reachable,frontend/index.html,12,#121826
+"color-mix(in oklab, #3054ED 75%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,15,border-[#3054ed]/75
+"color-mix(in oklab, #182137 10%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,16,border-[#182137]/10
+"color-mix(in oklab, #3054ED 40%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,16,border-[#3054ed]/40
+"color-mix(in oklab, #182137 40%, transparent)",Tailwind arbitrary hex + opacity,text,import-reachable,frontend/src/pages/Assessment.tsx,91,text-[#182137]/40
+"color-mix(in oklab, #DFEAF5 70%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Assessment.tsx,91,bg-[#dfeaf5]/70
+"color-mix(in oklab, #182137 35%, transparent)",Tailwind arbitrary hex + opacity,text,import-reachable,frontend/src/pages/Assessment.tsx,91,text-[#182137]/35
+"color-mix(in oklab, #182137 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Assessment.tsx,94,bg-[#182137]/10
+"color-mix(in oklab, #182137 60%, transparent)",Tailwind arbitrary hex + opacity,text,import-reachable,frontend/src/pages/Assessment.tsx,95,text-[#182137]/60
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,106,border-[#182137]/20
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,107,border-[#182137]/20
+"color-mix(in oklab, #DFEAF5 70%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Assessment.tsx,117,bg-[#dfeaf5]/70
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Assessment.tsx,125,border-[#182137]/20
+"color-mix(in oklab, #E9EDFF 90%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Dashboard.tsx,163,bg-[#e9edff]/90
+"color-mix(in oklab, #182137 25%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Dashboard.tsx,174,border-[#182137]/25
+"color-mix(in oklab, #182137 25%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Dashboard.tsx,175,border-[#182137]/25
+"color-mix(in oklab, #182137 5%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,10,border-[#182137]/5
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,67,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,68,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,73,border-[#182137]/15
+"color-mix(in oklab, #182137 10%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,80,border-[#182137]/10
+"color-mix(in oklab, #182137 8%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Feedback.tsx,81,border-[#182137]/8
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,49,border-[#182137]/20
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,50,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,51,border-[#182137]/15
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,52,border-[#182137]/20
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,55,border-[#182137]/15
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,56,border-[#4566ed]/20
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,61,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,62,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,62,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,62,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,66,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,67,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,69,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,72,border-[#182137]/15
+"color-mix(in oklab, #182137 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,72,border-[#182137]/20
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,74,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,76,border-[#182137]/15
+"color-mix(in oklab, #182137 15%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Landing.tsx,204,border-[#182137]/15
+"color-mix(in oklab, #4B505C 25%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Login.tsx,88,border-[#4b505c]/25
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Login.tsx,124,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Login.tsx,124,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Login.tsx,153,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Login.tsx,153,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Login.tsx,182,border-[#4b505c]/30
+"color-mix(in oklab, #3054ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,157,bg-[#3054ed]/10
+"color-mix(in oklab, #3054ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,161,bg-[#3054ed]/10
+"color-mix(in oklab, #3054ED 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/RepoDebugging.tsx,166,border-[#3054ed]/30
+"color-mix(in oklab, #0A1120 65%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/RepoDebugging.tsx,173,bg-[#0a1120]/65
+"color-mix(in oklab, #4566ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Settings.tsx,80,bg-[#4566ed]/10
+"color-mix(in oklab, #8195ED 60%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Settings.tsx,80,border-[#8195ed]/60
+"color-mix(in oklab, #182137 30%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Settings.tsx,82,bg-[#182137]/30
+"color-mix(in oklab, #101A35 65%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/pages/Settings.tsx,95,bg-[#101a35]/65
+"color-mix(in oklab, #4B505C 25%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,115,border-[#4b505c]/25
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,154,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Signup.tsx,154,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,179,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Signup.tsx,179,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,199,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Signup.tsx,199,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,221,border-[#4b505c]/30
+"color-mix(in oklab, #4566ED 20%, transparent)",Tailwind arbitrary hex + opacity,ring,import-reachable,frontend/src/pages/Signup.tsx,221,ring-[#4566ed]/20
+"color-mix(in oklab, #4B505C 30%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/pages/Signup.tsx,255,border-[#4b505c]/30
+"color-mix(in oklab, #3054ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,39,bg-[#3054ed]/10
+"color-mix(in oklab, #3054ED 15%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,40,bg-[#3054ed]/15
+"color-mix(in oklab, #3054ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,40,bg-[#3054ed]/10
+"color-mix(in oklab, #3054ED 10%, transparent)",Tailwind arbitrary hex + opacity,background,import-reachable,frontend/src/components/interview/RepositoryExplorer.tsx,47,bg-[#3054ed]/10
+"color-mix(in oklab, #8195C9 20%, transparent)",Tailwind arbitrary hex + opacity,border,import-reachable,frontend/src/components/ui/ProblemLoading.tsx,15,border-[#8195c9]/20

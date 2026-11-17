@@ -1,9 +1,10 @@
+import type { CalendarInterview } from "./calendarRewards.ts";
 import { loadProblems } from "./problems.ts";
 import type { UserProfile } from "./profile.ts";
 
 export interface DashboardProblem { slug: string; title: string; difficulty: string; topic: string | null }
 export interface RecentPractice { id: string; problemId: string | null; problemTitle: string; difficulty: string | null; endedAt: string | null; status: string; startedAt: string | null }
-export interface SessionSummary { completedThisWeek: number; recent: RecentPractice[]; completedSessionIds: string[]; completionDates: string[] }
+export interface SessionSummary { completedThisWeek: number; recent: RecentPractice[]; completedSessionIds: string[]; completionDates: string[]; completedInterviews: CalendarInterview[] }
 
 // Monday-to-Monday in the user's timezone, including daylight-saving changes.
 export function getWeekBounds(now = new Date(), timeZone = "America/Chicago") {
@@ -74,7 +75,7 @@ export function summarizeSessions(rows: Record<string, unknown>[], now = new Dat
     };
   });
   recent.sort((a, b) => new Date(b.startedAt || b.endedAt || 0).getTime() - new Date(a.startedAt || a.endedAt || 0).getTime());
-  return { completedThisWeek, completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
+  return { completedThisWeek, completedInterviews: recent.filter(row => row.status === "Completed" && row.endedAt && row.id !== "undefined" && row.id !== "null").map(row => ({id: row.id, title: row.problemTitle, endedAt: row.endedAt!})), completionDates: completedRows.map((row) => new Date(row.ended).toISOString()), recent: recent.slice(0, 5), completedSessionIds: completedRows.sort((a, b) => b.ended - a.ended).slice(0, 5).map((row) => row.id) };
 }
 
 export async function loadSessionSummary(

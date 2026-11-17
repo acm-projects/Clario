@@ -7,6 +7,7 @@ import { getRepoChallenge, listRepoChallenges, runRepoChallenge, type RepoChalle
 import RepositoryExplorer, { RepositoryFileIcon } from "../components/interview/RepositoryExplorer";
 import ProblemLoading from "../components/ui/ProblemLoading";
 import DuckHead from "../components/layout/DuckHead";
+import InterviewScenery from "../components/effects/InterviewScenery";
 import { useAppearance } from "../lib/appearance";
 import { defineEditorThemes } from "../lib/editorThemes";
 import type { ProfileContext } from "../lib/profile";
@@ -32,13 +33,16 @@ function ChallengePicker() {
     listRepoChallenges(controller.signal).then(data => { if (!controller.signal.aborted) { setChallenges(data); setLoading(false); setError(null); } }).catch(error => { if (!controller.signal.aborted) { setError(error instanceof Error ? error.message : "Could not load challenges."); setLoading(false); } });
     return () => controller.abort();
   }, [retry]);
-  return <div className="mx-auto max-w-[1080px] px-6 py-8 sm:py-14">
+  return <div className="relative isolate min-h-svh overflow-hidden">
+    <InterviewScenery />
+    <div className="mx-auto max-w-[1080px] px-6 py-8 sm:py-14">
     <Link to="/interview" className="inline-flex min-h-11 items-center text-sm text-[var(--repo-muted)]">← All interview modes</Link>
     <div className="mb-10 mt-8 flex items-center gap-5"><span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-[#3054ed]"><DuckHead className="size-12" /></span><div><p className="text-[10px] font-semibold tracking-[.18em] text-[var(--repo-accent)]">READ. REASON. REPAIR.</p><h1 className="mt-2 text-3xl font-semibold tracking-tight">Repo Debugging</h1></div></div>
     <p className="mb-8 max-w-[620px] text-sm leading-7 text-[var(--repo-muted)]">Debug a real-world codebase, fix bugs, and test your solution in a repository-based coding interview. Small repositories. Real behavior. No setup needed.</p>
     {loading ? <ProblemLoading dark={theme === "dark"} /> : error ? <div role="alert"><p>{error}</p><button type="button" onClick={() => { setLoading(true); setRetry(value => value + 1); }} className="mt-4 rounded-xl bg-[#3054ed] px-5 py-3 text-sm text-white">Try again</button></div> : <div className="grid gap-5 sm:grid-cols-2">{challenges.map((challenge, index) => <Link key={challenge.id} to={`/interview/repo/${encodeURIComponent(challenge.id)}`} className="group flex flex-col rounded-[24px] border border-[var(--repo-line)] bg-[var(--repo-panel)] p-7 transition-colors hover:border-[#3054ed]">
       <div className="flex justify-between font-mono text-xs text-[var(--repo-muted)]"><span>REPOSITORY / 0{index + 1}</span><span>{challenge.difficulty}</span></div><h2 className="mt-7 text-xl font-semibold tracking-tight">{challenge.title}</h2><p className="mb-7 mt-3 text-sm leading-7 text-[var(--repo-muted)]">{challenge.description}</p><div className="mt-auto flex items-center justify-between border-t border-[var(--repo-line)] pt-5 text-xs"><span>{challenge.language === "javascript" ? "JavaScript" : "Python"} · ~{challenge.estimatedMinutes} minutes</span><span className="font-semibold text-[var(--repo-accent)]">Open repository ↗</span></div>
     </Link>)}</div>}
+    </div>
   </div>;
 }
 

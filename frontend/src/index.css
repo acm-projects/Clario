@@ -1,6 +1,39 @@
 /* Tailwind v4 entry point, shared tokens, global defaults, and animation keyframes. */
 @import "tailwindcss";
 
+/* Keep the shared setup-page scenery behind content and fixed navigation. */
+:has(> .interview-scenery) {
+  position: relative;
+  isolation: isolate;
+}
+
+.library-topic-tag {
+  box-shadow: 0 3px 0 #c5a528, 0 5px 10px -4px #18213730;
+}
+
+/* Shared white cloud artwork for blue cards, banners, and interview panels.
+   A decorative layer keeps existing gradients and all controls intact. */
+.blue-clouds,
+.interview-page > header {
+  position: relative;
+  isolation: isolate;
+}
+.blue-clouds::before,
+.interview-page > header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: .18;
+  --container-cloud: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 100'%3E%3Cpath d='M42 87C21 87 9 76 9 61c0-16 13-28 30-28h4C49 14 66 5 84 9c13 2 23 10 28 21 8-8 19-12 31-10 17 2 29 14 32 29h13c23 0 39 8 39 21s-13 17-34 17Z' fill='white'/%3E%3C/svg%3E");
+  background-image: var(--container-cloud), var(--container-cloud), var(--container-cloud), var(--container-cloud);
+  background-repeat: no-repeat;
+  background-size: clamp(80px, 26%, 180px) auto, clamp(60px, 20%, 140px) auto, clamp(50px, 16%, 110px) auto, clamp(55px, 18%, 125px) auto;
+  background-position: right 4% top 8%, left 3% bottom 8%, left 8% top 16%, right 10% bottom 24%;
+}
+
 /* Workspace appearance. Keep the public landing page's editorial palette. */
 .brand-ui[data-appearance="dark"]:has(.app-sidebar-layout) {
   color-scheme: dark;
@@ -64,8 +97,8 @@
 .brand-ui[data-appearance="dark"] .reference-library .library-difficulty-tabs button { color: var(--text-muted); }
 .brand-ui[data-appearance="dark"] .reference-library .library-difficulty-tabs button[aria-pressed="true"] { background: #3054ed; color: #fff; box-shadow: none; }
 .brand-ui[data-appearance="dark"] .reference-library .library-difficulty-tabs button:hover:not([aria-pressed="true"]) { background: var(--surface-blue); color: var(--text); }
-.brand-ui[data-appearance="dark"] .reference-library .library-topic-tag { background: var(--surface-blue); color: #c8d4ef; }
-.brand-ui[data-appearance="dark"] .reference-library .library-topic-tag[aria-pressed="true"] { background: #3054ed; color: #fff; }
+.brand-ui[data-appearance="dark"] .reference-library .library-topic-tag { background: #ffdf4f; color: #182137; }
+.brand-ui[data-appearance="dark"] .reference-library .library-topic-tag[aria-pressed="true"] { background: #182137; color: #ffdf4f; outline: 1px solid #ffdf4f; }
 .brand-ui[data-appearance="dark"] .reference-library :is(.library-problem-action, .library-result-count button, .library-expanded-filters button, .library-choose-notice a) { color: #9cb4ff; }
 .brand-ui[data-appearance="dark"] .reference-library .library-problem-action:hover { color: #d3deff; }
 .brand-ui[data-appearance="dark"] .reference-library h2 button:hover { color: #9cb4ff; }

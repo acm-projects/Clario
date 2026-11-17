@@ -1,0 +1,30 @@
+/* Uniform cells contain the face and its brief entrance motion. */
+.dashboard-calendar .calendar-date-cell {
+  min-height: 62px !important;
+  aspect-ratio: auto;
+  justify-content: center;
+  padding: 4px 1px;
+  overflow: hidden;
+}
+.calendar-date-label { position: relative; flex-shrink: 0; line-height: 16px; }
+.calendar-ducky-face { transform-origin: 50% 53%; }
+.calendar-ducky[data-animate="true"] {
+  animation: calendar-ducky-appear 500ms ease-out var(--ducky-delay) 1 backwards;
+}
+.calendar-completed-day:is(:hover, :focus-visible) .calendar-ducky-face {
+  animation: calendar-ducky-wiggle 420ms ease-in-out 1;
+}
+@keyframes calendar-ducky-appear {
+  0% { opacity: 0; transform: translateY(3px) scale(.85); }
+  65% { opacity: 1; transform: translateY(-1px) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes calendar-ducky-wiggle {
+  25% { transform: rotate(-4deg); }
+  65% { transform: rotate(4deg); }
+  100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calendar-ducky[data-animate="true"],
+  .calendar-completed-day:is(:hover, :focus-visible) .calendar-ducky-face { animation: none; }
+}
